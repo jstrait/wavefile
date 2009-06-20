@@ -6,7 +6,7 @@ First, install the WaveFile gem...
 
 ...and include it in your Ruby program:
 
-    require 'WaveFile'
+    require 'wavefile'
 
 To open a wave file and get the raw sample data:
 
