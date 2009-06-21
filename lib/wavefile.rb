@@ -152,6 +152,14 @@ class WaveFile
     end
   end
 
+  def mono?()
+    return num_channels == 1
+  end
+  
+  def stereo?()
+    return num_channels == 2
+  end
+
   attr_reader :num_channels, :sample_rate, :bits_per_sample, :byte_rate, :block_align
   
 private

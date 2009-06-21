@@ -34,4 +34,20 @@ class WaveFileTest < Test::Unit::TestCase
     assert_equal(w.byte_rate, 44100)
     assert_equal(w.block_align, 1)
   end
+  
+  def test_mono?
+    w = WaveFile.new(1, 44100, 16)
+    assert_equal(w.mono?, true)
+    assert_equal(w.stereo?, false)
+    
+    w = WaveFile.open("examples/valid/sine-8bit.wav")
+    assert_equal(w.mono?, true)
+    assert_equal(w.stereo?, false)
+  end
+  
+  def test_stereo?
+    w = WaveFile.new(2, 44100, 16)
+    assert_equal(w.mono?, false)
+    assert_equal(w.stereo?, true)
+  end
 end
