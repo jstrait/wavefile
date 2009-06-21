@@ -50,4 +50,12 @@ class WaveFileTest < Test::Unit::TestCase
     assert_equal(w.mono?, false)
     assert_equal(w.stereo?, true)
   end
+  
+  def test_reverse
+    w = WaveFile.new(1, 44100, 16)
+    w.sample_data = [1, 2, 3, 4, 5]
+    w.reverse
+    
+    assert_equal(w.sample_data, [5, 4, 3, 2, 1])
+  end
 end

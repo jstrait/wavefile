@@ -159,6 +159,10 @@ class WaveFile
   def stereo?()
     return num_channels == 2
   end
+  
+  def reverse()
+    sample_data.reverse!()
+  end
 
   attr_reader :num_channels, :sample_rate, :bits_per_sample, :byte_rate, :block_align
   
