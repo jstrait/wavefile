@@ -70,6 +70,7 @@ class WaveFile
     if valid_header?(header)
       sample_data = read_sample_data(path,
                                      header[:sub_chunk1_size],
+                                     header[:num_channels],
                                      header[:bits_per_sample],
                                      header[:sub_chunk2_size])
       
@@ -105,10 +106,21 @@ class WaveFile
     file_contents += [sample_data_size].pack("V")
 
     # Write the sample data
+    if !mono?
+      output_sample_data = []
+      @sample_data.each{|sample|
+        sample.each{|sub_sample|
+          output_sample_data << sub_sample
+        }
+      }
+    else
+      output_sample_data = @sample_data
+    end
+    
     if @bits_per_sample == 8
-      file_contents += @sample_data.pack("C*")
+      file_contents += output_sample_data.pack("C*")
     elsif @bits_per_sample == 16
-      file_contents += @sample_data.pack("s*")
+      file_contents += output_sample_data.pack("s*")
     else
       raise StandardError, "Bits per sample is #{@bits_per_samples}, only 8 or 16 are supported"
     end
@@ -124,9 +136,17 @@ class WaveFile
   
   def normalized_sample_data()
     if @bits_per_sample == 8
-      normalized_sample_data = @sample_data.map {|sample| (sample.to_f / 511.0) * 2.0 }
+      if mono?
+        normalized_sample_data = @sample_data.map {|sample| (sample.to_f / 511.0) * 2.0 }
+      else
+        normalized_sample_data = @sample_data.map {|sample| sample.map {|sub_sample| (sub_sample.to_f / 511.0) * 2.0}} 
+      end
     elsif @bits_per_sample == 16
-      normalized_sample_data = @sample_data.map {|sample| (sample.to_f / 32767.0) }
+      if mono?
+        normalized_sample_data = @sample_data.map {|sample| (sample.to_f / 32767.0) }
+      else
+        normalized_sample_data = @sample_data.map {|sample| sample.map {|sub_sample| sub_sample.to_f / 32767.0}}
+      end
     else
       raise StandardError, "Bits per sample is #{@bits_per_samples}, only 8 or 16 are supported"
     end
@@ -139,11 +159,21 @@ class WaveFile
       if @bits_per_sample == 8
         # Samples in 8-bit wave files are stored as a unsigned byte
         # Effective values are 0 to 255
-        @sample_data = sample_data.map {|sample| ((sample * 127.0).to_i) + 127 }
+        
+        if mono?
+          @sample_data = sample_data.map {|sample| ((sample * 127.0).to_i) + 127 }
+        else
+          @sample_data = sample_data.map {|sample| sample.map {|sub_sample| ((sub_sample * 127.0).to_i) + 127}}
+        end
       elsif @bits_per_sample == 16
         # Samples in 16-bit wave files are stored as a signed little-endian short
         # Effective values are -32768 to 32767
-        @sample_data = sample_data.map {|sample| (sample * 32767.0).to_i }
+        
+        if mono?
+          @sample_data = sample_data.map {|sample| (sample * 32767.0).to_i }
+        else
+          @sample_data = sample_data.map {|sample| sample.map {|sub_sample| (sub_sample * 32767.0).to_i}}
+        end
       else
         raise StandardError, "Bits per sample is #{@bits_per_samples}, only 8 or 16 are supported"
       end
@@ -204,8 +234,9 @@ private
   def self.valid_header?(header)
     valid_bits_per_sample = header[:bits_per_sample] == 8   ||
                             header[:bits_per_sample] == 16
-                            
-    valid_num_channels = header[:num_channels] == 1 # Only mono files supported for now
+    
+    valid_num_channels = header[:num_channels] == 1 ||
+                         header[:num_channels] == 2
     
     return valid_bits_per_sample                    &&
            valid_num_channels                       &&
@@ -216,7 +247,7 @@ private
            header[:sub_chunk2_id] == SUB_CHUNK2_ID
   end
   
-  def self.read_sample_data(path, sub_chunk1_size, bits_per_sample, sample_data_size)
+  def self.read_sample_data(path, sub_chunk1_size, num_channels, bits_per_sample, sample_data_size)
     offset = 20 + sub_chunk1_size + 8
     file = File.open(path, "rb")
 
@@ -229,7 +260,19 @@ private
           data = file.sysread(sample_data_size).unpack("s*")
         else
           data = []
-        end 
+        end
+        
+        if(num_channels == 2)
+          stereo_data = []
+          
+          i = 0
+          while i < data.length
+            stereo_data << [data[i], data[i + 1]]
+            i += 2
+          end
+          
+          data = stereo_data
+        end
     rescue EOFError
       file.close()
     end
