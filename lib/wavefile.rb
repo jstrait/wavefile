@@ -155,27 +155,43 @@ class WaveFile
   end
   
   def sample_data=(sample_data)
-    if sample_data.length > 0 && sample_data[0].class == Float
+    if sample_data.length > 0 && ((mono? && sample_data[0].class == Float) ||
+                                  (!mono? && sample_data[0][0].class == Float))
+                                  
       if @bits_per_sample == 8
         # Samples in 8-bit wave files are stored as a unsigned byte
-        # Effective values are 0 to 255
-        
-        if mono?
-          @sample_data = sample_data.map {|sample| ((sample * 127.0).to_i) + 127 }
-        else
-          @sample_data = sample_data.map {|sample| sample.map {|sub_sample| ((sub_sample * 127.0).to_i) + 127}}
-        end
+        # Effective values are 0 to 255, midpoint at 128
+        min_value = 128.0
+        max_value = 127.0
+        midpoint = 128
       elsif @bits_per_sample == 16
         # Samples in 16-bit wave files are stored as a signed little-endian short
-        # Effective values are -32768 to 32767
-        
-        if mono?
-          @sample_data = sample_data.map {|sample| (sample * 32767.0).to_i }
-        else
-          @sample_data = sample_data.map {|sample| sample.map {|sub_sample| (sub_sample * 32767.0).to_i}}
-        end
+        # Effective values are -32768 to 32767, midpoint at 0
+        min_value = 32768.0
+        max_value = 32767.0
+        midpoint = 0
       else
         raise StandardError, "Bits per sample is #{@bits_per_samples}, only 8 or 16 are supported"
+      end
+      
+      if mono?
+        @sample_data = sample_data.map {|sample|
+          if(sample < 0.0)
+            (sample * min_value).to_i + midpoint
+          else
+            (sample * max_value).to_i + midpoint
+          end
+        }
+      else
+        @sample_data = sample_data.map {|sample|
+          sample.map {|sub_sample|
+            if(sub_sample < 0.0)
+              (sub_sample * min_value).to_i + midpoint
+            else
+              (sub_sample * max_value).to_i + midpoint
+            end
+          }
+        }
       end
     else
       @sample_data = sample_data
