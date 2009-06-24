@@ -136,19 +136,37 @@ class WaveFile
   
   def normalized_sample_data()
     if @bits_per_sample == 8
-      if mono?
-        normalized_sample_data = @sample_data.map {|sample| (sample.to_f / 511.0) * 2.0 }
-      else
-        normalized_sample_data = @sample_data.map {|sample| sample.map {|sub_sample| (sub_sample.to_f / 511.0) * 2.0}} 
-      end
+      min_value = 128.0
+      max_value = 127.0
+      midpoint = 128
     elsif @bits_per_sample == 16
-      if mono?
-        normalized_sample_data = @sample_data.map {|sample| (sample.to_f / 32767.0) }
-      else
-        normalized_sample_data = @sample_data.map {|sample| sample.map {|sub_sample| sub_sample.to_f / 32767.0}}
-      end
+      min_value = 32768.0
+      max_value = 32767.0
+      midpoint = 0
     else
       raise StandardError, "Bits per sample is #{@bits_per_samples}, only 8 or 16 are supported"
+    end
+    
+    if mono?
+      normalized_sample_data = @sample_data.map {|sample|
+        sample -= midpoint
+        if sample < 0
+          sample.to_f / min_value
+        else
+          sample.to_f / max_value
+        end
+      }
+    else
+      normalized_sample_data = @sample_data.map {|sample|
+        sample.map {|sub_sample|
+          sub_sample -= midpoint
+          if sub_sample < 0
+            sub_sample.to_f / min_value
+          else
+            sub_sample.to_f / max_value
+          end
+        }
+      }
     end
     
     return normalized_sample_data
@@ -157,7 +175,6 @@ class WaveFile
   def sample_data=(sample_data)
     if sample_data.length > 0 && ((mono? && sample_data[0].class == Float) ||
                                   (!mono? && sample_data[0][0].class == Float))
-                                  
       if @bits_per_sample == 8
         # Samples in 8-bit wave files are stored as a unsigned byte
         # Effective values are 0 to 255, midpoint at 128
