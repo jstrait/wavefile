@@ -200,18 +200,18 @@ class WaveFile
       if mono?
         @sample_data = sample_data.map {|sample|
           if(sample < 0.0)
-            (sample * min_value).to_i + midpoint
+            (sample * min_value).round + midpoint
           else
-            (sample * max_value).to_i + midpoint
+            (sample * max_value).round + midpoint
           end
         }
       else
         @sample_data = sample_data.map {|sample|
           sample.map {|sub_sample|
             if(sub_sample < 0.0)
-              (sub_sample * min_value).to_i + midpoint
+              (sub_sample * min_value).round + midpoint
             else
-              (sub_sample * max_value).to_i + midpoint
+              (sub_sample * max_value).round + midpoint
             end
           }
         }
