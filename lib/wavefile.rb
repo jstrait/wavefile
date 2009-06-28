@@ -55,13 +55,19 @@ class WaveFile
   HEADER_SIZE = 36
 
   def initialize(num_channels, sample_rate, bits_per_sample, sample_data = [])
-    @num_channels = num_channels
+    if num_channels == :mono
+      @num_channels = 1
+    elsif num_channels == :stereo
+      @num_channels = 2
+    else
+      @num_channels = num_channels
+    end
     @sample_rate = sample_rate
     @bits_per_sample = bits_per_sample
     @sample_data = sample_data
     
-    @byte_rate = sample_rate * num_channels * (bits_per_sample / 8)
-    @block_align = num_channels * (bits_per_sample / 8)
+    @byte_rate = sample_rate * @num_channels * (bits_per_sample / 8)
+    @block_align = @num_channels * (bits_per_sample / 8)
   end
   
   def self.open(path)

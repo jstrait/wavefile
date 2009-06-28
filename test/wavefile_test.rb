@@ -35,6 +35,14 @@ class WaveFileTest < Test::Unit::TestCase
     assert_equal(w.byte_rate, 44100)
     assert_equal(w.block_align, 1)
     
+    # Mono
+    w = WaveFile.new(:mono, 44100, 8)
+    assert_equal(w.num_channels, 1)
+    assert_equal(w.sample_rate, 44100)
+    assert_equal(w.bits_per_sample, 8)
+    assert_equal(w.byte_rate, 44100)
+    assert_equal(w.block_align, 1)
+    
     # Stereo
     w = WaveFile.new(2, 44100, 16)
     assert_equal(w.num_channels, 2)
@@ -42,6 +50,22 @@ class WaveFileTest < Test::Unit::TestCase
     assert_equal(w.bits_per_sample, 16)
     assert_equal(w.byte_rate, 176400)
     assert_equal(w.block_align, 4)
+    
+    # Stereo
+    w = WaveFile.new(:stereo, 44100, 16)
+    assert_equal(w.num_channels, 2)
+    assert_equal(w.sample_rate, 44100)
+    assert_equal(w.bits_per_sample, 16)
+    assert_equal(w.byte_rate, 176400)
+    assert_equal(w.block_align, 4)
+    
+    # Quad
+    w = WaveFile.new(4, 44100, 16)
+    assert_equal(w.num_channels, 4)
+    assert_equal(w.sample_rate, 44100)
+    assert_equal(w.bits_per_sample, 16)
+    assert_equal(w.byte_rate, 352800)
+    assert_equal(w.block_align, 8)
   end
   
   def test_normalized_sample_data
@@ -105,6 +129,9 @@ class WaveFileTest < Test::Unit::TestCase
     
     w = WaveFile.new(2, 44100, 16)
     assert_equal(w.mono?, false)
+    
+    w = WaveFile.new(4, 44100, 16)
+    assert_equal(w.mono?, false)
   end
   
   def test_stereo?
@@ -116,6 +143,9 @@ class WaveFileTest < Test::Unit::TestCase
     
     w = WaveFile.new(2, 44100, 16)
     assert_equal(w.stereo?, true)
+    
+    w = WaveFile.new(4, 44100, 16)
+    assert_equal(w.stereo?, false)
   end
   
   def test_reverse
