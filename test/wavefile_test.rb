@@ -70,17 +70,17 @@ class WaveFileTest < Test::Unit::TestCase
   
   def test_normalized_sample_data
     # Mono 8-bit
-    w = WaveFile.new(1, 44100, 8)
+    w = WaveFile.new(:mono, 44100, 8)
     w.sample_data = [0, 64, 128, 191, 255]
     assert_equal(w.normalized_sample_data, [-1.0, -0.5, 0.0, (63.0 / 127.0), 1.0])
     
     # Mono 16-bit
-    w = WaveFile.new(1, 44100, 16)
+    w = WaveFile.new(:mono, 44100, 16)
     w.sample_data = [-32768, -16384, 0, 16383, 32767]
     assert_equal(w.normalized_sample_data, [-1.0, -0.5, 0.0, (16383.0 / 32767.0), 1.0])
     
     # Stereo 8-bit
-    w = WaveFile.new(2, 44100, 8)
+    w = WaveFile.new(:stereo, 44100, 8)
     w.sample_data = [[0, 255], [64, 191], [128, 128], [191, 64], [255, 0]]
     assert_equal(w.normalized_sample_data, [[-1.0, 1.0],
                                            [-0.5, (63.0 / 127.0)],
@@ -89,7 +89,7 @@ class WaveFileTest < Test::Unit::TestCase
                                            [1.0, -1.0]])
                                            
     # Stereo 16-bit
-    w = WaveFile.new(2, 44100, 16)
+    w = WaveFile.new(:stereo, 44100, 16)
     w.sample_data = [[-32768, 32767], [-16384, 16383], [0, 0], [16383, -16384], [32767, -32768]]
     assert_equal(w.normalized_sample_data, [[-1.0, 1.0],
                                             [-0.5, (16383.0 / 32767.0)],
@@ -100,22 +100,22 @@ class WaveFileTest < Test::Unit::TestCase
   
   def test_sample_data=
     # Mono 8-bit
-    w = WaveFile.new(1, 44100, 8)
+    w = WaveFile.new(:mono, 44100, 8)
     w.sample_data = [-1.0, -0.5, 0.0, 0.5, 1.0]
     assert_equal(w.sample_data, [0, 64, 128, 191, 255])
     
     # Mono 16-bit
-    w = WaveFile.new(1, 44100, 16)
+    w = WaveFile.new(:mono, 44100, 16)
     w.sample_data = [-1.0, -0.5, 0.0, 0.5, 1.0]
     assert_equal(w.sample_data, [-32768, -16384, 0, 16383, 32767])
     
     # Stereo 8-bit
-    w = WaveFile.new(2, 44100, 8)
+    w = WaveFile.new(:stereo, 44100, 8)
     w.sample_data = [[-1.0, 1.0], [-0.5, 0.5], [0.0, 0.0], [0.5, -0.5], [1.0, -1.0]]
     assert_equal(w.sample_data, [[0, 255], [64, 191], [128, 128], [191, 64], [255, 0]])
     
     # Stereo 16-bit
-    w = WaveFile.new(2, 44100, 16)
+    w = WaveFile.new(:stereo, 44100, 16)
     w.sample_data = [[-1.0, 1.0], [-0.5, 0.5], [0.0, 0.0], [0.5, -0.5], [1.0, -1.0]]
     assert_equal(w.sample_data, [[-32768, 32767], [-16384, 16383], [0, 0], [16383, -16384], [32767, -32768]])
   end
@@ -150,13 +150,13 @@ class WaveFileTest < Test::Unit::TestCase
   
   def test_reverse
     # Mono
-    w = WaveFile.new(1, 44100, 16)
+    w = WaveFile.new(:mono, 44100, 16)
     w.sample_data = [1, 2, 3, 4, 5]
     w.reverse
     assert_equal(w.sample_data, [5, 4, 3, 2, 1])
   
     # Stereo
-    w = WaveFile.new(2, 44100, 16)
+    w = WaveFile.new(:stereo, 44100, 16)
     w.sample_data = [[1, 9], [2, 8], [3, 7], [4, 6], [5, 5]]
     w.reverse
     assert_equal(w.sample_data, [[5, 5], [4, 6], [3, 7], [2, 8], [1, 9]])
