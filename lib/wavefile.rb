@@ -274,8 +274,7 @@ private
     valid_bits_per_sample = header[:bits_per_sample] == 8   ||
                             header[:bits_per_sample] == 16
     
-    valid_num_channels = header[:num_channels] == 1 ||
-                         header[:num_channels] == 2
+    valid_num_channels = (1..65535) === header[:num_channels]
     
     return valid_bits_per_sample                    &&
            valid_num_channels                       &&
@@ -310,7 +309,7 @@ private
             i += num_channels
           end
           
-          data = multichannel_data
+          data = stereo_data
         end
     rescue EOFError
       file.close()
