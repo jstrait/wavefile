@@ -301,16 +301,16 @@ private
           data = []
         end
         
-        if(num_channels == 2)
-          stereo_data = []
+        if(num_channels > 1)
+          multichannel_data = []
           
           i = 0
           while i < data.length
-            stereo_data << [data[i], data[i + 1]]
-            i += 2
+            multichannel_data << data[i..(num_channels + i)]
+            i += num_channels
           end
           
-          data = stereo_data
+          data = multichannel_data
         end
     rescue EOFError
       file.close()
