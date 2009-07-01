@@ -85,7 +85,7 @@ class WaveFile
                            header[:bits_per_sample],
                            sample_data)
     else
-      raise StandardError, "#{path} is not a valid wave file"
+      raise StandardError, "#{path} is either not a valid wave file, or is in an unsupported format"
     end
     
     return wave_file
