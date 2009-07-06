@@ -2,11 +2,12 @@
 ===============================================================================
 * Added support for properly reading and writing stereo files. Files with more
   than 2 channels (such as surround sound) are supported as well.
-* Added convenience methods mono?() and stereo?()
+* Added convenience methods mono?() and stereo?().
 * Can now pass :mono and :stereo into the num_channels argument of the
-  constructor, to allow for more readable code
-* Added method reverse()
-* Corrected conversion of raw samples to normalized samples, and vice versa
+  constructor, to allow for more readable code.
+* Added method reverse().
+* Conversion of raw samples to normalized samples, and vice versa, is more
+  accurate.
 
 0.1.0
 ===============================================================================
