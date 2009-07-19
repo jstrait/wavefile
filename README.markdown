@@ -45,9 +45,9 @@ To create and save a new wave file:
     w.sample_data = <array of samples goes here>
     w.save("myfile.wav")
 
-When calling the sample_data=() method, the passed in array can contain either raw samples or normalized samples. If the first item in the array is a Float, the entire array is assumed to be normalized. Normalized samples are automatically converted into raw samples when saving.
+When calling the `sample_data=()` method, the passed in array can contain either raw samples or normalized samples. If the first item in the array is a Float, the entire array is assumed to be normalized. Normalized samples are automatically converted into raw samples when saving.
 
-You can reverse a file with the reverse() method:
+You can reverse a file with the `reverse()` method:
 
 	w = WaveFile.open("myfile.wav")
 	w.reverse()
