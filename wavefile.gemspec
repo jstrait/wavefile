@@ -1,6 +1,6 @@
 Gem::Specification.new do |s| 
   s.name = "wavefile"
-  s.version = "0.2.0"
+  s.version = "0.2.1"
   s.author = "Joel Strait"
   s.email = "joel.strait at gmail.com"
   s.homepage = "http://www.joelstrait.com/"
