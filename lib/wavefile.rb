@@ -305,7 +305,7 @@ private
           
           i = 0
           while i < data.length
-            multichannel_data << data[i..(num_channels + i)]
+            multichannel_data << data[i...(num_channels + i)]
             i += num_channels
           end
           
