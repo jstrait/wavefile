@@ -17,6 +17,7 @@ class WaveFileTest < Test::Unit::TestCase
   end
 
   def test_read_valid_file
+    # Mono file
     w = WaveFile.open("examples/valid/sine-mono-8bit.wav")
     assert_equal(w.num_channels, 1)
     assert_equal(w.mono?, true)
@@ -26,7 +27,12 @@ class WaveFileTest < Test::Unit::TestCase
     assert_equal(w.byte_rate, 44100)
     assert_equal(w.block_align, 1)
     assert_equal(w.sample_data.length, 44100)
+    # Test that sample array is in format [sample, sample ... sample]
+    valid = true
+    w.sample_data.each{|sample| valid &&= (sample.class == Fixnum)}
+    assert_equal(valid, true)
     
+    # Stereo file
     w = WaveFile.open("examples/valid/sine-stereo-8bit.wav")
     assert_equal(w.num_channels, 2)
     assert_equal(w.mono?, false)
@@ -36,6 +42,10 @@ class WaveFileTest < Test::Unit::TestCase
     assert_equal(w.byte_rate, 88200)
     assert_equal(w.block_align, 2)
     assert_equal(w.sample_data.length, 44100)
+    # Test that sample array is in format [[left, right], [left, right] ... [left,right]]
+    valid = true
+    w.sample_data.each{|sample| valid &&= (sample.class == Array) && (sample.length == 2)}
+    assert_equal(valid, true)
   end
   
   def test_new_file
