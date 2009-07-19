@@ -309,7 +309,7 @@ private
             i += num_channels
           end
           
-          data = stereo_data
+          data = multichannel_data
         end
     rescue EOFError
       file.close()
