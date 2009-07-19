@@ -1,4 +1,6 @@
-A class for reading and writing *.wav files.
+A Ruby gem for reading and writing wave files (*.wav).
+
+# Installation
 
 First, install the WaveFile gem...
 
@@ -7,6 +9,8 @@ First, install the WaveFile gem...
 ...and include it in your Ruby program:
 
     require 'wavefile'
+
+# Usage
 
 To open a wave file and get the raw sample data:
 
