@@ -13,16 +13,28 @@ class WaveFileTest < Test::Unit::TestCase
   end
   
   def test_read_nonexistent_file
-    assert_raise(Errno::ENOENT) { w = WaveFile.open("examples/invalid/oops.wav") }
+    assert_raise(Errno::ENOENT) { w = WaveFile.open("examples/invalid/nonexistent.wav") }
   end
 
   def test_read_valid_file
-    w = WaveFile.open("examples/valid/sine-8bit.wav")
+    w = WaveFile.open("examples/valid/sine-mono-8bit.wav")
     assert_equal(w.num_channels, 1)
+    assert_equal(w.mono?, true)
+    assert_equal(w.stereo?, false)
     assert_equal(w.sample_rate, 44100)
     assert_equal(w.bits_per_sample, 8)
     assert_equal(w.byte_rate, 44100)
     assert_equal(w.block_align, 1)
+    assert_equal(w.sample_data.length, 44100)
+    
+    w = WaveFile.open("examples/valid/sine-stereo-8bit.wav")
+    assert_equal(w.num_channels, 2)
+    assert_equal(w.mono?, false)
+    assert_equal(w.stereo?, true)
+    assert_equal(w.sample_rate, 44100)
+    assert_equal(w.bits_per_sample, 8)
+    assert_equal(w.byte_rate, 88200)
+    assert_equal(w.block_align, 2)
     assert_equal(w.sample_data.length, 44100)
   end
   
@@ -138,7 +150,7 @@ class WaveFileTest < Test::Unit::TestCase
     w = WaveFile.new(1, 44100, 16)
     assert_equal(w.mono?, true)
     
-    w = WaveFile.open("examples/valid/sine-8bit.wav")
+    w = WaveFile.open("examples/valid/sine-mono-8bit.wav")
     assert_equal(w.mono?, true)
     
     w = WaveFile.new(2, 44100, 16)
@@ -152,7 +164,7 @@ class WaveFileTest < Test::Unit::TestCase
     w = WaveFile.new(1, 44100, 16)
     assert_equal(w.stereo?, false)
     
-    w = WaveFile.open("examples/valid/sine-8bit.wav")
+    w = WaveFile.open("examples/valid/sine-mono-8bit.wav")
     assert_equal(w.stereo?, false)
     
     w = WaveFile.new(2, 44100, 16)
