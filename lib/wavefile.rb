@@ -232,6 +232,17 @@ class WaveFile
   def reverse()
     sample_data.reverse!()
   end
+  
+  def duration()
+    total_samples = sample_data.length
+    
+    return  {
+              :hours        => total_samples / (sample_rate * 60 * 60),
+              :minutes      => total_samples / (sample_rate * 60),
+              :seconds      => total_samples / sample_rate,
+              :milliseconds => (((total_samples % sample_rate).to_f / sample_rate.to_f) * 1000).ceil
+            }
+  end
 
   attr_reader :num_channels, :sample_rate, :bits_per_sample, :byte_rate, :block_align
   
