@@ -73,6 +73,9 @@ class WaveFile
   def self.open(path)
     header = read_header(path)
     
+    puts header.inspect
+    puts validate_header(header)
+    
     if valid_header?(header)
       sample_data = read_sample_data(path,
                                      header[:sub_chunk1_size],
@@ -279,6 +282,32 @@ private
     end
     
     return header
+  end
+
+  def self.validate_header(header)
+    errors = []
+    
+    unless header[:bits_per_sample] == 8  ||  header[:bits_per_sample] == 16
+      errors << "Invalid bits per sample of #{header[:bits_per_sample]}. Only 8 and 16 are supported."
+    end
+    
+    unless (1..65535) === header[:num_channels]
+      errors << "Invalid number of channels. Must be between 1 and 65535."
+    end
+    
+    unless header[:chunk_id] == CHUNK_ID
+      errors << "Unsupported chunk ID: '#{header[:chunk_id]}'"
+    end
+    
+    unless header[:format] == FORMAT
+      errors << "Unsupported format: '#{header[:format]}'"
+    end
+    
+    unless header[:format] == FORMAT
+      errors << "Unsupported format: '#{header[:format]}'"
+    end
+    
+    return errors
   end
   
   def self.valid_header?(header)
