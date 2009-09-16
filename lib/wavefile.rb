@@ -247,6 +247,62 @@ class WaveFile
             }
   end
 
+  def bits_per_sample=(new_bits_per_sample)
+    if new_bits_per_sample != 8 && new_bits_per_sample != 16
+      raise StandardError, "Bits per sample of #{@bits_per_samples} is invalid, only 8 or 16 are supported"
+    end
+    
+    if @bits_per_sample == 16 && new_bits_per_sample == 8
+      if mono?
+        @sample_data.map! {|sample|
+          if(sample < 0)
+            (sample / 256) + 128
+          else
+            # Faster to just divide by integer 258?
+            (sample / 258.007874015748031).round + 128
+          end
+        }
+      else
+        sample_data.map! {|sample|
+          sample.map {|sub_sample|
+            if(sub_sample < 0)
+              (sub_sample / 256) + 128
+            else
+              # Faster to just divide by integer 258?
+              (sub_sample / 258.007874015748031).round + 128
+            end
+          }
+        }
+      end
+    elsif @bits_per_sample == 8 && new_bits_per_sample == 16
+      if mono?
+        @sample_data.map! {|sample|
+          sample -= 128
+          if(sample < 0)
+            sample * 256
+          else
+            # Faster to just multiply by integer 258?
+            (sample * 258.007874015748031).round
+          end
+        }
+      else
+        sample_data.map! {|sample|
+          sample.map {|sub_sample|
+            sub_sample -= 128
+            if(sub_sample < 0.0)
+              sub_sample * 256
+            else
+              # Faster to just multiply by integer 258?
+              (sub_sample * 258.007874015748031).round
+            end
+          }
+        }
+      end
+    end
+    
+    @bits_per_sample = new_bits_per_sample
+  end
+
   attr_reader :num_channels, :sample_rate, :bits_per_sample, :byte_rate, :block_align
   
 private

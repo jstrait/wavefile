@@ -197,4 +197,72 @@ class WaveFileTest < Test::Unit::TestCase
     w.reverse
     assert_equal(w.sample_data, [[5, 5], [4, 6], [3, 7], [2, 8], [1, 9]])
   end
+  
+  def test_bits_per_sample=()
+    # Set bits_per_sample to invalid value (non-8 or non-16)
+    w = WaveFile.open("examples/valid/sine-mono-8bit.wav")
+    assert_raise(StandardError) { w.bits_per_sample = 20 }
+    w = WaveFile.new(:mono, 44100, 16)
+    assert_raise(StandardError) { w.bits_per_sample = 4 }
+    
+    w_before = WaveFile.open("examples/valid/sine-mono-8bit.wav")
+    w_after = WaveFile.open("examples/valid/sine-mono-8bit.wav")
+    w_after.bits_per_sample = 8
+    assert_equal(w_before.sample_data, w_after.sample_data)
+    
+    w_before = WaveFile.open("examples/valid/sine-stereo-8bit.wav")
+    w_after = WaveFile.open("examples/valid/sine-stereo-8bit.wav")
+    w_after.bits_per_sample = 8
+    assert_equal(w_before.sample_data, w_after.sample_data)
+    
+    # Open mono 16 bit file, change to 16 bit, still the same
+    # Open stereo 16 bit file, change to 16 bit, still the same
+    
+    # Open mono 8 bit file, convert to 16 bit
+    w = WaveFile.new(:mono, 44100, 8)
+    w.sample_data = [0, 32, 64, 96, 128, 160, 192, 223, 255]
+    w.bits_per_sample = 16
+    assert_equal(w.sample_data, [-32768, -24576, -16384, -8192, 0, 8256, 16513, 24511, 32767])
+    
+    # Open stereo 8 bit file, convert to 16 bit
+    w = WaveFile.new(:stereo, 44100, 8)
+    w.sample_data = [[0, 255], [32, 223], [64, 192], [96, 160], [128, 128],
+                    [160, 96], [192, 64], [223, 32], [255, 0]]
+    w.bits_per_sample = 16
+    assert_equal(w.sample_data, [[-32768, 32767], [-24576, 24511], [-16384, 16513], [-8192, 8256], [0, 0],
+                                 [8256, -8192], [16513, -16384], [24511, -24576], [32767, -32768]])
+    
+    # Open mono 16 bit file, convert to 8 bit
+    w = WaveFile.new(:mono, 44100, 16)
+    w.sample_data = [-32768, -24576, -16384, -8192, 0, 8256, 16513, 24511, 32767]
+    w.bits_per_sample = 8
+    assert_equal(w.sample_data, [0, 32, 64, 96, 128, 160, 192, 223, 255])
+    
+    # Open stereo 16 bit file, convert to 8 bit, conversion successful
+    w = WaveFile.new(:stereo, 44100, 16)
+    w.sample_data = [[-32768, 32767], [-24576, 24511], [-16384, 16513], [-8192, 8256], [0, 0],
+                     [8256, -8192], [16513, -16384], [24511, -24576], [32767, -32768]]
+    w.bits_per_sample = 8
+    assert_equal(w.sample_data, [[0, 255], [32, 223], [64, 192], [96, 160], [128, 128],
+                                 [160, 96], [192, 64], [223, 32], [255, 0]])
+    
+    # Open 8 bit mono, convert to 16 bit, back to 8 bit.
+    w_before = WaveFile.open("examples/valid/sine-mono-8bit.wav")
+    w_after = WaveFile.open("examples/valid/sine-mono-8bit.wav")
+    w_after.bits_per_sample = 16
+    assert_not_equal(w_before.sample_data, w_after.sample_data)
+    w_after.bits_per_sample = 8
+    assert_equal(w_before.sample_data, w_after.sample_data)
+    
+    # Open 8 bit stereo, convert to 16 bit, back to 8 bit.
+    w_before = WaveFile.open("examples/valid/sine-stereo-8bit.wav")
+    w_after = WaveFile.open("examples/valid/sine-stereo-8bit.wav")
+    w_after.bits_per_sample = 16
+    assert_not_equal(w_before.sample_data, w_after.sample_data)
+    w_after.bits_per_sample = 8
+    assert_equal(w_before.sample_data, w_after.sample_data)
+    
+    # Open 16 bit mono, convert to 8 bit, back to 16 bit.
+    # Open 16 bit stereo, convert to 8 bit, back to 16 bit.
+  end
 end
