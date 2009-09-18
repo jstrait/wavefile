@@ -238,13 +238,30 @@ class WaveFile
   
   def duration()
     total_samples = sample_data.length
+    samples_per_millisecond = @sample_rate / 1000.0
+    samples_per_second = @sample_rate
+    samples_per_minute = samples_per_second * 60
+    samples_per_hour = samples_per_minute * 60
+    hours, minutes, seconds, milliseconds = 0, 0, 0, 0
     
-    return  {
-              :hours        => total_samples / (sample_rate * 60 * 60),
-              :minutes      => total_samples / (sample_rate * 60),
-              :seconds      => total_samples / sample_rate,
-              :milliseconds => (((total_samples % sample_rate).to_f / sample_rate.to_f) * 1000).ceil
-            }
+    if(total_samples >= samples_per_hour)
+      hours = total_samples / samples_per_hour
+      total_samples -= samples_per_hour * hours
+    end
+    
+    if(total_samples >= samples_per_minute)
+      minutes = total_samples / samples_per_minute
+      total_samples -= samples_per_minute * minutes
+    end
+    
+    if(total_samples >= samples_per_second)
+      seconds = total_samples / samples_per_second
+      total_samples -= samples_per_second * seconds
+    end
+    
+    milliseconds = (total_samples / samples_per_millisecond).floor
+    
+    return  { :hours => hours, :minutes => minutes, :seconds => seconds, :milliseconds => milliseconds }
   end
 
   def bits_per_sample=(new_bits_per_sample)

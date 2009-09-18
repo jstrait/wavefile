@@ -198,6 +198,26 @@ class WaveFileTest < Test::Unit::TestCase
     assert_equal(w.sample_data, [[5, 5], [4, 6], [3, 7], [2, 8], [1, 9]])
   end
   
+  def test_duration()
+    sample_rate = 44100
+    w = WaveFile.new(:mono, sample_rate, 16)
+    
+    w.sample_data = []
+    assert_equal(w.duration, {:hours => 0, :minutes => 0, :seconds => 0, :milliseconds => 0})
+    w.sample_data = [].fill(0.0, 0, sample_rate / 2)
+    assert_equal(w.duration, {:hours => 0, :minutes => 0, :seconds => 0, :milliseconds => 500})
+    w.sample_data = [].fill(0.0, 0, sample_rate)
+    assert_equal(w.duration, {:hours => 0, :minutes => 0, :seconds => 1, :milliseconds => 0})
+    w.sample_data = [].fill(0.0, 0, sample_rate * 2)
+    assert_equal(w.duration, {:hours => 0, :minutes => 0, :seconds => 2, :milliseconds => 0})
+    w.sample_data = [].fill(0.0, 0, (sample_rate / 2) * 3)
+    assert_equal(w.duration, {:hours => 0, :minutes => 0, :seconds => 1, :milliseconds => 500})
+    #w.sample_data = [].fill(0.0, 0, sample_rate * 60)
+    #assert_equal(w.duration, {:hours => 0, :minutes => 1, :seconds => 0, :milliseconds => 0})
+    #w.sample_data = [].fill(0.0, 0, sample_rate * 60 * 60)
+    #assert_equal(w.duration, {:hours => 1, :minutes => 0, :seconds => 0, :milliseconds => 0})
+  end
+  
   def test_bits_per_sample=()
     # Set bits_per_sample to invalid value (non-8 or non-16)
     w = WaveFile.open("examples/valid/sine-mono-8bit.wav")
