@@ -73,8 +73,8 @@ class WaveFile
   def self.open(path)
     header = read_header(path)
     
-    puts header.inspect
-    puts validate_header(header)
+    #puts header.inspect
+    #puts validate_header(header)
     
     if valid_header?(header)
       sample_data = read_sample_data(path,
@@ -318,6 +318,31 @@ class WaveFile
     end
     
     @bits_per_sample = new_bits_per_sample
+  end
+  
+  def num_channels=(new_num_channels)
+    if num_num_channels == :mono
+      new_num_channels = 1
+    elsif new_num_channels == :stereo
+      new_num_channels = 2
+    end
+    
+    # The cases of mono -> stereo and vice-versa are handled in specially,
+    # because those conversion methods are faster than the general methods,
+    # and the vast majority of wave files are expected to be either mono or stereo.    
+    if @num_channels == 1 && new_num_channels == 2
+      sample_data.map! {|sample| [sample, sample]}
+    elsif @num_channels == 2 && new_num_channels == 1
+        sample_data.map! {|sample| (sample[0] + sample[1]) / 2}
+    elsif @num_channels == 1 && new_num_channels >= 2
+      sample_data.map! {|sample| [].fill(sample, 0, new_num_channels)}
+    elsif @num_channels >= 2 && new_num_channels == 1
+      sample_data.map! {|sample| sample.inject(0) {|sub_sample, sum| sum + sub_sample } / @num_channels }
+    elsif @num_channels > 2 && new_num_channels == 2
+      sample_data.map! {|sample| [sample[0], sample[1]]}
+    end
+    
+    @num_channels = new_num_channels
   end
 
   attr_reader :num_channels, :sample_rate, :bits_per_sample, :byte_rate, :block_align
