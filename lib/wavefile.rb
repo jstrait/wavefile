@@ -330,7 +330,8 @@ class WaveFile
     @num_channels = new_num_channels
   end
 
-  attr_reader :num_channels, :sample_rate, :bits_per_sample, :byte_rate, :block_align
+  attr_reader :num_channels, :bits_per_sample, :byte_rate, :block_align
+  attr_accessor :sample_rate
   
 private
 
