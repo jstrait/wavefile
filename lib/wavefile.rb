@@ -72,11 +72,9 @@ class WaveFile
   
   def self.open(path)
     header = read_header(path)
+    errors = validate_header(header)
     
-    #puts header.inspect
-    #puts validate_header(header)
-    
-    if valid_header?(header)
+    if errors == []
       sample_data = read_sample_data(path,
                                      header[:sub_chunk1_size],
                                      header[:num_channels],
@@ -88,7 +86,9 @@ class WaveFile
                            header[:bits_per_sample],
                            sample_data)
     else
-      raise StandardError, "#{path} is either not a valid wave file, or is in an unsupported format"
+      error_msg = "#{path} can't be opened, due to the following errors:\n"
+      errors.each {|error| error_msg += "  * #{error}\n" }
+      raise StandardError, error_msg
     end
     
     return wave_file
@@ -387,26 +387,19 @@ private
       errors << "Unsupported format: '#{header[:format]}'"
     end
     
-    unless header[:format] == FORMAT
-      errors << "Unsupported format: '#{header[:format]}'"
+    unless header[:sub_chunk1_id] == SUB_CHUNK1_ID
+      errors << "Unsupported chunk id: '#{header[:sub_chunk1_id]}'"
+    end
+    
+    unless header[:audio_format] == AUDIO_FORMAT
+      errors << "Unsupported audio format code: '#{header[:audio_format]}'"
+    end
+    
+    unless header[:sub_chunk2_id] == SUB_CHUNK2_ID
+      errors << "Unsupported chunk id: '#{header[:sub_chunk2_id]}'"
     end
     
     return errors
-  end
-  
-  def self.valid_header?(header)
-    valid_bits_per_sample = header[:bits_per_sample] == 8   ||
-                            header[:bits_per_sample] == 16
-    
-    valid_num_channels = (1..65535) === header[:num_channels]
-    
-    return valid_bits_per_sample                    &&
-           valid_num_channels                       &&
-           header[:chunk_id] == CHUNK_ID            &&
-           header[:format] == FORMAT                &&
-           header[:sub_chunk1_id] == SUB_CHUNK1_ID  &&
-           header[:audio_format] == AUDIO_FORMAT    &&
-           header[:sub_chunk2_id] == SUB_CHUNK2_ID
   end
   
   def self.read_sample_data(path, sub_chunk1_size, num_channels, bits_per_sample, sample_data_size)
