@@ -270,50 +270,35 @@ class WaveFile
     end
     
     if @bits_per_sample == 16 && new_bits_per_sample == 8
+      conversion_func = lambda {|sample|
+        if(sample < 0)
+          (sample / 256) + 128
+        else
+          # Faster to just divide by integer 258?
+          (sample / 258.007874015748031).round + 128
+        end
+      }
+
       if mono?
-        @sample_data.map! {|sample|
-          if(sample < 0)
-            (sample / 256) + 128
-          else
-            # Faster to just divide by integer 258?
-            (sample / 258.007874015748031).round + 128
-          end
-        }
+        @sample_data.map! &conversion_func
       else
-        sample_data.map! {|sample|
-          sample.map {|sub_sample|
-            if(sub_sample < 0)
-              (sub_sample / 256) + 128
-            else
-              # Faster to just divide by integer 258?
-              (sub_sample / 258.007874015748031).round + 128
-            end
-          }
-        }
+        sample_data.map! {|sample| sample.map! &conversion_func }
       end
     elsif @bits_per_sample == 8 && new_bits_per_sample == 16
+      conversion_func = lambda {|sample|
+        sample -= 128
+        if(sample < 0)
+          sample * 256
+        else
+          # Faster to just multiply by integer 258?
+          (sample * 258.007874015748031).round
+        end
+      }
+      
       if mono?
-        @sample_data.map! {|sample|
-          sample -= 128
-          if(sample < 0)
-            sample * 256
-          else
-            # Faster to just multiply by integer 258?
-            (sample * 258.007874015748031).round
-          end
-        }
+        @sample_data.map! &conversion_func
       else
-        sample_data.map! {|sample|
-          sample.map {|sub_sample|
-            sub_sample -= 128
-            if(sub_sample < 0.0)
-              sub_sample * 256
-            else
-              # Faster to just multiply by integer 258?
-              (sub_sample * 258.007874015748031).round
-            end
-          }
-        }
+        sample_data.map! {|sample| sample.map! &conversion_func }
       end
     end
     
@@ -321,7 +306,7 @@ class WaveFile
   end
   
   def num_channels=(new_num_channels)
-    if num_num_channels == :mono
+    if new_num_channels == :mono
       new_num_channels = 1
     elsif new_num_channels == :stereo
       new_num_channels = 2
