@@ -1,3 +1,14 @@
+0.3
+===============================================================================
+* New method bits_per_sample=(). Allows converting a file from 8-bit to 16-bit
+  and vice-versa.
+* New method num_channels=(). Allows converting a mono file to stereo, and
+  vice-versa.
+* New method sample_rate=(). Allows changing the sample rate of a file.
+* New method duration(). Returns a hash listing the playback time of the file.
+* More descriptive error messages are displayed when a file with an invalid
+  format can't be opened.
+
 0.2.1
 ===============================================================================
 * Fixed bug which prevented stereo files from being opened, due to refactoring
