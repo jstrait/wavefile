@@ -200,22 +200,47 @@ class WaveFileTest < Test::Unit::TestCase
   
   def test_duration()
     sample_rate = 44100
-    w = WaveFile.new(:mono, sample_rate, 16)
     
-    w.sample_data = []
-    assert_equal(w.duration, {:hours => 0, :minutes => 0, :seconds => 0, :milliseconds => 0})
-    w.sample_data = [].fill(0.0, 0, sample_rate / 2)
-    assert_equal(w.duration, {:hours => 0, :minutes => 0, :seconds => 0, :milliseconds => 500})
-    w.sample_data = [].fill(0.0, 0, sample_rate)
-    assert_equal(w.duration, {:hours => 0, :minutes => 0, :seconds => 1, :milliseconds => 0})
-    w.sample_data = [].fill(0.0, 0, sample_rate * 2)
-    assert_equal(w.duration, {:hours => 0, :minutes => 0, :seconds => 2, :milliseconds => 0})
-    w.sample_data = [].fill(0.0, 0, (sample_rate / 2) * 3)
-    assert_equal(w.duration, {:hours => 0, :minutes => 0, :seconds => 1, :milliseconds => 500})
-    #w.sample_data = [].fill(0.0, 0, sample_rate * 60)
-    #assert_equal(w.duration, {:hours => 0, :minutes => 1, :seconds => 0, :milliseconds => 0})
-    #w.sample_data = [].fill(0.0, 0, sample_rate * 60 * 60)
-    #assert_equal(w.duration, {:hours => 1, :minutes => 0, :seconds => 0, :milliseconds => 0})
+    [30001, 22050, 44100].each {|bits_per_sample|
+      [8, 16].each {|bits_per_sample|
+        [:mono, :stereo].each {|num_channels|
+          w = WaveFile.new(num_channels, sample_rate, bits_per_sample)
+          
+          w.sample_data = []
+          assert_equal(w.duration, {:hours => 0, :minutes => 0, :seconds => 0, :milliseconds => 0})
+          w.sample_data = get_duration_test_samples(num_channels, (sample_rate.to_f / 1000.0).floor)
+          assert_equal(w.duration, {:hours => 0, :minutes => 0, :seconds => 0, :milliseconds => 0})
+          w.sample_data = get_duration_test_samples(num_channels, (sample_rate.to_f / 1000.0).ceil)
+          assert_equal(w.duration, {:hours => 0, :minutes => 0, :seconds => 0, :milliseconds => 1})
+          w.sample_data = get_duration_test_samples(num_channels, sample_rate / 2)
+          assert_equal(w.duration, {:hours => 0, :minutes => 0, :seconds => 0, :milliseconds => 500})
+          w.sample_data = get_duration_test_samples(num_channels, sample_rate - 1)
+          assert_equal(w.duration, {:hours => 0, :minutes => 0, :seconds => 0, :milliseconds => 999})
+          w.sample_data = get_duration_test_samples(num_channels, sample_rate)
+          assert_equal(w.duration, {:hours => 0, :minutes => 0, :seconds => 1, :milliseconds => 0})
+          w.sample_data = get_duration_test_samples(num_channels, sample_rate * 2)
+          assert_equal(w.duration, {:hours => 0, :minutes => 0, :seconds => 2, :milliseconds => 0})
+          w.sample_data = get_duration_test_samples(num_channels, (sample_rate / 2) * 3)
+          assert_equal(w.duration, {:hours => 0, :minutes => 0, :seconds => 1, :milliseconds => 500})
+          
+          # These test currently take too long to run...
+          #w.sample_data = [].fill(0.0, 0, sample_rate * 60)
+          #assert_equal(w.duration, {:hours => 0, :minutes => 1, :seconds => 0, :milliseconds => 0})
+          #w.sample_data = [].fill(0.0, 0, sample_rate * 60 * 60)
+          #assert_equal(w.duration, {:hours => 1, :minutes => 0, :seconds => 0, :milliseconds => 0})
+        }
+      }
+    }
+  end
+  
+  def get_duration_test_samples(num_channels, num_samples)
+    if num_channels == :mono || num_channels == 1
+      return [].fill(0.0, 0, num_samples)
+    elsif num_channels == :stereo || num_channels == 2
+      return [].fill([0.0, 0.0], 0, num_samples)
+    else
+      return "error"
+    end
   end
   
   def test_bits_per_sample=()
