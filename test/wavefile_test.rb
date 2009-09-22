@@ -223,7 +223,7 @@ class WaveFileTest < Test::Unit::TestCase
           w.sample_data = get_duration_test_samples(num_channels, (sample_rate / 2) * 3)
           assert_equal(w.duration, {:hours => 0, :minutes => 0, :seconds => 1, :milliseconds => 500})
           
-          # These test currently take too long to run...
+          # These tests currently take too long to run...
           #w.sample_data = [].fill(0.0, 0, sample_rate * 60)
           #assert_equal(w.duration, {:hours => 0, :minutes => 1, :seconds => 0, :milliseconds => 0})
           #w.sample_data = [].fill(0.0, 0, sample_rate * 60 * 60)
