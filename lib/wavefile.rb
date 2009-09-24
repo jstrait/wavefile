@@ -48,10 +48,10 @@ The "data" subchunk contains the size of the data and the actual sound:
 class WaveFile
   CHUNK_ID = "RIFF"
   FORMAT = "WAVE"
-  SUB_CHUNK1_ID = "fmt "
+  FORMAT_CHUNK_ID = "fmt "
   SUB_CHUNK1_SIZE = 16
   AUDIO_FORMAT = 1
-  SUB_CHUNK2_ID = "data"
+  DATA_CHUNK_ID = "data"
   HEADER_SIZE = 36
 
   def initialize(num_channels, sample_rate, bits_per_sample, sample_data = [])
@@ -103,7 +103,7 @@ class WaveFile
     file_contents = CHUNK_ID
     file_contents += [HEADER_SIZE + sample_data_size].pack("V")
     file_contents += FORMAT
-    file_contents += SUB_CHUNK1_ID
+    file_contents += FORMAT_CHUNK_ID
     file_contents += [SUB_CHUNK1_SIZE].pack("V")
     file_contents += [AUDIO_FORMAT].pack("v")
     file_contents += [@num_channels].pack("v")
@@ -111,7 +111,7 @@ class WaveFile
     file_contents += [@byte_rate].pack("V")
     file_contents += [@block_align].pack("v")
     file_contents += [@bits_per_sample].pack("v")
-    file_contents += SUB_CHUNK2_ID
+    file_contents += DATA_CHUNK_ID
     file_contents += [sample_data_size].pack("V")
 
     # Write the sample data
@@ -359,8 +359,7 @@ private
         header[:format] = riff_header[2]
         
         # Read format subchunk
-        header[:sub_chunk1_id] = file.sysread(4)
-        header[:sub_chunk1_size] = file.sysread(4).unpack("V")[0]
+        header[:sub_chunk1_id], header[:sub_chunk1_size] = self.read_to_chunk(file, FORMAT_CHUNK_ID)
         format_subchunk_str = file.sysread(header[:sub_chunk1_size])
         format_subchunk = format_subchunk_str.unpack("vvVVvv")  # Any extra parameters are ignored
         header[:audio_format] = format_subchunk[0]
@@ -371,13 +370,27 @@ private
         header[:bits_per_sample] = format_subchunk[5]
         
         # Read data subchunk
-        header[:sub_chunk2_id] = file.sysread(4)
-        header[:sub_chunk2_size] = file.sysread(4).unpack("V")[0]
+        header[:sub_chunk2_id], header[:sub_chunk2_size] = self.read_to_chunk(file, DATA_CHUNK_ID)
     rescue EOFError
       file.close()
     end
     
     return header
+  end
+
+  def self.read_to_chunk(file, expected_chunk_id)
+    chunk_id = file.sysread(4)
+    chunk_size = file.sysread(4).unpack("V")[0]
+
+    while chunk_id != expected_chunk_id
+      # Skip chunk
+      file.sysread(chunk_size)
+      
+      chunk_id = file.sysread(4)
+      chunk_size = file.sysread(4).unpack("V")[0]
+    end
+    
+    return chunk_id, chunk_size
   end
 
   def self.validate_header(header)
@@ -399,7 +412,7 @@ private
       errors << "Unsupported format: '#{header[:format]}'"
     end
     
-    unless header[:sub_chunk1_id] == SUB_CHUNK1_ID
+    unless header[:sub_chunk1_id] == FORMAT_CHUNK_ID
       errors << "Unsupported chunk id: '#{header[:sub_chunk1_id]}'"
     end
     
@@ -407,7 +420,7 @@ private
       errors << "Unsupported audio format code: '#{header[:audio_format]}'"
     end
     
-    unless header[:sub_chunk2_id] == SUB_CHUNK2_ID
+    unless header[:sub_chunk2_id] == DATA_CHUNK_ID
       errors << "Unsupported chunk id: '#{header[:sub_chunk2_id]}'"
     end
     
