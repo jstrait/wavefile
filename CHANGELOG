@@ -6,7 +6,7 @@
   vice-versa.
 * New method sample_rate=(). Allows changing the sample rate of a file.
 * New method duration(). Returns a hash listing the playback time of the file.
-* New method inspect(). Returns a pretty-printed string containing metadata
+* New method inspect(). Returns a pretty-printed string listing metadata
   about the file.
 * More descriptive error messages are displayed when a file with an invalid
   format can't be opened.
