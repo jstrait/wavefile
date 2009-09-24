@@ -1,4 +1,4 @@
-0.3
+0.3.0
 ===============================================================================
 * New method bits_per_sample=(). Allows converting a file from 8-bit to 16-bit
   and vice-versa.
@@ -6,8 +6,11 @@
   vice-versa.
 * New method sample_rate=(). Allows changing the sample rate of a file.
 * New method duration(). Returns a hash listing the playback time of the file.
+* New method inspect(). Returns a pretty-printed string containing metadata
+  about the file.
 * More descriptive error messages are displayed when a file with an invalid
   format can't be opened.
+* Files that have more than just a format and data chunk can now be opened.
 
 0.2.1
 ===============================================================================
