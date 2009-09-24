@@ -143,7 +143,7 @@ class WaveFile
     return @sample_data
   end
   
-  def normalized_sample_data()
+  def normalized_sample_data()    
     if @bits_per_sample == 8
       min_value = 128.0
       max_value = 127.0
@@ -328,6 +328,18 @@ class WaveFile
     end
     
     @num_channels = new_num_channels
+  end
+
+  def inspect()
+    duration = self.duration()
+    
+    result =  "Channels:        #{@num_channels}\n" +
+              "Sample rate:     #{@sample_rate}\n" +
+              "Bits per sample: #{@bits_per_sample}\n" +
+              "Block align:     #{@block_align}\n" +
+              "Byte rate:       #{@byte_rate}\n" +
+              "Sample count:    #{@sample_data.length}\n" +
+              "Duration:        #{duration[:hours]}h:#{duration[:minutes]}m:#{duration[:seconds]}s:#{duration[:milliseconds]}ms\n"
   end
 
   attr_reader :num_channels, :bits_per_sample, :byte_rate, :block_align
