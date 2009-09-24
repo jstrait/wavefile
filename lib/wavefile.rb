@@ -50,7 +50,7 @@ class WaveFile
   FORMAT = "WAVE"
   FORMAT_CHUNK_ID = "fmt "
   SUB_CHUNK1_SIZE = 16
-  AUDIO_FORMAT = 1
+  PCM = 1
   DATA_CHUNK_ID = "data"
   HEADER_SIZE = 36
 
@@ -105,7 +105,7 @@ class WaveFile
     file_contents += FORMAT
     file_contents += FORMAT_CHUNK_ID
     file_contents += [SUB_CHUNK1_SIZE].pack("V")
-    file_contents += [AUDIO_FORMAT].pack("v")
+    file_contents += [PCM].pack("v")
     file_contents += [@num_channels].pack("v")
     file_contents += [@sample_rate].pack("V")
     file_contents += [@byte_rate].pack("V")
@@ -416,7 +416,7 @@ private
       errors << "Unsupported chunk id: '#{header[:sub_chunk1_id]}'"
     end
     
-    unless header[:audio_format] == AUDIO_FORMAT
+    unless header[:audio_format] == PCM
       errors << "Unsupported audio format code: '#{header[:audio_format]}'"
     end
     
