@@ -71,24 +71,31 @@ class WaveFile
   end
   
   def self.open(path)
-    header = read_header(path)
-    errors = validate_header(header)
+    file = File.open(path, "rb")
     
-    if errors == []
-      sample_data = read_sample_data(path,
-                                     header[:sub_chunk1_size],
-                                     header[:num_channels],
-                                     header[:bits_per_sample],
-                                     header[:sub_chunk2_size])
-      
-      wave_file = self.new(header[:num_channels],
-                           header[:sample_rate],
-                           header[:bits_per_sample],
-                           sample_data)
-    else
-      error_msg = "#{path} can't be opened, due to the following errors:\n"
-      errors.each {|error| error_msg += "  * #{error}\n" }
-      raise StandardError, error_msg
+    begin
+      header = read_header(file)
+      errors = validate_header(header)
+
+      if errors == []
+        sample_data = read_sample_data(file,
+                                       header[:num_channels],
+                                       header[:bits_per_sample],
+                                       header[:sub_chunk2_size])
+
+        wave_file = self.new(header[:num_channels],
+                             header[:sample_rate],
+                             header[:bits_per_sample],
+                             sample_data)
+      else
+        error_msg = "#{path} can't be opened, due to the following errors:\n"
+        errors.each {|error| error_msg += "  * #{error}\n" }
+        raise StandardError, error_msg
+      end
+    rescue EOFError
+      raise StandardError, "An error occured while reading #{path}."
+    ensure
+      file.close()
     end
     
     return wave_file
@@ -314,7 +321,7 @@ class WaveFile
     
     # The cases of mono -> stereo and vice-versa are handled in specially,
     # because those conversion methods are faster than the general methods,
-    # and the vast majority of wave files are expected to be either mono or stereo.    
+    # and the large majority of wave files are expected to be either mono or stereo.    
     if @num_channels == 1 && new_num_channels == 2
       sample_data.map! {|sample| [sample, sample]}
     elsif @num_channels == 2 && new_num_channels == 1
@@ -347,33 +354,28 @@ class WaveFile
   
 private
 
-  def self.read_header(path)
+  def self.read_header(file)
     header = {}
-    file = File.open(path, "rb")
-
-    begin
-        # Read RIFF header
-        riff_header = file.sysread(12).unpack("a4Va4")
-        header[:chunk_id] = riff_header[0]
-        header[:chunk_size] = riff_header[1]
-        header[:format] = riff_header[2]
-        
-        # Read format subchunk
-        header[:sub_chunk1_id], header[:sub_chunk1_size] = self.read_to_chunk(file, FORMAT_CHUNK_ID)
-        format_subchunk_str = file.sysread(header[:sub_chunk1_size])
-        format_subchunk = format_subchunk_str.unpack("vvVVvv")  # Any extra parameters are ignored
-        header[:audio_format] = format_subchunk[0]
-        header[:num_channels] = format_subchunk[1]
-        header[:sample_rate] = format_subchunk[2]
-        header[:byte_rate] = format_subchunk[3]
-        header[:block_align] = format_subchunk[4]
-        header[:bits_per_sample] = format_subchunk[5]
-        
-        # Read data subchunk
-        header[:sub_chunk2_id], header[:sub_chunk2_size] = self.read_to_chunk(file, DATA_CHUNK_ID)
-    rescue EOFError
-      file.close()
-    end
+    
+    # Read RIFF header
+    riff_header = file.sysread(12).unpack("a4Va4")
+    header[:chunk_id] = riff_header[0]
+    header[:chunk_size] = riff_header[1]
+    header[:format] = riff_header[2]
+    
+    # Read format subchunk
+    header[:sub_chunk1_id], header[:sub_chunk1_size] = self.read_to_chunk(file, FORMAT_CHUNK_ID)
+    format_subchunk_str = file.sysread(header[:sub_chunk1_size])
+    format_subchunk = format_subchunk_str.unpack("vvVVvv")  # Any extra parameters are ignored
+    header[:audio_format] = format_subchunk[0]
+    header[:num_channels] = format_subchunk[1]
+    header[:sample_rate] = format_subchunk[2]
+    header[:byte_rate] = format_subchunk[3]
+    header[:block_align] = format_subchunk[4]
+    header[:bits_per_sample] = format_subchunk[5]
+    
+    # Read data subchunk
+    header[:sub_chunk2_id], header[:sub_chunk2_size] = self.read_to_chunk(file, DATA_CHUNK_ID)
     
     return header
   end
@@ -427,34 +429,26 @@ private
     return errors
   end
   
-  def self.read_sample_data(path, sub_chunk1_size, num_channels, bits_per_sample, sample_data_size)
-    offset = 20 + sub_chunk1_size + 8
-    file = File.open(path, "rb")
-
-    begin
-        data = file.sysread(offset)
-        
-        if(bits_per_sample == 8)
-          data = file.sysread(sample_data_size).unpack("C*")
-        elsif(bits_per_sample == 16)
-          data = file.sysread(sample_data_size).unpack("s*")
-        else
-          data = []
-        end
-        
-        if(num_channels > 1)
-          multichannel_data = []
-          
-          i = 0
-          while i < data.length
-            multichannel_data << data[i...(num_channels + i)]
-            i += num_channels
-          end
-          
-          data = multichannel_data
-        end
-    rescue EOFError
-      file.close()
+  # Assumes that file is "queued up" to the first sample
+  def self.read_sample_data(file, num_channels, bits_per_sample, sample_data_size)
+    if(bits_per_sample == 8)
+      data = file.sysread(sample_data_size).unpack("C*")
+    elsif(bits_per_sample == 16)
+      data = file.sysread(sample_data_size).unpack("s*")
+    else
+      data = []
+    end
+    
+    if(num_channels > 1)
+      multichannel_data = []
+      
+      i = 0
+      while i < data.length
+        multichannel_data << data[i...(num_channels + i)]
+        i += num_channels
+      end
+      
+      data = multichannel_data
     end
     
     return data
