@@ -36,13 +36,31 @@ You can get basic metadata:
     w.stereo?           # Alias for num_channels == 2
     w.sample_rate       # 11025, 22050, 44100, etc.
     w.bits_per_sample   # 8 or 16
+	w.duration          # Example: {:hours => 0, :minutes => 3, :seconds => 12, :milliseconds => 345 }
 
-You can also convert a file to different formats. For example, you can convert a mono file to stereo, or down-sample a 16-bit file to 8-bit.
+You can view all of the metadata at once using the `inspect()` method. It returns a multi-line string:
+
+    w.inspect()
+	
+	# Example result:
+	#   Channels:        2
+	#   Sample rate:     44100
+	#   Bits per sample: 16
+	#   Block align:     4
+	#   Byte rate:       176400
+	#   Sample count:    498070
+	#   Duration:        0h:0m:11s:294ms
+
+You can use setter methods to convert a file to a different format. For example, you can convert a mono file to stereo, or down-sample a 16-bit file to 8-bit.
 
 	w.num_channels = 2
 	w.num_channels = :stereo   // Equivalent to line above
 	w.sample_rate = 22050
 	w.bits_per_sample = 16	
+
+Changes are not saved to disk until you call the `save()` method.
+
+	w.save("myfile.wav")
 
 To create and save a new wave file:
 
@@ -53,14 +71,6 @@ To create and save a new wave file:
     w.save("myfile.wav")
 
 When calling the `sample_data=()` method, the passed in array can contain either raw samples or normalized samples. If the first item in the array is a Float, the entire array is assumed to be normalized. Normalized samples are automatically converted into raw samples when saving.
-
-You can get the playback time of a file with the `duration()` method. It returns a hash listing the playback time:
-
-	w = WaveFile.open("myfile.wav")
-	play_time = w.duration
-	
-	// For example, {:hours => 0, :minutes => 3, :seconds => 12, :milliseconds => 345 }
-	puts play_time.inspect
 
 You can reverse a file with the `reverse()` method:
 
