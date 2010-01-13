@@ -4,7 +4,7 @@ A Ruby gem for reading and writing wave files (*.wav).
 
 First, install the WaveFile gem...
 
-    sudo gem install jstrait-wavefile -s http://gems.github.com
+    gem install wavefile
 
 ...and include it in your Ruby program:
 
@@ -36,7 +36,7 @@ You can get basic metadata:
     w.stereo?           # Alias for num_channels == 2
     w.sample_rate       # 11025, 22050, 44100, etc.
     w.bits_per_sample   # 8 or 16
-	w.duration          # Example: {:hours => 0, :minutes => 3, :seconds => 12, :milliseconds => 345 }
+    w.duration          # Example: {:hours => 0, :minutes => 3, :seconds => 12, :milliseconds => 345 }
 
 You can view all of the metadata at once using the `inspect()` method. It returns a multi-line string:
 
