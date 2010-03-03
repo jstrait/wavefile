@@ -46,6 +46,7 @@ The "data" subchunk contains the size of the data and the actual sound:
 =end
 
 class WaveFile
+  WAVEFILE_VERSION = "0.4.0a"
   CHUNK_ID = "RIFF"
   FORMAT = "WAVE"
   FORMAT_CHUNK_ID = "fmt "
