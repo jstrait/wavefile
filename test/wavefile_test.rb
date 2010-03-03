@@ -336,4 +336,29 @@ class WaveFileTest < Test::Unit::TestCase
     w.num_channels = 1
     assert_equal(w.sample_data, [-32768, -24576, -16384, -8192, 0, 8256, 16513, 24511, 32767])
   end
+  
+  def test_info()
+    w = WaveFile.new(:mono, 44100, 16)
+    w.sample_data = [-32768, -24576, -16384, -8192, 0, 8256, 16513, 24511, 32767]
+    expected_info = { :num_channels    => 1,
+                      :sample_rate     => 44100,
+                      :bits_per_sample => 16,
+                      :block_align     => 2,
+                      :byte_rate       => 88200,
+                      :sample_count    => 9,
+                      :duration        => {:hours=>0, :minutes=>0, :seconds=>0, :milliseconds=>0} }
+    assert_equal(w.info(), expected_info)
+    
+    w = WaveFile.new(:stereo, 44100, 8)
+    w.sample_data = [[0, 255], [32, 223], [64, 192], [96, 160], [128, 128],
+                     [160, 96], [192, 64], [223, 32], [255, 0]]
+    expected_info = { :num_channels    => 2,
+                      :sample_rate     => 44100,
+                      :bits_per_sample => 8,
+                      :block_align     => 2,
+                      :byte_rate       => 88200,
+                      :sample_count    => 9,
+                      :duration        => {:hours=>0, :minutes=>0, :seconds=>0, :milliseconds=>0} }
+    assert_equal(w.info(), expected_info)
+  end
 end

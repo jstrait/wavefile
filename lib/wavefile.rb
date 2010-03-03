@@ -337,6 +337,18 @@ class WaveFile
     @num_channels = new_num_channels
   end
 
+  def info()
+    return {
+              :num_channels    => @num_channels,
+              :sample_rate     => @sample_rate,
+              :bits_per_sample => @bits_per_sample,
+              :block_align     => @block_align,
+              :byte_rate       => @byte_rate,
+              :sample_count    => @sample_data.length,
+              :duration        => self.duration()
+           }
+  end
+
   def inspect()
     duration = self.duration()
     
