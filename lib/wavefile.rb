@@ -245,31 +245,7 @@ class WaveFile
   end
   
   def duration()
-    total_samples = sample_data.length
-    samples_per_millisecond = @sample_rate / 1000.0
-    samples_per_second = @sample_rate
-    samples_per_minute = samples_per_second * 60
-    samples_per_hour = samples_per_minute * 60
-    hours, minutes, seconds, milliseconds = 0, 0, 0, 0
-    
-    if(total_samples >= samples_per_hour)
-      hours = total_samples / samples_per_hour
-      total_samples -= samples_per_hour * hours
-    end
-    
-    if(total_samples >= samples_per_minute)
-      minutes = total_samples / samples_per_minute
-      total_samples -= samples_per_minute * minutes
-    end
-    
-    if(total_samples >= samples_per_second)
-      seconds = total_samples / samples_per_second
-      total_samples -= samples_per_second * seconds
-    end
-    
-    milliseconds = (total_samples / samples_per_millisecond).floor
-    
-    return  { :hours => hours, :minutes => minutes, :seconds => seconds, :milliseconds => milliseconds }
+    return WaveFile.calculate_duration(@sample_rate, @sample_data.length)
   end
 
   def bits_per_sample=(new_bits_per_sample)
@@ -339,15 +315,33 @@ class WaveFile
   end
 
   def info()
-    return {
-              :num_channels    => @num_channels,
-              :sample_rate     => @sample_rate,
-              :bits_per_sample => @bits_per_sample,
-              :block_align     => @block_align,
-              :byte_rate       => @byte_rate,
-              :sample_count    => @sample_data.length,
-              :duration        => self.duration()
-           }
+    return { :num_channels    => @num_channels,
+             :sample_rate     => @sample_rate,
+             :bits_per_sample => @bits_per_sample,
+             :block_align     => @block_align,
+             :byte_rate       => @byte_rate,
+             :sample_count    => @sample_data.length,
+             :duration        => self.duration() }
+  end
+
+  def self.info(path)
+    file = File.open(path, "rb")
+    
+    begin
+      header = read_header(file)
+    rescue EOFError
+      raise StandardError, "An error occured while reading #{path}."
+    ensure
+      file.close()
+    end
+    
+    return { :num_channels    => header[:num_channels],
+             :sample_rate     => header[:sample_rate],
+             :bits_per_sample => header[:bits_per_sample],
+             :block_align     => header[:block_align],
+             :byte_rate       => header[:byte_rate],
+             :sample_count    => header[:sub_chunk2_size],
+             :duration        => calculate_duration(header[:sample_rate], header[:sub_chunk2_size]) }
   end
 
   def inspect()
@@ -465,5 +459,32 @@ private
     end
     
     return data
+  end
+  
+  def self.calculate_duration(sample_rate, total_samples)
+    samples_per_millisecond = sample_rate / 1000.0
+    samples_per_second = sample_rate
+    samples_per_minute = samples_per_second * 60
+    samples_per_hour = samples_per_minute * 60
+    hours, minutes, seconds, milliseconds = 0, 0, 0, 0
+    
+    if(total_samples >= samples_per_hour)
+      hours = total_samples / samples_per_hour
+      total_samples -= samples_per_hour * hours
+    end
+    
+    if(total_samples >= samples_per_minute)
+      minutes = total_samples / samples_per_minute
+      total_samples -= samples_per_minute * minutes
+    end
+    
+    if(total_samples >= samples_per_second)
+      seconds = total_samples / samples_per_second
+      total_samples -= samples_per_second * seconds
+    end
+    
+    milliseconds = (total_samples / samples_per_millisecond).floor
+    
+    return  { :hours => hours, :minutes => minutes, :seconds => seconds, :milliseconds => milliseconds }
   end
 end
