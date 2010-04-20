@@ -232,18 +232,25 @@ class WaveFile
     end
   end
 
+  # Returns true if this is a monophonic file (i.e., it has 1 channel), false otherwise.
   def mono?()
     return num_channels == 1
   end
   
+  # Returns true if this is a stereo file (i.e., it has 2 channels), false otherwise.
   def stereo?()
     return num_channels == 2
   end
   
+  # Reverses the current sample data, causing any saved sounds to play backwards.
   def reverse()
     sample_data.reverse!()
   end
   
+  # Returns a hash describing the duration of the file's sound, given the current sample data and sample rate.
+  # The hash contains an hour, minute, second, and millisecond component.
+  # For example if there are 66150 samples and the sample rate is 44100, the following will be returned:
+  # {:hours => 0, :minutes => 0, :seconds => 1, :milliseconds => 500}
   def duration()
     return WaveFile.calculate_duration(@sample_rate, @sample_data.length)
   end
@@ -296,7 +303,7 @@ class WaveFile
       new_num_channels = 2
     end
     
-    # The cases of mono -> stereo and vice-versa are handled in specially,
+    # The cases of mono -> stereo and vice-versa are handled specially,
     # because those conversion methods are faster than the general methods,
     # and the large majority of wave files are expected to be either mono or stereo.    
     if @num_channels == 1 && new_num_channels == 2
@@ -314,6 +321,7 @@ class WaveFile
     @num_channels = new_num_channels
   end
 
+  # Returns a hash containing metadata about the WaveFile object.
   def info()
     return { :num_channels    => @num_channels,
              :sample_rate     => @sample_rate,
@@ -324,6 +332,10 @@ class WaveFile
              :duration        => self.duration() }
   end
 
+  # Returns a hash containing metadata about the Wave file at path.
+  # The hash returned is of the same format as the instance method info.
+  # An advantage of this method is that it allows you to retreive metadata for files that WaveFile is not
+  # necessarily able to fully open (for example, because it has an unsupported bits per sample).
   def self.info(path)
     file = File.open(path, "rb")
     
