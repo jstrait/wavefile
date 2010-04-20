@@ -352,7 +352,7 @@ class WaveFile
              :bits_per_sample => header[:bits_per_sample],
              :block_align     => header[:block_align],
              :byte_rate       => header[:byte_rate],
-             :sample_count    => header[:sub_chunk2_size],
+             :sample_count    => header[:sub_chunk2_size] / header[:num_channels] / (header[:bits_per_sample] / 8),
              :duration        => calculate_duration(header[:sample_rate], header[:sub_chunk2_size]) }
   end
 
@@ -417,8 +417,8 @@ private
   def self.validate_header(header)
     errors = []
     
-    unless header[:bits_per_sample] == 8  ||  header[:bits_per_sample] == 16
-      errors << "Invalid bits per sample of #{header[:bits_per_sample]}. Only 8 and 16 are supported."
+    unless [8, 16].member?header[:bits_per_sample]
+      errors << "Invalid bits per sample of #{header[:bits_per_sample]}. Only 8 or 16 are supported."
     end
     
     unless (1..65535) === header[:num_channels]
