@@ -54,6 +54,7 @@ class WaveFile
   PCM = 1
   DATA_CHUNK_ID = "data"
   HEADER_SIZE = 36
+  SUPPORTED_BITS_PER_SAMPLE = [8, 16]
 
   def initialize(num_channels, sample_rate, bits_per_sample, sample_data = [])
     if num_channels == :mono
@@ -256,7 +257,7 @@ class WaveFile
   end
 
   def bits_per_sample=(new_bits_per_sample)
-    if new_bits_per_sample != 8 && new_bits_per_sample != 16
+    if !SUPPORTED_BITS_PER_SAMPLE.member?(new_bits_per_sample)
       raise StandardError, "Bits per sample of #{@bits_per_samples} is invalid, only 8 or 16 are supported"
     end
     
@@ -419,7 +420,7 @@ private
   def self.validate_header(header)
     errors = []
     
-    unless [8, 16].member?header[:bits_per_sample]
+    unless SUPPORTED_BITS_PER_SAMPLE.member?header[:bits_per_sample]
       errors << "Invalid bits per sample of #{header[:bits_per_sample]}. Only 8 or 16 are supported."
     end
     
