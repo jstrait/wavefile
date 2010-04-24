@@ -5,7 +5,26 @@ require 'wavefile'
 
 class WaveFileTest < Test::Unit::TestCase
   def test_initialize
-
+    # Invalid bits per sample
+    assert_raise(UnsupportedBitsPerSampleError) { w = WaveFile.new(1, 44100, 4) }
+    
+    # Valid file without sample data
+    w = WaveFile.new(1, 44100, 8)
+    assert_equal(w.num_channels, 1)
+    assert_equal(w.sample_rate, 44100)
+    assert_equal(w.bits_per_sample, 8)
+    assert_equal(w.byte_rate, 44100)
+    assert_equal(w.block_align, 1)
+    assert_equal(w.sample_data, [])
+    
+    # Valid file with sample data
+    w = WaveFile.new(2, 44100, 16, [[1, 9], [2, 8], [3, 7], [4, 6], [5, 5]])
+    assert_equal(w.num_channels, 2)
+    assert_equal(w.sample_rate, 44100)
+    assert_equal(w.bits_per_sample, 16)
+    assert_equal(w.byte_rate, 176400)
+    assert_equal(w.block_align, 4)
+    assert_equal(w.sample_data, [[1, 9], [2, 8], [3, 7], [4, 6], [5, 5]])
   end
   
   def test_read_empty_file
@@ -244,9 +263,9 @@ class WaveFileTest < Test::Unit::TestCase
   def test_bits_per_sample=()
     # Set bits_per_sample to invalid value (non-8 or non-16)
     w = WaveFile.open("examples/valid/sine-mono-8bit.wav")
-    assert_raise(StandardError) { w.bits_per_sample = 20 }
+    assert_raise(UnsupportedBitsPerSampleError) { w.bits_per_sample = 20 }
     w = WaveFile.new(:mono, 44100, 16)
-    assert_raise(StandardError) { w.bits_per_sample = 4 }
+    assert_raise(UnsupportedBitsPerSampleError) { w.bits_per_sample = 4 }
     
     w_before = WaveFile.open("examples/valid/sine-mono-8bit.wav")
     w_after = WaveFile.open("examples/valid/sine-mono-8bit.wav")

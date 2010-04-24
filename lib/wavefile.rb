@@ -45,6 +45,8 @@ The "data" subchunk contains the size of the data and the actual sound:
 44        *   Data             The actual sound data.
 =end
 
+class UnsupportedBitsPerSampleError < RuntimeError; end
+
 class WaveFile
   WAVEFILE_VERSION = "0.4.0a"
   CHUNK_ID = "RIFF"
@@ -57,6 +59,8 @@ class WaveFile
   SUPPORTED_BITS_PER_SAMPLE = [8, 16]
 
   def initialize(num_channels, sample_rate, bits_per_sample, sample_data = [])
+    validate_bits_per_sample(bits_per_sample)
+    
     if num_channels == :mono
       @num_channels = 1
     elsif num_channels == :stereo
@@ -68,8 +72,9 @@ class WaveFile
     @bits_per_sample = bits_per_sample
     @sample_data = sample_data
     
-    @byte_rate = sample_rate * @num_channels * (bits_per_sample / 8)
-    @block_align = @num_channels * (bits_per_sample / 8)
+    bytes_per_sample = (bits_per_sample / 8)
+    @byte_rate = sample_rate * @num_channels * bytes_per_sample
+    @block_align = @num_channels * bytes_per_sample
   end
   
   def self.open(path)
@@ -257,9 +262,7 @@ class WaveFile
   end
 
   def bits_per_sample=(new_bits_per_sample)
-    if !SUPPORTED_BITS_PER_SAMPLE.member?(new_bits_per_sample)
-      raise StandardError, "Bits per sample of #{@bits_per_samples} is invalid, only 8 or 16 are supported"
-    end
+    validate_bits_per_sample(new_bits_per_sample)
     
     if @bits_per_sample == 16 && new_bits_per_sample == 8
       conversion_func = lambda {|sample|
@@ -501,5 +504,13 @@ private
     milliseconds = (total_samples / samples_per_millisecond).floor
     
     return  { :hours => hours, :minutes => minutes, :seconds => seconds, :milliseconds => milliseconds }
+  end
+  
+  def validate_bits_per_sample(candidate_bits_per_sample)
+    if !SUPPORTED_BITS_PER_SAMPLE.member?(candidate_bits_per_sample)
+      raise UnsupportedBitsPerSampleError,
+            "Bits per sample of #{candidate_bits_per_sample} is unsupported. " +
+            "Only #{SUPPORTED_BITS_PER_SAMPLE.inspect} are supported."
+    end
   end
 end
