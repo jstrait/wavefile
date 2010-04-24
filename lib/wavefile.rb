@@ -264,7 +264,9 @@ class WaveFile
   def bits_per_sample=(new_bits_per_sample)
     validate_bits_per_sample(new_bits_per_sample)
     
-    if @bits_per_sample == 16 && new_bits_per_sample == 8
+    transformation = { @bits_per_sample => new_bits_per_sample }
+    
+    if transformation == { 16 => 8 }
       conversion_func = lambda {|sample|
         if(sample < 0)
           (sample / 256) + 128
@@ -279,7 +281,7 @@ class WaveFile
       else
         sample_data.map! {|sample| sample.map! &conversion_func }
       end
-    elsif @bits_per_sample == 8 && new_bits_per_sample == 16
+    elsif transformation == { 8 => 16 }
       conversion_func = lambda {|sample|
         sample -= 128
         if(sample < 0)
