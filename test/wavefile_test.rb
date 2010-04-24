@@ -201,34 +201,32 @@ class WaveFileTest < Test::Unit::TestCase
   def test_duration()
     sample_rate = 44100
     
-    [30001, 22050, 44100].each {|bits_per_sample|
-      [8, 16].each {|bits_per_sample|
-        [:mono, :stereo].each {|num_channels|
-          w = WaveFile.new(num_channels, sample_rate, bits_per_sample)
-          
-          w.sample_data = []
-          assert_equal(w.duration, {:hours => 0, :minutes => 0, :seconds => 0, :milliseconds => 0})
-          w.sample_data = get_duration_test_samples(num_channels, (sample_rate.to_f / 1000.0).floor)
-          assert_equal(w.duration, {:hours => 0, :minutes => 0, :seconds => 0, :milliseconds => 0})
-          w.sample_data = get_duration_test_samples(num_channels, (sample_rate.to_f / 1000.0).ceil)
-          assert_equal(w.duration, {:hours => 0, :minutes => 0, :seconds => 0, :milliseconds => 1})
-          w.sample_data = get_duration_test_samples(num_channels, sample_rate / 2)
-          assert_equal(w.duration, {:hours => 0, :minutes => 0, :seconds => 0, :milliseconds => 500})
-          w.sample_data = get_duration_test_samples(num_channels, sample_rate - 1)
-          assert_equal(w.duration, {:hours => 0, :minutes => 0, :seconds => 0, :milliseconds => 999})
-          w.sample_data = get_duration_test_samples(num_channels, sample_rate)
-          assert_equal(w.duration, {:hours => 0, :minutes => 0, :seconds => 1, :milliseconds => 0})
-          w.sample_data = get_duration_test_samples(num_channels, sample_rate * 2)
-          assert_equal(w.duration, {:hours => 0, :minutes => 0, :seconds => 2, :milliseconds => 0})
-          w.sample_data = get_duration_test_samples(num_channels, (sample_rate / 2) * 3)
-          assert_equal(w.duration, {:hours => 0, :minutes => 0, :seconds => 1, :milliseconds => 500})
-          
-          # These tests currently take too long to run...
-          #w.sample_data = [].fill(0.0, 0, sample_rate * 60)
-          #assert_equal(w.duration, {:hours => 0, :minutes => 1, :seconds => 0, :milliseconds => 0})
-          #w.sample_data = [].fill(0.0, 0, sample_rate * 60 * 60)
-          #assert_equal(w.duration, {:hours => 1, :minutes => 0, :seconds => 0, :milliseconds => 0})
-        }
+    [8, 16].each {|bits_per_sample|
+      [:mono, :stereo].each {|num_channels|
+        w = WaveFile.new(num_channels, sample_rate, bits_per_sample)
+        
+        w.sample_data = []
+        assert_equal(w.duration, {:hours => 0, :minutes => 0, :seconds => 0, :milliseconds => 0})
+        w.sample_data = get_duration_test_samples(num_channels, (sample_rate.to_f / 1000.0).floor)
+        assert_equal(w.duration, {:hours => 0, :minutes => 0, :seconds => 0, :milliseconds => 0})
+        w.sample_data = get_duration_test_samples(num_channels, (sample_rate.to_f / 1000.0).ceil)
+        assert_equal(w.duration, {:hours => 0, :minutes => 0, :seconds => 0, :milliseconds => 1})
+        w.sample_data = get_duration_test_samples(num_channels, sample_rate / 2)
+        assert_equal(w.duration, {:hours => 0, :minutes => 0, :seconds => 0, :milliseconds => 500})
+        w.sample_data = get_duration_test_samples(num_channels, sample_rate - 1)
+        assert_equal(w.duration, {:hours => 0, :minutes => 0, :seconds => 0, :milliseconds => 999})
+        w.sample_data = get_duration_test_samples(num_channels, sample_rate)
+        assert_equal(w.duration, {:hours => 0, :minutes => 0, :seconds => 1, :milliseconds => 0})
+        w.sample_data = get_duration_test_samples(num_channels, sample_rate * 2)
+        assert_equal(w.duration, {:hours => 0, :minutes => 0, :seconds => 2, :milliseconds => 0})
+        w.sample_data = get_duration_test_samples(num_channels, (sample_rate / 2) * 3)
+        assert_equal(w.duration, {:hours => 0, :minutes => 0, :seconds => 1, :milliseconds => 500})
+        
+        # These tests currently take too long to run...
+        #w.sample_data = [].fill(0.0, 0, sample_rate * 60)
+        #assert_equal(w.duration, {:hours => 0, :minutes => 1, :seconds => 0, :milliseconds => 0})
+        #w.sample_data = [].fill(0.0, 0, sample_rate * 60 * 60)
+        #assert_equal(w.duration, {:hours => 1, :minutes => 0, :seconds => 0, :milliseconds => 0})
       }
     }
   end
@@ -338,6 +336,7 @@ class WaveFileTest < Test::Unit::TestCase
   end
   
   def test_info()
+    ### Instance method
     w = WaveFile.new(:mono, 44100, 16)
     w.sample_data = [-32768, -24576, -16384, -8192, 0, 8256, 16513, 24511, 32767]
     expected_info = { :num_channels    => 1,
@@ -360,5 +359,18 @@ class WaveFileTest < Test::Unit::TestCase
                       :sample_count    => 9,
                       :duration        => {:hours=>0, :minutes=>0, :seconds=>0, :milliseconds=>0} }
     assert_equal(w.info(), expected_info)
+    
+    
+    ### Class method
+    assert_equal(WaveFile.info("examples/valid/sine-stereo-8bit.wav"),
+                 { :num_channels    => 2,
+                   :sample_rate     => 44100,
+                   :bits_per_sample => 8,
+                   :block_align     => 2,
+                   :byte_rate       => 88200,
+                   :sample_count    => 44100,
+                   :duration        => {:hours=>0, :minutes=>0, :seconds=>1, :milliseconds=>0} })
+                   
+    assert_raise(StandardError) { WaveFile.info("examples/invalid/empty.wav") }
   end
 end

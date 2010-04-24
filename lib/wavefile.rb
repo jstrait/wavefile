@@ -342,18 +342,20 @@ class WaveFile
     begin
       header = read_header(file)
     rescue EOFError
-      raise StandardError, "An error occured while reading #{path}."
+      raise StandardError, "An error occured while reading file #{path}."
     ensure
       file.close()
     end
+    
+    sample_count = header[:sub_chunk2_size] / header[:num_channels] / (header[:bits_per_sample] / 8)
     
     return { :num_channels    => header[:num_channels],
              :sample_rate     => header[:sample_rate],
              :bits_per_sample => header[:bits_per_sample],
              :block_align     => header[:block_align],
              :byte_rate       => header[:byte_rate],
-             :sample_count    => header[:sub_chunk2_size] / header[:num_channels] / (header[:bits_per_sample] / 8),
-             :duration        => calculate_duration(header[:sample_rate], header[:sub_chunk2_size]) }
+             :sample_count    => sample_count,
+             :duration        => calculate_duration(header[:sample_rate], sample_count) }
   end
 
   def inspect()
