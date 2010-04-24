@@ -57,6 +57,16 @@ class WaveFile
   DATA_CHUNK_ID = "data"
   HEADER_SIZE = 36
   SUPPORTED_BITS_PER_SAMPLE = [8, 16]
+  
+  # Format codes from http://www.signalogic.com/index.pl?page=ms_waveform
+  #               and http://www.sonicspot.com/guide/wavefiles.html
+  AUDIO_FORMAT_CODES = {0 => "Unknown", 1 => "PCM", 2 => "Microsoft ADPCM", 3 => "IEEE floating point",
+                        5 => "IBM CVSD", 6 => "ITU G.711 a-law", 7 => "ITU G.711 m-law", 11 => "Intel IMA/DVI ADPCM",
+                        16 => "ITU G.723 ADPCM", 17 => "Dialogic OKI ADPCM", 20 => "ITU G.723 ADPCM (Yamaha)",
+                        30 => "Dolby AAC", 31 => "Microsoft GSM 6.10", 36 => "Rockwell ADPCM",
+                        40 => "ITU G.721 ADPCM", 42 => "Microsoft MSG723", 45 => "ITU-T G.726",
+                        49 => "GSM 6.10", 64 => "ITU G.721 ADPCM", 80 => "MPEG", 101 => "IBM m-law",
+                        102 => "IBM a-law", 103 => "IBM ADPCM", 65536 => "Experimental"}
 
   def initialize(num_channels, sample_rate, bits_per_sample, sample_data = [])
     validate_bits_per_sample(bits_per_sample)
@@ -367,7 +377,8 @@ class WaveFile
 
   # Returns a hash containing metadata about the WaveFile object.
   def info()
-    return { :num_channels    => @num_channels,
+    return { :format          => "PCM",
+             :num_channels    => @num_channels,
              :sample_rate     => @sample_rate,
              :bits_per_sample => @bits_per_sample,
              :block_align     => @block_align,
@@ -392,8 +403,13 @@ class WaveFile
     end
     
     sample_count = header[:sub_chunk2_size] / header[:num_channels] / (header[:bits_per_sample] / 8)
+    format = AUDIO_FORMAT_CODES[header[:audio_format]]
+    if format == nil
+      format = "Unknown code: #{header[:audio_format]}"
+    end
     
-    return { :num_channels    => header[:num_channels],
+    return { :format          => format,
+             :num_channels    => header[:num_channels],
              :sample_rate     => header[:sample_rate],
              :bits_per_sample => header[:bits_per_sample],
              :block_align     => header[:block_align],
