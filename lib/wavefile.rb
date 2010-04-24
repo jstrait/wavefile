@@ -496,7 +496,7 @@ private
   
   # Assumes that file is "queued up" to the first sample
   def self.read_sample_data(file, num_channels, bits_per_sample, sample_data_size)
-    self.read_sample_data_old(file, num_channels, bits_per_sample, sample_data_size)
+    self.read_sample_data_new(file, num_channels, bits_per_sample, sample_data_size)
   end
   
   def self.read_sample_data_new(file, num_channels, bits_per_sample, sample_data_size)
@@ -513,6 +513,7 @@ private
       multichannel_data = Array.new(num_multichannel_samples)
       
       (0...num_multichannel_samples).each {|i|
+        # TODO: Fix for more than 2 channels
         multichannel_data[i] = [data.pop(), data.pop()]
       }
       
