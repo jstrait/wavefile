@@ -144,8 +144,6 @@ class WaveFile
       file_contents += output_sample_data.pack("C*")
     elsif @bits_per_sample == 16
       file_contents += output_sample_data.pack("s*")
-    else
-      raise StandardError, "Bits per sample is #{@bits_per_samples}, only 8 or 16 are supported"
     end
 
     file = File.open(path, "w")
@@ -166,8 +164,6 @@ class WaveFile
       min_value = 32768.0
       max_value = 32767.0
       midpoint = 0
-    else
-      raise StandardError, "Bits per sample is #{@bits_per_samples}, only 8 or 16 are supported"
     end
     
     if mono?
@@ -210,8 +206,6 @@ class WaveFile
         min_value = 32768.0
         max_value = 32767.0
         midpoint = 0
-      else
-        raise StandardError, "Bits per sample is #{@bits_per_samples}, only 8 or 16 are supported"
       end
       
       if mono?
