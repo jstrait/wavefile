@@ -205,10 +205,16 @@ class WaveFile
     file.close
   end
   
+  # Returns the sample data for the sound. For mono files, sample data is returned as a list on integers.
+  # For files with more than 1 channel, each sample is represented by an Array containing the sample value
+  # for each channel. 
+  # Example mono sample data: [1, 2, 3, 4, 5, 6, 7, 8]
+  # Example stereo sample data: [[1, 2], [3, 4], [5, 6], [7, 8]]
   def sample_data()
     return @sample_data
   end
   
+  # Returns the sample data for the Wave file, but with each sample converted to a Float between -1.0 and 1.0.
   def normalized_sample_data()    
     if @bits_per_sample == 8
       min_value = 128.0
@@ -309,6 +315,10 @@ class WaveFile
     return WaveFile.calculate_duration(@sample_rate, @sample_data.length)
   end
 
+  # Changes the sound's bits per sample. The sample data will be up or down-sampled as a result.
+  # When down-sampling (such as from 16 bits to 8 bits), sound quality can go down. However,
+  # when up-sampling (such as from 8 bits to 16 bits) sound quality DOES NOT improve.
+  # Currently, only 8 and 16 bits per sample are supported.
   def bits_per_sample=(new_bits_per_sample)
     validate_bits_per_sample(new_bits_per_sample)
     
