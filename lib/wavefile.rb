@@ -512,10 +512,6 @@ private
   
   # Assumes that file is "queued up" to the first sample
   def self.read_sample_data(file, num_channels, bits_per_sample, sample_data_size)
-    self.read_sample_data_new(file, num_channels, bits_per_sample, sample_data_size)
-  end
-  
-  def self.read_sample_data_new(file, num_channels, bits_per_sample, sample_data_size)
     if(bits_per_sample == 8)
       data = file.sysread(sample_data_size).unpack("C*")
     elsif(bits_per_sample == 16)
@@ -546,30 +542,6 @@ private
       end
 
       data = multichannel_data.reverse!()
-    end
-    
-    return data
-  end
-  
-  def self.read_sample_data_old(file, num_channels, bits_per_sample, sample_data_size)
-    if(bits_per_sample == 8)
-      data = file.sysread(sample_data_size).unpack("C*")
-    elsif(bits_per_sample == 16)
-      data = file.sysread(sample_data_size).unpack("s*")
-    else
-      data = []
-    end
-    
-    if(num_channels > 1)
-      multichannel_data = []
-      
-      i = 0
-      while i < data.length
-        multichannel_data << data[i...(num_channels + i)]
-        i += num_channels
-      end
-      
-      data = multichannel_data
     end
     
     return data
