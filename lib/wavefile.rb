@@ -528,12 +528,24 @@ private
       num_multichannel_samples = data.length / num_channels
       multichannel_data = Array.new(num_multichannel_samples)
       
-      (0...num_multichannel_samples).each {|i|
-        # TODO: Fix for more than 2 channels
-        multichannel_data[i] = [data.pop(), data.pop()]
-      }
-      
-      data = multichannel_data
+      if(num_channels == 2)
+        # Files with more than 2 channels are expected to be rare, so if there are 2 channels
+        # using a faster specific algorithm instead of a general one.
+        (0...num_multichannel_samples).each {|i|
+          multichannel_data[i] = [data.pop(), data.pop()].reverse!()
+        }
+      else
+        # General algorithm that works for any number of channels, 2 or greater.
+        (0...num_multichannel_samples).each {|i|
+          sample = Array.new(num_channels)
+          num_channels.times {|j|
+            sample[j] = data.pop()
+          }
+          multichannel_data[i] = sample.reverse!()
+        }
+      end
+
+      data = multichannel_data.reverse!()
     end
     
     return data

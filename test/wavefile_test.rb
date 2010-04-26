@@ -65,6 +65,15 @@ class WaveFileTest < Test::Unit::TestCase
     valid = true
     w.sample_data.each{|sample| valid &&= (sample.class == Array) && (sample.length == 2)}
     assert_equal(valid, true)
+    
+    w = WaveFile.open("examples/valid/simple_mono_16.wav")
+    assert_equal([1, 2, 3, 4, 5, 0, 7, 8, 9, 6], w.sample_data)
+    
+    w = WaveFile.open("examples/valid/simple_stereo_16.wav")
+    assert_equal([[1, 2], [3, 4], [5, 0], [7, 8], [9, 10]], w.sample_data)
+    
+    w = WaveFile.open("examples/valid/simple_quad_16.wav")
+    assert_equal([[1, 2, 3, 4], [5, 6, 7, 8], [9, 0, 11, 12], [13, 14, 15, 16], [17, 18, 19, 20]], w.sample_data)
   end
   
   def test_new_file
