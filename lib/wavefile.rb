@@ -46,6 +46,7 @@ The "data" subchunk contains the size of the data and the actual sound:
 =end
 
 class UnsupportedBitsPerSampleError < RuntimeError; end
+class InvalidNumChannelsError < RuntimeError; end
 class UnloadableWaveFileError < RuntimeError; end
 
 class WaveFile
@@ -58,6 +59,7 @@ class WaveFile
   DATA_CHUNK_ID = "data"
   HEADER_SIZE = 36
   SUPPORTED_BITS_PER_SAMPLE = [8, 16]
+  MAX_NUM_CHANNELS = 65535
   
   # Format codes from http://www.signalogic.com/index.pl?page=ms_waveform
   #               and http://www.sonicspot.com/guide/wavefiles.html
@@ -71,6 +73,7 @@ class WaveFile
 
   def initialize(num_channels, sample_rate, bits_per_sample, sample_data = [])
     validate_bits_per_sample(bits_per_sample)
+    validate_num_channels(num_channels)
     
     if num_channels == :mono
       @num_channels = 1
@@ -368,12 +371,14 @@ class WaveFile
   end
   
   def num_channels=(new_num_channels)
+    validate_num_channels(new_num_channels)
+    
     if new_num_channels == :mono
       new_num_channels = 1
     elsif new_num_channels == :stereo
       new_num_channels = 2
     end
-    
+        
     # The cases of mono -> stereo and vice-versa are handled specially,
     # because those conversion methods are faster than the general methods,
     # and the large majority of wave files are expected to be either mono or stereo.    
@@ -500,8 +505,8 @@ private
       errors << "Invalid bits per sample of #{header[:bits_per_sample]}. Only 8 or 16 are supported."
     end
     
-    unless (1..65535) === header[:num_channels]
-      errors << "Invalid number of channels. Must be between 1 and 65535."
+    unless (1..MAX_NUM_CHANNELS) === header[:num_channels]
+      errors << "Invalid number of channels. Must be between 1 and #{MAX_NUM_CHANNELS}."
     end
     
     unless header[:chunk_id] == CHUNK_ID
@@ -596,6 +601,14 @@ private
       raise UnsupportedBitsPerSampleError,
             "Bits per sample of #{candidate_bits_per_sample} is unsupported. " +
             "Only #{SUPPORTED_BITS_PER_SAMPLE.inspect} are supported."
+    end
+  end
+  
+  def validate_num_channels(candidate_num_channels)
+    unless candidate_num_channels == :mono   ||
+           candidate_num_channels == :stereo ||
+           (1..MAX_NUM_CHANNELS) === candidate_num_channels
+      raise InvalidNumChannelsError, "Invalid number of channels. Must be between 1 and #{MAX_NUM_CHANNELS}."
     end
   end
 end

@@ -5,9 +5,6 @@ require 'wavefile'
 
 class WaveFileTest < Test::Unit::TestCase
   def test_initialize
-    # Invalid bits per sample
-    assert_raise(UnsupportedBitsPerSampleError) { w = WaveFile.new(1, 44100, 4) }
-    
     # Valid file without sample data
     w = WaveFile.new(1, 44100, 8)
     assert_equal(w.num_channels, 1)
@@ -25,6 +22,14 @@ class WaveFileTest < Test::Unit::TestCase
     assert_equal(w.byte_rate, 176400)
     assert_equal(w.block_align, 4)
     assert_equal(w.sample_data, [[1, 9], [2, 8], [3, 7], [4, 6], [5, 5]])
+
+    # Invalid bits per sample
+    assert_raise(UnsupportedBitsPerSampleError) { w = WaveFile.new(1, 44100, 4) }
+    
+    # Invalid number of channels
+    assert_raise(InvalidNumChannelsError) { w = WaveFile.new(:foo, 44100, 16) }
+    assert_raise(InvalidNumChannelsError) { w = WaveFile.new(0, 44100, 16) }
+    assert_raise(InvalidNumChannelsError) { w = WaveFile.new(65536, 44100, 16) }
   end
   
   def test_read_empty_file
@@ -338,6 +343,11 @@ class WaveFileTest < Test::Unit::TestCase
   end
   
   def test_num_channels=()
+    # Invalid number of channels
+    assert_raise(InvalidNumChannelsError) { w = WaveFile.new(:foo, 44100, 16) }
+    assert_raise(InvalidNumChannelsError) { w = WaveFile.new(0, 44100, 16) }
+    assert_raise(InvalidNumChannelsError) { w = WaveFile.new(65536, 44100, 16) }
+    
     w = WaveFile.new(:mono, 44100, 16)
     w.sample_data = [-32768, -24576, -16384, -8192, 0, 8256, 16513, 24511, 32767]
     w.num_channels = 2
