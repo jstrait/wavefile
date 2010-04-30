@@ -28,16 +28,16 @@ class WaveFileTest < Test::Unit::TestCase
   end
   
   def test_read_empty_file
-    assert_raise(StandardError) { w = WaveFile.open("examples/invalid/empty.wav") }
+    assert_raise(StandardError) { w = WaveFile.load("examples/invalid/empty.wav") }
   end
   
   def test_read_nonexistent_file
-    assert_raise(Errno::ENOENT) { w = WaveFile.open("examples/invalid/nonexistent.wav") }
+    assert_raise(Errno::ENOENT) { w = WaveFile.load("examples/invalid/nonexistent.wav") }
   end
 
   def test_read_valid_file
     # Mono file
-    w = WaveFile.open("examples/valid/sine-mono-8bit.wav")
+    w = WaveFile.load("examples/valid/sine-mono-8bit.wav")
     assert_equal(w.num_channels, 1)
     assert_equal(w.mono?, true)
     assert_equal(w.stereo?, false)
@@ -52,7 +52,7 @@ class WaveFileTest < Test::Unit::TestCase
     assert_equal(valid, true)
     
     # Stereo file
-    w = WaveFile.open("examples/valid/sine-stereo-8bit.wav")
+    w = WaveFile.load("examples/valid/sine-stereo-8bit.wav")
     assert_equal(w.num_channels, 2)
     assert_equal(w.mono?, false)
     assert_equal(w.stereo?, true)
@@ -66,13 +66,13 @@ class WaveFileTest < Test::Unit::TestCase
     w.sample_data.each{|sample| valid &&= (sample.class == Array) && (sample.length == 2)}
     assert_equal(valid, true)
     
-    w = WaveFile.open("examples/valid/simple_mono_16.wav")
+    w = WaveFile.load("examples/valid/simple_mono_16.wav")
     assert_equal([1, 2, 3, 4, 5, 0, 7, 8, 9, 6], w.sample_data)
     
-    w = WaveFile.open("examples/valid/simple_stereo_16.wav")
+    w = WaveFile.load("examples/valid/simple_stereo_16.wav")
     assert_equal([[1, 2], [3, 4], [5, 0], [7, 8], [9, 10]], w.sample_data)
     
-    w = WaveFile.open("examples/valid/simple_quad_16.wav")
+    w = WaveFile.load("examples/valid/simple_quad_16.wav")
     assert_equal([[1, 2, 3, 4], [5, 6, 7, 8], [9, 0, 11, 12], [13, 14, 15, 16], [17, 18, 19, 20]], w.sample_data)
   end
   
@@ -188,7 +188,7 @@ class WaveFileTest < Test::Unit::TestCase
     w = WaveFile.new(1, 44100, 16)
     assert_equal(w.mono?, true)
     
-    w = WaveFile.open("examples/valid/sine-mono-8bit.wav")
+    w = WaveFile.load("examples/valid/sine-mono-8bit.wav")
     assert_equal(w.mono?, true)
     
     w = WaveFile.new(2, 44100, 16)
@@ -202,7 +202,7 @@ class WaveFileTest < Test::Unit::TestCase
     w = WaveFile.new(1, 44100, 16)
     assert_equal(w.stereo?, false)
     
-    w = WaveFile.open("examples/valid/sine-mono-8bit.wav")
+    w = WaveFile.load("examples/valid/sine-mono-8bit.wav")
     assert_equal(w.stereo?, false)
     
     w = WaveFile.new(2, 44100, 16)
@@ -271,18 +271,18 @@ class WaveFileTest < Test::Unit::TestCase
   
   def test_bits_per_sample=()
     # Set bits_per_sample to invalid value (non-8 or non-16)
-    w = WaveFile.open("examples/valid/sine-mono-8bit.wav")
+    w = WaveFile.load("examples/valid/sine-mono-8bit.wav")
     assert_raise(UnsupportedBitsPerSampleError) { w.bits_per_sample = 20 }
     w = WaveFile.new(:mono, 44100, 16)
     assert_raise(UnsupportedBitsPerSampleError) { w.bits_per_sample = 4 }
     
-    w_before = WaveFile.open("examples/valid/sine-mono-8bit.wav")
-    w_after = WaveFile.open("examples/valid/sine-mono-8bit.wav")
+    w_before = WaveFile.load("examples/valid/sine-mono-8bit.wav")
+    w_after = WaveFile.load("examples/valid/sine-mono-8bit.wav")
     w_after.bits_per_sample = 8
     assert_equal(w_before.sample_data, w_after.sample_data)
     
-    w_before = WaveFile.open("examples/valid/sine-stereo-8bit.wav")
-    w_after = WaveFile.open("examples/valid/sine-stereo-8bit.wav")
+    w_before = WaveFile.load("examples/valid/sine-stereo-8bit.wav")
+    w_after = WaveFile.load("examples/valid/sine-stereo-8bit.wav")
     w_after.bits_per_sample = 8
     assert_equal(w_before.sample_data, w_after.sample_data)
     
@@ -318,16 +318,16 @@ class WaveFileTest < Test::Unit::TestCase
                                  [160, 96], [192, 64], [223, 32], [255, 0]])
     
     # Open 8 bit mono, convert to 16 bit, back to 8 bit.
-    w_before = WaveFile.open("examples/valid/sine-mono-8bit.wav")
-    w_after = WaveFile.open("examples/valid/sine-mono-8bit.wav")
+    w_before = WaveFile.load("examples/valid/sine-mono-8bit.wav")
+    w_after = WaveFile.load("examples/valid/sine-mono-8bit.wav")
     w_after.bits_per_sample = 16
     assert_not_equal(w_before.sample_data, w_after.sample_data)
     w_after.bits_per_sample = 8
     assert_equal(w_before.sample_data, w_after.sample_data)
     
     # Open 8 bit stereo, convert to 16 bit, back to 8 bit.
-    w_before = WaveFile.open("examples/valid/sine-stereo-8bit.wav")
-    w_after = WaveFile.open("examples/valid/sine-stereo-8bit.wav")
+    w_before = WaveFile.load("examples/valid/sine-stereo-8bit.wav")
+    w_after = WaveFile.load("examples/valid/sine-stereo-8bit.wav")
     w_after.bits_per_sample = 16
     assert_not_equal(w_before.sample_data, w_after.sample_data)
     w_after.bits_per_sample = 8

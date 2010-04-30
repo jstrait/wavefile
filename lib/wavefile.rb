@@ -87,7 +87,7 @@ class WaveFile
     @block_align = @num_channels * bytes_per_sample
   end
   
-  def self.open(path)
+  def self.load(path)
     file = File.open(path, "rb")
     
     begin
@@ -115,7 +115,13 @@ class WaveFile
       file.close()
     end
     
-    return wave_file
+    return wave_file    
+  end
+  
+  # <b>DEPRECATED:</b> Please use <tt>load</tt> instead.
+  def self.open(path)
+    warn "[DEPRECATION] `open` is deprecated.  Please use `load` instead."
+    self.load(path)
   end
 
   def save(path)
