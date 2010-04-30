@@ -46,6 +46,7 @@ The "data" subchunk contains the size of the data and the actual sound:
 =end
 
 class UnsupportedBitsPerSampleError < RuntimeError; end
+class UnloadableWaveFileError < RuntimeError; end
 
 class WaveFile
   WAVEFILE_VERSION = "0.4.0a"
@@ -107,7 +108,7 @@ class WaveFile
       else
         error_msg = "#{path} can't be opened, due to the following errors:\n"
         errors.each {|error| error_msg += "  * #{error}\n" }
-        raise StandardError, error_msg
+        raise UnloadableWaveFileError, error_msg
       end
     rescue EOFError
       raise StandardError, "An error occured while reading #{path}."
