@@ -597,7 +597,7 @@ private
   end
   
   def validate_bits_per_sample(candidate_bits_per_sample)
-    if !SUPPORTED_BITS_PER_SAMPLE.member?(candidate_bits_per_sample)
+    unless SUPPORTED_BITS_PER_SAMPLE.member?(candidate_bits_per_sample)
       raise UnsupportedBitsPerSampleError,
             "Bits per sample of #{candidate_bits_per_sample} is unsupported. " +
             "Only #{SUPPORTED_BITS_PER_SAMPLE.inspect} are supported."
