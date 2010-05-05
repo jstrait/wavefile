@@ -227,13 +227,9 @@ class WaveFile
   # Returns the sample data for the Wave file, but with each sample converted to a Float between -1.0 and 1.0.
   def normalized_sample_data()    
     if @bits_per_sample == 8
-      min_value = 128.0
-      max_value = 127.0
-      midpoint = 128
+      min_value, max_value, midpoint = 128.0, 127.0, 128
     elsif @bits_per_sample == 16
-      min_value = 32768.0
-      max_value = 32767.0
-      midpoint = 0
+      min_value, max_value, midpoint = 32768.0, 32767.0, 0
     end
     
     if mono?
@@ -267,15 +263,11 @@ class WaveFile
       if @bits_per_sample == 8
         # Samples in 8-bit wave files are stored as a unsigned byte
         # Effective values are 0 to 255, midpoint at 128
-        min_value = 128.0
-        max_value = 127.0
-        midpoint = 128
+        min_value, max_value, midpoint = 128.0, 127.0, 128
       elsif @bits_per_sample == 16
         # Samples in 16-bit wave files are stored as a signed little-endian short
         # Effective values are -32768 to 32767, midpoint at 0
-        min_value = 32768.0
-        max_value = 32767.0
-        midpoint = 0
+        min_value, max_value, midpoint = 32768.0, 32767.0, 0
       end
       
       if mono?
