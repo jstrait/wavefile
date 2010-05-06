@@ -58,7 +58,7 @@ class WaveFile
   PCM = 1
   DATA_CHUNK_ID = "data"
   HEADER_SIZE = 36
-  SUPPORTED_BITS_PER_SAMPLE = [8, 16]
+  SUPPORTED_BITS_PER_SAMPLE = [8, 16, 32]
   MAX_NUM_CHANNELS = 65535
   
   # Format codes from http://www.signalogic.com/index.pl?page=ms_waveform
@@ -161,6 +161,8 @@ class WaveFile
       pack_code = "C*"
     elsif @bits_per_sample == 16
       pack_code = "s*"
+    elsif @bits_per_sample == 32
+      pack_code = "V*"
     end
     
     if @num_channels == 1
@@ -208,6 +210,8 @@ class WaveFile
       file_contents += output_sample_data.pack("C*")
     elsif @bits_per_sample == 16
       file_contents += output_sample_data.pack("s*")
+    elsif @bits_per_sample == 32
+      file_contents += output_sample_data.pack("V*")
     end
 
     file = File.open(path, "w")
@@ -230,6 +234,8 @@ class WaveFile
       min_value, max_value, midpoint = 128.0, 127.0, 128
     elsif @bits_per_sample == 16
       min_value, max_value, midpoint = 32768.0, 32767.0, 0
+    elsif @bits_per_sample == 32
+      min_value, max_value, midpoint = 2147483648.0, 2147483647.0, 0
     end
     
     if mono?
@@ -268,6 +274,8 @@ class WaveFile
         # Samples in 16-bit wave files are stored as a signed little-endian short
         # Effective values are -32768 to 32767, midpoint at 0
         min_value, max_value, midpoint = 32768.0, 32767.0, 0
+      elsif @bits_per_sample == 32
+        min_value, max_value, midpoint = 2147483648.0, 2147483647.0, 0
       end
       
       if mono?
@@ -323,6 +331,8 @@ class WaveFile
   # Currently, only 8 and 16 bits per sample are supported.
   def bits_per_sample=(new_bits_per_sample)
     validate_bits_per_sample(new_bits_per_sample)
+    
+    ### TODO: Add support for converting to/from 32-bit
     
     transformation = { @bits_per_sample => new_bits_per_sample }
     
@@ -494,7 +504,7 @@ private
     errors = []
     
     unless SUPPORTED_BITS_PER_SAMPLE.member?header[:bits_per_sample]
-      errors << "Invalid bits per sample of #{header[:bits_per_sample]}. Only 8 or 16 are supported."
+      errors << "Invalid bits per sample of #{header[:bits_per_sample]}. Only 8, 16, and 32 are supported."
     end
     
     unless (1..MAX_NUM_CHANNELS) === header[:num_channels]
@@ -530,6 +540,8 @@ private
       data = file.sysread(sample_data_size).unpack("C*")
     elsif(bits_per_sample == 16)
       data = file.sysread(sample_data_size).unpack("s*")
+    elsif(bits_per_sample == 32)
+      data = file.sysread(sample_data_size).unpack("V*")
     else
       data = []
     end
