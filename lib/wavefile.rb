@@ -222,8 +222,8 @@ class WaveFile
   # Returns the sample data for the sound. For mono files, sample data is returned as a list on integers.
   # For files with more than 1 channel, each sample is represented by an Array containing the sample value
   # for each channel. 
-  # Example mono sample data: [1, 2, 3, 4, 5, 6, 7, 8]
-  # Example stereo sample data: [[1, 2], [3, 4], [5, 6], [7, 8]]
+  # * Example mono sample data: <code>[1, 2, 3, 4, 5, 6, 7, 8]</code>
+  # * Example stereo sample data: <code>[[1, 2], [3, 4], [5, 6], [7, 8]]</code>
   def sample_data()
     return @sample_data
   end
@@ -263,7 +263,18 @@ class WaveFile
     return normalized_sample_data
   end
   
+  # Replaces the sample data with new sample data. Sample data should be passed in as an Array, and can
+  # either be raw or normalized. If the first item in the array is a Float, the data is assumed to be
+  # normalized and each sample should be between -1.0 and 1.0 inclusive. Normalized sample data will
+  # automatically be converted to the correct raw format based on the current value of bits_per_sample.
+  # If the first item in the array is an Integer, the data is assumed to be raw. In this case, each sample
+  # should be within these ranges depending on the current value of bits_per_sample:
+  # * 8-bit:  0 to 255
+  # * 16-bit: -32768 to 32767
+  # * 32-bit: -2147483648 to 2147483647
   def sample_data=(sample_data)
+    # TODO: Add validation that samples are within correct range
+    
     if sample_data.length > 0 && ((mono? && sample_data[0].class == Float) ||
                                   (!mono? && sample_data[0][0].class == Float))
       if @bits_per_sample == 8
@@ -302,12 +313,12 @@ class WaveFile
     end
   end
 
-  # Returns true if this is a monophonic file (i.e., it has 1 channel), false otherwise.
+  # Returns true if this is a monophonic file (i.e., num_channels == 1), false otherwise.
   def mono?()
     return num_channels == 1
   end
   
-  # Returns true if this is a stereo file (i.e., it has 2 channels), false otherwise.
+  # Returns true if this is a stereo file (i.e., num_channels == 2), false otherwise.
   def stereo?()
     return num_channels == 2
   end
@@ -320,7 +331,7 @@ class WaveFile
   # Returns a hash describing the duration of the file's sound, given the current sample data and sample rate.
   # The hash contains an hour, minute, second, and millisecond component.
   # For example if there are 66150 samples and the sample rate is 44100, the following will be returned:
-  # {:hours => 0, :minutes => 0, :seconds => 1, :milliseconds => 500}
+  # <code>{:hours => 0, :minutes => 0, :seconds => 1, :milliseconds => 500}</code>
   def duration()
     return WaveFile.calculate_duration(@sample_rate, @sample_data.length)
   end
@@ -372,6 +383,14 @@ class WaveFile
     @bits_per_sample = new_bits_per_sample
   end
   
+  # Changes the WaveFile's number of channels. Number of channels can either be specified by an integer
+  # between 1 and MAX_NUM_CHANNELS, or :mono for 1 channel, or :stereo for 2 channels.
+  # Calling this method will modify any existing sample data. If a mono file is converted to having 2 or
+  # more channels, the sample data will be duplicated for each new channel.
+  # * Example of mono to stereo: <code>[1, 2, 3, 4] -> [[1, 1], [2, 2], [3, 3], [4, 4]]</code>
+  # If a file with 2 or more channels is changed to mono, each sample will be mixed down to mono by averaging.
+  # * Example of stereo to mono: <code>[[10, 0], [27, 13], [-4, 2], [20, -5]] -> [5, 20, -1, 7]</code>
+  # Currently, converting from 2 channels to more than 2 channels is unsupported.
   def num_channels=(new_num_channels)
     validate_num_channels(new_num_channels)
     
@@ -383,7 +402,8 @@ class WaveFile
         
     # The cases of mono -> stereo and vice-versa are handled specially,
     # because those conversion methods are faster than the general methods,
-    # and the large majority of wave files are expected to be either mono or stereo.    
+    # and the large majority of wave files are expected to be either mono or stereo.
+    # TODO: What about 2 or more channels converted to 2 or more channels?
     if @num_channels == 1 && new_num_channels == 2
       sample_data.map! {|sample| [sample, sample]}
     elsif @num_channels == 2 && new_num_channels == 1
@@ -414,7 +434,7 @@ class WaveFile
   # Returns a hash containing metadata about the Wave file at path.
   # The hash returned is of the same format as the instance method info.
   # An advantage of this method is that it allows you to retreive metadata for files that WaveFile is not
-  # necessarily able to fully open (for example, because it has an unsupported bits per sample).
+  # necessarily able to fully load (for example, because it has an unsupported bits per sample).
   def self.info(path)
     file = File.open(path, "rb")
     
