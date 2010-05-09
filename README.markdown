@@ -4,7 +4,7 @@ A Ruby gem for reading and writing wave files (*.wav).
 
 First, install the WaveFile gem...
 
-    gem install wavefile
+    sudo gem install wavefile
 
 ...and include it in your Ruby program:
 
