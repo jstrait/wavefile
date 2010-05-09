@@ -1,8 +1,18 @@
-A Ruby gem for reading and writing wave files (*.wav).
+A pure Ruby gem for reading and writing sound files in Wave format (*.wav).
+
+# Current Status
+
+The latest stable version in 0.3.0. Currently, version 0.4.0 is under development, so code on the trunk is not necessarily guaranteed to stay stable from day to day. The following improvements are currently planned for 0.4.0:
+
+* Support for 32-bit files, and _possibly_ 24-bit files.
+* Addition of info() instance and class methods, which returns a hash containing metadata about a Wave file (including Wave files that are in an unsupported format).
+* General bug fixes and improved validation.
+* RDOCing it.
+* Possible performance improvements.
 
 # Installation
 
-First, install the WaveFile gem...
+First, install the WaveFile gem from rubygems.org:
 
     sudo gem install wavefile
 
