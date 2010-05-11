@@ -341,43 +341,72 @@ class WaveFile
   # when up-sampling (such as from 8 bits to 16 bits) sound quality DOES NOT improve.
   # Currently, only 8 and 16 bits per sample are supported.
   def bits_per_sample=(new_bits_per_sample)
+    if(new_bits_per_sample == @bits_per_sample)
+      return
+    end
     validate_bits_per_sample(new_bits_per_sample)
     
-    ### TODO: Add support for converting to/from 32-bit
+    if(@bits_per_sample > new_bits_per_sample)
+      positive_factor = ((2 ** @bits_per_sample - 1) - 1.0) / ((2 ** new_bits_per_sample - 1) - 1.0)
+    else
+      positive_factor = ((2 ** new_bits_per_sample - 1) - 1.0) / ((2 ** @bits_per_sample - 1) - 1.0)
+    end
+    negative_factor = 2 ** (@bits_per_sample - new_bits_per_sample).abs
     
-    transformation = { @bits_per_sample => new_bits_per_sample }
-    
-    if transformation == { 16 => 8 }
+    if(@bits_per_sample == 8 && new_bits_per_sample == 16)
       conversion_func = lambda {|sample|
-        if(sample < 0)
-          (sample / 256) + 128
+        if(sample < 128)
+          ((sample - 128) * negative_factor)
         else
-          # Faster to just divide by integer 258?
-          (sample / 258.007874015748031).round + 128
+          ((sample - 128) * positive_factor).round
         end
       }
-
-      if mono?
-        @sample_data.map! &conversion_func
-      else
-        sample_data.map! {|sample| sample.map! &conversion_func }
-      end
-    elsif transformation == { 8 => 16 }
+    elsif(@bits_per_sample == 8 && new_bits_per_sample == 32)
       conversion_func = lambda {|sample|
-        sample -= 128
-        if(sample < 0)
-          sample * 256
+        if(sample < 128)
+          ((sample - 128) * negative_factor)
         else
-          # Faster to just multiply by integer 258?
-          (sample * 258.007874015748031).round
+          ((sample - 128) * positive_factor).round
         end
       }
-      
-      if mono?
-        @sample_data.map! &conversion_func
-      else
-        sample_data.map! {|sample| sample.map! &conversion_func }
-      end
+    elsif(@bits_per_sample == 16 && new_bits_per_sample == 8)
+      conversion_func = lambda {|sample|
+        if(sample < 0)
+          (sample / negative_factor) + 128
+        else
+          (sample / positive_factor).round + 128
+        end
+      }
+    elsif(@bits_per_sample == 16 && new_bits_per_sample == 32)
+      conversion_func = lambda {|sample|
+        if(sample < 0)
+          sample * negative_factor
+        else
+          (sample * positive_factor).round
+        end
+      }
+    elsif(@bits_per_sample == 32 && new_bits_per_sample == 8)
+      conversion_func = lambda {|sample|
+        if(sample < 0)
+          (sample / negative_factor) + 128
+        else
+          (sample / positive_factor).round + 128
+        end
+      }
+    elsif(@bits_per_sample == 32 && new_bits_per_sample == 16)
+      conversion_func = lambda {|sample|
+        if(sample < 0)
+          sample / negative_factor
+        else
+          (sample / positive_factor).round
+        end
+      }
+    end
+    
+    if mono?
+      @sample_data.map! &conversion_func
+    else
+      sample_data.map! {|sample| sample.map! &conversion_func }
     end
     
     @bits_per_sample = new_bits_per_sample
