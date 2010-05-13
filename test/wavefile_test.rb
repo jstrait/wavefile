@@ -7,25 +7,25 @@ class WaveFileTest < Test::Unit::TestCase
   def test_initialize
     # Valid file without sample data
     w = WaveFile.new(1, 44100, 8)
-    assert_equal(w.num_channels, 1)
-    assert_equal(w.sample_rate, 44100)
-    assert_equal(w.bits_per_sample, 8)
-    assert_equal(w.byte_rate, 44100)
-    assert_equal(w.block_align, 1)
-    assert_equal(w.sample_data, [])
+    assert_equal(1, w.num_channels)
+    assert_equal(44100, w.sample_rate)
+    assert_equal(8, w.bits_per_sample)
+    assert_equal(44100, w.byte_rate)
+    assert_equal(1, w.block_align)
+    assert_equal([], w.sample_data)
     
     # Valid file with sample data
     w = WaveFile.new(2, 44100, 16, [[1, 9], [2, 8], [3, 7], [4, 6], [5, 5]])
-    assert_equal(w.num_channels, 2)
-    assert_equal(w.sample_rate, 44100)
-    assert_equal(w.bits_per_sample, 16)
-    assert_equal(w.byte_rate, 176400)
-    assert_equal(w.block_align, 4)
-    assert_equal(w.sample_data, [[1, 9], [2, 8], [3, 7], [4, 6], [5, 5]])
+    assert_equal(2, w.num_channels)
+    assert_equal(44100, w.sample_rate)
+    assert_equal(16, w.bits_per_sample)
+    assert_equal(176400, w.byte_rate)
+    assert_equal(4, w.block_align)
+    assert_equal([[1, 9], [2, 8], [3, 7], [4, 6], [5, 5]], w.sample_data)
 
     # Valid 32-bit file
     w = WaveFile.new(2, 44100, 32)
-    assert_equal(w.bits_per_sample, 32)
+    assert_equal(32, w.bits_per_sample)
 
     # Invalid bits per sample
     assert_raise(UnsupportedBitsPerSampleError) { w = WaveFile.new(1, 44100, 4) }
@@ -47,33 +47,33 @@ class WaveFileTest < Test::Unit::TestCase
   def test_read_valid_file
     # Mono file
     w = WaveFile.load("examples/valid/sine-mono-8bit.wav")
-    assert_equal(w.num_channels, 1)
-    assert_equal(w.mono?, true)
-    assert_equal(w.stereo?, false)
-    assert_equal(w.sample_rate, 44100)
-    assert_equal(w.bits_per_sample, 8)
-    assert_equal(w.byte_rate, 44100)
-    assert_equal(w.block_align, 1)
-    assert_equal(w.sample_data.length, 44100)
+    assert_equal(1, w.num_channels)
+    assert_equal(true, w.mono?)
+    assert_equal(false, w.stereo?)
+    assert_equal(44100, w.sample_rate)
+    assert_equal(8, w.bits_per_sample)
+    assert_equal(44100, w.byte_rate)
+    assert_equal(1, w.block_align)
+    assert_equal(44100, w.sample_data.length)
     # Test that sample array is in format [sample, sample ... sample]
     valid = true
     w.sample_data.each{|sample| valid &&= (sample.class == Fixnum)}
-    assert_equal(valid, true)
+    assert_equal(true, valid)
     
     # Stereo file
     w = WaveFile.load("examples/valid/sine-stereo-8bit.wav")
-    assert_equal(w.num_channels, 2)
-    assert_equal(w.mono?, false)
-    assert_equal(w.stereo?, true)
-    assert_equal(w.sample_rate, 44100)
-    assert_equal(w.bits_per_sample, 8)
-    assert_equal(w.byte_rate, 88200)
-    assert_equal(w.block_align, 2)
-    assert_equal(w.sample_data.length, 44100)
+    assert_equal(2, w.num_channels)
+    assert_equal(false, w.mono?)
+    assert_equal(true, w.stereo?)
+    assert_equal(44100, w.sample_rate)
+    assert_equal(8, w.bits_per_sample)
+    assert_equal(88200, w.byte_rate)
+    assert_equal(2, w.block_align)
+    assert_equal(44100, w.sample_data.length)
     # Test that sample array is in format [[left, right], [left, right] ... [left,right]]
     valid = true
     w.sample_data.each{|sample| valid &&= (sample.class == Array) && (sample.length == 2)}
-    assert_equal(valid, true)
+    assert_equal(true, valid)
     
     w = WaveFile.load("examples/valid/simple_mono_16.wav")
     assert_equal([1, 2, 3, 4, 5, 0, 7, 8, 9, 6], w.sample_data)
@@ -88,164 +88,171 @@ class WaveFileTest < Test::Unit::TestCase
   def test_new_file
     # Mono
     w = WaveFile.new(1, 44100, 8)
-    assert_equal(w.num_channels, 1)
-    assert_equal(w.sample_rate, 44100)
-    assert_equal(w.bits_per_sample, 8)
-    assert_equal(w.byte_rate, 44100)
-    assert_equal(w.block_align, 1)
+    assert_equal(1, w.num_channels)
+    assert_equal(44100, w.sample_rate)
+    assert_equal(8, w.bits_per_sample)
+    assert_equal(44100, w.byte_rate)
+    assert_equal(1, w.block_align)
     
     # Mono
     w = WaveFile.new(:mono, 44100, 8)
-    assert_equal(w.num_channels, 1)
-    assert_equal(w.sample_rate, 44100)
-    assert_equal(w.bits_per_sample, 8)
-    assert_equal(w.byte_rate, 44100)
-    assert_equal(w.block_align, 1)
+    assert_equal(1, w.num_channels)
+    assert_equal(44100, w.sample_rate)
+    assert_equal(8, w.bits_per_sample)
+    assert_equal(44100, w.byte_rate)
+    assert_equal(1, w.block_align)
     
     # Stereo
     w = WaveFile.new(2, 44100, 16)
-    assert_equal(w.num_channels, 2)
-    assert_equal(w.sample_rate, 44100)
-    assert_equal(w.bits_per_sample, 16)
-    assert_equal(w.byte_rate, 176400)
-    assert_equal(w.block_align, 4)
+    assert_equal(2, w.num_channels)
+    assert_equal(44100, w.sample_rate)
+    assert_equal(16, w.bits_per_sample)
+    assert_equal(176400, w.byte_rate)
+    assert_equal(4, w.block_align)
     
     # Stereo
     w = WaveFile.new(:stereo, 44100, 16)
-    assert_equal(w.num_channels, 2)
-    assert_equal(w.sample_rate, 44100)
-    assert_equal(w.bits_per_sample, 16)
-    assert_equal(w.byte_rate, 176400)
-    assert_equal(w.block_align, 4)
+    assert_equal(2, w.num_channels)
+    assert_equal(44100, w.sample_rate)
+    assert_equal(16, w.bits_per_sample)
+    assert_equal(176400, w.byte_rate)
+    assert_equal(4, w.block_align)
     
     # Quad
     w = WaveFile.new(4, 44100, 16)
-    assert_equal(w.num_channels, 4)
-    assert_equal(w.sample_rate, 44100)
-    assert_equal(w.bits_per_sample, 16)
-    assert_equal(w.byte_rate, 352800)
-    assert_equal(w.block_align, 8)
+    assert_equal(4, w.num_channels)
+    assert_equal(44100, w.sample_rate)
+    assert_equal(16, w.bits_per_sample)
+    assert_equal(352800, w.byte_rate)
+    assert_equal(8, w.block_align)
   end
   
   def test_normalized_sample_data
     # Mono 8-bit
     w = WaveFile.new(:mono, 44100, 8)
     w.sample_data = [0, 32, 64, 96, 128, 160, 192, 223, 255]
-    assert_equal(w.normalized_sample_data, [-1.0, -0.75, -0.5, -0.25, 0.0,
-                                            (32.0 / 127.0), (64.0 / 127.0), (95.0 / 127.0), 1.0])
+    assert_equal([-1.0, -0.75, -0.5, -0.25, 0.0, (32.0 / 127.0), (64.0 / 127.0), (95.0 / 127.0), 1.0],
+                 w.normalized_sample_data)
     
     # Mono 16-bit
     w = WaveFile.new(:mono, 44100, 16)
     w.sample_data = [-32768, -24576, -16384, -8192, 0, 8192, 16383, 24575, 32767]
-    assert_equal(w.normalized_sample_data, [-1.0, -0.75, -0.5, -0.25, 0.0,
-                                            (8192.0 / 32767.0), (16383.0 / 32767.0), (24575.0 / 32767.0), 1.0])
+    assert_equal([-1.0, -0.75, -0.5, -0.25, 0.0, (8192.0 / 32767.0), (16383.0 / 32767.0), (24575.0 / 32767.0), 1.0],
+                 w.normalized_sample_data)
     
     # Mono 32-bit
     w = WaveFile.new(:mono, 44100, 32)
     w. sample_data = [-2147483648, -1610612736, -1073741824, -536870912, 0,
                        536870912, 1073741824, 1610612735, 2147483647]
-    assert_equal(w.normalized_sample_data, [-1.0, -0.75, -0.5, -0.25, 0.0,
-                                            (536870912.0 / 2147483647.0), (1073741824.0 / 2147483647.0), (1610612735.0 / 2147483647.0), 1.0])
+    assert_equal([-1.0, -0.75, -0.5, -0.25, 0.0,
+                  (536870912.0 / 2147483647.0), (1073741824.0 / 2147483647.0), (1610612735.0 / 2147483647.0), 1.0],
+                 w.normalized_sample_data)
     
     # Stereo 8-bit
     w = WaveFile.new(:stereo, 44100, 8)
     w.sample_data = [[0, 255], [32, 223], [64, 192], [96, 160], [128, 128], [160, 96], [192, 64], [223, 32], [255, 0]]
-    assert_equal(w.normalized_sample_data, [[-1.0, 1.0],
-                                            [-0.75, (95.0 / 127.0)],
-                                            [-0.5, (64.0 / 127.0)],
-                                            [-0.25, (32.0 / 127.0)],
-                                            [0.0, 0.0],
-                                            [(32.0 / 127.0), -0.25],
-                                            [(64.0 / 127.0), -0.5],
-                                            [(95.0 / 127.0), -0.75],
-                                            [1.0, -1.0]])
+    assert_equal([[-1.0, 1.0],
+                  [-0.75, (95.0 / 127.0)],
+                  [-0.5, (64.0 / 127.0)],
+                  [-0.25, (32.0 / 127.0)],
+                  [0.0, 0.0],
+                  [(32.0 / 127.0), -0.25],
+                  [(64.0 / 127.0), -0.5],
+                  [(95.0 / 127.0), -0.75],
+                  [1.0, -1.0]],
+                 w.normalized_sample_data)
     
     # Stereo 16-bit
     w = WaveFile.new(:stereo, 44100, 16)
     w.sample_data = [[-32768, 32767], [-24576, 24575], [-16384, 16384], [-8192, 8192], [0, 0], [8192, -8192], [16384, -16384], [24575, -24576], [32767, -32768]]
-    assert_equal(w.normalized_sample_data, [[-1.0, 1.0],
-                                            [-0.75, (24575.0 / 32767.0)],
-                                            [-0.5, (16384.0 / 32767.0)],
-                                            [-0.25, (8192.0 / 32767.0)],
-                                            [0.0, 0.0],
-                                            [(8192.0 / 32767.0), -0.25],
-                                            [(16384.0 / 32767.0), -0.5],
-                                            [(24575.0 / 32767.0), -0.75],
-                                            [1.0, -1.0]])
+    assert_equal([[-1.0, 1.0],
+                  [-0.75, (24575.0 / 32767.0)],
+                  [-0.5, (16384.0 / 32767.0)],
+                  [-0.25, (8192.0 / 32767.0)],
+                  [0.0, 0.0],
+                  [(8192.0 / 32767.0), -0.25],
+                  [(16384.0 / 32767.0), -0.5],
+                  [(24575.0 / 32767.0), -0.75],
+                  [1.0, -1.0]],
+                 w.normalized_sample_data)
     
     # Stereo 32-bit
     w = WaveFile.new(:stereo, 44100, 32)
     w. sample_data = [[-2147483648, 2147483647], [-1610612736, 1610612735], [-1073741824, 1073741824], [-536870912, 536870912], [0, 0],
                       [536870912, -536870912], [1073741824, -1073741824], [1610612735, -1610612736], [2147483647, -2147483648]]
-    assert_equal(w.normalized_sample_data, [[-1.0, 1.0], [-0.75, (1610612735.0 / 2147483647.0)], [-0.5, (1073741824.0 / 2147483647.0)], [-0.25, (536870912.0 / 2147483647.0)], [0.0, 0.0],
-                                            [(536870912.0 / 2147483647.0), -0.25], [(1073741824.0 / 2147483647.0), -0.5], [(1610612735.0 / 2147483647.0), -0.75], [1.0, -1.0]])
+    assert_equal([[-1.0, 1.0], [-0.75, (1610612735.0 / 2147483647.0)], [-0.5, (1073741824.0 / 2147483647.0)], [-0.25, (536870912.0 / 2147483647.0)], [0.0, 0.0],
+                  [(536870912.0 / 2147483647.0), -0.25], [(1073741824.0 / 2147483647.0), -0.5], [(1610612735.0 / 2147483647.0), -0.75], [1.0, -1.0]],
+                 w.normalized_sample_data)
   end
   
   def test_sample_data=
     # Mono 8-bit
     w = WaveFile.new(:mono, 44100, 8)
     w.sample_data = [-1.0, -0.75, -0.5, -0.25, 0.0, 0.25, 0.5, 0.75, 1.0]
-    assert_equal(w.sample_data, [0, 32, 64, 96, 128, 160, 192, 223, 255])
+    assert_equal([0, 32, 64, 96, 128, 160, 192, 223, 255], w.sample_data)
     
     # Mono 16-bit
     w = WaveFile.new(:mono, 44100, 16)
     w.sample_data = [-1.0, -0.75, -0.5, -0.25, 0.0, 0.25, 0.5, 0.75, 1.0]
-    assert_equal(w.sample_data, [-32768, -24576, -16384, -8192, 0, 8192, 16384, 24575, 32767])
+    assert_equal([-32768, -24576, -16384, -8192, 0, 8192, 16384, 24575, 32767], w.sample_data)
     
     # Mono 32-bit
     w = WaveFile.new(:mono, 44100, 32)
     w.sample_data = [-1.0, -0.75, -0.5, -0.25, 0.0, 0.25, 0.5, 0.75, 1.0]
-    assert_equal(w.sample_data, [-2147483648, -1610612736, -1073741824, -536870912, 0,
-                                 536870912, 1073741824, 1610612735, 2147483647])
+    assert_equal([-2147483648, -1610612736, -1073741824, -536870912, 0, 536870912, 1073741824, 1610612735, 2147483647],
+                 w.sample_data)
     
     # Stereo 8-bit
     w = WaveFile.new(:stereo, 44100, 8)
     w.sample_data = [[-1.0, 1.0], [-0.75, 0.75], [-0.5, 0.5], [-0.25, 0.25], [0.0, 0.0],
                      [0.25, -0.25], [0.5, -0.5], [0.75, -0.75], [1.0, -1.0]]
-    assert_equal(w.sample_data, [[0, 255], [32, 223], [64, 192], [96, 160], [128, 128],
-                                 [160, 96], [192, 64], [223, 32], [255, 0]])
+    assert_equal([[0, 255], [32, 223], [64, 192], [96, 160], [128, 128],
+                  [160, 96], [192, 64], [223, 32], [255, 0]],
+                 w.sample_data)
     
     # Stereo 16-bit
     w = WaveFile.new(:stereo, 44100, 16)
     w.sample_data = [[-1.0, 1.0], [-0.75, 0.75], [-0.5, 0.5], [-0.25, 0.25], [0.0, 0.0],
                      [0.25, -0.25], [0.5, -0.5], [0.75, -0.75], [1.0, -1.0]]
-    assert_equal(w.sample_data, [[-32768, 32767], [-24576, 24575], [-16384, 16384], [-8192, 8192], [0, 0],
-                                 [8192, -8192], [16384, -16384], [24575, -24576], [32767, -32768]])
+    assert_equal([[-32768, 32767], [-24576, 24575], [-16384, 16384], [-8192, 8192], [0, 0],
+                  [8192, -8192], [16384, -16384], [24575, -24576], [32767, -32768]],
+                 w.sample_data)
     
     # Stereo 32-bit
     w = WaveFile.new(:stereo, 44100, 32)
     w.sample_data = [[-1.0, 1.0], [-0.75, 0.75], [-0.5, 0.5], [-0.25, 0.25], [0.0, 0.0],
                      [0.25, -0.25], [0.5, -0.5], [0.75, -0.75], [1.0, -1.0]]
-    assert_equal(w.sample_data, [[-2147483648, 2147483647], [-1610612736, 1610612735], [-1073741824, 1073741824], [-536870912, 536870912], [0, 0],
-                                 [536870912, -536870912], [1073741824, -1073741824], [1610612735, -1610612736], [2147483647, -2147483648]])
+    assert_equal([[-2147483648, 2147483647], [-1610612736, 1610612735], [-1073741824, 1073741824], [-536870912, 536870912], [0, 0],
+                  [536870912, -536870912], [1073741824, -1073741824], [1610612735, -1610612736], [2147483647, -2147483648]],
+                 w.sample_data)
   end
   
   def test_mono?
     w = WaveFile.new(1, 44100, 16)
-    assert_equal(w.mono?, true)
+    assert_equal(true, w.mono?)
     
     w = WaveFile.load("examples/valid/sine-mono-8bit.wav")
-    assert_equal(w.mono?, true)
+    assert_equal(true, w.mono?)
     
     w = WaveFile.new(2, 44100, 16)
-    assert_equal(w.mono?, false)
+    assert_equal(false, w.mono?)
     
     w = WaveFile.new(4, 44100, 16)
-    assert_equal(w.mono?, false)
+    assert_equal(false, w.mono?)
   end
   
   def test_stereo?
     w = WaveFile.new(1, 44100, 16)
-    assert_equal(w.stereo?, false)
+    assert_equal(false, w.stereo?)
     
     w = WaveFile.load("examples/valid/sine-mono-8bit.wav")
-    assert_equal(w.stereo?, false)
+    assert_equal(false, w.stereo?)
     
     w = WaveFile.new(2, 44100, 16)
-    assert_equal(w.stereo?, true)
+    assert_equal(true, w.stereo?)
     
     w = WaveFile.new(4, 44100, 16)
-    assert_equal(w.stereo?, false)
+    assert_equal(false, w.stereo?)
   end
   
   def test_reverse
@@ -253,13 +260,13 @@ class WaveFileTest < Test::Unit::TestCase
     w = WaveFile.new(:mono, 44100, 16)
     w.sample_data = [1, 2, 3, 4, 5]
     w.reverse
-    assert_equal(w.sample_data, [5, 4, 3, 2, 1])
+    assert_equal([5, 4, 3, 2, 1], w.sample_data)
   
     # Stereo
     w = WaveFile.new(:stereo, 44100, 16)
     w.sample_data = [[1, 9], [2, 8], [3, 7], [4, 6], [5, 5]]
     w.reverse
-    assert_equal(w.sample_data, [[5, 5], [4, 6], [3, 7], [2, 8], [1, 9]])
+    assert_equal([[5, 5], [4, 6], [3, 7], [2, 8], [1, 9]], w.sample_data)
   end
   
   def test_duration()
