@@ -59,6 +59,7 @@ class WaveFile
   DATA_CHUNK_ID = "data"
   HEADER_SIZE = 36
   SUPPORTED_BITS_PER_SAMPLE = [8, 16, 32]
+  PACK_CODES = {8 => "C*", 16 => "s*", 32 => "V*"}
   MAX_NUM_CHANNELS = 65535
   
   # Format codes from http://www.signalogic.com/index.pl?page=ms_waveform
@@ -157,14 +158,7 @@ class WaveFile
     file.syswrite(header)
 
     # Write the sample data
-    if @bits_per_sample == 8
-      pack_code = "C*"
-    elsif @bits_per_sample == 16
-      pack_code = "s*"
-    elsif @bits_per_sample == 32
-      pack_code = "V*"
-    end
-    
+    pack_code = PACK_CODES[@bits_per_sample]
     if @num_channels == 1
       file.syswrite(@sample_data.pack(pack_code))
     else
@@ -585,15 +579,7 @@ private
   
   # Assumes that file is "queued up" to the first sample
   def self.read_sample_data(file, num_channels, bits_per_sample, sample_data_size)
-    if(bits_per_sample == 8)
-      data = file.sysread(sample_data_size).unpack("C*")
-    elsif(bits_per_sample == 16)
-      data = file.sysread(sample_data_size).unpack("s*")
-    elsif(bits_per_sample == 32)
-      data = file.sysread(sample_data_size).unpack("V*")
-    else
-      data = []
-    end
+    data = file.sysread(sample_data_size).unpack(PACK_CODES[bits_per_sample])
     
     if(num_channels > 1)
       num_multichannel_samples = data.length / num_channels
