@@ -239,7 +239,7 @@ class WaveFile
     end
     
     if mono?
-      normalized_sample_data = @sample_data.map {|sample|
+      normalized_sample_data = @sample_data.map! {|sample|
         sample -= midpoint
         if sample < 0
           sample.to_f / min_value
@@ -248,8 +248,8 @@ class WaveFile
         end
       }
     else
-      normalized_sample_data = @sample_data.map {|sample|
-        sample.map {|sub_sample|
+      normalized_sample_data = @sample_data.map! {|sample|
+        sample.map! {|sub_sample|
           sub_sample -= midpoint
           if sub_sample < 0
             sub_sample.to_f / min_value
