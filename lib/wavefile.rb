@@ -232,26 +232,19 @@ class WaveFile
       min_value, max_value, midpoint = 2147483648.0, 2147483647.0, 0
     end
     
+    conversion_func = lambda do |sample|
+      sample -= midpoint
+      if sample < 0
+        (sample.to_f / min_value)
+      else
+        (sample.to_f / max_value)
+      end
+    end
+    
     if mono?
-      normalized_sample_data = @sample_data.map! {|sample|
-        sample -= midpoint
-        if sample < 0
-          sample.to_f / min_value
-        else
-          sample.to_f / max_value
-        end
-      }
+      normalized_sample_data = @sample_data.map! &conversion_func
     else
-      normalized_sample_data = @sample_data.map! {|sample|
-        sample.map! {|sub_sample|
-          sub_sample -= midpoint
-          if sub_sample < 0
-            sub_sample.to_f / min_value
-          else
-            sub_sample.to_f / max_value
-          end
-        }
-      }
+      normalized_sample_data = @sample_data.map! {|sample| sample.map! &conversion_func }
     end
     
     return normalized_sample_data
