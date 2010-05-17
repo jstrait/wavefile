@@ -291,7 +291,7 @@ class WaveFile
       if mono?
         @sample_data = sample_data.map! &denormalization_function
       else
-        @sample_data = sample_data.map! {|sample| sample.map! &denormalization_function }
+        @sample_data = sample_data.map! {|sample| sample.map &denormalization_function }
       end
     else
       @sample_data = sample_data
