@@ -232,8 +232,12 @@ class WaveFile
       min_value, max_value, midpoint = 2147483648.0, 2147483647.0, 0
     end
     
-    conversion_func = lambda do |sample|
+    normalization_function = lambda do |sample|
       sample -= midpoint
+      # NOTE: In Ruby 1.8, it is faster to manually convert each sample to a Float. (Ballpark 30%).
+      # The opposite is true in Ruby 1.9 - omitting .to_f is ballpark 40% faster. Opting in favor
+      # of 1.8 for now, since exepected that more people are currently using it and 1.8 needs all the
+      # help it can get performance wise. Might add version check in the future and act accordingly.
       if sample < 0
         (sample.to_f / min_value)
       else
@@ -242,9 +246,9 @@ class WaveFile
     end
     
     if mono?
-      normalized_sample_data = @sample_data.map! &conversion_func
+      normalized_sample_data = @sample_data.map! &normalization_function
     else
-      normalized_sample_data = @sample_data.map! {|sample| sample.map! &conversion_func }
+      normalized_sample_data = @sample_data.map! {|sample| sample.map! &normalization_function }
     end
     
     return normalized_sample_data
