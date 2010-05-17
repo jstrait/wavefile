@@ -280,24 +280,18 @@ class WaveFile
         min_value, max_value, midpoint = 2147483648.0, 2147483647.0, 0
       end
       
+      denormalization_function = lambda do |sample|
+        if(sample < 0.0)
+          (sample * min_value).round + midpoint
+        else
+          (sample * max_value).round + midpoint
+        end
+      end
+      
       if mono?
-        @sample_data = sample_data.map {|sample|
-          if(sample < 0.0)
-            (sample * min_value).round + midpoint
-          else
-            (sample * max_value).round + midpoint
-          end
-        }
+        @sample_data = sample_data.map! &denormalization_function
       else
-        @sample_data = sample_data.map {|sample|
-          sample.map {|sub_sample|
-            if(sub_sample < 0.0)
-              (sub_sample * min_value).round + midpoint
-            else
-              (sub_sample * max_value).round + midpoint
-            end
-          }
-        }
+        @sample_data = sample_data.map! {|sample| sample.map! &denormalization_function }
       end
     else
       @sample_data = sample_data
