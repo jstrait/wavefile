@@ -1,6 +1,10 @@
 #!/usr/bin/env ruby
 
 =begin
+Method and apparatus for reading and writing the Wave file sound format using pure Ruby.
+=end
+
+=begin
 WAV File Specification
 FROM http://ccrma.stanford.edu/courses/422/projects/WaveFormat/
 The canonical WAVE format starts with the RIFF header:
@@ -164,6 +168,24 @@ class WaveFile
     file.close
   end
   
+  # Returns true if this is a monophonic file (i.e., num_channels == 1), false otherwise.
+  def mono?()
+    return num_channels == 1
+  end
+  
+  # Returns true if this is a stereo file (i.e., num_channels == 2), false otherwise.
+  def stereo?()
+    return num_channels == 2
+  end
+  
+  # Returns a hash describing the duration of the file's sound, given the current sample data and sample rate.
+  # The hash contains an hour, minute, second, and millisecond component.
+  # For example if there are 66150 samples and the sample rate is 44100, the following will be returned:
+  # <code>{:hours => 0, :minutes => 0, :seconds => 1, :milliseconds => 500}</code>
+  def duration()
+    return WaveFile.calculate_duration(@sample_rate, @sample_data.length)
+  end
+  
   # Returns the sample data for the sound. For mono files, sample data is returned as a list on integers.
   # For files with more than 1 channel, each sample is represented by an Array containing the sample value
   # for each channel. 
@@ -171,38 +193,6 @@ class WaveFile
   # * Example stereo sample data: <code>[[1, 2], [3, 4], [5, 6], [7, 8]]</code>
   def sample_data()
     return @sample_data
-  end
-  
-  # Returns the sample data for the Wave file, but with each sample converted to a Float between -1.0 and 1.0.
-  def normalized_sample_data()    
-    if @bits_per_sample == 8
-      min_value, max_value, midpoint = 128.0, 127.0, 128
-    elsif @bits_per_sample == 16
-      min_value, max_value, midpoint = 32768.0, 32767.0, 0
-    elsif @bits_per_sample == 32
-      min_value, max_value, midpoint = 2147483648.0, 2147483647.0, 0
-    end
-    
-    normalization_function = lambda do |sample|
-      sample -= midpoint
-      # NOTE: In Ruby 1.8, it is faster to manually convert each sample to a Float. (Ballpark 30%).
-      # The opposite is true in Ruby 1.9 - omitting .to_f is ballpark 40% faster. Opting in favor
-      # of 1.8 for now, since exepected that more people are currently using it and 1.8 needs all the
-      # help it can get performance wise. Might add version check in the future and act accordingly.
-      if sample < 0
-        (sample.to_f / min_value)
-      else
-        (sample.to_f / max_value)
-      end
-    end
-    
-    if mono?
-      normalized_sample_data = @sample_data.map! &normalization_function
-    else
-      normalized_sample_data = @sample_data.map! {|sample| sample.map! &normalization_function }
-    end
-    
-    return normalized_sample_data
   end
   
   # Replaces the sample data with new sample data. Sample data should be passed in as an Array, and can
@@ -249,30 +239,75 @@ class WaveFile
       @sample_data = sample_data
     end
   end
-
-  # Returns true if this is a monophonic file (i.e., num_channels == 1), false otherwise.
-  def mono?()
-    return num_channels == 1
+  
+  # Returns the sample data for the Wave file, but with each sample converted to a Float between -1.0 and 1.0.
+  def normalized_sample_data()    
+    if @bits_per_sample == 8
+      min_value, max_value, midpoint = 128.0, 127.0, 128
+    elsif @bits_per_sample == 16
+      min_value, max_value, midpoint = 32768.0, 32767.0, 0
+    elsif @bits_per_sample == 32
+      min_value, max_value, midpoint = 2147483648.0, 2147483647.0, 0
+    end
+    
+    normalization_function = lambda do |sample|
+      sample -= midpoint
+      # NOTE: In Ruby 1.8, it is faster to manually convert each sample to a Float. (Ballpark 30%).
+      # The opposite is true in Ruby 1.9 - omitting .to_f is ballpark 40% faster. Opting in favor
+      # of 1.8 for now, since exepected that more people are currently using it and 1.8 needs all the
+      # help it can get performance wise. Might add version check in the future and act accordingly.
+      if sample < 0
+        (sample.to_f / min_value)
+      else
+        (sample.to_f / max_value)
+      end
+    end
+    
+    if mono?
+      normalized_sample_data = @sample_data.map! &normalization_function
+    else
+      normalized_sample_data = @sample_data.map! {|sample| sample.map! &normalization_function }
+    end
+    
+    return normalized_sample_data
   end
   
-  # Returns true if this is a stereo file (i.e., num_channels == 2), false otherwise.
-  def stereo?()
-    return num_channels == 2
+  # Changes the WaveFile's number of channels. Number of channels can either be specified by an integer
+  # between 1 and MAX_NUM_CHANNELS, or :mono for 1 channel, or :stereo for 2 channels.
+  # Calling this method will modify any existing sample data. If a mono file is converted to having 2 or
+  # more channels, the sample data will be duplicated for each new channel.
+  # * Example of mono to stereo: <code>[1, 2, 3, 4] -> [[1, 1], [2, 2], [3, 3], [4, 4]]</code>
+  # If a file with 2 or more channels is changed to mono, each sample will be mixed down to mono by averaging.
+  # * Example of stereo to mono: <code>[[10, 0], [27, 13], [-4, 2], [20, -5]] -> [5, 20, -1, 7]</code>
+  # Currently, converting from 2 channels to more than 2 channels is unsupported.
+  def num_channels=(new_num_channels)
+    validate_num_channels(new_num_channels)
+    
+    if new_num_channels == :mono
+      new_num_channels = 1
+    elsif new_num_channels == :stereo
+      new_num_channels = 2
+    end
+        
+    # The cases of mono -> stereo and vice-versa are handled specially,
+    # because those conversion methods are faster than the general methods,
+    # and the large majority of wave files are expected to be either mono or stereo.
+    # TODO: What about 2 or more channels converted to 2 or more channels?
+    if @num_channels == 1 && new_num_channels == 2
+      sample_data.map! {|sample| [sample, sample]}
+    elsif @num_channels == 2 && new_num_channels == 1
+        sample_data.map! {|sample| (sample[0] + sample[1]) / 2}
+    elsif @num_channels == 1 && new_num_channels >= 2
+      sample_data.map! {|sample| [].fill(sample, 0, new_num_channels)}
+    elsif @num_channels >= 2 && new_num_channels == 1
+      sample_data.map! {|sample| sample.inject(0) {|sub_sample, sum| sum + sub_sample } / @num_channels }
+    elsif @num_channels > 2 && new_num_channels == 2
+      sample_data.map! {|sample| [sample[0], sample[1]]}
+    end
+    
+    @num_channels = new_num_channels
   end
   
-  # Reverses the current sample data, causing any saved sounds to play backwards.
-  def reverse()
-    sample_data.reverse!()
-  end
-  
-  # Returns a hash describing the duration of the file's sound, given the current sample data and sample rate.
-  # The hash contains an hour, minute, second, and millisecond component.
-  # For example if there are 66150 samples and the sample rate is 44100, the following will be returned:
-  # <code>{:hours => 0, :minutes => 0, :seconds => 1, :milliseconds => 500}</code>
-  def duration()
-    return WaveFile.calculate_duration(@sample_rate, @sample_data.length)
-  end
-
   # Changes the sound's bits per sample. The sample data will be up or down-sampled as a result.
   # When down-sampling (such as from 16 bits to 8 bits), sound quality can go down. However,
   # when up-sampling (such as from 8 bits to 16 bits) sound quality DOES NOT improve.
@@ -349,40 +384,9 @@ class WaveFile
     @bits_per_sample = new_bits_per_sample
   end
   
-  # Changes the WaveFile's number of channels. Number of channels can either be specified by an integer
-  # between 1 and MAX_NUM_CHANNELS, or :mono for 1 channel, or :stereo for 2 channels.
-  # Calling this method will modify any existing sample data. If a mono file is converted to having 2 or
-  # more channels, the sample data will be duplicated for each new channel.
-  # * Example of mono to stereo: <code>[1, 2, 3, 4] -> [[1, 1], [2, 2], [3, 3], [4, 4]]</code>
-  # If a file with 2 or more channels is changed to mono, each sample will be mixed down to mono by averaging.
-  # * Example of stereo to mono: <code>[[10, 0], [27, 13], [-4, 2], [20, -5]] -> [5, 20, -1, 7]</code>
-  # Currently, converting from 2 channels to more than 2 channels is unsupported.
-  def num_channels=(new_num_channels)
-    validate_num_channels(new_num_channels)
-    
-    if new_num_channels == :mono
-      new_num_channels = 1
-    elsif new_num_channels == :stereo
-      new_num_channels = 2
-    end
-        
-    # The cases of mono -> stereo and vice-versa are handled specially,
-    # because those conversion methods are faster than the general methods,
-    # and the large majority of wave files are expected to be either mono or stereo.
-    # TODO: What about 2 or more channels converted to 2 or more channels?
-    if @num_channels == 1 && new_num_channels == 2
-      sample_data.map! {|sample| [sample, sample]}
-    elsif @num_channels == 2 && new_num_channels == 1
-        sample_data.map! {|sample| (sample[0] + sample[1]) / 2}
-    elsif @num_channels == 1 && new_num_channels >= 2
-      sample_data.map! {|sample| [].fill(sample, 0, new_num_channels)}
-    elsif @num_channels >= 2 && new_num_channels == 1
-      sample_data.map! {|sample| sample.inject(0) {|sub_sample, sum| sum + sub_sample } / @num_channels }
-    elsif @num_channels > 2 && new_num_channels == 2
-      sample_data.map! {|sample| [sample[0], sample[1]]}
-    end
-    
-    @num_channels = new_num_channels
+  # Reverses the current sample data, causing any saved sounds to play backwards.
+  def reverse()
+    sample_data.reverse!()
   end
 
   # Returns a hash containing metadata about the WaveFile object.
