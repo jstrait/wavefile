@@ -96,6 +96,11 @@ class WaveFile
     @block_align = @num_channels * bytes_per_sample
   end
   
+  # Returns an instance of WaveFile with the file specified by path loaded into it.
+  # Raises an UnloadableWaveFileError if the file is not a Wave file, or is in an unsupported format.
+  # Currently, Wave files of the following type can be loaded:
+  # * PCM audio format (i.e. an audio format code of 1)
+  # * 8, 16, or 32 bits per sample
   def self.load(path)
     file = File.open(path, "rb")
     
@@ -127,12 +132,13 @@ class WaveFile
     return wave_file    
   end
   
-  # <b>DEPRECATED:</b> Please use <tt>load</tt> instead.
+  # <b>DEPRECATED:</b> Please use <tt>load</tt> instead. Will likely be removed in v0.5.0.
   def self.open(path)
-    warn "[DEPRECATION] `open` is deprecated.  Please use `load` instead."
+    warn "[DEPRECATION] `open` is deprecated. Please use `load` instead."
     self.load(path)
   end
 
+  # Saves the Wave file to the file specified by path.
   def save(path)
     # All numeric values should be saved in little-endian format
 
@@ -309,9 +315,9 @@ class WaveFile
   end
   
   # Changes the sound's bits per sample. The sample data will be up or down-sampled as a result.
-  # When down-sampling (such as from 16 bits to 8 bits), sound quality can go down. However,
+  # When down-sampling (such as from 16 bits to 8 bits), sound quality can be reduced. However,
   # when up-sampling (such as from 8 bits to 16 bits) sound quality DOES NOT improve.
-  # Currently, only 8 and 16 bits per sample are supported.
+  # Currently, only 8, 16, and 32 bits per sample are supported.
   def bits_per_sample=(new_bits_per_sample)
     if(new_bits_per_sample == @bits_per_sample)
       return
@@ -325,6 +331,7 @@ class WaveFile
     end
     negative_factor = 2 ** (@bits_per_sample - new_bits_per_sample).abs
     
+    # Yikes! These 6 mostly identical branches need to be simplified...
     if(@bits_per_sample == 8 && new_bits_per_sample == 16)
       conversion_func = lambda do |sample|
         if(sample < 128)
@@ -389,7 +396,16 @@ class WaveFile
     sample_data.reverse!()
   end
 
-  # Returns a hash containing metadata about the WaveFile object.
+  # Returns a hash containing metadata about the WaveFile object. The hash contains the following fields:
+  # * Audio format: (always "PCM", since this is currently the only format WaveFile can load)
+  # * Number of channels: (1, 2, etc.)
+  # * Sample rate: (44100, etc.)
+  # * Bits per sample: (8, 16, or 32)
+  # * Block align: The number of bytes required for 1 sample over each channel. For example, in a stereo
+  #   16-bit file this would be 4 (16 bits * 2 channels == 32 bits == 4 bytes).
+  # * Byte rate: TO DO
+  # * Sample count: TO DO
+  # * Duration: The length in time of the file, in the same format as returned by duration.
   def info()
     return { :format          => "PCM",
              :num_channels    => @num_channels,
@@ -403,7 +419,7 @@ class WaveFile
 
   # Returns a hash containing metadata about the Wave file at path.
   # The hash returned is of the same format as the instance method info.
-  # An advantage of this method is that it allows you to retreive metadata for files that WaveFile is not
+  # An advantage of this method is that it allows you to retrieve metadata for files that WaveFile is not
   # necessarily able to fully load (for example, because it has an unsupported bits per sample).
   def self.info(path)
     file = File.open(path, "rb")
@@ -432,6 +448,7 @@ class WaveFile
              :duration        => calculate_duration(header[:sample_rate], sample_count) }
   end
 
+  # Returns a formatted String representation of the Wave file metadata.
   def inspect()
     duration = self.duration()
     
