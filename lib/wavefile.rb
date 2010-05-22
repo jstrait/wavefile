@@ -291,6 +291,7 @@ class WaveFile
       if mono?
         @sample_data = sample_data.map! &denormalization_function
       else
+        # What's going on here? Why can't you use map!() in the inner block?
         @sample_data = sample_data.map! {|sample| sample.map &denormalization_function }
       end
     else
@@ -339,53 +340,53 @@ class WaveFile
     negative_factor = 2 ** (@bits_per_sample - new_bits_per_sample).abs
     
     if(@bits_per_sample == 8 && new_bits_per_sample == 16)
-      conversion_func = lambda {|sample|
+      conversion_func = lambda do |sample|
         if(sample < 128)
           ((sample - 128) * negative_factor)
         else
           ((sample - 128) * positive_factor).round
         end
-      }
+      end
     elsif(@bits_per_sample == 8 && new_bits_per_sample == 32)
-      conversion_func = lambda {|sample|
+      conversion_func = lambda do |sample|
         if(sample < 128)
           ((sample - 128) * negative_factor)
         else
           ((sample - 128) * positive_factor).round
         end
-      }
+      end
     elsif(@bits_per_sample == 16 && new_bits_per_sample == 8)
-      conversion_func = lambda {|sample|
+      conversion_func = lambda do |sample|
         if(sample < 0)
           (sample / negative_factor) + 128
         else
           (sample / positive_factor).round + 128
         end
-      }
+      end
     elsif(@bits_per_sample == 16 && new_bits_per_sample == 32)
-      conversion_func = lambda {|sample|
+      conversion_func = lambda do |sample|
         if(sample < 0)
           sample * negative_factor
         else
           (sample * positive_factor).round
         end
-      }
+      end
     elsif(@bits_per_sample == 32 && new_bits_per_sample == 8)
-      conversion_func = lambda {|sample|
+      conversion_func = lambda do |sample|
         if(sample < 0)
           (sample / negative_factor) + 128
         else
           (sample / positive_factor).round + 128
         end
-      }
+      end
     elsif(@bits_per_sample == 32 && new_bits_per_sample == 16)
-      conversion_func = lambda {|sample|
+      conversion_func = lambda do |sample|
         if(sample < 0)
           sample / negative_factor
         else
           (sample / positive_factor).round
         end
-      }
+      end
     end
     
     if mono?
@@ -579,18 +580,14 @@ private
       if(num_channels == 2)
         # Files with more than 2 channels are expected to be rare, so if there are 2 channels
         # using a faster specific algorithm instead of a general one.
-        (0...num_multichannel_samples).each {|i|
-          multichannel_data[i] = [data.pop(), data.pop()].reverse!()
-        }
+        num_multichannel_samples.times {|i| multichannel_data[i] = [data.pop(), data.pop()].reverse!() }
       else
         # General algorithm that works for any number of channels, 2 or greater.
-        (0...num_multichannel_samples).each {|i|
+        num_multichannel_samples.times do |i|
           sample = Array.new(num_channels)
-          num_channels.times {|j|
-            sample[j] = data.pop()
-          }
+          num_channels.times {|j| sample[j] = data.pop() }
           multichannel_data[i] = sample.reverse!()
-        }
+        end
       end
 
       data = multichannel_data.reverse!()
@@ -623,7 +620,7 @@ private
     
     milliseconds = (total_samples / samples_per_millisecond).floor
     
-    return  { :hours => hours, :minutes => minutes, :seconds => seconds, :milliseconds => milliseconds }
+    return { :hours => hours, :minutes => minutes, :seconds => seconds, :milliseconds => milliseconds }
   end
   
   def validate_bits_per_sample(candidate_bits_per_sample)
