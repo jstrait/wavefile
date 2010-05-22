@@ -130,10 +130,6 @@ class WaveFile
   end
 
   def save(path)
-    save_new(path)
-  end
-
-  def save_new(path)
     # All numeric values should be saved in little-endian format
 
     bytes_per_sample = (@bits_per_sample / 8)
@@ -165,51 +161,6 @@ class WaveFile
       file.syswrite(@sample_data.flatten.pack(pack_code))
     end
 
-    file.close
-  end
-
-  def save_old(path)
-    # All numeric values should be saved in little-endian format
-
-    sample_data_size = @sample_data.length * @num_channels * (@bits_per_sample / 8)
-
-    # Write the header
-    file_contents = CHUNK_ID
-    file_contents += [HEADER_SIZE + sample_data_size].pack("V")
-    file_contents += FORMAT
-    file_contents += FORMAT_CHUNK_ID
-    file_contents += [SUB_CHUNK1_SIZE].pack("V")
-    file_contents += [PCM].pack("v")
-    file_contents += [@num_channels].pack("v")
-    file_contents += [@sample_rate].pack("V")
-    file_contents += [@byte_rate].pack("V")
-    file_contents += [@block_align].pack("v")
-    file_contents += [@bits_per_sample].pack("v")
-    file_contents += DATA_CHUNK_ID
-    file_contents += [sample_data_size].pack("V")
-
-    # Write the sample data
-    if !mono?
-      output_sample_data = []
-      @sample_data.each{|sample|
-        sample.each{|sub_sample|
-          output_sample_data << sub_sample
-        }
-      }
-    else
-      output_sample_data = @sample_data
-    end
-    
-    if @bits_per_sample == 8
-      file_contents += output_sample_data.pack("C*")
-    elsif @bits_per_sample == 16
-      file_contents += output_sample_data.pack("s*")
-    elsif @bits_per_sample == 32
-      file_contents += output_sample_data.pack("V*")
-    end
-
-    file = File.open(path, "w")
-    file.syswrite(file_contents)
     file.close
   end
   
