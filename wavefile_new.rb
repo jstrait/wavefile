@@ -31,6 +31,21 @@ module WaveFile
     attr_accessor :channels, :bits_per_sample, :sample_rate
   end
 
+  class WaveFileBuffer
+    def initialize(samples, format)
+      @samples = samples
+      @channels = format.channels
+      @bits_per_sample = format.bits_per_sample
+      @sample_rate = format.sample_rate
+    end
+
+    def convert(format)
+      return self
+    end
+
+    attr_reader :samples, :channels, :bits_per_sample, :sample_rate
+  end
+
   class WaveFileReader
     def initialize(format)
     end
@@ -49,12 +64,12 @@ module WaveFile
       write_header(0)
     end
 
-    def write(sample_data)
-      # TODO: Implement this.
-      #sample_data = convert(sample_data, format)
+    def write(buffer)
+      converted_buffer = buffer.convert(@format)
+      samples = converted_buffer.samples
 
-      @file.syswrite(sample_data.pack(@pack_code))
-      @sample_count += sample_data.length
+      @file.syswrite(samples.pack(@pack_code))
+      @sample_count += samples.length
     end
 
     def close()
