@@ -6,7 +6,7 @@ end
 class WaveFileFormat
   def initialize(channels, bits_per_sample, sample_rate)
     @channels = channels
-    @bits_per_sample = @bits_per_sample
+    @bits_per_sample = bits_per_sample
     @sample_rate = sample_rate
   end
 
@@ -15,7 +15,7 @@ class WaveFileFormat
   end
 
   def block_align()
-    return (@bits_per_sample / 8) * @num_channels
+    return (@bits_per_sample / 8) * @channels
   end
 
   attr_accessor :channels, :bits_per_sample, :sample_rate
@@ -43,20 +43,22 @@ class WaveFileWriter
     @file = File.open(file_name, "w")
     @format = format
 
+    @sample_count = 0
     @pack_code = PACK_CODES[format.bits_per_sample]
-    write_header(sample_data_size)
+    write_header(0)
   end
 
   def write(sample_data)
     # TODO: Implement this.
     #sample_data = convert(sample_data, format)
 
-    file.syswrite(sample_data.pack(@pack_code))
+    @file.syswrite(sample_data.pack(@pack_code))
+    @sample_count += sample_data.length
   end
 
   def close()
     @file.sysseek(0)
-    write_header(sample_count)
+    write_header(@sample_count)
     
     @file.close()
   end
@@ -78,6 +80,7 @@ private
     header += DATA_CHUNK_ID
     header += [sample_data_size].pack("V")
 
-    file.syswrite(header)
+    @file.syswrite(header)
   end
 end
+
