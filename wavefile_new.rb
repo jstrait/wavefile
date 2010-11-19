@@ -136,8 +136,10 @@ module WaveFile
    
       validate_header(header)
     
+      sample_count = header[:sub_chunk2_size] / header[:block_align]
+
       @format = WaveFileFormat.new(header[:channels], header[:bits_per_sample], header[:sample_rate])
-      @info = WaveFileInfo.new(@file_name, @format, header[:sub_chunk2_size])
+      @info = WaveFileInfo.new(@file_name, @format, sample_count)
     end
 
     def read_to_chunk(expected_chunk_id)
