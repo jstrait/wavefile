@@ -1,11 +1,22 @@
 module WaveFile
-  CHUNK_ID = "RIFF"
   FORMAT = "WAVE"
-  FORMAT_CHUNK_ID = "fmt "
   SUB_CHUNK1_SIZE = 16
   PCM = 1
   DATA_CHUNK_ID = "data"
   HEADER_SIZE = 36
+  CHUNK_IDS = {:header       => "RIFF",
+               :format       => "fmt ",
+               :data         => "data",
+               :fact         => "fact",
+               :silence      => "slnt",
+               :cue          => "cue ",
+               :playlist     => "plst",
+               :list         => "list",
+               :label        => "labl",
+               :labeled_text => "ltxt",
+               :note         => "note",
+               :sample       => "smpl",
+               :instrument   => "inst" }
   PACK_CODES = {8 => "C*", 16 => "s*", 32 => "V*"}
 
   class WaveFileInfo
@@ -80,7 +91,7 @@ module WaveFile
     end
 
     def convert(new_format)
-      return WaveFileBuffer.new(@samples, format)
+      return WaveFileBuffer.new(@samples, new_format)
     end
 
     def convert!(new_format)
@@ -132,7 +143,7 @@ module WaveFile
       header[:format] = riff_header[2]
     
       # Read format subchunk
-      header[:sub_chunk1_id], header[:sub_chunk1_size] = read_to_chunk(FORMAT_CHUNK_ID)
+      header[:sub_chunk1_id], header[:sub_chunk1_size] = read_to_chunk(CHUNK_IDS[:format])
       format_subchunk_str = @file.sysread(header[:sub_chunk1_size])
       format_subchunk = format_subchunk_str.unpack("vvVVvv")  # Any extra parameters are ignored
       header[:audio_format] = format_subchunk[0]
@@ -143,7 +154,7 @@ module WaveFile
       header[:bits_per_sample] = format_subchunk[5]
     
       # Read data subchunk
-      header[:sub_chunk2_id], header[:sub_chunk2_size] = read_to_chunk(DATA_CHUNK_ID)
+      header[:sub_chunk2_id], header[:sub_chunk2_size] = read_to_chunk(CHUNK_IDS[:data])
    
       validate_header(header)
     
@@ -200,10 +211,10 @@ module WaveFile
   private
 
     def write_header(sample_data_size)
-      header = CHUNK_ID
+      header = CHUNK_IDS[:header]
       header += [HEADER_SIZE + sample_data_size].pack("V")
       header += FORMAT
-      header += FORMAT_CHUNK_ID
+      header += CHUNK_IDS[:format]
       header += [SUB_CHUNK1_SIZE].pack("V")
       header += [PCM].pack("v")
       header += [@format.channels].pack("v")
@@ -211,7 +222,7 @@ module WaveFile
       header += [@format.byte_rate].pack("V")
       header += [@format.block_align].pack("v")
       header += [@format.bits_per_sample].pack("v")
-      header += DATA_CHUNK_ID
+      header += CHUNK_IDS[:data]
       header += [sample_data_size].pack("V")
 
       @file.syswrite(header)
