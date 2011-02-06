@@ -74,7 +74,7 @@ module WaveFile
     end
 
     def byte_rate()
-      return (@bits_per_sample / 8) * sample_rate
+      return (@bits_per_sample / 8) * @sample_rate
     end
 
     def block_align()
