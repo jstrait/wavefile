@@ -1,4 +1,6 @@
 module WaveFile
+  VERSION = "0.4.0a"
+
   FORMAT = "WAVE"
   SUB_CHUNK1_SIZE = 16
   PCM = 1
