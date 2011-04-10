@@ -3,7 +3,6 @@ module WaveFile
     def initialize(file_name, format)
       @file = File.open(file_name, "w")
       @format = format.dup
-      @format.interleaving = :interleaved
 
       @sample_count = 0
       @pack_code = PACK_CODES[format.bits_per_sample]
