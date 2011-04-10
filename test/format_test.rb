@@ -27,4 +27,14 @@ class WaveFileFormatTest < Test::Unit::TestCase
     format = WaveFileFormat.new(2, 16, 44100)
     assert_equal(4, format.block_align)
   end
+
+  def test_mono?()
+    format = WaveFileFormat.new(1, 8, 44100)
+    assert_equal(true, format.mono?)
+    assert_equal(false, format.stereo?)
+
+    format = WaveFileFormat.new(2, 8, 44100)
+    assert_equal(false, format.mono?)
+    assert_equal(true, format.stereo?)
+  end
 end

@@ -6,6 +6,14 @@ module WaveFile
       @sample_rate = sample_rate
     end
 
+    def mono?()
+      return @channels == 1
+    end
+
+    def stereo?()
+      return @channels == 2
+    end
+
     def byte_rate()
       return (@bits_per_sample / 8) * @sample_rate
     end
