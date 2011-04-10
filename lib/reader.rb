@@ -8,7 +8,7 @@ module WaveFile
     end
 
     def read(buffer_size, format=@format)
-      samples = @file.sysread(buffer_size).unpack(PACK_CODES[format.bits_per_sample])
+      samples = @file.sysread(buffer_size * format.block_align).unpack(PACK_CODES[format.bits_per_sample])
 
       buffer = WaveFileBuffer.new(samples, @format)
       return buffer.convert(format)
