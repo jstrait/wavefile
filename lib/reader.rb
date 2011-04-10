@@ -16,6 +16,26 @@ module WaveFile
     def read(buffer_size)
       samples = @file.sysread(buffer_size * @native_format.block_align).unpack(PACK_CODES[@native_format.bits_per_sample])
 
+      if @native_format.channels > 1
+        num_multichannel_samples = samples.length / @native_format.channels
+        multichannel_data = Array.new(num_multichannel_samples)
+      
+        if(@native_format.channels == 2)
+          # Files with more than 2 channels are expected to be rare, so if there are 2 channels
+          # using a faster specific algorithm instead of a general one.
+          num_multichannel_samples.times {|i| multichannel_data[i] = [samples.pop(), samples.pop()].reverse!() }
+        else
+          # General algorithm that works for any number of channels, 2 or greater.
+          num_multichannel_samples.times do |i|
+            sample = Array.new(@native_format.channels)
+            num_channels.times {|j| sample[j] = samples.pop() }
+            multichannel_data[i] = sample.reverse!()
+          end
+        end
+
+        samples = multichannel_data.reverse!()
+      end
+
       buffer = WaveFileBuffer.new(samples, @native_format)
       return buffer.convert(@output_format)
     end
