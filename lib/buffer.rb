@@ -35,7 +35,9 @@ module WaveFile
     def convert_buffer(samples, old_format, new_format)
       new_samples = samples.dup
       
-      new_samples = convert_buffer_channels(new_samples, old_format.channels, new_format.channels)
+      unless old_format.channels == new_format.channels
+        new_samples = convert_buffer_channels(new_samples, old_format.channels, new_format.channels)
+      end
 
       @format = new_format
       
@@ -57,7 +59,7 @@ module WaveFile
       elsif old_channels > 2 && new_channels == 2
         samples.map! {|sample| [sample[0], sample[1]]}
       else
-        raise StandardError "Conversion of sample data from #{old_channels} channels to #{new_channels} channels is unsupported"
+        raise "Conversion of sample data from #{old_channels} channels to #{new_channels} channels is unsupported"
       end
     
       return samples
