@@ -49,7 +49,7 @@ module WaveFile
     
       sample_count = header[:sub_chunk2_size] / header[:block_align]
 
-      @format = WaveFileFormat.new(header[:channels], header[:bits_per_sample], header[:sample_rate], :interleaved)
+      @format = WaveFileFormat.new(header[:channels], header[:bits_per_sample], header[:sample_rate])
       @info = WaveFileInfo.new(@file_name, @format, sample_count)
     end
 
