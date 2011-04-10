@@ -6,6 +6,18 @@ require 'wavefile.rb'
 include WaveFile
 
 class WaveFileFormatTest < Test::Unit::TestCase
+  def test_channels=()
+    ["dsfsfsdf", :foo, 0, 65536].each do |invalid_channels|
+      assert_raise(WaveFileFormatError) { WaveFileFormat.new(invalid_channels, 16, 44100) }
+    end
+  end
+
+  def test_bits_per_sample=()
+    ["dsfsfsdf", :foo, 0, 12].each do |invalid_bits_per_sample|
+      assert_raise(WaveFileFormatError) { WaveFileFormat.new(1, invalid_bits_per_sample, 44100) }
+    end
+  end
+
   def test_byte_rate()
     format = WaveFileFormat.new(1, 8, 44100)
     assert_equal(44100, format.byte_rate)
