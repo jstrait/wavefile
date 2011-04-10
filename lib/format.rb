@@ -1,14 +1,7 @@
 module WaveFile
   class WaveFileFormat
     def initialize(channels, bits_per_sample, sample_rate)
-      if channels == :mono
-        channels = 1
-      end
-      if channels == :stereo
-        channels = 2
-      end
-
-      @channels = channels
+      self.channels=(channels)
       @bits_per_sample = bits_per_sample
       @sample_rate = sample_rate
     end
@@ -29,6 +22,17 @@ module WaveFile
       return (@bits_per_sample / 8) * @channels
     end
 
-    attr_accessor :channels, :bits_per_sample, :sample_rate
+    def channels=(new_channels)
+      if new_channels == :mono
+        @channels = 1
+      elsif new_channels == :stereo
+        @channels = 2
+      else
+        @channels = new_channels
+      end
+    end
+
+    attr_reader :channels
+    attr_accessor :bits_per_sample, :sample_rate
   end
 end
