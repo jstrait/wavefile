@@ -12,7 +12,7 @@ module WaveFile
     def write(buffer)
       samples = buffer.convert(@format).samples
 
-      @file.syswrite(samples.pack(@pack_code))
+      @file.syswrite(samples.flatten.pack(@pack_code))
       @sample_count += samples.length
     end
 
