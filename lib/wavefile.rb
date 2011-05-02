@@ -7,11 +7,10 @@ require 'lib/writer.rb'
 module WaveFile
   VERSION = "0.4.0a"
 
-  FORMAT = "WAVE"
-  SUB_CHUNK1_SIZE = 16
+  WAVEFILE_FORMAT_CODE = "WAVE"
+  FORMAT_CHUNK_BYTE_LENGTH = 16
   PCM = 1
-  DATA_CHUNK_ID = "data"
-  HEADER_SIZE = 36
+  HEADER_BYTE_LENGTH = 36
   CHUNK_IDS = {:header       => "RIFF",
                :format       => "fmt ",
                :data         => "data",

@@ -27,10 +27,10 @@ module WaveFile
 
     def write_header(sample_data_size)
       header = CHUNK_IDS[:header]
-      header += [HEADER_SIZE + sample_data_size].pack("V")
-      header += FORMAT
+      header += [HEADER_BYTE_LENGTH + sample_data_size].pack("V")
+      header += WAVEFILE_FORMAT_CODE
       header += CHUNK_IDS[:format]
-      header += [SUB_CHUNK1_SIZE].pack("V")
+      header += [FORMAT_CHUNK_BYTE_LENGTH].pack("V")
       header += [PCM].pack("v")
       header += [@format.channels].pack("v")
       header += [@format.sample_rate].pack("V")
