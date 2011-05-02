@@ -1,8 +1,8 @@
-require 'lib/buffer.rb'
-require 'lib/format.rb'
-require 'lib/info.rb'
-require 'lib/reader.rb'
-require 'lib/writer.rb'
+require 'wavefile/buffer'
+require 'wavefile/format'
+require 'wavefile/info'
+require 'wavefile/reader'
+require 'wavefile/writer'
 
 module WaveFile
   VERSION = "0.4.0a"
