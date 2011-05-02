@@ -1,5 +1,5 @@
 module WaveFile
-  class WaveFileBuffer
+  class Buffer
     def initialize(samples, format)
       @samples = samples
       @format = format
@@ -7,7 +7,7 @@ module WaveFile
     
     def convert(new_format)
       new_samples = convert_buffer(@samples.dup, @format, new_format)
-      return WaveFileBuffer.new(new_samples, new_format)
+      return Buffer.new(new_samples, new_format)
     end
 
     def convert!(new_format)

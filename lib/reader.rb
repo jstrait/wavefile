@@ -1,5 +1,5 @@
 module WaveFile
-  class WaveFileReader
+  class Reader
     def initialize(file_name, format=nil)
       @file_name = file_name
       @file = File.open(file_name, "r")
@@ -36,7 +36,7 @@ module WaveFile
         samples = multichannel_data.reverse!()
       end
 
-      buffer = WaveFileBuffer.new(samples, @native_format)
+      buffer = Buffer.new(samples, @native_format)
       return buffer.convert(@output_format)
     end
 
@@ -75,8 +75,8 @@ module WaveFile
     
       sample_count = header[:sub_chunk2_size] / header[:block_align]
 
-      @native_format = WaveFileFormat.new(header[:channels], header[:bits_per_sample], header[:sample_rate])
-      @info = WaveFileInfo.new(@file_name, @native_format, sample_count)
+      @native_format = Format.new(header[:channels], header[:bits_per_sample], header[:sample_rate])
+      @info = Info.new(@file_name, @native_format, sample_count)
     end
 
     def read_to_chunk(expected_chunk_id)

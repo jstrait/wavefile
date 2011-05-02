@@ -1,5 +1,5 @@
 module WaveFile
-  class WaveFileInfo
+  class Info
     def initialize(file_name, format, sample_count)
       @file_name = file_name
       @channels = format.channels

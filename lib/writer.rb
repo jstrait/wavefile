@@ -1,5 +1,5 @@
 module WaveFile
-  class WaveFileWriter
+  class Writer
     def initialize(file_name, format)
       @file = File.open(file_name, "w")
       @format = format.dup

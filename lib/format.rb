@@ -1,7 +1,7 @@
 module WaveFile
-  class WaveFileFormatError < RuntimeError; end
+  class FormatError < RuntimeError; end
 
-  class WaveFileFormat
+  class Format
     MAX_NUM_CHANNELS = 65535
     SUPPORTED_BITS_PER_SAMPLE = [8, 16, 32]
 
@@ -54,13 +54,13 @@ module WaveFile
       unless candidate_num_channels == :mono   ||
              candidate_num_channels == :stereo ||
              (1..MAX_NUM_CHANNELS) === candidate_num_channels
-        raise WaveFileFormatError, "Invalid number of channels. Must be between 1 and #{MAX_NUM_CHANNELS}."
+        raise FormatError, "Invalid number of channels. Must be between 1 and #{MAX_NUM_CHANNELS}."
       end
     end
 
     def validate_bits_per_sample(candidate_bits_per_sample)
       unless SUPPORTED_BITS_PER_SAMPLE.member?(candidate_bits_per_sample)
-        raise WaveFileFormatError,
+        raise FormatError,
               "Bits per sample of #{candidate_bits_per_sample} is unsupported. " +
               "Only #{SUPPORTED_BITS_PER_SAMPLE.inspect} are supported."
       end
