@@ -2,13 +2,12 @@ A pure Ruby gem for reading and writing sound files in Wave format (*.wav).
 
 # Current Status
 
-The latest stable version in 0.3.0. Currently, version 0.4.0 is under development, so code on the trunk is not necessarily guaranteed to stay stable from day to day. The following improvements are currently planned for 0.4.0:
+The most recent release is 0.3.0. Work is under way on 0.4.0, which will be akin to a rewrite. It will not be backward compatible with the previous API (and in general this should be the expectation until version 1.0).
 
-* Support for 32-bit files, and _possibly_ 24-bit files.
-* Addition of info() instance and class methods, which returns a hash containing metadata about a Wave file (including Wave files that are in an unsupported format).
-* General bug fixes and improved validation.
-* RDOCing it.
-* Possible performance improvements.
+The primary difference coming in 0.4.0 is that the API will be buffer based, instead of load-everything-into-memory-at-once based. Although the latter approach is simpler for smaller files, it's not practical for large files (and Wave files are typically pretty large). This version will not focus on new features, although some improvements might come for free. (For example, the ability to effectively work with large files).
+
+The notes below cover 0.3.0; 0.4.0 will be different.
+
 
 # Installation
 
