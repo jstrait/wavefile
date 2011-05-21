@@ -2,7 +2,7 @@ module WaveFile
   class Reader
     def initialize(file_name, format=nil)
       @file_name = file_name
-      @file = File.open(file_name, "r")
+      @file = File.open(file_name, "rb")
 
       read_header()
       
