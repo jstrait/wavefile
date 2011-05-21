@@ -13,6 +13,16 @@ module WaveFile
       end
     end
 
+    def each_buffer(buffer_size)
+      begin
+        while true do
+          yield(read(buffer_size))
+        end
+      rescue EOFError
+        close()
+      end
+    end
+
     def read(buffer_size)
       samples = @file.sysread(buffer_size * @native_format.block_align).unpack(PACK_CODES[@native_format.bits_per_sample])
 
