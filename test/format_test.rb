@@ -6,8 +6,17 @@ require 'wavefile.rb'
 include WaveFile
 
 class FormatTest < Test::Unit::TestCase
+  def test_valid_channels()
+    [1, 2, 3, 4, 65535].each do |valid_channels|
+      assert_equal(valid_channels, Format.new(valid_channels, 16, 44100).channels)
+    end
+
+    assert_equal(1, Format.new(:mono, 16, 44100).channels)
+    assert_equal(2, Format.new(:stereo, 16, 44100).channels)
+  end
+
   def test_invalid_channels()
-    ["dsfsfsdf", :foo, 0, 65536].each do |invalid_channels|
+    ["dsfsfsdf", :foo, 0, -1, 65536].each do |invalid_channels|
       assert_raise(FormatError) { Format.new(invalid_channels, 16, 44100) }
     end
   end
@@ -16,6 +25,12 @@ class FormatTest < Test::Unit::TestCase
     ["dsfsfsdf", :foo, 0, 12].each do |invalid_bits_per_sample|
       assert_raise(FormatError) { Format.new(1, invalid_bits_per_sample, 44100) }
     end
+  end
+
+  def test_valid_bits_per_sample()
+    assert_equal(8, Format.new(1, 8, 44100).bits_per_sample)
+    assert_equal(16, Format.new(1, 16, 44100).bits_per_sample)
+    assert_equal(32, Format.new(1, 32, 44100).bits_per_sample)
   end
 
   def test_byte_rate()
@@ -44,7 +59,7 @@ class FormatTest < Test::Unit::TestCase
     end
   end
 
-  def test_mono?()
+  def test_channel_predicates()
     [1, :mono].each do |one_channel|
       format = Format.new(one_channel, 8, 44100)
       assert_equal(true, format.mono?)
