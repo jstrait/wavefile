@@ -25,7 +25,7 @@ module WaveFile
       return @channels == 2
     end
 
-    attr_reader :channels, :bits_per_sample, :sample_rate, :byte_rate, :block_align
+    attr_reader :channels, :bits_per_sample, :sample_rate, :block_align, :byte_rate
   
   private
 
@@ -33,9 +33,9 @@ module WaveFile
       if channels == :mono
         return 1
       elsif channels == :stereo
-         return 2
+        return 2
       else
-         return channels
+        return channels
       end
     end
 
