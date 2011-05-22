@@ -28,8 +28,10 @@ module WaveFile
   private
 
     def write_header(sample_count)
+      sample_data_byte_count = sample_count * @format.block_align
+
       header = CHUNK_IDS[:header]
-      header += [HEADER_BYTE_LENGTH + sample_count].pack("V")
+      header += [HEADER_BYTE_LENGTH + sample_data_byte_count].pack("V")
       header += WAVEFILE_FORMAT_CODE
       header += CHUNK_IDS[:format]
       header += [FORMAT_CHUNK_BYTE_LENGTH].pack("V")
@@ -40,7 +42,7 @@ module WaveFile
       header += [@format.block_align].pack("v")
       header += [@format.bits_per_sample].pack("v")
       header += CHUNK_IDS[:data]
-      header += [sample_count].pack("V")
+      header += [sample_data_byte_count].pack("V")
 
       @file.syswrite(header)
     end
