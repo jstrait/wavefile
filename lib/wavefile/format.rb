@@ -12,6 +12,8 @@ module WaveFile
       @channels = canonicalize_channels(channels)
       @bits_per_sample = bits_per_sample
       @sample_rate = sample_rate
+      @byte_rate = (@bits_per_sample / 8) * @sample_rate
+      @block_align = (@bits_per_sample / 8) * @channels
     end
 
     def mono?()
@@ -22,15 +24,7 @@ module WaveFile
       return @channels == 2
     end
 
-    def byte_rate()
-      return (@bits_per_sample / 8) * @sample_rate
-    end
-
-    def block_align()
-      return (@bits_per_sample / 8) * @channels
-    end
-
-    attr_reader :channels, :bits_per_sample, :sample_rate
+    attr_reader :channels, :bits_per_sample, :sample_rate, :byte_rate, :block_align
   
   private
 
