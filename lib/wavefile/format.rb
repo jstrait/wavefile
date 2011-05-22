@@ -2,12 +2,14 @@ module WaveFile
   class FormatError < RuntimeError; end
 
   class Format
-    MAX_NUM_CHANNELS = 65535
+    MAX_CHANNELS = 65535
     SUPPORTED_BITS_PER_SAMPLE = [8, 16, 32]
 
     def initialize(channels, bits_per_sample, sample_rate)
-      self.channels=(channels)
-      self.bits_per_sample=(bits_per_sample)
+      validate_channels(channels)
+      validate_bits_per_sample(bits_per_sample)
+
+      @channels = canonicalize_channels(channels)
       @bits_per_sample = bits_per_sample
       @sample_rate = sample_rate
     end
@@ -28,33 +30,25 @@ module WaveFile
       return (@bits_per_sample / 8) * @channels
     end
 
-    def channels=(new_channels)
-      validate_num_channels(new_channels)
-
-      if new_channels == :mono
-        @channels = 1
-      elsif new_channels == :stereo
-        @channels = 2
-      else
-        @channels = new_channels
-      end
-    end
-
-    def bits_per_sample=(new_bits_per_sample)
-      validate_bits_per_sample(new_bits_per_sample)
-      @bits_per_sample = new_bits_per_sample
-    end
-
-    attr_reader :channels, :bits_per_sample
-    attr_accessor :sample_rate
+    attr_reader :channels, :bits_per_sample, :sample_rate
   
   private
 
-    def validate_num_channels(candidate_num_channels)
-      unless candidate_num_channels == :mono   ||
-             candidate_num_channels == :stereo ||
-             (1..MAX_NUM_CHANNELS) === candidate_num_channels
-        raise FormatError, "Invalid number of channels. Must be between 1 and #{MAX_NUM_CHANNELS}."
+    def canonicalize_channels(channels)
+      if channels == :mono
+        return 1
+      elsif channels == :stereo
+         return 2
+      else
+         return channels
+      end
+    end
+
+    def validate_channels(candidate_channels)
+      unless candidate_channels == :mono   ||
+             candidate_channels == :stereo ||
+             (1..MAX_CHANNELS) === candidate_channels
+        raise FormatError, "Invalid number of channels. Must be between 1 and #{MAX_CHANNELS}."
       end
     end
 

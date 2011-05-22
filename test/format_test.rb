@@ -6,13 +6,13 @@ require 'wavefile.rb'
 include WaveFile
 
 class FormatTest < Test::Unit::TestCase
-  def test_channels=()
+  def test_invalid_channels()
     ["dsfsfsdf", :foo, 0, 65536].each do |invalid_channels|
       assert_raise(FormatError) { Format.new(invalid_channels, 16, 44100) }
     end
   end
 
-  def test_bits_per_sample=()
+  def test_invalid_bits_per_sample()
     ["dsfsfsdf", :foo, 0, 12].each do |invalid_bits_per_sample|
       assert_raise(FormatError) { Format.new(1, invalid_bits_per_sample, 44100) }
     end
