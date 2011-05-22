@@ -60,6 +60,9 @@ class FormatTest < Test::Unit::TestCase
 
       format = Format.new(one_channel, 16, 44100)
       assert_equal(2, format.block_align)
+
+      format = Format.new(one_channel, 32, 44100)
+      assert_equal(4, format.block_align)
     end
 
     [2, :stereo].each do |two_channels|
@@ -68,6 +71,9 @@ class FormatTest < Test::Unit::TestCase
 
       format = Format.new(two_channels, 16, 44100)
       assert_equal(4, format.block_align)
+
+      format = Format.new(two_channels, 32, 44100)
+      assert_equal(8, format.block_align)
     end
   end
 
