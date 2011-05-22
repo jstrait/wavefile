@@ -19,8 +19,8 @@ module WaveFile
 
     def calculate_duration()
       total_samples = @sample_count
-      samples_per_millisecond = sample_rate / 1000.0
-      samples_per_second = sample_rate
+      samples_per_millisecond = @sample_rate / 1000.0
+      samples_per_second = @sample_rate
       samples_per_minute = samples_per_second * 60
       samples_per_hour = samples_per_minute * 60
       hours, minutes, seconds, milliseconds = 0, 0, 0, 0
