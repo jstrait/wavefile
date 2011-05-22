@@ -6,10 +6,11 @@ module WaveFile
     SUPPORTED_BITS_PER_SAMPLE = [8, 16, 32]
 
     def initialize(channels, bits_per_sample, sample_rate)
+      channels = canonicalize_channels(channels)
       validate_channels(channels)
       validate_bits_per_sample(bits_per_sample)
 
-      @channels = canonicalize_channels(channels)
+      @channels = channels
       @bits_per_sample = bits_per_sample
       @sample_rate = sample_rate
       @block_align = (@bits_per_sample / 8) * @channels
@@ -39,9 +40,7 @@ module WaveFile
     end
 
     def validate_channels(candidate_channels)
-      unless candidate_channels == :mono   ||
-             candidate_channels == :stereo ||
-             (1..MAX_CHANNELS) === candidate_channels
+      unless (1..MAX_CHANNELS) === candidate_channels
         raise FormatError, "Invalid number of channels. Must be between 1 and #{MAX_CHANNELS}."
       end
     end
