@@ -2,7 +2,7 @@ module WaveFile
   class Writer
     def initialize(file_name, format)
       @file = File.open(file_name, "wb")
-      @format = format.dup
+      @format = format
 
       @sample_count = 0
       @pack_code = PACK_CODES[format.bits_per_sample]
