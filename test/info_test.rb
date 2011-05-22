@@ -18,7 +18,7 @@ class InfoTest < Test::Unit::TestCase
     assert_equal(2, info.channels)
     assert_equal(16, info.bits_per_sample)
     assert_equal(44100, info.sample_rate)
-    assert_equal(88200, info.byte_rate)
+    assert_equal(176400, info.byte_rate)
     assert_equal(4, info.block_align)
     assert_equal(44100, info.sample_count)
     assert_equal({:hours => 0, :minutes => 0, :seconds => 1, :milliseconds => 0}, info.duration)
