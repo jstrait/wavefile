@@ -7,9 +7,9 @@ module WaveFile
       read_header()
       
       if format == nil
-        @output_format = @native_format
+        @format = @native_format
       else
-        @output_format = format
+        @format = format
       end
     end
 
@@ -47,14 +47,14 @@ module WaveFile
       end
 
       buffer = Buffer.new(samples, @native_format)
-      return buffer.convert(@output_format)
+      return buffer.convert(@format)
     end
 
     def close()
       @file.close()
     end
 
-    attr_reader :info
+    attr_reader :file_name, :format, :info
 
   private
   

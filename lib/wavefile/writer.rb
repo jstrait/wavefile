@@ -23,6 +23,8 @@ module WaveFile
       @file.close()
     end
 
+    attr_reader :file_name, :format
+
   private
 
     def write_header(sample_data_size)
