@@ -4,7 +4,7 @@ module WaveFile
       @file = File.open(file_name, "wb")
       @format = format
 
-      @sample_count = 0
+      @samples_written = 0
       @pack_code = PACK_CODES[format.bits_per_sample]
       write_header(0)
     end
@@ -13,23 +13,23 @@ module WaveFile
       samples = buffer.convert(@format).samples
 
       @file.syswrite(samples.flatten.pack(@pack_code))
-      @sample_count += samples.length
+      @samples_written += samples.length
     end
 
     def close()
       @file.sysseek(0)
-      write_header(@sample_count)
+      write_header(@samples_written)
       
       @file.close()
     end
 
-    attr_reader :file_name, :format
+    attr_reader :file_name, :format, :samples_written
 
   private
 
-    def write_header(sample_data_size)
+    def write_header(sample_count)
       header = CHUNK_IDS[:header]
-      header += [HEADER_BYTE_LENGTH + sample_data_size].pack("V")
+      header += [HEADER_BYTE_LENGTH + sample_count].pack("V")
       header += WAVEFILE_FORMAT_CODE
       header += CHUNK_IDS[:format]
       header += [FORMAT_CHUNK_BYTE_LENGTH].pack("V")
@@ -40,7 +40,7 @@ module WaveFile
       header += [@format.block_align].pack("v")
       header += [@format.bits_per_sample].pack("v")
       header += CHUNK_IDS[:data]
-      header += [sample_data_size].pack("V")
+      header += [sample_count].pack("V")
 
       @file.syswrite(header)
     end
