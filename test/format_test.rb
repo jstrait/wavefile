@@ -40,11 +40,17 @@ class FormatTest < Test::Unit::TestCase
     format = Format.new(1, 16, 44100)
     assert_equal(88200, format.byte_rate)
 
+    format = Format.new(1, 32, 44100)
+    assert_equal(176400, format.byte_rate)
+
     format = Format.new(2, 8, 44100)
     assert_equal(88200, format.byte_rate)
 
     format = Format.new(2, 16, 44100)
     assert_equal(176400, format.byte_rate)
+
+    format = Format.new(2, 32, 44100)
+    assert_equal(352800, format.byte_rate)
   end
 
   def test_block_align()
