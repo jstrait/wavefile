@@ -70,7 +70,36 @@ module WaveFile
     end
 
     def convert_buffer_bits_per_sample(samples, old_bits_per_sample, new_bits_per_sample)
-      # TO DO: Fill this in
+      shift_amount = (new_bits_per_sample - old_bits_per_sample).abs
+
+      if old_bits_per_sample == 8
+        if Array === samples.first
+          samples.map! do |sample|
+            sample.map! {|sub_sample| (sub_sample - 128) << shift_amount }
+          end
+        else
+          samples.map! {|sample| (sample - 128) << shift_amount }
+        end
+      elsif new_bits_per_sample == 8
+        if Array === samples.first
+          samples.map! do |sample|
+            sample.map! {|sub_sample| (sub_sample >> shift_amount) + 128 }
+          end
+        else
+          samples.map! {|sample| (sample >> shift_amount) + 128 }
+        end
+      else
+        operator = (new_bits_per_sample > old_bits_per_sample) ? :<< : :>>
+
+        if Array === samples.first
+          samples.map! do |sample|
+            sample.map! {|sub_sample| sub_sample.send(operator, shift_amount) }
+          end
+        else
+          samples.map! {|sample| sample.send(operator, shift_amount) }
+        end
+      end
+
       return samples
     end
   end
