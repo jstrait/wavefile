@@ -39,6 +39,10 @@ module WaveFile
         new_samples = convert_buffer_channels(new_samples, old_format.channels, new_format.channels)
       end
 
+      unless old_format.bits_per_sample == new_format.bits_per_sample
+        new_samples = convert_buffer_bits_per_sample(new_samples, old_format.bits_per_sample, new_format.bits_per_sample)
+      end
+
       @format = new_format
       
       return new_samples
@@ -62,6 +66,11 @@ module WaveFile
         raise "Conversion of sample data from #{old_channels} channels to #{new_channels} channels is unsupported"
       end
     
+      return samples
+    end
+
+    def convert_buffer_bits_per_sample(samples, old_bits_per_sample, new_bits_per_sample)
+      # TO DO: Fill this in
       return samples
     end
   end
