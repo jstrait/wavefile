@@ -11,6 +11,11 @@ module WaveFile
       else
         @format = format
       end
+
+      if block_given?
+        yield(self)
+        close()
+      end
     end
 
     def each_buffer(buffer_size)

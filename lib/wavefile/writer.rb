@@ -7,6 +7,11 @@ module WaveFile
       @samples_written = 0
       @pack_code = PACK_CODES[format.bits_per_sample]
       write_header(0)
+
+      if block_given?
+        yield(self)
+        close()
+      end
     end
 
     def write(buffer)
