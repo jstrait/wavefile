@@ -30,7 +30,8 @@ class BufferTest < Test::Unit::TestCase
         assert_equal([-100, 0, 125, 4], b.samples)
 
         # 3-channel => Mono
-        b = Buffer.new([[-100, -100, -100], [0, 0, 0], [200, 50, 650], [5, 1, 1], [5, 1, 2]], Format.new(3, bits_per_sample, sample_rate))
+        b = Buffer.new([[-100, -100, -100], [0, 0, 0], [200, 50, 650], [5, 1, 1], [5, 1, 2]],
+                       Format.new(3, bits_per_sample, sample_rate))
         b.convert!(Format.new(1, bits_per_sample, sample_rate))
         assert_equal([-100, 0, 300, 2, 2], b.samples)
       end
