@@ -34,6 +34,17 @@ class BufferTest < Test::Unit::TestCase
                        Format.new(3, bits_per_sample, sample_rate))
         b.convert!(Format.new(1, bits_per_sample, sample_rate))
         assert_equal([-100, 0, 300, 2, 2], b.samples)
+
+        # 3-channel => Stereo
+        b = Buffer.new([[-100, -100, -100], [1, 2, 3], [200, 50, 650]],
+                       Format.new(3, bits_per_sample, sample_rate))
+        b.convert!(Format.new(2, bits_per_sample, sample_rate))
+        assert_equal([[-100, -100], [1, 2], [200, 50]], b.samples)
+
+        # Unsupported conversion (4-channel => 3-channel)
+        b = Buffer.new([[-100, 200, -300, 400], [1, 2, 3, 4]],
+                       Format.new(4, bits_per_sample, sample_rate))
+        assert_raise(RuntimeError) { b.convert!(Format.new(3, bits_per_sample, sample_rate)) }
       end
     end
   end
