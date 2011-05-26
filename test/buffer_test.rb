@@ -46,4 +46,11 @@ class BufferTest < Test::Unit::TestCase
       end
     end
   end
+
+  def test_convert_buffer_bits_per_sample
+    # Assert that not changing the number of channels is a no-op
+    b = Buffer.new([-32768, -24576, -16384, -8192, 0, 8256, 16513, 24511, 32767], Format.new(1, 16, 44100))
+    b.convert!(Format.new(1, 16, 44100))
+    assert_equal([-32768, -24576, -16384, -8192, 0, 8256, 16513, 24511, 32767], b.samples)
+  end
 end
