@@ -17,13 +17,13 @@ class FormatTest < Test::Unit::TestCase
 
   def test_invalid_channels()
     ["dsfsfsdf", :foo, 0, -1, 65536].each do |invalid_channels|
-      assert_raise(FormatError) { Format.new(invalid_channels, 16, 44100) }
+      assert_raise(InvalidFormatError) { Format.new(invalid_channels, 16, 44100) }
     end
   end
 
   def test_invalid_bits_per_sample()
     ["dsfsfsdf", :foo, 0, 12].each do |invalid_bits_per_sample|
-      assert_raise(FormatError) { Format.new(1, invalid_bits_per_sample, 44100) }
+      assert_raise(InvalidFormatError) { Format.new(1, invalid_bits_per_sample, 44100) }
     end
   end
 

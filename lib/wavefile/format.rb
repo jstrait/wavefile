@@ -1,5 +1,5 @@
 module WaveFile
-  class FormatError < RuntimeError; end
+  class InvalidFormatError < RuntimeError; end
 
   class Format
     MAX_CHANNELS = 65535
@@ -41,13 +41,13 @@ module WaveFile
 
     def validate_channels(candidate_channels)
       unless (1..MAX_CHANNELS) === candidate_channels
-        raise FormatError, "Invalid number of channels. Must be between 1 and #{MAX_CHANNELS}."
+        raise InvalidFormatError, "Invalid number of channels. Must be between 1 and #{MAX_CHANNELS}."
       end
     end
 
     def validate_bits_per_sample(candidate_bits_per_sample)
       unless SUPPORTED_BITS_PER_SAMPLE.member?(candidate_bits_per_sample)
-        raise FormatError,
+        raise InvalidFormatError,
               "Bits per sample of #{candidate_bits_per_sample} is unsupported. " +
               "Only #{SUPPORTED_BITS_PER_SAMPLE.inspect} are supported."
       end
