@@ -1,4 +1,6 @@
 module WaveFile
+  class UnsupportedFormatError < StandardError; end
+
   class Reader
     def initialize(file_name, format=nil)
       @file_name = file_name
@@ -63,34 +65,32 @@ module WaveFile
 
   private
   
-    def read_header()
-      header = {}
-    
+    def read_header()    
       # Read RIFF header
-      riff_header = @file.sysread(12).unpack("a4Va4")
-      header[:riff_header_chunk_id] = riff_header[0]
-      header[:riff_header_chunk_size] = riff_header[1]
-      header[:riff_format] = riff_header[2]
-    
-      # Read format subchunk
-      header[:format_chunk_id], header[:format_chunk_size] = read_to_chunk(CHUNK_IDS[:format])
-      format_subchunk_str = @file.sysread(header[:format_chunk_size])
-      format_subchunk = format_subchunk_str.unpack("vvVVvv")  # Any extra parameters are ignored
-      header[:audio_format] = format_subchunk[0]
-      header[:channels] = format_subchunk[1]
-      header[:sample_rate] = format_subchunk[2]
-      header[:byte_rate] = format_subchunk[3]
-      header[:block_align] = format_subchunk[4]
-      header[:bits_per_sample] = format_subchunk[5]
+      riff_header = {}
+      riff_header[:chunk_id],
+        riff_header[:chunk_size],
+        riff_header[:riff_format] = @file.sysread(12).unpack("a4Va4")
+      validate_riff_header(riff_header)
+
+      # Read format chunk
+      format_chunk = {}
+      format_chunk[:chunk_id], format_chunk[:chunk_size] = read_to_chunk(CHUNK_IDS[:format])
+      format_chunk_str = @file.sysread(format_chunk[:chunk_size])
+      format_chunk[:audio_format],
+        format_chunk[:channels],
+        format_chunk[:sample_rate],
+        format_chunk[:byte_rate],
+        format_chunk[:block_align],
+        format_chunk[:bits_per_sample] = format_subchunk_str.unpack("vvVVvv")  # Any extra parameters are ignored
     
       # Read data subchunk
-      header[:data_chunk_id], header[:data_chunk_size] = read_to_chunk(CHUNK_IDS[:data])
+      data_chunk = {}
+      data_chunk[:data_chunk_id], data_chunk[:data_chunk_size] = read_to_chunk(CHUNK_IDS[:data])
    
-      validate_header(header)
-    
-      sample_count = header[:data_chunk_size] / header[:block_align]
+      sample_count = data_chunk[:data_chunk_size] / format[:block_align]
 
-      @native_format = Format.new(header[:channels], header[:bits_per_sample], header[:sample_rate])
+      @native_format = Format.new(format[:channels], format[:bits_per_sample], format[:sample_rate])
       @info = Info.new(@file_name, @native_format, sample_count)
     end
 
@@ -109,8 +109,18 @@ module WaveFile
       return chunk_id, chunk_size
     end
 
-    def validate_header(header)
-      return true
+    def validate_riff_header(riff_header)
+      unless riff_header[:chunk_id] == CHUNK_IDS[:header]
+        raise UnsupportedFormatError,
+              "File '#{@file_name}' is not a supported wave file. " +
+              "Expected chunk ID '#{CHUNK_IDS[:header]}', but was '#{riff_header[:chunk_id]}'"
+      end
+
+      unless riff_header[:riff_format] == WAVEFILE_FORMAT_CODE
+        raise UnsupportedFormatError,
+              "File '#{@file_name}' is not a supported wave file. " +
+              "Expected RIFF format of '#{WAVEFILE_FORMAT_CODE}', but was '#{riff_header[:riff_format]}'"
+      end
     end
   end
 end
