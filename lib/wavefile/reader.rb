@@ -68,13 +68,13 @@ module WaveFile
     
       # Read RIFF header
       riff_header = @file.sysread(12).unpack("a4Va4")
-      header[:chunk_id] = riff_header[0]
-      header[:chunk_size] = riff_header[1]
-      header[:format] = riff_header[2]
+      header[:riff_header_chunk_id] = riff_header[0]
+      header[:riff_header_chunk_size] = riff_header[1]
+      header[:riff_format] = riff_header[2]
     
       # Read format subchunk
-      header[:sub_chunk1_id], header[:sub_chunk1_size] = read_to_chunk(CHUNK_IDS[:format])
-      format_subchunk_str = @file.sysread(header[:sub_chunk1_size])
+      header[:format_chunk_id], header[:format_chunk_size] = read_to_chunk(CHUNK_IDS[:format])
+      format_subchunk_str = @file.sysread(header[:format_chunk_size])
       format_subchunk = format_subchunk_str.unpack("vvVVvv")  # Any extra parameters are ignored
       header[:audio_format] = format_subchunk[0]
       header[:channels] = format_subchunk[1]
@@ -84,11 +84,11 @@ module WaveFile
       header[:bits_per_sample] = format_subchunk[5]
     
       # Read data subchunk
-      header[:sub_chunk2_id], header[:sub_chunk2_size] = read_to_chunk(CHUNK_IDS[:data])
+      header[:data_chunk_id], header[:data_chunk_size] = read_to_chunk(CHUNK_IDS[:data])
    
       validate_header(header)
     
-      sample_count = header[:sub_chunk2_size] / header[:block_align]
+      sample_count = header[:data_chunk_size] / header[:block_align]
 
       @native_format = Format.new(header[:channels], header[:bits_per_sample], header[:sample_rate])
       @info = Info.new(@file_name, @native_format, sample_count)
