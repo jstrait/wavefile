@@ -1,5 +1,5 @@
 module WaveFile
-  class InvalidFormatError < RuntimeError; end
+  class InvalidFormatError < StandardError; end
 
   class Format
     MAX_CHANNELS = 65535
