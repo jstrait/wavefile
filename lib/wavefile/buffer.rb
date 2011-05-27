@@ -1,4 +1,6 @@
 module WaveFile
+  class BufferConversionError < StandardError; end
+  
   class Buffer
     def initialize(samples, format)
       @samples = samples
@@ -63,7 +65,8 @@ module WaveFile
       elsif old_channels > 2 && new_channels == 2
         samples.map! {|sample| [sample[0], sample[1]]}
       else
-        raise "Conversion of sample data from #{old_channels} channels to #{new_channels} channels is unsupported"
+        raise BufferConversionError,
+              "Conversion of sample data from #{old_channels} channels to #{new_channels} channels is unsupported"
       end
     
       return samples

@@ -44,7 +44,7 @@ class BufferTest < Test::Unit::TestCase
         # Unsupported conversion (4-channel => 3-channel)
         b = Buffer.new([[-100, 200, -300, 400], [1, 2, 3, 4]],
                        Format.new(4, bits_per_sample, sample_rate))
-        assert_raise(RuntimeError) { b.convert!(Format.new(3, bits_per_sample, sample_rate)) }
+        assert_raise(BufferConversionError) { b.convert!(Format.new(3, bits_per_sample, sample_rate)) }
       end
     end
   end
