@@ -65,7 +65,7 @@ module WaveFile
 
   private
   
-    def read_header()    
+    def read_header()
       # Read RIFF header
       riff_header = {}
       riff_header[:chunk_id],
