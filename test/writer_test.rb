@@ -8,9 +8,11 @@ include WaveFile
 class WriterTest < Test::Unit::TestCase
   OUTPUT_FOLDER = "test/fixtures/actual_output"
 
-  def test_no_sample_data
+  def setup
     clean_output_folder()
+  end
 
+  def test_no_sample_data
     writer = Writer.new("#{OUTPUT_FOLDER}/no_samples.wav", Format.new(1, 8, 44100))
     writer.close()
     
