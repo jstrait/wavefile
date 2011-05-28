@@ -82,8 +82,9 @@ module WaveFile
         format_chunk[:sample_rate],
         format_chunk[:byte_rate],
         format_chunk[:block_align],
-        format_chunk[:bits_per_sample] = format_subchunk_str.unpack("vvVVvv")  # Any extra parameters are ignored
-    
+        format_chunk[:bits_per_sample] = format_chunk_str.unpack("vvVVvv")  # Any extra parameters are ignored
+      validate_format_chunk(format_chunk)
+
       # Read data subchunk
       data_chunk = {}
       data_chunk[:data_chunk_id], data_chunk[:data_chunk_size] = read_to_chunk(CHUNK_IDS[:data])
@@ -100,7 +101,7 @@ module WaveFile
 
       while chunk_id != expected_chunk_id
         # Skip chunk
-        file.sysread(chunk_size)
+        @file.sysread(chunk_size)
         
         chunk_id = @file.sysread(4)
         chunk_size = @file.sysread(4).unpack("V")[0]
