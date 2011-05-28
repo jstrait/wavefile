@@ -5,7 +5,7 @@ require 'wavefile.rb'
 
 include WaveFile
 
-class BufferTest < Test::Unit::TestCase
+class ReaderTest < Test::Unit::TestCase
   def test_nonexistent_file
     assert_raise(Errno::ENOENT) { reader = Reader.new("test/fixtures/i_do_not_exist.wav") }
   end
