@@ -122,5 +122,13 @@ module WaveFile
               "Expected RIFF format of '#{WAVEFILE_FORMAT_CODE}', but was '#{riff_header[:riff_format]}'"
       end
     end
+
+    def validate_format_chunk(format_chunk)
+      unless format_chunk[:audio_format] == PCM
+        raise UnsupportedFormatError,
+              "File '#{@file_name}' is not a supported wave file. " +
+              "This file encoding format #{format_chunk[:audio_format]}, only PCM (1) is supported"
+      end
+    end
   end
 end
