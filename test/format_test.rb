@@ -33,6 +33,18 @@ class FormatTest < Test::Unit::TestCase
     assert_equal(32, Format.new(1, 32, 44100).bits_per_sample)
   end
 
+  def test_valid_sample_rate()
+    [1, 44100, 4294967296].each do |valid_sample_rate|
+      assert_equal(valid_sample_rate, Format.new(1, 16, valid_sample_rate).sample_rate)
+    end
+  end
+
+  def test_invalid_sample_rate()
+    ["dsfsfsdf", :foo, 0, -1, 4294967297].each do |invalid_sample_rate|
+      assert_raise(InvalidFormatError) { Format.new(1, 16, invalid_sample_rate) }
+    end
+  end
+
   def test_byte_rate()
     format = Format.new(1, 8, 44100)
     assert_equal(44100, format.byte_rate)
