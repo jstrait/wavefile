@@ -1,5 +1,7 @@
 module WaveFile
   class Writer
+    EMPTY_BYTE = "\000"
+
     def initialize(file_name, format)
       @file = File.open(file_name, "wb")
       @format = format
@@ -22,6 +24,13 @@ module WaveFile
     end
 
     def close()
+      # The Wave file format requires that the total bytes of sample data written
+      # are even. If not, an empty padding byte should be written.
+      bytes_written = @samples_written * @format.block_align
+      if bytes_written.odd?
+        @file.syswrite(EMPTY_BYTE)
+      end
+
       @file.sysseek(0)
       write_header(@samples_written)
       
