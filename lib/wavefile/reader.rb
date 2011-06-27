@@ -89,9 +89,9 @@ module WaveFile
       data_chunk = {}
       data_chunk[:data_chunk_id], data_chunk[:data_chunk_size] = read_to_chunk(CHUNK_IDS[:data])
    
-      sample_count = data_chunk[:data_chunk_size] / format[:block_align]
+      sample_count = data_chunk[:data_chunk_size] / format_chunk[:block_align]
 
-      @native_format = Format.new(format[:channels], format[:bits_per_sample], format[:sample_rate])
+      @native_format = Format.new(format_chunk[:channels], format_chunk[:bits_per_sample], format_chunk[:sample_rate])
       @info = Info.new(@file_name, @native_format, sample_count)
     end
 
