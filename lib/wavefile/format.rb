@@ -2,9 +2,14 @@ module WaveFile
   class InvalidFormatError < StandardError; end
 
   class Format
+    # Not using ranges because of 1.8.7 performance problems with Range.max()
+    MIN_CHANNELS = 1
     MAX_CHANNELS = 65535
-    SUPPORTED_BITS_PER_SAMPLE = [8, 16, 32]
+
+    MIN_SAMPLE_RATE = 1
     MAX_SAMPLE_RATE = 4_294_967_296
+
+    SUPPORTED_BITS_PER_SAMPLE = [8, 16, 32]
 
     def initialize(channels, bits_per_sample, sample_rate)
       channels = canonicalize_channels(channels)
@@ -42,7 +47,7 @@ module WaveFile
     end
 
     def validate_channels(candidate_channels)
-      unless (1..MAX_CHANNELS) === candidate_channels
+      unless (MIN_CHANNELS..MAX_CHANNELS) === candidate_channels
         raise InvalidFormatError, "Invalid number of channels. Must be between 1 and #{MAX_CHANNELS}."
       end
     end
@@ -56,7 +61,7 @@ module WaveFile
     end
 
     def validate_sample_rate(candidate_sample_rate)
-      unless (1..MAX_SAMPLE_RATE) === candidate_sample_rate
+      unless (MIN_SAMPLE_RATE..MAX_SAMPLE_RATE) === candidate_sample_rate
         raise InvalidFormatError, "Invalid sample rate. Must be between 1 and #{MAX_SAMPLE_RATE}"
       end
     end
