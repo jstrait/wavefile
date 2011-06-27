@@ -17,6 +17,10 @@ module WaveFile
   
   private
 
+    # Calculates playback time given the number of samples and the sample rate.
+    #
+    # Returns a hash listing the number of hours, minutes, seconds, and milliseconds of
+    # playback time.
     def calculate_duration()
       total_samples = @sample_count
       samples_per_millisecond = @sample_rate / 1000.0
