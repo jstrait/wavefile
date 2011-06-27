@@ -65,6 +65,9 @@ module WaveFile
 
   private
 
+    VALID_FORMAT_CHUNK_SIZES = [16, 18, 40]
+    FORMAT_CHUNK_SIZE_TO_EXTENSION_SIZE = {16 => nil, 18 => 0, 40 => 22}
+
     def read_header()
       # Read RIFF header
       begin
@@ -140,7 +143,7 @@ module WaveFile
     # Note that this method only verifies that the format chunk contains valid data per the Wave file spec,
     # and not necessarily that it is in a format that Reader can read.
     def validate_format_chunk(format_chunk)
-      unless [16, 18, 40].member?(format_chunk[:chunk_size])
+      unless VALID_FORMAT_CHUNK_SIZES.member?(format_chunk[:chunk_size])
         raise UnsupportedFormatError,
               "File '#{@file_name}' is not a supported wave file. " +
               "REASON MESSAGE TO DO"
@@ -148,12 +151,13 @@ module WaveFile
 
       # TODO: Validate that :audio_format through :bits_per_sample are not nil
       
-      if format_chunk[:chunk_size] > 16
-        # TODO: Validate that :extension_size is not nil
+      unless format_chunk[:extension_size] == FORMAT_CHUNK_SIZE_TO_EXTENSION_SIZE[format_chunk[:chunk_size]]
+        # TODO: Raise error
+      end
 
-        if format_chunk[:extension_size] > 0
+      if format_chunk[:chunk_size] == 40
           # TODO: Validate the :channel_mask through :sub_format_guid are not nil
-        end
+          # TODO: Validate that :sub_format_guid is the correct string
       end
     end
   end
