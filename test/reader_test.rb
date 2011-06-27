@@ -10,6 +10,14 @@ class ReaderTest < Test::Unit::TestCase
     assert_raise(Errno::ENOENT) { reader = Reader.new("test/fixtures/i_do_not_exist.wav") }
   end
 
+  def test_empty_file
+    assert_raise(UnsupportedFormatError) { reader = Reader.new("test/fixtures/empty.wav") }
+  end
+
+  def test_incomplete_riff_header
+    assert_raise(UnsupportedFormatError) { reader = Reader.new("test/fixtures/incomplete_riff_header.wav") }
+  end
+
   def test_bad_riff_header
     assert_raise(UnsupportedFormatError) { reader = Reader.new("test/fixtures/bad_riff_header.wav") }
   end

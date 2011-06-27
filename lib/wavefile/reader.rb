@@ -67,11 +67,17 @@ module WaveFile
   
     def read_header()
       # Read RIFF header
-      riff_header = {}
-      riff_header[:chunk_id],
+      begin
+        riff_header = {}
+        riff_header[:chunk_id],
         riff_header[:chunk_size],
         riff_header[:riff_format] = @file.sysread(12).unpack("a4Va4")
-      validate_riff_header(riff_header)
+        validate_riff_header(riff_header)
+      rescue EOFError
+        raise UnsupportedFormatError,
+              "File '#{@file_name}' is not a supported wave file. " +
+              "It is empty."
+      end
 
       # Read format chunk
       format_chunk = {}
