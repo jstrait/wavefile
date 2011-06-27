@@ -32,11 +32,6 @@ class ReaderTest < Test::Unit::TestCase
     assert_raise(UnsupportedFormatError) { Reader.new(fixture("bad_wavefile_format.wav")) }
   end
 
-  # The audio format in the format chunk is not 1 (i.e. PCM)
-  def test_bad_audio_format
-    assert_raise(UnsupportedFormatError) { Reader.new(fixture("bad_audio_format.wav")) }
-  end
-
 private
 
   def fixture(fixture_name)

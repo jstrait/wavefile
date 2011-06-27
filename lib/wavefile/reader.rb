@@ -64,7 +64,7 @@ module WaveFile
     attr_reader :file_name, :format, :info
 
   private
-  
+
     def read_header()
       # Read RIFF header
       begin
@@ -83,12 +83,19 @@ module WaveFile
       format_chunk = {}
       format_chunk[:chunk_id], format_chunk[:chunk_size] = read_to_chunk(CHUNK_IDS[:format])
       format_chunk_str = @file.sysread(format_chunk[:chunk_size])
+
       format_chunk[:audio_format],
-        format_chunk[:channels],
-        format_chunk[:sample_rate],
-        format_chunk[:byte_rate],
-        format_chunk[:block_align],
-        format_chunk[:bits_per_sample] = format_chunk_str.unpack("vvVVvv")  # Any extra parameters are ignored
+      format_chunk[:channels],
+      format_chunk[:sample_rate],
+      format_chunk[:byte_rate],
+      format_chunk[:block_align],
+      format_chunk[:bits_per_sample],
+      format_chunk[:extension_size],
+      format_chunk[:valid_bits_per_sample],
+      format_chunk[:channel_mask],
+      format_chunk[:sub_format_code],
+      format_chunk[:sub_format_guid] = format_chunk_str.unpack("vvVVvvvVva14")
+
       validate_format_chunk(format_chunk)
 
       # Read data subchunk
@@ -130,11 +137,23 @@ module WaveFile
       end
     end
 
+    # Note that this method only verifies that the format chunk contains valid data per the Wave file spec,
+    # and not necessarily that it is in a format that Reader can read.
     def validate_format_chunk(format_chunk)
-      unless format_chunk[:audio_format] == PCM
+      unless [16, 18, 40].member?(format_chunk[:chunk_size])
         raise UnsupportedFormatError,
               "File '#{@file_name}' is not a supported wave file. " +
-              "This file encoding format #{format_chunk[:audio_format]}, only PCM (1) is supported"
+              "REASON MESSAGE TO DO"
+      end
+
+      # TODO: Validate that :audio_format through :bits_per_sample are not nil
+      
+      if format_chunk[:chunk_size] > 16
+        # TODO: Validate that :extension_size is not nil
+
+        if format_chunk[:extension_size] > 0
+          # TODO: Validate the :channel_mask through :sub_format_guid are not nil
+        end
       end
     end
   end
