@@ -47,6 +47,13 @@ class InfoTest < Test::Unit::TestCase
       info = Info.new(FILE_NAME, format, (sample_rate * SECONDS_IN_MINUTE) + sample_rate + (sample_rate / 2))
       assert_equal({:hours => 0, :minutes => 1, :seconds => 1, :milliseconds => 500}, info.duration)
     end
+
+    # Test for when the number of hours is more than a day.
+    format = Format.new(2, 16, 44100)
+    samples_per_hour = 44100 * 60 * 60
+    info = Info.new(FILE_NAME, format, samples_per_hour * 25)
+    assert_equal({:hours => 25, :minutes => 0, :seconds => 0, :milliseconds => 0}, info.duration)
+
   end
 end
 
