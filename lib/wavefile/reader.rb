@@ -64,6 +64,7 @@ module WaveFile
     attr_reader :file_name, :format, :info
 
   private
+    FORMAT_CHUNK_MINIMUM_SIZE = 16
 
     VALID_FORMAT_CHUNK_SIZES = [16, 18, 40]
     FORMAT_CHUNK_SIZE_TO_EXTENSION_SIZE = {16 => nil, 18 => 0, 40 => 22}
@@ -85,21 +86,32 @@ module WaveFile
       # Read format chunk
       format_chunk = {}
       format_chunk[:chunk_id], format_chunk[:chunk_size] = read_to_chunk(CHUNK_IDS[:format])
-      format_chunk_str = @file.sysread(format_chunk[:chunk_size])
 
+      if format_chunk[:chunk_size] < FORMAT_CHUNK_MINIMUM_SIZE
+        raise UnsupportedFormatError, "TODO"
+      end
+
+      format_chunk_str = @file.sysread(format_chunk[:chunk_size])
       format_chunk[:audio_format],
       format_chunk[:channels],
       format_chunk[:sample_rate],
       format_chunk[:byte_rate],
       format_chunk[:block_align],
-      format_chunk[:bits_per_sample],
-      format_chunk[:extension_size],
-      format_chunk[:valid_bits_per_sample],
-      format_chunk[:channel_mask],
-      format_chunk[:sub_format_code],
-      format_chunk[:sub_format_guid] = format_chunk_str.unpack("vvVVvvvVva14")
+      format_chunk[:bits_per_sample] = format_chunk_str.slice!(FORMAT_CHUNK_MINIMUM_SIZE).unpack("vvVVvv")
 
-      validate_format_chunk(format_chunk)
+      if format_chunk[:chunk_size] > FORMAT_CHUNK_MINIMUM_SIZE
+        format_chunk[:extension_size] = format_chunk_str.slice!(2).unpack("v")
+
+        if format_chunk[:extension_size] == nil
+          raise UnsupportedFormatError, "TODO"
+        end
+
+        if format_chunk[:extension_size] != format_chunk_str.length
+          raise UnsupportedFormatError, "TODO"
+        end
+
+        # TODO: Parse the extension
+      end
 
       # Read data subchunk
       data_chunk = {}
@@ -137,27 +149,6 @@ module WaveFile
         raise UnsupportedFormatError,
               "File '#{@file_name}' is not a supported wave file. " +
               "Expected RIFF format of '#{WAVEFILE_FORMAT_CODE}', but was '#{riff_header[:riff_format]}'"
-      end
-    end
-
-    # Note that this method only verifies that the format chunk contains valid data per the Wave file spec,
-    # and not necessarily that it is in a format that Reader can read.
-    def validate_format_chunk(format_chunk)
-      unless VALID_FORMAT_CHUNK_SIZES.member?(format_chunk[:chunk_size])
-        raise UnsupportedFormatError,
-              "File '#{@file_name}' is not a supported wave file. " +
-              "REASON MESSAGE TO DO"
-      end
-
-      # TODO: Validate that :audio_format through :bits_per_sample are not nil
-      
-      unless format_chunk[:extension_size] == FORMAT_CHUNK_SIZE_TO_EXTENSION_SIZE[format_chunk[:chunk_size]]
-        # TODO: Raise error
-      end
-
-      if format_chunk[:chunk_size] == 40
-          # TODO: Validate the :channel_mask through :sub_format_guid are not nil
-          # TODO: Validate that :sub_format_guid is the correct string
       end
     end
   end
