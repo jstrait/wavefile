@@ -85,22 +85,32 @@ module WaveFile
 
       # Read format chunk
       format_chunk = {}
-      format_chunk[:chunk_id], format_chunk[:chunk_size] = read_to_chunk(CHUNK_IDS[:format])
+      begin
+        format_chunk[:chunk_id], format_chunk[:chunk_size] = read_to_chunk(CHUNK_IDS[:format])
+      rescue EOFError
+        raise UnsupportedFormatError,
+              "File '#{@file_name}' is not a supported wave file. " +
+              "It has no format chunk."
+      end
 
       if format_chunk[:chunk_size] < FORMAT_CHUNK_MINIMUM_SIZE
         raise UnsupportedFormatError, "TODO"
       end
 
-      format_chunk_str = @file.sysread(format_chunk[:chunk_size])
+      begin
+        format_chunk_str = @file.sysread(format_chunk[:chunk_size])
+      rescue
+        raise UnsupportedFormatError, "TODO"
+      end
       format_chunk[:audio_format],
       format_chunk[:channels],
       format_chunk[:sample_rate],
       format_chunk[:byte_rate],
       format_chunk[:block_align],
-      format_chunk[:bits_per_sample] = format_chunk_str.slice!(FORMAT_CHUNK_MINIMUM_SIZE).unpack("vvVVvv")
+      format_chunk[:bits_per_sample] = format_chunk_str.slice!(0...FORMAT_CHUNK_MINIMUM_SIZE).unpack("vvVVvv")
 
       if format_chunk[:chunk_size] > FORMAT_CHUNK_MINIMUM_SIZE
-        format_chunk[:extension_size] = format_chunk_str.slice!(2).unpack("v")
+        format_chunk[:extension_size] = format_chunk_str.slice!(0...2).unpack("v")
 
         if format_chunk[:extension_size] == nil
           raise UnsupportedFormatError, "TODO"
@@ -115,8 +125,12 @@ module WaveFile
 
       # Read data subchunk
       data_chunk = {}
-      data_chunk[:data_chunk_id], data_chunk[:data_chunk_size] = read_to_chunk(CHUNK_IDS[:data])
-   
+      begin
+        data_chunk[:data_chunk_id], data_chunk[:data_chunk_size] = read_to_chunk(CHUNK_IDS[:data])
+      rescue
+        raise UnsupportedFormatError, "TODO"
+      end
+
       sample_count = data_chunk[:data_chunk_size] / format_chunk[:block_align]
 
       @native_format = Format.new(format_chunk[:channels], format_chunk[:bits_per_sample], format_chunk[:sample_rate])

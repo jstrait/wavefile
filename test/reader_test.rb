@@ -32,6 +32,26 @@ class ReaderTest < Test::Unit::TestCase
     assert_raise(UnsupportedFormatError) { Reader.new(fixture("bad_wavefile_format.wav")) }
   end
 
+  # The file consists of just a valid RIFF header
+  def test_no_format_chunk
+    assert_raise(UnsupportedFormatError) { Reader.new(fixture("no_format_chunk.wav")) }
+  end
+
+  # The format chunk has 0 bytes in it (despite the chunk size being 16)
+  def test_empty_format_chunk
+    assert_raise(UnsupportedFormatError) { Reader.new(fixture("empty_format_chunk.wav")) }
+  end
+
+  # The format chunk has some data, but not all of the minimum required.
+  def test_insufficient_format_chunk
+    assert_raise(UnsupportedFormatError) { Reader.new(fixture("insufficient_format_chunk.wav")) }
+  end
+
+  # The RIFF header and format chunk are OK, but there is no data chunk
+  def test_no_data_chunk
+    assert_raise(UnsupportedFormatError) { Reader.new(fixture("no_data_chunk.wav")) }
+  end
+
 private
 
   def fixture(fixture_name)
