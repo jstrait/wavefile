@@ -64,17 +64,15 @@ module WaveFile
   private
 
     def convert_buffer(samples, old_format, new_format)
-      new_samples = samples.dup
-      
       unless old_format.channels == new_format.channels
-        new_samples = convert_buffer_channels(new_samples, old_format.channels, new_format.channels)
+        samples = convert_buffer_channels(samples, old_format.channels, new_format.channels)
       end
 
       unless old_format.bits_per_sample == new_format.bits_per_sample
-        new_samples = convert_buffer_bits_per_sample(new_samples, old_format.bits_per_sample, new_format.bits_per_sample)
+        samples = convert_buffer_bits_per_sample(samples, old_format.bits_per_sample, new_format.bits_per_sample)
       end
       
-      return new_samples
+      return samples
     end
 
     def convert_buffer_channels(samples, old_channels, new_channels)
