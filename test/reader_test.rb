@@ -14,42 +14,42 @@ class ReaderTest < Test::Unit::TestCase
 
   # File contains 0 bytes
   def test_empty_file
-    assert_raise(UnsupportedFormatError) { Reader.new(fixture("empty.wav")) }
+    assert_raise(InvalidFormatError) { Reader.new(fixture("empty.wav")) }
   end
 
   # File consists of "RIFF" and nothing else
   def test_incomplete_riff_header
-    assert_raise(UnsupportedFormatError) { Reader.new(fixture("incomplete_riff_header.wav")) }
+    assert_raise(InvalidFormatError) { Reader.new(fixture("incomplete_riff_header.wav")) }
   end
 
   # First 4 bytes in the file are not "RIFF"
   def test_bad_riff_header
-    assert_raise(UnsupportedFormatError) { Reader.new(fixture("bad_riff_header.wav")) }
+    assert_raise(InvalidFormatError) { Reader.new(fixture("bad_riff_header.wav")) }
   end
 
   # The format code in the RIFF header is not "WAVE"
   def test_bad_wave_format
-    assert_raise(UnsupportedFormatError) { Reader.new(fixture("bad_wavefile_format.wav")) }
+    assert_raise(InvalidFormatError) { Reader.new(fixture("bad_wavefile_format.wav")) }
   end
 
   # The file consists of just a valid RIFF header
   def test_no_format_chunk
-    assert_raise(UnsupportedFormatError) { Reader.new(fixture("no_format_chunk.wav")) }
+    assert_raise(InvalidFormatError) { Reader.new(fixture("no_format_chunk.wav")) }
   end
 
   # The format chunk has 0 bytes in it (despite the chunk size being 16)
   def test_empty_format_chunk
-    assert_raise(UnsupportedFormatError) { Reader.new(fixture("empty_format_chunk.wav")) }
+    assert_raise(InvalidFormatError) { Reader.new(fixture("empty_format_chunk.wav")) }
   end
 
   # The format chunk has some data, but not all of the minimum required.
   def test_insufficient_format_chunk
-    assert_raise(UnsupportedFormatError) { Reader.new(fixture("insufficient_format_chunk.wav")) }
+    assert_raise(InvalidFormatError) { Reader.new(fixture("insufficient_format_chunk.wav")) }
   end
 
   # The RIFF header and format chunk are OK, but there is no data chunk
   def test_no_data_chunk
-    assert_raise(UnsupportedFormatError) { Reader.new(fixture("no_data_chunk.wav")) }
+    assert_raise(InvalidFormatError) { Reader.new(fixture("no_data_chunk.wav")) }
   end
 
 private

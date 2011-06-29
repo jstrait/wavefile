@@ -1,5 +1,5 @@
 module WaveFile
-  class UnsupportedFormatError < StandardError; end
+  class InvalidFormatError < StandardError; end
 
   class Reader
     def initialize(file_name, format=nil)
@@ -95,11 +95,11 @@ module WaveFile
           chunk_size = @file.sysread(4).unpack("V")[0]
         end
       rescue EOFError
-        raise UnsupportedFormatError, "TODO"
+        raise InvalidFormatError, "TODO"
       end
 
       if format_chunk == nil
-        raise UnsupportedFormatError, "File either has no format chunk, or it comes after the data chunk"
+        raise InvalidFormatError, "File either has no format chunk, or it comes after the data chunk"
       end
 
       sample_count = chunk_size / format_chunk[:block_align]
@@ -114,19 +114,19 @@ module WaveFile
         riff_header[:chunk_size],
         riff_header[:riff_format] = @file.sysread(12).unpack("a4Va4")
       rescue EOFError
-        raise UnsupportedFormatError,
+        raise InvalidFormatError,
               "File '#{@file_name}' is not a supported wave file. " +
               "It is empty."
       end
 
       unless riff_header[:chunk_id] == CHUNK_IDS[:header]
-        raise UnsupportedFormatError,
+        raise InvalidFormatError,
               "File '#{@file_name}' is not a supported wave file. " +
               "Expected chunk ID '#{CHUNK_IDS[:header]}', but was '#{riff_header[:chunk_id]}'"
       end
 
       unless riff_header[:riff_format] == WAVEFILE_FORMAT_CODE
-        raise UnsupportedFormatError,
+        raise InvalidFormatError,
               "File '#{@file_name}' is not a supported wave file. " +
               "Expected RIFF format of '#{WAVEFILE_FORMAT_CODE}', but was '#{riff_header[:riff_format]}'"
       end
@@ -134,13 +134,13 @@ module WaveFile
 
     def parse_format_chunk(chunk_size, raw_chunk_data)
       if chunk_size < FORMAT_CHUNK_MINIMUM_SIZE
-        raise UnsupportedFormatError, "TODO"
+        raise InvalidFormatError, "TODO"
       end
 
       begin
         format_chunk_str = @file.sysread(format_chunk[:chunk_size])
       rescue
-        raise UnsupportedFormatError, "TODO"
+        raise InvalidFormatError, "TODO"
       end
       format_chunk[:audio_format],
       format_chunk[:channels],
@@ -153,11 +153,11 @@ module WaveFile
         format_chunk[:extension_size] = format_chunk_str.slice!(0...2).unpack("v")
 
         if format_chunk[:extension_size] == nil
-          raise UnsupportedFormatError, "TODO"
+          raise InvalidFormatError, "TODO"
         end
 
         if format_chunk[:extension_size] != format_chunk_str.length
-          raise UnsupportedFormatError, "TODO"
+          raise InvalidFormatError, "TODO"
         end
 
         # TODO: Parse the extension
