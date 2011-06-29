@@ -86,19 +86,23 @@ module WaveFile
       # because this library doesn't use them.
 
       unless raw_format_chunk[:audio_format] == PCM
-        raise UnsupportedFormatError, "TODO"
+        raise UnsupportedFormatError, "Audio format is #{raw_format_chunk[:audio_format]}, " +
+                                      "but only format code 1 (i.e. PCM) is supported."
       end
 
       unless Format::SUPPORTED_BITS_PER_SAMPLE.include?(raw_format_chunk[:bits_per_sample])
-        raise UnsupportedFormatError, "TODO"
+        raise UnsupportedFormatError, "Bits per sample is #{raw_format_chunk[:bits_per_sample]}, " +
+                                      "but only #{Format::SUPPORTED_BITS_PER_SAMPLE.inspect} are supported."
       end
 
       unless raw_format_chunk[:channels] > 0
-        raise UnsupportedFormatError, "TODO"
+        raise UnsupportedFormatError, "Number of channels is #{raw_format_chunk[:channels]}, " +
+                                      "but only #{Format::MIN_CHANNELS}-#{Format::MAX_CHANNELS} are supported."
       end
 
       unless raw_format_chunk[:sample_rate] > 0
-        raise UnsupportedFormatError, "TODO"
+        raise UnsupportedFormatError, "Sample rate is #{raw_format_chunk[:channels]}, " +
+                                      "but only #{Format::MIN_SAMPLE_RATE}-#{Format::MAX_SAMPLE_RATE} are supported."
       end
     end
   end
@@ -131,13 +135,11 @@ module WaveFile
           chunk_size = @file.sysread(4).unpack("V")[0]
         end
       rescue EOFError
-        raise InvalidFormatError,
-              "File '#{@file_name}' is not a supported wave file. " +
-              "It doesn't have a data chunk."
+        raise_error InvalidFormatError, "It doesn't have a data chunk."
       end
 
       if format_chunk == nil
-        raise InvalidFormatError, "File either has no format chunk, or it comes after the data chunk"
+        raise_error InvalidFormatError, "The format chunk is either missing, or it comes after the data chunk."
       end
 
       sample_count = chunk_size / format_chunk[:block_align]
@@ -154,15 +156,11 @@ module WaveFile
       riff_header[:riff_format] = read_chunk_body(CHUNK_IDS[:header], RIFF_CHUNK_HEADER_SIZE).unpack("a4Va4")
 
       unless riff_header[:chunk_id] == CHUNK_IDS[:header]
-        raise InvalidFormatError,
-              "File '#{@file_name}' is not a supported wave file. " +
-              "Expected chunk ID '#{CHUNK_IDS[:header]}', but was '#{riff_header[:chunk_id]}'"
+        raise_error InvalidFormatError, "Expected chunk ID '#{CHUNK_IDS[:header]}', but was '#{riff_header[:chunk_id]}'"
       end
 
       unless riff_header[:riff_format] == WAVEFILE_FORMAT_CODE
-        raise InvalidFormatError,
-              "File '#{@file_name}' is not a supported wave file. " +
-              "Expected RIFF format of '#{WAVEFILE_FORMAT_CODE}', but was '#{riff_header[:riff_format]}'"
+        raise_error InvalidFormatError, "Expected RIFF format of '#{WAVEFILE_FORMAT_CODE}', but was '#{riff_header[:riff_format]}'"
       end
 
       return riff_header
@@ -170,7 +168,7 @@ module WaveFile
 
     def read_format_chunk(chunk_id, chunk_size)
       if chunk_size < FORMAT_CHUNK_MINIMUM_SIZE
-        raise InvalidFormatError, "TODO"
+        raise_error InvalidFormatError, "The format chunk is incomplete."
       end
 
       raw_bytes = read_chunk_body(CHUNK_IDS[:format], chunk_size)
@@ -187,11 +185,11 @@ module WaveFile
         format_chunk[:extension_size] = raw_bytes.slice!(0...2).unpack("v").first
 
         if format_chunk[:extension_size] == nil
-          raise InvalidFormatError, "TODO"
+          raise_error InvalidFormatError, "The format chunk is missing an expected extension."
         end
 
         if format_chunk[:extension_size] != raw_bytes.length
-          raise InvalidFormatError, "TODO"
+          raise_error InvalidFormatError, "The format chunk extension is shorter than expected."
         end
 
         # TODO: Parse the extension
@@ -204,10 +202,12 @@ module WaveFile
       begin
         return @file.sysread(chunk_size)
       rescue EOFError
-        raise InvalidFormatError,
-              "File '#{@file_name}' is not a supported wave file. " +
-              "The #{chunk_id} has incomplete data."
+        raise_error InvalidFormatError, "The #{chunk_id} chunk has incomplete data."
       end
+    end
+
+    def raise_error(exception_class, message)
+      raise exception_class, "File '#{@file_name}' is not a supported wave file. #{message}"
     end
   end
 end
