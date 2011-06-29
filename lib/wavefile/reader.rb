@@ -1,6 +1,8 @@
 module WaveFile
   class InvalidFormatError < StandardError; end
 
+  class UnsupportedFormatError < StandardError; end
+
   class Reader
     def initialize(file_name, format=nil)
       @file_name = file_name
@@ -9,7 +11,7 @@ module WaveFile
       raw_format_chunk, sample_count = read_until_data_chunk()
       @sample_count = sample_count
       # Make sure we can actually read the file
-      validate_format(raw_format_chunk)
+      validate_format_chunk(raw_format_chunk)
 
       if format == nil
         @format = Format.new(raw_format_chunk[:channels], raw_format_chunk[:bits_per_sample], raw_format_chunk[:sample_rate])
@@ -95,7 +97,7 @@ module WaveFile
           chunk_size = @file.sysread(4).unpack("V")[0]
         end
       rescue EOFError
-        raise InvalidFormatError, "TODO"
+        raise InvalidFormatError, "NO DATA CHUNK FOUND"
       end
 
       if format_chunk == nil
@@ -137,26 +139,22 @@ module WaveFile
         raise InvalidFormatError, "TODO"
       end
 
-      begin
-        format_chunk_str = @file.sysread(format_chunk[:chunk_size])
-      rescue
-        raise InvalidFormatError, "TODO"
-      end
+      format_chunk = {}
       format_chunk[:audio_format],
       format_chunk[:channels],
       format_chunk[:sample_rate],
       format_chunk[:byte_rate],
       format_chunk[:block_align],
-      format_chunk[:bits_per_sample] = format_chunk_str.slice!(0...FORMAT_CHUNK_MINIMUM_SIZE).unpack("vvVVvv")
+      format_chunk[:bits_per_sample] = raw_chunk_data.slice!(0...FORMAT_CHUNK_MINIMUM_SIZE).unpack("vvVVvv")
 
-      if format_chunk[:chunk_size] > FORMAT_CHUNK_MINIMUM_SIZE
-        format_chunk[:extension_size] = format_chunk_str.slice!(0...2).unpack("v")
+      if chunk_size > FORMAT_CHUNK_MINIMUM_SIZE
+        format_chunk[:extension_size] = raw_chunk_data.slice!(0...2).unpack("v")
 
         if format_chunk[:extension_size] == nil
           raise InvalidFormatError, "TODO"
         end
 
-        if format_chunk[:extension_size] != format_chunk_str.length
+        if format_chunk[:extension_size] != raw_chunk_data.length
           raise InvalidFormatError, "TODO"
         end
 
@@ -167,7 +165,24 @@ module WaveFile
     end
 
     def validate_format_chunk(raw_format_chunk)
-      return true
+      # :byte_rate and :block_align are not checked to make sure that match :channels/:sample_rate/bits_per_sample
+      # because this library doesn't use them.
+
+      unless raw_format_chunk[:audio_format] == PCM
+        raise UnsupportedFormatError, "TODO"
+      end
+
+      unless Format::SUPPORTED_BITS_PER_SAMPLE.include?(raw_format_chunk[:bits_per_sample])
+        raise UnsupportedFormatError, "TODO"
+      end
+
+      unless raw_format_chunk[:channels] == 0
+        raise UnsupportedFormatError, "TODO"
+      end
+
+      unless raw_format_chunk[:sample_rate] == 0
+        raise UnsupportedFormatError, "TODO"
+      end
     end
   end
 end

@@ -38,6 +38,20 @@ class ReaderTest < Test::Unit::TestCase
     assert_raise(InvalidFormatError) { Reader.new(fixture("no_data_chunk.wav")) }
   end
 
+  def test_unsupported_formats
+    # Audio format is 2, which is not supported
+    assert_raise(UnsupportedFormatError) { Reader.new(fixture("unsupported_audio_format.wav")) }
+
+    # Bits per sample is 24, which is not supported
+    assert_raise(UnsupportedFormatError) { Reader.new(fixture("unsupported_bits_per_sample.wav")) }
+
+    # Channel count is 0
+    assert_raise(UnsupportedFormatError) { Reader.new(fixture("bad_channel_count.wav")) }
+
+    # Sample rate is 0
+    assert_raise(UnsupportedFormatError) { Reader.new(fixture("bad_sample_rate.wav")) }
+  end
+
 private
 
   def fixture(fixture_name)
