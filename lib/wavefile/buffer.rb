@@ -40,7 +40,7 @@ module WaveFile
     #   new_format = Format.new(:mono, 16, 44100)
     #   old_buffer.convert!(new_format)
     #
-    # Retuns self.
+    # Returns self.
     def convert!(new_format)
       @samples = convert_buffer(@samples, @format, new_format)
       @format = new_format
