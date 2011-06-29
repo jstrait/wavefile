@@ -73,8 +73,6 @@ module WaveFile
       unless old_format.bits_per_sample == new_format.bits_per_sample
         new_samples = convert_buffer_bits_per_sample(new_samples, old_format.bits_per_sample, new_format.bits_per_sample)
       end
-
-      @format = new_format
       
       return new_samples
     end

@@ -6,6 +6,39 @@ require 'wavefile.rb'
 include WaveFile
 
 class BufferTest < Test::Unit::TestCase
+  def test_convert
+    old_format = Format.new(1, 16, 44100)
+    new_format = Format.new(2, 16, 22050)
+
+    old_buffer = Buffer.new([-100, 0, 200], old_format)
+    new_buffer = old_buffer.convert(new_format)
+
+    assert_equal([-100, 0, 200], old_buffer.samples)
+    assert_equal(1, old_buffer.channels)
+    assert_equal(16, old_buffer.bits_per_sample)
+    assert_equal(44100, old_buffer.sample_rate)
+
+    assert_equal([[-100, -100], [0, 0], [200, 200]], new_buffer.samples)
+    assert_equal(2, new_buffer.channels)
+    assert_equal(16, new_buffer.bits_per_sample)
+    assert_equal(22050, new_buffer.sample_rate)
+  end
+
+  def test_convert!
+    old_format = Format.new(1, 16, 44100)
+    new_format = Format.new(2, 16, 22050)
+
+    old_buffer = Buffer.new([-100, 0, 200], old_format)
+    new_buffer = old_buffer.convert!(new_format)
+
+    assert(old_buffer.equal?(new_buffer))
+    assert_equal([[-100, -100], [0, 0], [200, 200]], old_buffer.samples)
+    assert_equal(2, old_buffer.channels)
+    assert_equal(16, old_buffer.bits_per_sample)
+    assert_equal(22050, old_buffer.sample_rate)
+  end
+
+
   def test_convert_buffer_channels
     Format::SUPPORTED_BITS_PER_SAMPLE.each do |bits_per_sample|
       [44100, 22050].each do |sample_rate|
