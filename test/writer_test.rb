@@ -12,6 +12,16 @@ class WriterTest < Test::Unit::TestCase
     clean_output_folder()
   end
 
+  def test_attemp_to_write_after_close
+    format = Format.new(1, 8, 44100)
+
+    writer = Writer.new("#{OUTPUT_FOLDER}/write_after_close.wav", format)
+    writer.write(Buffer.new([1, 2, 3, 4], format))
+    writer.close()
+
+    assert_raise(IOError) { writer.write(Buffer.new([5, 6, 7, 8], format)) }
+  end
+
   def test_no_sample_data
     writer = Writer.new("#{OUTPUT_FOLDER}/no_samples.wav", Format.new(1, 8, 44100))
     writer.close()
