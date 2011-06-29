@@ -10,7 +10,6 @@ module WaveFile
   WAVEFILE_FORMAT_CODE = "WAVE"
   FORMAT_CHUNK_BYTE_LENGTH = 16
   PCM = 1
-  HEADER_BYTE_LENGTH = 36
   CHUNK_IDS = {:header       => "RIFF",
                :format       => "fmt ",
                :data         => "data",

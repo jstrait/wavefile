@@ -1,6 +1,7 @@
 module WaveFile
   class Writer
     EMPTY_BYTE = "\000"
+    CANONICAL_HEADER_BYTE_LENGTH = 36
 
     def initialize(file_name, format)
       @file = File.open(file_name, "wb")
@@ -56,7 +57,7 @@ module WaveFile
 
       # Write the header for the RIFF chunk
       header = CHUNK_IDS[:header]
-      header += [HEADER_BYTE_LENGTH + sample_data_byte_count].pack("V")
+      header += [CANONICAL_HEADER_BYTE_LENGTH + sample_data_byte_count].pack("V")
       header += WAVEFILE_FORMAT_CODE
 
       # Write the format chunk
