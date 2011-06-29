@@ -8,13 +8,16 @@ module WaveFile
       @file_name = file_name
       @file = File.open(file_name, "rb")
 
-      raw_format_chunk, sample_count = read_until_data_chunk()
+      raw_format_chunk, sample_count = HeaderReader.new(@file, @file_name).read_until_data_chunk()
       @sample_count = sample_count
-      # Make sure we can actually read the file
+      # Make file is in a format we can actually read
       validate_format_chunk(raw_format_chunk)
 
+      @native_format = Format.new(raw_format_chunk[:channels],
+                                  raw_format_chunk[:bits_per_sample],
+                                  raw_format_chunk[:sample_rate])
       if format == nil
-        @format = Format.new(raw_format_chunk[:channels], raw_format_chunk[:bits_per_sample], raw_format_chunk[:sample_rate])
+        @format = @native_format
       else
         @format = format
       end
@@ -27,7 +30,7 @@ module WaveFile
 
     def self.info(file_name)
       file = File.open(file_name, "rb")
-      raw_format_chunk, sample_count = read_until_data_chunk(file)
+      raw_format_chunk, sample_count = HeaderReader.new(file, file_name).read_until_data_chunk()
       file.close()
 
       return Info.new(file_name, raw_format_chunk, sample_count)
@@ -77,92 +80,6 @@ module WaveFile
     attr_reader :file_name, :format
 
   private
-    FORMAT_CHUNK_MINIMUM_SIZE = 16
-
-    def read_until_data_chunk()
-      read_riff_chunk_header()
-
-      begin
-        chunk_id = @file.sysread(4)
-        chunk_size = @file.sysread(4).unpack("V")[0]
-        while chunk_id != CHUNK_IDS[:data]
-          if chunk_id == CHUNK_IDS[:format]
-            format_chunk = parse_format_chunk(chunk_size, @file.sysread(chunk_size))
-          else
-            # Other chunk types besides the format chunk are ignored. This may change in the future.
-            @file.sysread(chunk_size)
-          end
-
-          chunk_id = @file.sysread(4)
-          chunk_size = @file.sysread(4).unpack("V")[0]
-        end
-      rescue EOFError
-        raise InvalidFormatError, "NO DATA CHUNK FOUND"
-      end
-
-      if format_chunk == nil
-        raise InvalidFormatError, "File either has no format chunk, or it comes after the data chunk"
-      end
-
-      sample_count = chunk_size / format_chunk[:block_align]
-
-      return format_chunk, sample_count
-    end
-
-    def read_riff_chunk_header()
-      begin
-        riff_header = {}
-        riff_header[:chunk_id],
-        riff_header[:chunk_size],
-        riff_header[:riff_format] = @file.sysread(12).unpack("a4Va4")
-      rescue EOFError
-        raise InvalidFormatError,
-              "File '#{@file_name}' is not a supported wave file. " +
-              "It is empty."
-      end
-
-      unless riff_header[:chunk_id] == CHUNK_IDS[:header]
-        raise InvalidFormatError,
-              "File '#{@file_name}' is not a supported wave file. " +
-              "Expected chunk ID '#{CHUNK_IDS[:header]}', but was '#{riff_header[:chunk_id]}'"
-      end
-
-      unless riff_header[:riff_format] == WAVEFILE_FORMAT_CODE
-        raise InvalidFormatError,
-              "File '#{@file_name}' is not a supported wave file. " +
-              "Expected RIFF format of '#{WAVEFILE_FORMAT_CODE}', but was '#{riff_header[:riff_format]}'"
-      end
-    end
-
-    def parse_format_chunk(chunk_size, raw_chunk_data)
-      if chunk_size < FORMAT_CHUNK_MINIMUM_SIZE
-        raise InvalidFormatError, "TODO"
-      end
-
-      format_chunk = {}
-      format_chunk[:audio_format],
-      format_chunk[:channels],
-      format_chunk[:sample_rate],
-      format_chunk[:byte_rate],
-      format_chunk[:block_align],
-      format_chunk[:bits_per_sample] = raw_chunk_data.slice!(0...FORMAT_CHUNK_MINIMUM_SIZE).unpack("vvVVvv")
-
-      if chunk_size > FORMAT_CHUNK_MINIMUM_SIZE
-        format_chunk[:extension_size] = raw_chunk_data.slice!(0...2).unpack("v")
-
-        if format_chunk[:extension_size] == nil
-          raise InvalidFormatError, "TODO"
-        end
-
-        if format_chunk[:extension_size] != raw_chunk_data.length
-          raise InvalidFormatError, "TODO"
-        end
-
-        # TODO: Parse the extension
-      end
-
-      return format_chunk
-    end
 
     def validate_format_chunk(raw_format_chunk)
       # :byte_rate and :block_align are not checked to make sure that match :channels/:sample_rate/bits_per_sample
@@ -176,12 +93,120 @@ module WaveFile
         raise UnsupportedFormatError, "TODO"
       end
 
-      unless raw_format_chunk[:channels] == 0
+      unless raw_format_chunk[:channels] > 0
         raise UnsupportedFormatError, "TODO"
       end
 
-      unless raw_format_chunk[:sample_rate] == 0
+      unless raw_format_chunk[:sample_rate] > 0
         raise UnsupportedFormatError, "TODO"
+      end
+    end
+  end
+
+
+  class HeaderReader
+    RIFF_CHUNK_HEADER_SIZE = 12
+    FORMAT_CHUNK_MINIMUM_SIZE = 16
+
+    def initialize(file, file_name)
+      @file = file
+      @file_name = file_name
+    end
+
+    def read_until_data_chunk()
+      read_riff_chunk()
+
+      begin
+        chunk_id = @file.sysread(4)
+        chunk_size = @file.sysread(4).unpack("V")[0]
+        while chunk_id != CHUNK_IDS[:data]
+          if chunk_id == CHUNK_IDS[:format]
+            format_chunk = read_format_chunk(chunk_id, chunk_size)
+          else
+            # Other chunk types besides the format chunk are ignored. This may change in the future.
+            @file.sysread(chunk_size)
+          end
+
+          chunk_id = @file.sysread(4)
+          chunk_size = @file.sysread(4).unpack("V")[0]
+        end
+      rescue EOFError
+        raise InvalidFormatError,
+              "File '#{@file_name}' is not a supported wave file. " +
+              "It doesn't have a data chunk."
+      end
+
+      if format_chunk == nil
+        raise InvalidFormatError, "File either has no format chunk, or it comes after the data chunk"
+      end
+
+      sample_count = chunk_size / format_chunk[:block_align]
+
+      return format_chunk, sample_count
+    end
+
+  private
+
+    def read_riff_chunk()
+      riff_header = {}
+      riff_header[:chunk_id],
+      riff_header[:chunk_size],
+      riff_header[:riff_format] = read_chunk_body(CHUNK_IDS[:header], RIFF_CHUNK_HEADER_SIZE).unpack("a4Va4")
+
+      unless riff_header[:chunk_id] == CHUNK_IDS[:header]
+        raise InvalidFormatError,
+              "File '#{@file_name}' is not a supported wave file. " +
+              "Expected chunk ID '#{CHUNK_IDS[:header]}', but was '#{riff_header[:chunk_id]}'"
+      end
+
+      unless riff_header[:riff_format] == WAVEFILE_FORMAT_CODE
+        raise InvalidFormatError,
+              "File '#{@file_name}' is not a supported wave file. " +
+              "Expected RIFF format of '#{WAVEFILE_FORMAT_CODE}', but was '#{riff_header[:riff_format]}'"
+      end
+
+      return riff_header
+    end
+
+    def read_format_chunk(chunk_id, chunk_size)
+      if chunk_size < FORMAT_CHUNK_MINIMUM_SIZE
+        raise InvalidFormatError, "TODO"
+      end
+
+      raw_bytes = read_chunk_body(CHUNK_IDS[:format], chunk_size)
+
+      format_chunk = {}
+      format_chunk[:audio_format],
+      format_chunk[:channels],
+      format_chunk[:sample_rate],
+      format_chunk[:byte_rate],
+      format_chunk[:block_align],
+      format_chunk[:bits_per_sample] = raw_bytes.slice!(0...FORMAT_CHUNK_MINIMUM_SIZE).unpack("vvVVvv")
+
+      if chunk_size > FORMAT_CHUNK_MINIMUM_SIZE
+        format_chunk[:extension_size] = raw_bytes.slice!(0...2).unpack("v").first
+
+        if format_chunk[:extension_size] == nil
+          raise InvalidFormatError, "TODO"
+        end
+
+        if format_chunk[:extension_size] != raw_bytes.length
+          raise InvalidFormatError, "TODO"
+        end
+
+        # TODO: Parse the extension
+      end
+
+      return format_chunk
+    end
+
+    def read_chunk_body(chunk_id, chunk_size)
+      begin
+        return @file.sysread(chunk_size)
+      rescue EOFError
+        raise InvalidFormatError,
+              "File '#{@file_name}' is not a supported wave file. " +
+              "The #{chunk_id} has incomplete data."
       end
     end
   end
