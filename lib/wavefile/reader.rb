@@ -1,9 +1,27 @@
 module WaveFile
+  # Error that is raised when trying to read from a file that is either not a wave file,
+  # or that is not valid according to the wave file spec.
   class InvalidFormatError < StandardError; end
 
+  # Error that is raised when trying to read from a valid wave file that has its sample data
+  # stored in a format that Reader doesn't understand.
   class UnsupportedFormatError < StandardError; end
 
+
+  # Provides the ability to read sample data out of a wave file, as well as query a
+  # wave file about its metadata (e.g. number of channels, sample rate, etc). 
   class Reader
+    # Returns a Reader object that is ready to start reading the specified file's sample data.
+    #
+    # file_name - The name of the wave file to read from.
+    # format - The format that read sample data should be returned in
+    #          (default: the wave file's internal format).
+    #
+    # Returns a Reader object that is ready to start reading the specified file's sample data.
+    # Raises Errno::ENOENT if the specified file can't be found
+    # Raises InvalidFormatError if the specified file isn't a valid wave file
+    # Raises UnsupportedFormatError if the specified file has its sample data stored in a format
+    #                               that Reader doesn't know how to process.
     def initialize(file_name, format=nil)
       @file_name = file_name
       @file = File.open(file_name, "rb")
@@ -36,6 +54,14 @@ module WaveFile
       return Info.new(file_name, raw_format_chunk, sample_count)
     end
 
+    # Reads sample data of the into successive Buffers of the specified size, until there is no more
+    # sample data to be read. When all sample data has been read, the Reader is automatically closed.
+    # Each Buffer is passed to the specified block.
+    #
+    # buffer_size - The number of samples to read into each Buffer. The number of samples read into the
+    #               final Buffer could be less than this size, if there are not enough remaining samples.
+    #
+    # Returns nothing.
     def each_buffer(buffer_size)
       begin
         while true do
@@ -46,7 +72,18 @@ module WaveFile
       end
     end
 
+    # Reads the specified number of samples from the wave file into a Buffer. Note that the Buffer will have
+    # at most buffer_size samples, but could have less if the file doesn't have enough remaining samples.
+    #
+    # buffer_size - The number of samples to read. Note that for multi-channel files, this number of samples
+    #               will be read from each channel.
+    #
+    # Returns a Buffer containing buffer_size samples
+    # Raises EOFError if no samples could be read due to reaching the end of the file
     def read(buffer_size)
+      # FIXME: Does this properly deal with a possible padding byte at the end of the data chunk? Or possible
+      #        chunks after the data chunk?
+
       samples = @file.sysread(buffer_size * @native_format.block_align).unpack(PACK_CODES[@native_format.bits_per_sample])
 
       if @native_format.channels > 1
@@ -108,6 +145,9 @@ module WaveFile
   end
 
 
+  # Used to read the RIFF chunks in a wave file up until the data chunk. Thus is can be used
+  # to open a wave file and "queue it up" to the start of the actual sample data, as well as
+  # extract information out of pre-data chunks, such as the format chunk.
   class HeaderReader
     RIFF_CHUNK_HEADER_SIZE = 12
     FORMAT_CHUNK_MINIMUM_SIZE = 16
