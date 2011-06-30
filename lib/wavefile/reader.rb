@@ -28,6 +28,8 @@ module WaveFile
 
       raw_format_chunk, sample_count = HeaderReader.new(@file, @file_name).read_until_data_chunk()
       @sample_count = sample_count
+      @samples_remaining = sample_count
+
       # Make file is in a format we can actually read
       validate_format_chunk(raw_format_chunk)
 
@@ -97,10 +99,15 @@ module WaveFile
     # Returns a Buffer containing buffer_size samples
     # Raises EOFError if no samples could be read due to reaching the end of the file
     def read(buffer_size)
-      # FIXME: Does this properly deal with a possible padding byte at the end of the data chunk? Or possible
-      #        chunks after the data chunk?
+      if @samples_remaining == 0
+        #FIXME: Do something different here, because the end of the file has not actually necessarily been reached
+        raise EOFError
+      elsif buffer_size > @samples_remaining
+        buffer_size = @samples_remaining
+      end
 
       samples = @file.sysread(buffer_size * @native_format.block_align).unpack(PACK_CODES[@native_format.bits_per_sample])
+      @samples_remaining -= buffer_size
 
       if @native_format.channels > 1
         num_multichannel_samples = samples.length / @native_format.channels
