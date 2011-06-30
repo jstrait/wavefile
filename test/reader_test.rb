@@ -68,6 +68,18 @@ class ReaderTest < Test::Unit::TestCase
     assert_equal([-10000, -10000, -10000, -10000, 10000, 10000, 10000, 10000] * 24,  buffers[2].samples)
   end
 
+  def test_each_buffer_basic_scenario
+    buffers = []
+    reader = Reader.new(fixture("valid_16_mono_44100.wav"))
+    reader.each_buffer(1024) {|buffer| buffers << buffer }
+    
+    assert_equal(3, buffers.length)
+    assert_equal([1024, 1024, 192], buffers.map {|buffer| buffer.samples.length })
+    assert_equal([-10000, -10000, -10000, -10000, 10000, 10000, 10000, 10000] * 128, buffers[0].samples)
+    assert_equal([-10000, -10000, -10000, -10000, 10000, 10000, 10000, 10000] * 128, buffers[1].samples)
+    assert_equal([-10000, -10000, -10000, -10000, 10000, 10000, 10000, 10000] * 24,  buffers[2].samples)
+  end
+
 private
 
   def read_file(file_name, buffer_size)
