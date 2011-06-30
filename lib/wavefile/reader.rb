@@ -209,10 +209,10 @@ module WaveFile
       riff_header = {}
       riff_header[:chunk_id],
       riff_header[:chunk_size],
-      riff_header[:riff_format] = read_chunk_body(CHUNK_IDS[:header], RIFF_CHUNK_HEADER_SIZE).unpack("a4Va4")
+      riff_header[:riff_format] = read_chunk_body(CHUNK_IDS[:riff], RIFF_CHUNK_HEADER_SIZE).unpack("a4Va4")
 
-      unless riff_header[:chunk_id] == CHUNK_IDS[:header]
-        raise_error InvalidFormatError, "Expected chunk ID '#{CHUNK_IDS[:header]}', but was '#{riff_header[:chunk_id]}'"
+      unless riff_header[:chunk_id] == CHUNK_IDS[:riff]
+        raise_error InvalidFormatError, "Expected chunk ID '#{CHUNK_IDS[:riff]}', but was '#{riff_header[:chunk_id]}'"
       end
 
       unless riff_header[:riff_format] == WAVEFILE_FORMAT_CODE

@@ -56,7 +56,7 @@ module WaveFile
       sample_data_byte_count = sample_count * @format.block_align
 
       # Write the header for the RIFF chunk
-      header = CHUNK_IDS[:header]
+      header = CHUNK_IDS[:riff]
       header += [CANONICAL_HEADER_BYTE_LENGTH + sample_data_byte_count].pack("V")
       header += WAVEFILE_FORMAT_CODE
 
