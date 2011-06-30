@@ -59,7 +59,7 @@ class ReaderTest < Test::Unit::TestCase
   end
 
   def test_read_basic_scenario
-    buffers = read_file("valid_16_mono_44100.wav", 1024)
+    buffers = read_file("valid_mono_16_44100.wav", 1024)
 
     assert_equal(3, buffers.length)
     assert_equal([1024, 1024, 192], buffers.map {|buffer| buffer.samples.length })
@@ -69,7 +69,7 @@ class ReaderTest < Test::Unit::TestCase
   end
 
   def test_read_basic_with_format_conversion
-    buffers = read_file("valid_16_mono_44100.wav", 1024, Format.new(:stereo, 8, 22100))
+    buffers = read_file("valid_mono_16_44100.wav", 1024, Format.new(:stereo, 8, 22100))
 
     assert_equal(3, buffers.length)
     assert_equal([1024, 1024, 192], buffers.map {|buffer| buffer.samples.length })
@@ -91,7 +91,7 @@ class ReaderTest < Test::Unit::TestCase
 
   def test_each_buffer_basic_scenario
     buffers = []
-    reader = Reader.new(fixture("valid_16_mono_44100.wav"))
+    reader = Reader.new(fixture("valid_mono_16_44100.wav"))
     reader.each_buffer(1024) {|buffer| buffers << buffer }
     
     assert_equal(3, buffers.length)
@@ -103,7 +103,7 @@ class ReaderTest < Test::Unit::TestCase
 
   def test_each_buffer_basic_with_format_conversion
     buffers = []
-    reader = Reader.new(fixture("valid_16_mono_44100.wav"), Format.new(:stereo, 8, 22100))
+    reader = Reader.new(fixture("valid_mono_16_44100.wav"), Format.new(:stereo, 8, 22100))
     reader.each_buffer(1024) {|buffer| buffers << buffer }
     
     assert_equal(3, buffers.length)
