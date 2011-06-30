@@ -154,7 +154,7 @@ module WaveFile
       end
 
       unless raw_format_chunk[:sample_rate] > 0
-        raise UnsupportedFormatError, "Sample rate is #{raw_format_chunk[:channels]}, " +
+        raise UnsupportedFormatError, "Sample rate is #{raw_format_chunk[:sample_rate]}, " +
                                       "but only #{Format::MIN_SAMPLE_RATE}-#{Format::MAX_SAMPLE_RATE} are supported."
       end
     end
