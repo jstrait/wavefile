@@ -68,6 +68,16 @@ class ReaderTest < Test::Unit::TestCase
     assert_equal([-10000, -10000, -10000, -10000, 10000, 10000, 10000, 10000] * 24,  buffers[2].samples)
   end
 
+  def test_read_basic_with_format_conversion
+    buffers = read_file("valid_16_mono_44100.wav", 1024, Format.new(:stereo, 8, 22100))
+
+    assert_equal(3, buffers.length)
+    assert_equal([1024, 1024, 192], buffers.map {|buffer| buffer.samples.length })
+    assert_equal(([[88, 88]] * 4 + [[167, 167]] * 4) * 128, buffers[0].samples)
+    assert_equal(([[88, 88]] * 4 + [[167, 167]] * 4) * 128, buffers[1].samples)
+    assert_equal(([[88, 88]] * 4 + [[167, 167]] * 4) * 24,  buffers[2].samples)
+  end
+
   def test_each_buffer_basic_scenario
     buffers = []
     reader = Reader.new(fixture("valid_16_mono_44100.wav"))
@@ -80,11 +90,24 @@ class ReaderTest < Test::Unit::TestCase
     assert_equal([-10000, -10000, -10000, -10000, 10000, 10000, 10000, 10000] * 24,  buffers[2].samples)
   end
 
+  def test_each_buffer_basic_with_format_conversion
+    buffers = []
+    reader = Reader.new(fixture("valid_16_mono_44100.wav"), Format.new(:stereo, 8, 22100))
+    reader.each_buffer(1024) {|buffer| buffers << buffer }
+    
+    assert_equal(3, buffers.length)
+    assert_equal([1024, 1024, 192], buffers.map {|buffer| buffer.samples.length })
+    assert_equal(([[88, 88]] * 4 + [[167, 167]] * 4) * 128, buffers[0].samples)
+    assert_equal(([[88, 88]] * 4 + [[167, 167]] * 4) * 128, buffers[1].samples)
+    assert_equal(([[88, 88]] * 4 + [[167, 167]] * 4) * 24,  buffers[2].samples)
+  end
+
 private
 
-  def read_file(file_name, buffer_size)
+  def read_file(file_name, buffer_size, format=nil)
     buffers = []
-    reader = Reader.new(fixture(file_name))
+    reader = Reader.new(fixture(file_name), format)
+
     begin
       while true do
         buffers << reader.read(buffer_size)
