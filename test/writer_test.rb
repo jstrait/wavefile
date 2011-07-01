@@ -12,7 +12,7 @@ class WriterTest < Test::Unit::TestCase
     clean_output_folder()
   end
 
-  def test_attemp_to_write_after_close
+  def test_attempt_to_write_after_close
     format = Format.new(1, 8, 44100)
 
     writer = Writer.new("#{OUTPUT_FOLDER}/write_after_close.wav", format)
