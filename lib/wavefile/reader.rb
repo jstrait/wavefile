@@ -133,10 +133,15 @@ module WaveFile
       return buffer.convert(@format)
     end
 
+    # Returns true if the Reader is closed, and false if it is open and available for reading.
     def closed?()
       return @file.closed?
     end
 
+    # Closes the Reader. After a Reader is closed, no more sample data can be read from it.
+    #
+    # Returns nothing.
+    # Raises IOError if the Reader is already closed.
     def close()
       @file.close()
     end

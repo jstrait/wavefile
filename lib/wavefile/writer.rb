@@ -21,6 +21,9 @@ module WaveFile
       end
     end
 
+
+    # Appends the sample data in the given Buffer to the end of the wave file.
+    #
     def write(buffer)
       samples = buffer.convert(@format).samples
 
@@ -28,10 +31,21 @@ module WaveFile
       @samples_written += samples.length
     end
 
+
+    # Returns true if the Writer is closed, and false if it is open and available for writing.
     def closed?()
       return @file.closed?
     end
 
+
+    # Closes the Writer. After a Writer is closed, no more sample data can be written to it.
+    #
+    # Note that the wave file will NOT be valid until this method is called. The wave file
+    # format requires certain information about the amount of sample data, and this can't be
+    # determined until all samples have been written. 
+    #
+    # Returns nothing.
+    # Raises IOError if the Writer is already closed.
     def close()
       # The RIFF specification requires that each chunk be aligned to an even number of bytes,
       # even if the byte count is an odd number. Therefore if an odd number of bytes has been
@@ -56,6 +70,8 @@ module WaveFile
 
   private
 
+    # Writes the RIFF chunk header, format chunk, and the header for the data chunk. After this
+    # method is called the file will be "queued up" and ready for writing actual sample data.
     def write_header(sample_count)
       sample_data_byte_count = sample_count * @format.block_align
 
