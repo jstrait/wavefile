@@ -185,7 +185,7 @@ module WaveFile
 
       begin
         chunk_id = @file.sysread(4)
-        chunk_size = @file.sysread(4).unpack("V")[0]
+        chunk_size = @file.sysread(4).unpack(UNSIGNED_INT_32)[0]
         while chunk_id != CHUNK_IDS[:data]
           if chunk_id == CHUNK_IDS[:format]
             format_chunk = read_format_chunk(chunk_id, chunk_size)
@@ -195,7 +195,7 @@ module WaveFile
           end
 
           chunk_id = @file.sysread(4)
-          chunk_size = @file.sysread(4).unpack("V")[0]
+          chunk_size = @file.sysread(4).unpack(UNSIGNED_INT_32)[0]
         end
       rescue EOFError
         raise_error InvalidFormatError, "It doesn't have a data chunk."
@@ -245,7 +245,7 @@ module WaveFile
       format_chunk[:bits_per_sample] = raw_bytes.slice!(0...FORMAT_CHUNK_MINIMUM_SIZE).unpack("vvVVvv")
 
       if chunk_size > FORMAT_CHUNK_MINIMUM_SIZE
-        format_chunk[:extension_size] = raw_bytes.slice!(0...2).unpack("v").first
+        format_chunk[:extension_size] = raw_bytes.slice!(0...2).unpack(UNSIGNED_INT_16).first
 
         if format_chunk[:extension_size] == nil
           raise_error InvalidFormatError, "The format chunk is missing an expected extension."

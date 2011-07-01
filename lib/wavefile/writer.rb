@@ -57,22 +57,22 @@ module WaveFile
 
       # Write the header for the RIFF chunk
       header = CHUNK_IDS[:riff]
-      header += [CANONICAL_HEADER_BYTE_LENGTH + sample_data_byte_count].pack("V")
+      header += [CANONICAL_HEADER_BYTE_LENGTH + sample_data_byte_count].pack(UNSIGNED_INT_32)
       header += WAVEFILE_FORMAT_CODE
 
       # Write the format chunk
       header += CHUNK_IDS[:format]
-      header += [FORMAT_CHUNK_BYTE_LENGTH].pack("V")
-      header += [PCM].pack("v")
-      header += [@format.channels].pack("v")
-      header += [@format.sample_rate].pack("V")
-      header += [@format.byte_rate].pack("V")
-      header += [@format.block_align].pack("v")
-      header += [@format.bits_per_sample].pack("v")
+      header += [FORMAT_CHUNK_BYTE_LENGTH].pack(UNSIGNED_INT_32)
+      header += [PCM].pack(UNSIGNED_INT_16)
+      header += [@format.channels].pack(UNSIGNED_INT_16)
+      header += [@format.sample_rate].pack(UNSIGNED_INT_32)
+      header += [@format.byte_rate].pack(UNSIGNED_INT_32)
+      header += [@format.block_align].pack(UNSIGNED_INT_16)
+      header += [@format.bits_per_sample].pack(UNSIGNED_INT_16)
 
       # Write the header for the data chunk
       header += CHUNK_IDS[:data]
-      header += [sample_data_byte_count].pack("V")
+      header += [sample_data_byte_count].pack(UNSIGNED_INT_32)
 
       @file.syswrite(header)
     end
