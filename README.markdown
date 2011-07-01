@@ -1,19 +1,33 @@
 A pure Ruby gem for reading and writing sound files in Wave format (*.wav).
 
-# Current Status
+# Current Status (as of July 1, 2011)
 
-The most recent release is 0.3.0. Work is under way on 0.4.0, which will be akin to a rewrite. It will not be backward compatible with the previous API (and in general this should be the expectation until version 1.0).
+The most recent release is v0.3.0. Work is in progress on v0.4.0, which is effectively a rewrite. It will not be backward compatible with the previous API (and in general, this should be the expectation until version 1.0).
 
-The primary difference coming in 0.4.0 is that the API will be buffer based, instead of load-everything-into-memory-at-once based. Although the latter approach is simpler for smaller files, it's not practical for large files (and Wave files are typically pretty large). This version will not focus on new features, although some improvements might come for free. (For example, the ability to effectively work with large files).
+All of the main pieces are in place for v0.4.0, and the API is largely complete. Although there will still probably be changes on the edges, the core API should be in place.
 
-The notes below cover 0.3.0; 0.4.0 will be different.
+Current work is primarily focused on stabilization, testing with different wave files, and adding documentation.
 
+
+# Why Is v0.4.0 A Rewrite?
+
+As discovered from using this gem in projects like [BEATS](http://beatsdrummachine.com), the API for previous versions is fundamentally flawed. It requires the entire wave file to be loaded into memory, and all operations (such as changing the bits per sample) occur on the entire wave file at once. This is terrible for performance for anything bigger than a short file. The old API also doesn't support incrementally appending sample data to a file. This requires client programs to use giant arrays to store the entire sample data, which is again terrible for performance, and places a practical bound on what this gem can be used for.
+
+Starting in v0.4.0, the API will be buffer based, instead of load-everything-into-memory-at-once based. From the experience of writing some example programs using it, this is a huge improvement.
+
+The new API is better for more than just performance reasons. For example, it's now really simple to read data out of a file in a format other than it's internal format. For example, if you are working with several files and need them to all be in the same format, it's easy to do that. Another nicety is automatic file management just like the File object. For example, it's easy to continually read the sample data from a file, passing each buffer to a block, and have the file automatically close when there is no more left.
+
+
+
+# Usage Instructions for v0.3.0
+
+The notes below cover v0.3.0; v0.4.0 will be different.
 
 # Installation
 
 First, install the WaveFile gem from rubygems.org:
 
-    sudo gem install wavefile
+    gem install wavefile
 
 ...and include it in your Ruby program:
 
