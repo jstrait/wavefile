@@ -2,21 +2,22 @@ A pure Ruby gem for reading and writing sound files in Wave format (*.wav).
 
 # Current Status (as of July 1, 2011)
 
-The most recent release is v0.3.0. Work is in progress on v0.4.0, which is effectively a rewrite. It will not be backward compatible with the previous API (and in general, this should be the expectation until version 1.0).
+The most recent release is v0.3.0. Work is in progress on the trunk on v0.4.0, which is effectively a rewrite. It will not be backward compatible with the previous API (and in general, this should be the expectation until version 1.0).
 
 All of the main pieces are in place for v0.4.0, and the API is largely complete. Although there will still probably be changes on the edges, the core API should be in place.
 
 Current work is primarily focused on stabilization, testing with different wave files, and adding documentation.
 
 
-# Why Is v0.4.0 A Rewrite?
+# What's Coming in v0.4.0?
 
-As discovered from using this gem in projects like [BEATS](http://beatsdrummachine.com), the API for previous versions is fundamentally flawed. It requires the entire wave file to be loaded into memory, and all operations (such as changing the bits per sample) occur on the entire wave file at once. This is terrible for performance for anything bigger than a short file. The old API also doesn't support incrementally appending sample data to a file. This requires client programs to use giant arrays to store the entire sample data, which is again terrible for performance, and places a practical bound on what this gem can be used for.
+As discovered from using this gem in projects like [BEATS](http://beatsdrummachine.com), the API for previous versions is fundamentally flawed. It requires the entire wave file to be loaded into memory, and all operations (such as changing the bits per sample) occur on the entire wave file at once. This is terrible for performance for anything bigger than a short file. The old API also doesn't support incrementally appending sample data to a file. This requires client programs to use giant arrays to store the entire sample data, which is again terrible for performance, and places a practical limit on what this gem can be used for.
 
 Starting in v0.4.0, the API will be buffer based, instead of load-everything-into-memory-at-once based. From the experience of writing some example programs using it, this is a huge improvement.
 
 The new API is better for more than just performance reasons. For example, it's now really simple to read data out of a file in a format other than it's internal format. For example, if you are working with several files and need them to all be in the same format, it's easy to do that. Another nicety is automatic file management just like the File object. For example, it's easy to continually read the sample data from a file, passing each buffer to a block, and have the file automatically close when there is no more left.
 
+Note that the ability to convert sample data to floating point (i.e. values between -1.0 and 1.0) won't be present in v0.4.0 to keep the scope in check. However, I plan to add this back in a future version.
 
 
 # Usage Instructions for v0.3.0
