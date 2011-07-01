@@ -185,7 +185,7 @@ module WaveFile
 
       begin
         chunk_id = @file.sysread(4)
-        chunk_size = @file.sysread(4).unpack(UNSIGNED_INT_32)[0]
+        chunk_size = @file.sysread(4).unpack(UNSIGNED_INT_32).first
         while chunk_id != CHUNK_IDS[:data]
           if chunk_id == CHUNK_IDS[:format]
             format_chunk = read_format_chunk(chunk_id, chunk_size)
@@ -195,7 +195,7 @@ module WaveFile
           end
 
           chunk_id = @file.sysread(4)
-          chunk_size = @file.sysread(4).unpack(UNSIGNED_INT_32)[0]
+          chunk_size = @file.sysread(4).unpack(UNSIGNED_INT_32).first
         end
       rescue EOFError
         raise_error InvalidFormatError, "It doesn't have a data chunk."
