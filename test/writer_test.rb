@@ -8,6 +8,11 @@ include WaveFile
 class WriterTest < Test::Unit::TestCase
   OUTPUT_FOLDER = "test/fixtures/actual_output"
 
+  SQUARE_WAVE_CYCLE_8BIT_MONO = [88, 88, 88, 88, 167, 167, 167, 167]
+  SQUARE_WAVE_CYCLE_8BIT_STEREO = [[88, 88], [88, 88], [88, 88], [88, 88],
+                                   [167, 167], [167, 167], [167, 167], [167, 167]]
+  SQUARE_WAVE_CYCLE_16BIT_MONO = [-10000, -10000, -10000, -10000, 10000, 10000, 10000, 10000]
+
   def setup
     clean_output_folder()
   end
@@ -24,9 +29,9 @@ class WriterTest < Test::Unit::TestCase
     format = Format.new(1, 16, 44100)
 
     writer = Writer.new("#{OUTPUT_FOLDER}/#{file_name}", format)
-    writer.write(Buffer.new([-10000, -10000, -10000, -10000, 10000, 10000, 10000, 10000] * 128, format))
-    writer.write(Buffer.new([-10000, -10000, -10000, -10000, 10000, 10000, 10000, 10000] * 128, format))
-    writer.write(Buffer.new([-10000, -10000, -10000, -10000, 10000, 10000, 10000, 10000] * 24, format))
+    writer.write(Buffer.new(SQUARE_WAVE_CYCLE_16BIT_MONO * 128, format))
+    writer.write(Buffer.new(SQUARE_WAVE_CYCLE_16BIT_MONO * 128, format))
+    writer.write(Buffer.new(SQUARE_WAVE_CYCLE_16BIT_MONO * 24, format))
     writer.close()
 
     assert_equal(read_file(:expected, file_name), read_file(:actual, file_name))
@@ -37,9 +42,9 @@ class WriterTest < Test::Unit::TestCase
     format = Format.new(1, 8, 44100)
 
     writer = Writer.new("#{OUTPUT_FOLDER}/#{file_name}", format)
-    writer.write(Buffer.new([88, 88, 88, 88, 167, 167, 167, 167] * 128, format))
-    writer.write(Buffer.new([88, 88, 88, 88, 167, 167, 167, 167] * 128, format))
-    writer.write(Buffer.new([88, 88, 88, 88, 167, 167, 167, 167] * 23 + [88, 88, 88, 88, 167, 167, 167], format))
+    writer.write(Buffer.new(SQUARE_WAVE_CYCLE_8BIT_MONO * 128, format))
+    writer.write(Buffer.new(SQUARE_WAVE_CYCLE_8BIT_MONO * 128, format))
+    writer.write(Buffer.new(SQUARE_WAVE_CYCLE_8BIT_MONO * 23 + [88, 88, 88, 88, 167, 167, 167], format))
     writer.close()
 
     assert_equal(read_file(:expected, file_name), read_file(:actual, file_name))
