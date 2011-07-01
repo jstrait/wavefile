@@ -126,6 +126,21 @@ class ReaderTest < Test::Unit::TestCase
                  buffers[2].samples)
   end
 
+  def test_closed?
+    reader = Reader.new(fixture("valid_mono_16_44100.wav"))
+    assert_equal(false, reader.closed?)
+    reader.close()
+    assert(reader.closed?)
+
+    # For Reader.each_buffer()
+    reader = Reader.new(fixture("valid_mono_16_44100.wav"))
+    assert_equal(false, reader.closed?)
+    reader.each_buffer(1024) do |buffer|
+      # No-op
+    end
+    assert_equal(true, reader.closed?)
+  end
+
 private
 
   def read_file(file_name, buffer_size, format=nil)

@@ -133,6 +133,10 @@ module WaveFile
       return buffer.convert(@format)
     end
 
+    def closed?()
+      return @file.closed?
+    end
+
     def close()
       @file.close()
     end

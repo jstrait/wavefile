@@ -28,6 +28,10 @@ module WaveFile
       @samples_written += samples.length
     end
 
+    def closed?()
+      return @file.closed?
+    end
+
     def close()
       # The RIFF specification requires that each chunk be aligned to an even number of bytes,
       # even if the byte count is an odd number. Therefore if an odd number of bytes has been
