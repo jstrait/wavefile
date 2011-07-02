@@ -41,13 +41,14 @@ class WriterTest < Test::Unit::TestCase
 
   def test_write_different_format
     file_name = "valid_mono_8_44100.wav"
-    format_8bit =  Format.new(1,  8, 44100)
-    format_16bit = Format.new(2, 16, 44100)
+    format_8bit_mono    = Format.new(:mono,   8,  44100)
+    format_16_bit_mono  = Format.new(:mono,   16, 22050)
+    format_16bit_stereo = Format.new(:stereo, 16, 44100)
 
-    writer = Writer.new("#{OUTPUT_FOLDER}/#{file_name}", format_8bit)
-    writer.write(Buffer.new(SQUARE_WAVE_CYCLE_16BIT_STEREO * 128, format_16bit))
-    writer.write(Buffer.new(SQUARE_WAVE_CYCLE_16BIT_STEREO * 128, format_16bit))
-    writer.write(Buffer.new(SQUARE_WAVE_CYCLE_16BIT_STEREO * 24,  format_16bit))
+    writer = Writer.new("#{OUTPUT_FOLDER}/#{file_name}", format_8bit_mono)
+    writer.write(Buffer.new(SQUARE_WAVE_CYCLE_16BIT_STEREO * 128, format_16bit_stereo))
+    writer.write(Buffer.new(SQUARE_WAVE_CYCLE_16BIT_MONO * 128,   format_16_bit_mono))
+    writer.write(Buffer.new(SQUARE_WAVE_CYCLE_16BIT_STEREO * 24,  format_16bit_stereo))
     writer.close()
 
     assert_equal(read_file(:expected, file_name), read_file(:actual, file_name))
