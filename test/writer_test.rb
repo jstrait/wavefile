@@ -39,6 +39,20 @@ class WriterTest < Test::Unit::TestCase
     assert_equal(read_file(:expected, file_name), read_file(:actual, file_name))
   end
 
+  def test_write_basic_file_with_a_block
+    file_name = "valid_mono_16_44100.wav"
+    format = Format.new(1, 16, 44100)
+
+    writer = Writer.new("#{OUTPUT_FOLDER}/#{file_name}", format) do |writer|
+      4.times do
+        writer.write(Buffer.new(SQUARE_WAVE_CYCLE_16BIT_MONO * 70, format))
+      end
+    end
+
+    assert_equal(read_file(:expected, file_name), read_file(:actual, file_name))
+    assert(writer.closed?)
+  end
+
   def test_write_buffers_of_different_formats
     file_name = "valid_mono_8_44100.wav"
     format_8bit_mono    = Format.new(:mono,   8,  44100)
