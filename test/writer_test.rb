@@ -19,14 +19,14 @@ class WriterTest < Test::Unit::TestCase
     clean_output_folder()
   end
 
-  def test_no_sample_data
+  def test_write_file_with_no_sample_data
     writer = Writer.new("#{OUTPUT_FOLDER}/no_samples.wav", Format.new(1, 8, 44100))
     writer.close()
     
     assert_equal(read_file(:expected, "no_samples.wav"), read_file(:actual, "no_samples.wav"))
   end
 
-  def test_basic
+  def test_write_basic_file
     file_name = "valid_mono_16_44100.wav"
     format = Format.new(1, 16, 44100)
 
@@ -39,7 +39,7 @@ class WriterTest < Test::Unit::TestCase
     assert_equal(read_file(:expected, file_name), read_file(:actual, file_name))
   end
 
-  def test_write_different_format
+  def test_write_buffers_of_different_formats
     file_name = "valid_mono_8_44100.wav"
     format_8bit_mono    = Format.new(:mono,   8,  44100)
     format_16_bit_mono  = Format.new(:mono,   16, 22050)
@@ -54,7 +54,7 @@ class WriterTest < Test::Unit::TestCase
     assert_equal(read_file(:expected, file_name), read_file(:actual, file_name))
   end
 
-  def test_with_padding_byte
+  def test_write_file_with_padding_byte
     file_name = "valid_mono_8_44100_with_padding_byte.wav"
     format = Format.new(1, 8, 44100)
 
