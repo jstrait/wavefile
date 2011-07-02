@@ -24,47 +24,47 @@ class ReaderTest < Test::Unit::TestCase
     # so run the tests for both methods.
     [:new, :info].each do |method_name|
       # File contains 0 bytes
-      assert_raise(InvalidFormatError) { Reader.send(method_name, fixture("empty.wav")) }
+      assert_raise(InvalidFormatError) { Reader.send(method_name, fixture("invalid/empty.wav")) }
 
       # File consists of "RIFF" and nothing else
-      assert_raise(InvalidFormatError) { Reader.send(method_name, fixture("incomplete_riff_header.wav")) }
+      assert_raise(InvalidFormatError) { Reader.send(method_name, fixture("invalid/incomplete_riff_header.wav")) }
 
       # First 4 bytes in the file are not "RIFF"
-      assert_raise(InvalidFormatError) { Reader.send(method_name, fixture("bad_riff_header.wav")) }
+      assert_raise(InvalidFormatError) { Reader.send(method_name, fixture("invalid/bad_riff_header.wav")) }
 
       # The format code in the RIFF header is not "WAVE"
-      assert_raise(InvalidFormatError) { Reader.new(fixture("bad_wavefile_format.wav")) }
+      assert_raise(InvalidFormatError) { Reader.new(fixture("invalid/bad_wavefile_format.wav")) }
 
       # The file consists of just a valid RIFF header
-      assert_raise(InvalidFormatError) { Reader.new(fixture("no_format_chunk.wav")) }
+      assert_raise(InvalidFormatError) { Reader.new(fixture("invalid/no_format_chunk.wav")) }
 
       # The format chunk has 0 bytes in it (despite the chunk size being 16)
-      assert_raise(InvalidFormatError) { Reader.new(fixture("empty_format_chunk.wav")) }
+      assert_raise(InvalidFormatError) { Reader.new(fixture("invalid/empty_format_chunk.wav")) }
 
       # The format chunk has some data, but not all of the minimum required.
-      assert_raise(InvalidFormatError) { Reader.new(fixture("insufficient_format_chunk.wav")) }
+      assert_raise(InvalidFormatError) { Reader.new(fixture("invalid/insufficient_format_chunk.wav")) }
 
       # The RIFF header and format chunk are OK, but there is no data chunk
-      assert_raise(InvalidFormatError) { Reader.new(fixture("no_data_chunk.wav")) }
+      assert_raise(InvalidFormatError) { Reader.new(fixture("invalid/no_data_chunk.wav")) }
     end
   end
 
   def test_unsupported_formats
     # Audio format is 2, which is not supported
-    assert_raise(UnsupportedFormatError) { Reader.new(fixture("unsupported_audio_format.wav")) }
+    assert_raise(UnsupportedFormatError) { Reader.new(fixture("unsupported/unsupported_audio_format.wav")) }
 
     # Bits per sample is 24, which is not supported
-    assert_raise(UnsupportedFormatError) { Reader.new(fixture("unsupported_bits_per_sample.wav")) }
+    assert_raise(UnsupportedFormatError) { Reader.new(fixture("unsupported/unsupported_bits_per_sample.wav")) }
 
     # Channel count is 0
-    assert_raise(UnsupportedFormatError) { Reader.new(fixture("bad_channel_count.wav")) }
+    assert_raise(UnsupportedFormatError) { Reader.new(fixture("unsupported/bad_channel_count.wav")) }
 
     # Sample rate is 0
-    assert_raise(UnsupportedFormatError) { Reader.new(fixture("bad_sample_rate.wav")) }
+    assert_raise(UnsupportedFormatError) { Reader.new(fixture("unsupported/bad_sample_rate.wav")) }
   end
 
   def test_read_basic_scenario
-    buffers = read_file("valid_mono_16_44100.wav", 1024)
+    buffers = read_file("valid/valid_mono_16_44100.wav", 1024)
 
     assert_equal(3, buffers.length)
     assert_equal([1024, 1024, 192], buffers.map {|buffer| buffer.samples.length })
@@ -74,7 +74,7 @@ class ReaderTest < Test::Unit::TestCase
   end
 
   def test_read_basic_with_format_conversion
-    buffers = read_file("valid_mono_16_44100.wav", 1024, Format.new(:stereo, 8, 22100))
+    buffers = read_file("valid/valid_mono_16_44100.wav", 1024, Format.new(:stereo, 8, 22100))
 
     assert_equal(3, buffers.length)
     assert_equal([1024, 1024, 192], buffers.map {|buffer| buffer.samples.length })
@@ -84,7 +84,7 @@ class ReaderTest < Test::Unit::TestCase
   end
 
   def test_read_with_padding_byte
-    buffers = read_file("valid_mono_8_44100_with_padding_byte.wav", 1024)
+    buffers = read_file("valid/valid_mono_8_44100_with_padding_byte.wav", 1024)
 
     assert_equal(3, buffers.length)
     assert_equal([1024, 1024, 191], buffers.map {|buffer| buffer.samples.length })
@@ -96,7 +96,7 @@ class ReaderTest < Test::Unit::TestCase
 
   def test_each_buffer_basic_scenario
     buffers = []
-    reader = Reader.new(fixture("valid_mono_16_44100.wav"))
+    reader = Reader.new(fixture("valid/valid_mono_16_44100.wav"))
     reader.each_buffer(1024) {|buffer| buffers << buffer }
     
     assert_equal(3, buffers.length)
@@ -108,7 +108,7 @@ class ReaderTest < Test::Unit::TestCase
 
   def test_each_buffer_basic_with_format_conversion
     buffers = []
-    reader = Reader.new(fixture("valid_mono_16_44100.wav"), Format.new(:stereo, 8, 22100))
+    reader = Reader.new(fixture("valid/valid_mono_16_44100.wav"), Format.new(:stereo, 8, 22100))
     reader.each_buffer(1024) {|buffer| buffers << buffer }
     
     assert_equal(3, buffers.length)
@@ -120,7 +120,7 @@ class ReaderTest < Test::Unit::TestCase
 
   def test_each_buffer_with_padding_byte
     buffers = []
-    reader = Reader.new(fixture("valid_mono_8_44100_with_padding_byte.wav"))
+    reader = Reader.new(fixture("valid/valid_mono_8_44100_with_padding_byte.wav"))
     reader.each_buffer(1024) {|buffer| buffers << buffer }
 
     assert_equal(3, buffers.length)
@@ -132,13 +132,13 @@ class ReaderTest < Test::Unit::TestCase
   end
 
   def test_closed?
-    reader = Reader.new(fixture("valid_mono_16_44100.wav"))
+    reader = Reader.new(fixture("valid/valid_mono_16_44100.wav"))
     assert_equal(false, reader.closed?)
     reader.close()
     assert(reader.closed?)
 
     # For Reader.each_buffer()
-    reader = Reader.new(fixture("valid_mono_16_44100.wav"))
+    reader = Reader.new(fixture("valid/valid_mono_16_44100.wav"))
     assert_equal(false, reader.closed?)
     reader.each_buffer(1024) do |buffer|
       # No-op
