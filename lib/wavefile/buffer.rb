@@ -2,6 +2,7 @@ module WaveFile
   # Error that is raised when an attempt is made to perform an unsupported or undefined
   # conversion between two sample data formats.
   class BufferConversionError < StandardError; end
+ 
   
   # Represents a collection of samples in a certain format (e.g. 16-bit mono).
   # Reader returns sample data contained in Buffers, and Writer expects incoming sample
@@ -9,10 +10,14 @@ module WaveFile
   #
   # Contains methods to convert the sample data in the buffer to a different format.
   class Buffer
+
+    # Creates a new Buffer. You are on the honor system to make sure that the given
+    # sample data matches the given format.
     def initialize(samples, format)
       @samples = samples
       @format = format
     end
+
     
     # Creates a new Buffer containing the sample data of this Buffer, but converted to
     # a different format.
@@ -29,6 +34,7 @@ module WaveFile
       new_samples = convert_buffer(@samples.dup, @format, new_format)
       return Buffer.new(new_samples, new_format)
     end
+
 
     # Converts the sample data contained in the Buffer to a new format. The sample data
     # is converted in place, so the existing Buffer is modified.
@@ -47,14 +53,17 @@ module WaveFile
       return self
     end
 
+    # The number of channels the buffer's sample data has
     def channels
       return @format.channels
     end
 
+    # The bits per sample of the buffer's sample data
     def bits_per_sample
       return @format.bits_per_sample
     end
 
+    # The sample rate of the buffer's sample data
     def sample_rate
       return @format.sample_rate
     end
