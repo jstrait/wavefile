@@ -95,8 +95,12 @@ class ReaderTest < Test::Unit::TestCase
   end
 
   def test_each_buffer_native_format
-    buffers = []
     reader = Reader.new(fixture("valid/valid_mono_16_44100.wav"))
+    assert_equal(1, reader.format.channels)
+    assert_equal(16, reader.format.bits_per_sample)
+    assert_equal(44100, reader.format.sample_rate)
+
+    buffers = []
     reader.each_buffer(1024) {|buffer| buffers << buffer }
     
     assert_equal(3, buffers.length)
@@ -107,8 +111,12 @@ class ReaderTest < Test::Unit::TestCase
   end
 
   def test_each_buffer_with_format_conversion
+    reader = Reader.new(fixture("valid/valid_mono_16_44100.wav"), Format.new(:stereo, 8, 22050))
+    assert_equal(2, reader.format.channels)
+    assert_equal(8, reader.format.bits_per_sample)
+    assert_equal(22050, reader.format.sample_rate)
+
     buffers = []
-    reader = Reader.new(fixture("valid/valid_mono_16_44100.wav"), Format.new(:stereo, 8, 22100))
     reader.each_buffer(1024) {|buffer| buffers << buffer }
     
     assert_equal(3, buffers.length)
@@ -151,6 +159,11 @@ class ReaderTest < Test::Unit::TestCase
     buffer = reader.read(1024)
     reader.close()
     assert_raise(IOError) { reader.read(1024) }
+  end
+
+  def test_file_name
+    reader = Reader.new(fixture("valid/valid_mono_16_44100.wav"))
+    assert(reader.file_name.end_with?("valid/valid_mono_16_44100.wav"))
   end
 
 private
