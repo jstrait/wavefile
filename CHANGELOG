@@ -1,3 +1,11 @@
+0.4.0
+===============================================================================
+* Complete re-write and brand new API. Not backwards compatible with previous
+  versions.
+* Support for reading/writing file formats as previous versions, but no support
+  for using floating point sample data ("normalized" sample data in the
+  terminology of previous versions).
+
 0.3.0
 ===============================================================================
 * New method bits_per_sample=(). Allows converting a file from 8-bit to 16-bit
