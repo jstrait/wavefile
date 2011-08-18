@@ -63,7 +63,7 @@ class ReaderTest < Test::Unit::TestCase
     assert_raise(UnsupportedFormatError) { Reader.new(fixture("unsupported/bad_sample_rate.wav")) }
   end
 
-  def test_read_basic_scenario
+  def test_read_native_format
     buffers = read_file("valid/valid_mono_16_44100.wav", 1024)
 
     assert_equal(3, buffers.length)
@@ -73,7 +73,7 @@ class ReaderTest < Test::Unit::TestCase
     assert_equal(SQUARE_WAVE_CYCLE_16BIT_MONO * 24,  buffers[2].samples)
   end
 
-  def test_read_basic_with_format_conversion
+  def test_read_with_format_conversion
     buffers = read_file("valid/valid_mono_16_44100.wav", 1024, Format.new(:stereo, 8, 22100))
 
     assert_equal(3, buffers.length)
@@ -94,7 +94,7 @@ class ReaderTest < Test::Unit::TestCase
                  buffers[2].samples)
   end
 
-  def test_each_buffer_basic_scenario
+  def test_each_buffer_native_format
     buffers = []
     reader = Reader.new(fixture("valid/valid_mono_16_44100.wav"))
     reader.each_buffer(1024) {|buffer| buffers << buffer }
@@ -106,7 +106,7 @@ class ReaderTest < Test::Unit::TestCase
     assert_equal(SQUARE_WAVE_CYCLE_16BIT_MONO * 24,  buffers[2].samples)
   end
 
-  def test_each_buffer_basic_with_format_conversion
+  def test_each_buffer_with_format_conversion
     buffers = []
     reader = Reader.new(fixture("valid/valid_mono_16_44100.wav"), Format.new(:stereo, 8, 22100))
     reader.each_buffer(1024) {|buffer| buffers << buffer }
