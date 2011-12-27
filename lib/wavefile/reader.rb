@@ -61,7 +61,8 @@ module WaveFile
     #
     # Returns an Info object containing metadata about the wave file.
     # Raises Errno::ENOENT if the specified file can't be found
-    # Raises InvalidFormatError if the specified file isn't a valid wave file
+    # Raises InvalidFormatError if the specified file isn't a valid wave file, or is in a format
+    #                           that WaveFile can't read.
     def self.info(file_name)
       file = File.open(file_name, "rb")
       raw_format_chunk, sample_count = HeaderReader.new(file, file_name).read_until_data_chunk()
@@ -75,8 +76,13 @@ module WaveFile
     # sample data to be read. When all sample data has been read, the Reader is automatically closed.
     # Each Buffer is passed to the specified block.
     #
-    # buffer_size - The number of samples to read into each Buffer. The number of samples read into the
-    #               final Buffer could be less than this size, if there are not enough remaining samples.
+    # Note that the number of sames to read is for *each channel*. That is, if buffer_size is 1024, then
+    # for a stereo file 1024 samples will be read from the left channel, and 1024 samples will be read from
+    # the right channel.
+    #
+    # buffer_size - The number of samples to read into each Buffer from each channel. The number of
+    #               samples read into the final Buffer could be less than this size, if there are not
+    #               enough remaining samples.
     #
     # Returns nothing.
     def each_buffer(buffer_size)
@@ -114,7 +120,7 @@ module WaveFile
         multichannel_data = Array.new(num_multichannel_samples)
       
         if(@native_format.channels == 2)
-          # Files with more than 2 channels are expected to be rare, so if there are 2 channels
+          # Files with more than 2 channels are expected to be less common, so if there are 2 channels
           # using a faster specific algorithm instead of a general one.
           num_multichannel_samples.times {|i| multichannel_data[i] = [samples.pop(), samples.pop()].reverse!() }
         else
