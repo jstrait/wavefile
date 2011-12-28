@@ -76,14 +76,16 @@ class ReaderTest < Test::Unit::TestCase
   end
 
   def test_read_native_format
-    Format::SUPPORTED_BITS_PER_SAMPLE.each do |bits_per_sample|
-      buffers = read_file("valid/valid_mono_#{bits_per_sample}_44100.wav", 1024)
+    [:mono, :stereo].each do |channels|
+      Format::SUPPORTED_BITS_PER_SAMPLE.each do |bits_per_sample|
+        buffers = read_file("valid/valid_#{channels}_#{bits_per_sample}_44100.wav", 1024)
 
-      assert_equal(3, buffers.length)
-      assert_equal([1024, 1024, 192], buffers.map {|buffer| buffer.samples.length })
-      assert_equal(SQUARE_WAVE_CYCLE[:mono][bits_per_sample] * 128, buffers[0].samples)
-      assert_equal(SQUARE_WAVE_CYCLE[:mono][bits_per_sample] * 128, buffers[1].samples)
-      assert_equal(SQUARE_WAVE_CYCLE[:mono][bits_per_sample] * 24,  buffers[2].samples)
+        assert_equal(3, buffers.length)
+        assert_equal([1024, 1024, 192], buffers.map {|buffer| buffer.samples.length })
+        assert_equal(SQUARE_WAVE_CYCLE[channels][bits_per_sample] * 128, buffers[0].samples)
+        assert_equal(SQUARE_WAVE_CYCLE[channels][bits_per_sample] * 128, buffers[1].samples)
+        assert_equal(SQUARE_WAVE_CYCLE[channels][bits_per_sample] * 24,  buffers[2].samples)
+      end
     end
   end
 
