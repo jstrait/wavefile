@@ -89,13 +89,15 @@ class FormatTest < Test::Unit::TestCase
     end
   end
 
-  def test_channel_predicates()
+  def test_mono?()
     [1, :mono].each do |one_channel|
       format = Format.new(one_channel, 8, 44100)
       assert_equal(true, format.mono?)
       assert_equal(false, format.stereo?)
     end
+  end
 
+  def test_stereo?()
     [2, :stereo].each do |two_channels|
       format = Format.new(two_channels, 8, 44100)
       assert_equal(false, format.mono?)
