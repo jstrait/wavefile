@@ -9,27 +9,21 @@ class ReaderTest < Test::Unit::TestCase
   FIXTURE_ROOT_PATH = "test/fixtures"
 
   SQUARE_WAVE_CYCLE = {}
-  SQUARE_WAVE_CYCLE[8] = {}
-  SQUARE_WAVE_CYCLE[8][:mono] =    [88, 88, 88, 88, 167, 167, 167, 167]
-  SQUARE_WAVE_CYCLE[8][:stereo] =  [[88, 88], [88, 88], [88, 88], [88, 88],
-                                    [167, 167], [167, 167], [167, 167], [167, 167]]
-  SQUARE_WAVE_CYCLE[16] = {}
-  SQUARE_WAVE_CYCLE[16][:mono] =   [-10000, -10000, -10000, -10000, 10000, 10000, 10000, 10000]
-  SQUARE_WAVE_CYCLE[16][:stereo] = [[-10000, -10000], [-10000, -10000], [-10000, -10000], [-10000, -10000],
-                                    [10000, 10000], [10000, 10000], [10000, 10000], [10000, 10000]]
-  SQUARE_WAVE_CYCLE[32] = {}
-  SQUARE_WAVE_CYCLE[32][:mono] =   [-1000000000, -1000000000, -1000000000, -1000000000,
+  SQUARE_WAVE_CYCLE[:mono] = {}
+  SQUARE_WAVE_CYCLE[:mono][8] =    [88, 88, 88, 88, 167, 167, 167, 167]
+  SQUARE_WAVE_CYCLE[:mono][16] =   [-10000, -10000, -10000, -10000, 10000, 10000, 10000, 10000]
+  SQUARE_WAVE_CYCLE[:mono][32] =   [-1000000000, -1000000000, -1000000000, -1000000000,
                                      1000000000, 1000000000, 1000000000, 1000000000]
-  SQUARE_WAVE_CYCLE[32][:stereo] = [[-1000000000, -1000000000], [-1000000000, -1000000000],
+  SQUARE_WAVE_CYCLE[:stereo] = {}
+  SQUARE_WAVE_CYCLE[:stereo][8] =  [[88, 88], [88, 88], [88, 88], [88, 88],
+                                    [167, 167], [167, 167], [167, 167], [167, 167]]
+  SQUARE_WAVE_CYCLE[:stereo][16] = [[-10000, -10000], [-10000, -10000], [-10000, -10000], [-10000, -10000],
+                                    [10000, 10000], [10000, 10000], [10000, 10000], [10000, 10000]]
+  SQUARE_WAVE_CYCLE[:stereo][32] = [[-1000000000, -1000000000], [-1000000000, -1000000000],
                                     [-1000000000, -1000000000], [-1000000000, -1000000000],
                                     [ 1000000000,  1000000000], [ 1000000000,  1000000000],
                                     [ 1000000000,  1000000000], [ 1000000000,  1000000000]]
 
-  #SQUARE_WAVE_CYCLE_8BIT_MONO = [88, 88, 88, 88, 167, 167, 167, 167]
-  #SQUARE_WAVE_CYCLE_8BIT_STEREO = [[88, 88], [88, 88], [88, 88], [88, 88],
-  #                                 [167, 167], [167, 167], [167, 167], [167, 167]]
-  #SQUARE_WAVE_CYCLE_16BIT_MONO = [-10000, -10000, -10000, -10000, 10000, 10000, 10000, 10000]
-  #SQUARE_WAVE_CYCLE_32BIT_MONO = [-1000000000, -1000000000, -1000000000, -1000000000, 1000000000, 1000000000, 1000000000, 1000000000]
 
   def test_nonexistent_file
     assert_raise(Errno::ENOENT) { Reader.new(fixture("i_do_not_exist.wav")) }
@@ -87,9 +81,9 @@ class ReaderTest < Test::Unit::TestCase
 
       assert_equal(3, buffers.length)
       assert_equal([1024, 1024, 192], buffers.map {|buffer| buffer.samples.length })
-      assert_equal(SQUARE_WAVE_CYCLE[bits_per_sample][:mono] * 128, buffers[0].samples)
-      assert_equal(SQUARE_WAVE_CYCLE[bits_per_sample][:mono] * 128, buffers[1].samples)
-      assert_equal(SQUARE_WAVE_CYCLE[bits_per_sample][:mono] * 24,  buffers[2].samples)
+      assert_equal(SQUARE_WAVE_CYCLE[:mono][bits_per_sample] * 128, buffers[0].samples)
+      assert_equal(SQUARE_WAVE_CYCLE[:mono][bits_per_sample] * 128, buffers[1].samples)
+      assert_equal(SQUARE_WAVE_CYCLE[:mono][bits_per_sample] * 24,  buffers[2].samples)
     end
   end
 
@@ -98,9 +92,9 @@ class ReaderTest < Test::Unit::TestCase
 
     assert_equal(3, buffers.length)
     assert_equal([1024, 1024, 192], buffers.map {|buffer| buffer.samples.length })
-    assert_equal(SQUARE_WAVE_CYCLE[8][:stereo] * 128, buffers[0].samples)
-    assert_equal(SQUARE_WAVE_CYCLE[8][:stereo] * 128, buffers[1].samples)
-    assert_equal(SQUARE_WAVE_CYCLE[8][:stereo] * 24,  buffers[2].samples)
+    assert_equal(SQUARE_WAVE_CYCLE[:stereo][8] * 128, buffers[0].samples)
+    assert_equal(SQUARE_WAVE_CYCLE[:stereo][8] * 128, buffers[1].samples)
+    assert_equal(SQUARE_WAVE_CYCLE[:stereo][8] * 24,  buffers[2].samples)
   end
 
   def test_read_with_padding_byte
@@ -108,9 +102,9 @@ class ReaderTest < Test::Unit::TestCase
 
     assert_equal(3, buffers.length)
     assert_equal([1024, 1024, 191], buffers.map {|buffer| buffer.samples.length })
-    assert_equal(SQUARE_WAVE_CYCLE[8][:mono] * 128, buffers[0].samples)
-    assert_equal(SQUARE_WAVE_CYCLE[8][:mono] * 128, buffers[1].samples)
-    assert_equal((SQUARE_WAVE_CYCLE[8][:mono] * 23) + [88, 88, 88, 88, 167, 167, 167], 
+    assert_equal(SQUARE_WAVE_CYCLE[:mono][8] * 128, buffers[0].samples)
+    assert_equal(SQUARE_WAVE_CYCLE[:mono][8] * 128, buffers[1].samples)
+    assert_equal((SQUARE_WAVE_CYCLE[:mono][8] * 23) + [88, 88, 88, 88, 167, 167, 167], 
                  buffers[2].samples)
   end
 
@@ -125,9 +119,9 @@ class ReaderTest < Test::Unit::TestCase
     
     assert_equal(3, buffers.length)
     assert_equal([1024, 1024, 192], buffers.map {|buffer| buffer.samples.length })
-    assert_equal(SQUARE_WAVE_CYCLE[16][:mono] * 128, buffers[0].samples)
-    assert_equal(SQUARE_WAVE_CYCLE[16][:mono] * 128, buffers[1].samples)
-    assert_equal(SQUARE_WAVE_CYCLE[16][:mono] * 24,  buffers[2].samples)
+    assert_equal(SQUARE_WAVE_CYCLE[:mono][16] * 128, buffers[0].samples)
+    assert_equal(SQUARE_WAVE_CYCLE[:mono][16] * 128, buffers[1].samples)
+    assert_equal(SQUARE_WAVE_CYCLE[:mono][16] * 24,  buffers[2].samples)
   end
 
   def test_each_buffer_with_format_conversion
@@ -141,9 +135,9 @@ class ReaderTest < Test::Unit::TestCase
     
     assert_equal(3, buffers.length)
     assert_equal([1024, 1024, 192], buffers.map {|buffer| buffer.samples.length })
-    assert_equal(SQUARE_WAVE_CYCLE[8][:stereo] * 128, buffers[0].samples)
-    assert_equal(SQUARE_WAVE_CYCLE[8][:stereo] * 128, buffers[1].samples)
-    assert_equal(SQUARE_WAVE_CYCLE[8][:stereo] * 24,  buffers[2].samples)
+    assert_equal(SQUARE_WAVE_CYCLE[:stereo][8] * 128, buffers[0].samples)
+    assert_equal(SQUARE_WAVE_CYCLE[:stereo][8] * 128, buffers[1].samples)
+    assert_equal(SQUARE_WAVE_CYCLE[:stereo][8] * 24,  buffers[2].samples)
   end
 
   def test_each_buffer_with_padding_byte
@@ -153,9 +147,9 @@ class ReaderTest < Test::Unit::TestCase
 
     assert_equal(3, buffers.length)
     assert_equal([1024, 1024, 191], buffers.map {|buffer| buffer.samples.length })
-    assert_equal(SQUARE_WAVE_CYCLE[8][:mono] * 128, buffers[0].samples)
-    assert_equal(SQUARE_WAVE_CYCLE[8][:mono] * 128, buffers[1].samples)
-    assert_equal((SQUARE_WAVE_CYCLE[8][:mono] * 23) + [88, 88, 88, 88, 167, 167, 167], 
+    assert_equal(SQUARE_WAVE_CYCLE[:mono][8] * 128, buffers[0].samples)
+    assert_equal(SQUARE_WAVE_CYCLE[:mono][8] * 128, buffers[1].samples)
+    assert_equal((SQUARE_WAVE_CYCLE[:mono][8] * 23) + [88, 88, 88, 88, 167, 167, 167], 
                  buffers[2].samples)
   end
 
