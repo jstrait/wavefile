@@ -8,14 +8,22 @@ include WaveFile
 class WriterTest < Test::Unit::TestCase
   OUTPUT_FOLDER = "test/fixtures/actual_output"
 
-  SQUARE_WAVE_CYCLE_8BIT_MONO = [88, 88, 88, 88, 167, 167, 167, 167]
-  SQUARE_WAVE_CYCLE_8BIT_STEREO = [[88, 88], [88, 88], [88, 88], [88, 88],
-                                   [167, 167], [167, 167], [167, 167], [167, 167]]
-  SQUARE_WAVE_CYCLE_16BIT_MONO = [-10000, -10000, -10000, -10000, 10000, 10000, 10000, 10000]
-  SQUARE_WAVE_CYCLE_16BIT_STEREO = [[-10000, -10000], [-10000, -10000], [-10000, -10000], [-10000, -10000],
+  SQUARE_WAVE_CYCLE = {}
+  SQUARE_WAVE_CYCLE[:mono] = {}
+  SQUARE_WAVE_CYCLE[:mono][8] =    [88, 88, 88, 88, 167, 167, 167, 167]
+  SQUARE_WAVE_CYCLE[:mono][16] =   [-10000, -10000, -10000, -10000, 10000, 10000, 10000, 10000]
+  SQUARE_WAVE_CYCLE[:mono][32] =   [-1000000000, -1000000000, -1000000000, -1000000000,
+                                     1000000000, 1000000000, 1000000000, 1000000000]
+  SQUARE_WAVE_CYCLE[:stereo] = {}
+  SQUARE_WAVE_CYCLE[:stereo][8] =  [[88, 88], [88, 88], [88, 88], [88, 88],
+                                    [167, 167], [167, 167], [167, 167], [167, 167]]
+  SQUARE_WAVE_CYCLE[:stereo][16] = [[-10000, -10000], [-10000, -10000], [-10000, -10000], [-10000, -10000],
                                     [10000, 10000], [10000, 10000], [10000, 10000], [10000, 10000]]
-  SQUARE_WAVE_CYCLE_32BIT_MONO = [-1000000000, -1000000000, -1000000000, -1000000000,
-                                   1000000000,  1000000000,  1000000000,  1000000000]
+  SQUARE_WAVE_CYCLE[:stereo][32] = [[-1000000000, -1000000000], [-1000000000, -1000000000],
+                                    [-1000000000, -1000000000], [-1000000000, -1000000000],
+                                    [ 1000000000,  1000000000], [ 1000000000,  1000000000],
+                                    [ 1000000000,  1000000000], [ 1000000000,  1000000000]]
+
 
   def setup
     clean_output_folder()
@@ -29,16 +37,18 @@ class WriterTest < Test::Unit::TestCase
   end
 
   def test_write_basic_file
-    file_name = "valid_mono_16_44100.wav"
-    format = Format.new(1, 16, 44100)
+    Format::SUPPORTED_BITS_PER_SAMPLE.each do |bits_per_sample|
+      file_name = "valid_mono_#{bits_per_sample}_44100.wav"
+      format = Format.new(1, bits_per_sample, 44100)
 
-    writer = Writer.new("#{OUTPUT_FOLDER}/#{file_name}", format)
-    writer.write(Buffer.new(SQUARE_WAVE_CYCLE_16BIT_MONO * 128, format))
-    writer.write(Buffer.new(SQUARE_WAVE_CYCLE_16BIT_MONO * 128, format))
-    writer.write(Buffer.new(SQUARE_WAVE_CYCLE_16BIT_MONO * 24, format))
-    writer.close()
+      writer = Writer.new("#{OUTPUT_FOLDER}/#{file_name}", format)
+      writer.write(Buffer.new(SQUARE_WAVE_CYCLE[:mono][bits_per_sample] * 128, format))
+      writer.write(Buffer.new(SQUARE_WAVE_CYCLE[:mono][bits_per_sample] * 128, format))
+      writer.write(Buffer.new(SQUARE_WAVE_CYCLE[:mono][bits_per_sample] * 24, format))
+      writer.close()
 
-    assert_equal(read_file(:expected, file_name), read_file(:actual, file_name))
+      assert_equal(read_file(:expected, file_name), read_file(:actual, file_name))
+    end
   end
 
   def test_write_basic_file_with_a_block
@@ -47,7 +57,7 @@ class WriterTest < Test::Unit::TestCase
 
     writer = Writer.new("#{OUTPUT_FOLDER}/#{file_name}", format) do |writer|
       4.times do
-        writer.write(Buffer.new(SQUARE_WAVE_CYCLE_16BIT_MONO * 70, format))
+        writer.write(Buffer.new(SQUARE_WAVE_CYCLE[:mono][16] * 70, format))
       end
     end
 
@@ -62,22 +72,9 @@ class WriterTest < Test::Unit::TestCase
     format_16bit_stereo = Format.new(:stereo, 16, 44100)
 
     writer = Writer.new("#{OUTPUT_FOLDER}/#{file_name}", format_8bit_mono)
-    writer.write(Buffer.new(SQUARE_WAVE_CYCLE_16BIT_STEREO * 128, format_16bit_stereo))
-    writer.write(Buffer.new(SQUARE_WAVE_CYCLE_16BIT_MONO * 128,   format_16_bit_mono))
-    writer.write(Buffer.new(SQUARE_WAVE_CYCLE_16BIT_STEREO * 24,  format_16bit_stereo))
-    writer.close()
-
-    assert_equal(read_file(:expected, file_name), read_file(:actual, file_name))
-  end
-
-  def test_write_32_bit_file
-    file_name = "valid_mono_32_44100.wav"
-    format = Format.new(1, 32, 44100)
-
-    writer = Writer.new("#{OUTPUT_FOLDER}/#{file_name}", format)
-    writer.write(Buffer.new(SQUARE_WAVE_CYCLE_32BIT_MONO * 128, format))
-    writer.write(Buffer.new(SQUARE_WAVE_CYCLE_32BIT_MONO * 128, format))
-    writer.write(Buffer.new(SQUARE_WAVE_CYCLE_32BIT_MONO * 24, format))
+    writer.write(Buffer.new(SQUARE_WAVE_CYCLE[:stereo][16] * 128, format_16bit_stereo))
+    writer.write(Buffer.new(SQUARE_WAVE_CYCLE[:mono][16] * 128,   format_16_bit_mono))
+    writer.write(Buffer.new(SQUARE_WAVE_CYCLE[:stereo][16] * 24,  format_16bit_stereo))
     writer.close()
 
     assert_equal(read_file(:expected, file_name), read_file(:actual, file_name))
@@ -88,9 +85,9 @@ class WriterTest < Test::Unit::TestCase
     format = Format.new(1, 8, 44100)
 
     writer = Writer.new("#{OUTPUT_FOLDER}/#{file_name}", format)
-    writer.write(Buffer.new(SQUARE_WAVE_CYCLE_8BIT_MONO * 128, format))
-    writer.write(Buffer.new(SQUARE_WAVE_CYCLE_8BIT_MONO * 128, format))
-    writer.write(Buffer.new(SQUARE_WAVE_CYCLE_8BIT_MONO * 23 + [88, 88, 88, 88, 167, 167, 167], format))
+    writer.write(Buffer.new(SQUARE_WAVE_CYCLE[:mono][8] * 128, format))
+    writer.write(Buffer.new(SQUARE_WAVE_CYCLE[:mono][8] * 128, format))
+    writer.write(Buffer.new(SQUARE_WAVE_CYCLE[:mono][8] * 23 + [88, 88, 88, 88, 167, 167, 167], format))
     writer.close()
 
     assert_equal(read_file(:expected, file_name), read_file(:actual, file_name))
