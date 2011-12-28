@@ -23,7 +23,8 @@ module WaveFile
                :note         => "note",
                :sample       => "smpl",
                :instrument   => "inst" }
-  PACK_CODES = {8 => "C*", 16 => "s*", 32 => "V*"}
+
+  PACK_CODES = {8 => "C*", 16 => "s*", 32 => "l*"}
 
   UNSIGNED_INT_16 = "v"
   UNSIGNED_INT_32 = "V"

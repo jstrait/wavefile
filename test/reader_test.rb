@@ -12,6 +12,7 @@ class ReaderTest < Test::Unit::TestCase
   SQUARE_WAVE_CYCLE_8BIT_STEREO = [[88, 88], [88, 88], [88, 88], [88, 88],
                                    [167, 167], [167, 167], [167, 167], [167, 167]]
   SQUARE_WAVE_CYCLE_16BIT_MONO = [-10000, -10000, -10000, -10000, 10000, 10000, 10000, 10000]
+  SQUARE_WAVE_CYCLE_32BIT_MONO = [-1000000000, -1000000000, -1000000000, -1000000000, 1000000000, 1000000000, 1000000000, 1000000000]
 
   def test_nonexistent_file
     assert_raise(Errno::ENOENT) { Reader.new(fixture("i_do_not_exist.wav")) }
@@ -81,6 +82,16 @@ class ReaderTest < Test::Unit::TestCase
     assert_equal(SQUARE_WAVE_CYCLE_8BIT_STEREO * 128, buffers[0].samples)
     assert_equal(SQUARE_WAVE_CYCLE_8BIT_STEREO * 128, buffers[1].samples)
     assert_equal(SQUARE_WAVE_CYCLE_8BIT_STEREO * 24,  buffers[2].samples)
+  end
+
+  def test_read_32_bit_file
+    buffers = read_file("valid/valid_mono_32_44100.wav", 1024)
+
+    assert_equal(3, buffers.length)
+    assert_equal([1024, 1024, 192], buffers.map {|buffer| buffer.samples.length })
+    assert_equal(SQUARE_WAVE_CYCLE_32BIT_MONO * 128, buffers[0].samples)
+    assert_equal(SQUARE_WAVE_CYCLE_32BIT_MONO * 128, buffers[1].samples)
+    assert_equal(SQUARE_WAVE_CYCLE_32BIT_MONO * 24,  buffers[2].samples)
   end
 
   def test_read_with_padding_byte
