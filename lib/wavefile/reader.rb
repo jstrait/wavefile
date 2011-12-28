@@ -48,6 +48,7 @@ module WaveFile
       end
     end
 
+
     # Reads metadata from the specified wave file and returns an Info object with the results.
     # Metadata includes things like the number of channels, bits per sample, number of samples,
     # sample encoding format (i.e. PCM, IEEE float, uLaw etc). See the Info object for more
@@ -139,10 +140,12 @@ module WaveFile
       return buffer.convert(@format)
     end
 
+
     # Returns true if the Reader is closed, and false if it is open and available for reading.
     def closed?()
       return @file.closed?
     end
+
 
     # Closes the Reader. After a Reader is closed, no more sample data can be read from it.
     #

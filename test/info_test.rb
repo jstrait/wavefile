@@ -57,7 +57,6 @@ class InfoTest < Test::Unit::TestCase
     samples_per_hour = 44100 * 60 * 60
     info = Info.new(FILE_NAME, format_chunk, samples_per_hour * 25)
     assert_equal({:hours => 25, :minutes => 0, :seconds => 0, :milliseconds => 0}, info.duration)
-
   end
 end
 

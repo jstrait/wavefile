@@ -53,15 +53,18 @@ module WaveFile
       return self
     end
 
+
     # The number of channels the buffer's sample data has
     def channels
       return @format.channels
     end
 
+
     # The bits per sample of the buffer's sample data
     def bits_per_sample
       return @format.bits_per_sample
     end
+
 
     # The sample rate of the buffer's sample data
     def sample_rate
