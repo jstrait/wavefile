@@ -29,6 +29,15 @@ class WriterTest < Test::Unit::TestCase
     clean_output_folder()
   end
 
+  # Executes the given block against different combinations of number of channels and bits per sample.
+  def exhaustively_test
+    [:mono, :stereo].each do |channels|
+      Format::SUPPORTED_BITS_PER_SAMPLE.each do |bits_per_sample|
+        yield(channels, bits_per_sample)
+      end
+    end
+  end
+
   def test_write_file_with_no_sample_data
     writer = Writer.new("#{OUTPUT_FOLDER}/no_samples.wav", Format.new(1, 8, 44100))
     writer.close()
@@ -37,37 +46,33 @@ class WriterTest < Test::Unit::TestCase
   end
 
   def test_write_basic_file
-    [:mono, :stereo].each do |channels|
-      Format::SUPPORTED_BITS_PER_SAMPLE.each do |bits_per_sample|
-        file_name = "valid_#{channels}_#{bits_per_sample}_44100.wav"
-        format = Format.new(channels, bits_per_sample, 44100)
+    exhaustively_test do |channels, bits_per_sample|
+      file_name = "valid_#{channels}_#{bits_per_sample}_44100.wav"
+      format = Format.new(channels, bits_per_sample, 44100)
 
-        writer = Writer.new("#{OUTPUT_FOLDER}/#{file_name}", format)
-        writer.write(Buffer.new(SQUARE_WAVE_CYCLE[channels][bits_per_sample] * 128, format))
-        writer.write(Buffer.new(SQUARE_WAVE_CYCLE[channels][bits_per_sample] * 128, format))
-        writer.write(Buffer.new(SQUARE_WAVE_CYCLE[channels][bits_per_sample] * 24, format))
-        writer.close()
+      writer = Writer.new("#{OUTPUT_FOLDER}/#{file_name}", format)
+      writer.write(Buffer.new(SQUARE_WAVE_CYCLE[channels][bits_per_sample] * 128, format))
+      writer.write(Buffer.new(SQUARE_WAVE_CYCLE[channels][bits_per_sample] * 128, format))
+      writer.write(Buffer.new(SQUARE_WAVE_CYCLE[channels][bits_per_sample] * 24, format))
+      writer.close()
 
-        assert_equal(read_file(:expected, file_name), read_file(:actual, file_name))
-      end
+      assert_equal(read_file(:expected, file_name), read_file(:actual, file_name))
     end
   end
 
   def test_write_basic_file_with_a_block
-    [:mono, :stereo].each do |channels|
-      Format::SUPPORTED_BITS_PER_SAMPLE.each do |bits_per_sample|
-        file_name = "valid_#{channels}_#{bits_per_sample}_44100.wav"
-        format = Format.new(channels, bits_per_sample, 44100)
+    exhaustively_test do |channels, bits_per_sample|
+      file_name = "valid_#{channels}_#{bits_per_sample}_44100.wav"
+      format = Format.new(channels, bits_per_sample, 44100)
 
-        writer = Writer.new("#{OUTPUT_FOLDER}/#{file_name}", format) do |writer|
-          4.times do
-            writer.write(Buffer.new(SQUARE_WAVE_CYCLE[channels][bits_per_sample] * 70, format))
-          end
+      writer = Writer.new("#{OUTPUT_FOLDER}/#{file_name}", format) do |writer|
+        4.times do
+          writer.write(Buffer.new(SQUARE_WAVE_CYCLE[channels][bits_per_sample] * 70, format))
         end
-
-        assert_equal(read_file(:expected, file_name), read_file(:actual, file_name))
-        assert(writer.closed?)
       end
+
+      assert_equal(read_file(:expected, file_name), read_file(:actual, file_name))
+      assert(writer.closed?)
     end
   end
 
