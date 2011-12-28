@@ -37,17 +37,19 @@ class WriterTest < Test::Unit::TestCase
   end
 
   def test_write_basic_file
-    Format::SUPPORTED_BITS_PER_SAMPLE.each do |bits_per_sample|
-      file_name = "valid_mono_#{bits_per_sample}_44100.wav"
-      format = Format.new(1, bits_per_sample, 44100)
+    [:mono, :stereo].each do |channels|
+      Format::SUPPORTED_BITS_PER_SAMPLE.each do |bits_per_sample|
+        file_name = "valid_#{channels}_#{bits_per_sample}_44100.wav"
+        format = Format.new(channels, bits_per_sample, 44100)
 
-      writer = Writer.new("#{OUTPUT_FOLDER}/#{file_name}", format)
-      writer.write(Buffer.new(SQUARE_WAVE_CYCLE[:mono][bits_per_sample] * 128, format))
-      writer.write(Buffer.new(SQUARE_WAVE_CYCLE[:mono][bits_per_sample] * 128, format))
-      writer.write(Buffer.new(SQUARE_WAVE_CYCLE[:mono][bits_per_sample] * 24, format))
-      writer.close()
+        writer = Writer.new("#{OUTPUT_FOLDER}/#{file_name}", format)
+        writer.write(Buffer.new(SQUARE_WAVE_CYCLE[channels][bits_per_sample] * 128, format))
+        writer.write(Buffer.new(SQUARE_WAVE_CYCLE[channels][bits_per_sample] * 128, format))
+        writer.write(Buffer.new(SQUARE_WAVE_CYCLE[channels][bits_per_sample] * 24, format))
+        writer.close()
 
-      assert_equal(read_file(:expected, file_name), read_file(:actual, file_name))
+        assert_equal(read_file(:expected, file_name), read_file(:actual, file_name))
+      end
     end
   end
 
