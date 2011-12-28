@@ -8,6 +8,8 @@ include WaveFile
 class ReaderTest < Test::Unit::TestCase
   FIXTURE_ROOT_PATH = "test/fixtures"
 
+  CHANNEL_ALIAS = { :mono => 1, :stereo => 2}
+
   SQUARE_WAVE_CYCLE = {}
   SQUARE_WAVE_CYCLE[:mono] = {}
   SQUARE_WAVE_CYCLE[:mono][8] =    [88, 88, 88, 88, 167, 167, 167, 167]
@@ -73,6 +75,20 @@ class ReaderTest < Test::Unit::TestCase
 
     # Sample rate is 0
     assert_raise(UnsupportedFormatError) { Reader.new(fixture("unsupported/bad_sample_rate.wav")) }
+  end
+
+  def test_initialize
+    [:mono, :stereo].each do |channels|
+      Format::SUPPORTED_BITS_PER_SAMPLE.each do |bits_per_sample|
+        reader = Reader.new(fixture("valid/valid_#{channels}_#{bits_per_sample}_44100.wav"))
+        assert_equal(CHANNEL_ALIAS[channels], reader.format.channels)
+        assert_equal(bits_per_sample, reader.format.bits_per_sample)
+        assert_equal(44100, reader.format.sample_rate)
+        assert_equal(false, reader.closed?)
+
+        reader.close()
+      end
+    end
   end
 
   def test_read_native_format
