@@ -9,6 +9,7 @@ class ReaderTest < Test::Unit::TestCase
 
   FIXTURE_ROOT_PATH = "test/fixtures"
 
+  
   def test_nonexistent_file
     assert_raise(Errno::ENOENT) { Reader.new(fixture("i_do_not_exist.wav")) }
 
@@ -61,11 +62,13 @@ class ReaderTest < Test::Unit::TestCase
 
   def test_initialize
     exhaustively_test do |channels, bits_per_sample|
-      reader = Reader.new(fixture("valid/valid_#{channels}_#{bits_per_sample}_44100.wav"))
+      file_name = fixture("valid/valid_#{channels}_#{bits_per_sample}_44100.wav")
+      reader = Reader.new(file_name)
       assert_equal(CHANNEL_ALIAS[channels], reader.format.channels)
       assert_equal(bits_per_sample, reader.format.bits_per_sample)
       assert_equal(44100, reader.format.sample_rate)
       assert_equal(false, reader.closed?)
+      assert_equal(file_name, reader.file_name)
     end
   end
 
@@ -167,11 +170,6 @@ class ReaderTest < Test::Unit::TestCase
     buffer = reader.read(1024)
     reader.close()
     assert_raise(IOError) { reader.read(1024) }
-  end
-
-  def test_file_name
-    reader = Reader.new(fixture("valid/valid_mono_16_44100.wav"))
-    assert(reader.file_name.end_with?("valid/valid_mono_16_44100.wav"))
   end
 
 private
