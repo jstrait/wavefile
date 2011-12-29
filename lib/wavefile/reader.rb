@@ -36,6 +36,8 @@ module WaveFile
       @native_format = Format.new(raw_format_chunk[:channels],
                                   raw_format_chunk[:bits_per_sample],
                                   raw_format_chunk[:sample_rate])
+      @pack_code = PACK_CODES[@native_format.bits_per_sample]
+
       if format == nil
         @format = @native_format
       else
@@ -113,7 +115,7 @@ module WaveFile
         buffer_size = @samples_remaining
       end
 
-      samples = @file.sysread(buffer_size * @native_format.block_align).unpack(PACK_CODES[@native_format.bits_per_sample])
+      samples = @file.sysread(buffer_size * @native_format.block_align).unpack(@pack_code)
       @samples_remaining -= buffer_size
 
       if @native_format.channels > 1
