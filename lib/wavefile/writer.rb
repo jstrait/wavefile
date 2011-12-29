@@ -94,7 +94,7 @@ module WaveFile
       @file.close()
     end
 
-    attr_reader :file_name, :format, :samples_written
+    attr_reader :file_name, :format
 
   private
 
