@@ -23,7 +23,7 @@ class WriterTest < Test::Unit::TestCase
   def test_write_basic_file
     exhaustively_test do |channels, bits_per_sample|
       file_name = "valid_#{channels}_#{bits_per_sample}_44100.wav"
-      format = Format.new(channels, bits_per_sample, 44100)
+      format = Format.new(CHANNEL_ALIAS[channels], bits_per_sample, 44100)
 
       writer = Writer.new("#{OUTPUT_FOLDER}/#{file_name}", format)
       writer.write(Buffer.new(SQUARE_WAVE_CYCLE[channels][bits_per_sample] * 128, format))
@@ -38,7 +38,7 @@ class WriterTest < Test::Unit::TestCase
   def test_write_basic_file_with_a_block
     exhaustively_test do |channels, bits_per_sample|
       file_name = "valid_#{channels}_#{bits_per_sample}_44100.wav"
-      format = Format.new(channels, bits_per_sample, 44100)
+      format = Format.new(CHANNEL_ALIAS[channels], bits_per_sample, 44100)
 
       writer = Writer.new("#{OUTPUT_FOLDER}/#{file_name}", format) do |writer|
         4.times do

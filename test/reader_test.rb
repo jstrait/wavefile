@@ -9,8 +9,6 @@ class ReaderTest < Test::Unit::TestCase
 
   FIXTURE_ROOT_PATH = "test/fixtures"
 
-  CHANNEL_ALIAS = { :mono => 1, :stereo => 2}
-
   def test_nonexistent_file
     assert_raise(Errno::ENOENT) { Reader.new(fixture("i_do_not_exist.wav")) }
 
