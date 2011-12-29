@@ -61,14 +61,26 @@ class ReaderTest < Test::Unit::TestCase
   end
 
   def test_initialize
+    format = Format.new(:stereo, 16, 22050)
+
     exhaustively_test do |channels, bits_per_sample|
       file_name = fixture("valid/valid_#{channels}_#{bits_per_sample}_44100.wav")
+
       reader = Reader.new(file_name)
       assert_equal(CHANNEL_ALIAS[channels], reader.format.channels)
       assert_equal(bits_per_sample, reader.format.bits_per_sample)
       assert_equal(44100, reader.format.sample_rate)
       assert_equal(false, reader.closed?)
       assert_equal(file_name, reader.file_name)
+      reader.close()
+
+      reader = Reader.new(file_name, format)
+      assert_equal(2, reader.format.channels)
+      assert_equal(16, reader.format.bits_per_sample)
+      assert_equal(22050, reader.format.sample_rate)
+      assert_equal(false, reader.closed?)
+      assert_equal(file_name, reader.file_name)
+      reader.close()
     end
   end
 
