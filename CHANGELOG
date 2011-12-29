@@ -1,10 +1,23 @@
 0.4.0
 ===============================================================================
-* Complete re-write and brand new API. Not backwards compatible with previous
-  versions.
-* Support for reading/writing file formats as previous versions, but no support
-  for using floating point sample data ("normalized" sample data in the
-  terminology of previous versions).
+* A brand new API, based on streaming. (The old API has been removed).
+  Improvements due to the new API include:
+** Reduced memory consumption, due to not having to load the entire file
+   into memory. In practice, this allows the gem to read/write files that
+   previously would have been prohibitively large.
+** Better performance for large files, for the same reason as above.
+** Ability to progressively append data to the end of a file, instead of
+   writing the entire file at once.
+** Ability to easily read and write data in an arbitrary format, regardless of
+   the file's native format. For example, you can transparently read data out
+   of a 16-bit stereo file as 8-bit mono.
+** Automatic file management, similar to how IO.open() works.
+* Ability to query format metadata of files without opening them, even for
+  formats that this gem can't read or write.
+* Support for reading and writing 32-bit PCM files.
+* No longer supported: Reading PCM data as floating point and writing floating
+  point as PCM.
+
 
 0.3.0
 ===============================================================================
@@ -20,10 +33,12 @@
   format can't be opened.
 * Files that have more than just a format and data chunk can now be opened.
 
+
 0.2.1
 ===============================================================================
 * Fixed bug which prevented stereo files from being opened, due to refactoring
   gone bad.
+
 
 0.2.0
 ===============================================================================
@@ -35,6 +50,7 @@
 * Added method reverse().
 * Conversion of raw samples to normalized samples, and vice versa, is more
   accurate.
+
 
 0.1.0
 ===============================================================================
