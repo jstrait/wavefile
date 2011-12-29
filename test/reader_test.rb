@@ -66,6 +66,7 @@ class ReaderTest < Test::Unit::TestCase
     exhaustively_test do |channels, bits_per_sample|
       file_name = fixture("valid/valid_#{channels}_#{bits_per_sample}_44100.wav")
 
+      # Read native format
       reader = Reader.new(file_name)
       assert_equal(CHANNEL_ALIAS[channels], reader.format.channels)
       assert_equal(bits_per_sample, reader.format.bits_per_sample)
@@ -74,6 +75,7 @@ class ReaderTest < Test::Unit::TestCase
       assert_equal(file_name, reader.file_name)
       reader.close()
 
+      # Read a non-native format
       reader = Reader.new(file_name, format)
       assert_equal(2, reader.format.channels)
       assert_equal(16, reader.format.bits_per_sample)
@@ -81,6 +83,14 @@ class ReaderTest < Test::Unit::TestCase
       assert_equal(false, reader.closed?)
       assert_equal(file_name, reader.file_name)
       reader.close()
+
+      # Block is given.
+      reader = Reader.new(file_name) {|reader| reader.read(1024) }
+      assert_equal(CHANNEL_ALIAS[channels], reader.format.channels)
+      assert_equal(bits_per_sample, reader.format.bits_per_sample)
+      assert_equal(44100, reader.format.sample_rate)
+      assert(reader.closed?)
+      assert_equal(file_name, reader.file_name)
     end
   end
 
@@ -115,6 +125,11 @@ class ReaderTest < Test::Unit::TestCase
     assert_equal(SQUARE_WAVE_CYCLE[:mono][8] * 128, buffers[1].samples)
     assert_equal((SQUARE_WAVE_CYCLE[:mono][8] * 23) + [88, 88, 88, 88, 167, 167, 167], 
                  buffers[2].samples)
+  end
+
+  def test_each_buffer_no_block_given
+    reader = Reader.new(fixture("valid/valid_mono_16_44100.wav"))
+    assert_raise(LocalJumpError) { reader.each_buffer(1024) }
   end
 
   def test_each_buffer_native_format
