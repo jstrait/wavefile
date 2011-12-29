@@ -128,7 +128,7 @@ module WaveFile
           # General algorithm that works for any number of channels, 2 or greater.
           num_multichannel_samples.times do |i|
             sample = Array.new(@native_format.channels)
-            num_channels.times {|j| sample[j] = samples.pop() }
+            @native_format.channels.times {|j| sample[j] = samples.pop() }
             multichannel_data[i] = sample.reverse!()
           end
         end
