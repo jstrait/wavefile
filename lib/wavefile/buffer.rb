@@ -2,8 +2,8 @@ module WaveFile
   # Error that is raised when an attempt is made to perform an unsupported or undefined
   # conversion between two sample data formats.
   class BufferConversionError < StandardError; end
- 
-  
+
+
   # Represents a collection of samples in a certain format (e.g. 16-bit mono).
   # Reader returns sample data contained in Buffers, and Writer expects incoming sample
   # data to be contained in a Buffer as well.
@@ -18,7 +18,7 @@ module WaveFile
       @format = format
     end
 
-    
+
     # Creates a new Buffer containing the sample data of this Buffer, but converted to
     # a different format.
     #
@@ -83,7 +83,7 @@ module WaveFile
       unless old_format.bits_per_sample == new_format.bits_per_sample
         samples = convert_buffer_bits_per_sample(samples, old_format.bits_per_sample, new_format.bits_per_sample)
       end
-      
+
       return samples
     end
 
@@ -105,7 +105,7 @@ module WaveFile
         raise BufferConversionError,
               "Conversion of sample data from #{old_channels} channels to #{new_channels} channels is unsupported"
       end
-    
+
       return samples
     end
 
