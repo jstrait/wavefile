@@ -5,7 +5,7 @@ require 'wavefile/reader'
 require 'wavefile/writer'
 
 module WaveFile
-  VERSION = "0.4.0alpha"
+  VERSION = "0.4.0"
 
   WAVEFILE_FORMAT_CODE = "WAVE"
   FORMAT_CHUNK_BYTE_LENGTH = 16
