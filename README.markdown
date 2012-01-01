@@ -1,8 +1,8 @@
-A pure Ruby gem for reading and writing sound files in Wave format (*.wav). You can use this gem to create Ruby programs that produce audio, such as [drum machine](http://github.com/jstrait/beats).
+A pure Ruby gem for reading and writing sound files in Wave format (*.wav). You can use this gem to create Ruby programs that produce audio, such as [drum machine](http://beatsdrummachine.com).
 
 # What's New in v0.4.0?
 
-This version is a re-write with a completely new, much improved API. (The old API has been removed). The new API is better in about every way, including:
+This version is a re-write with a completely new, much improved API. (The old API has been removed). Some improvements due to the new API include:
 
 * Reduced memory consumption, due to not having to load the entire file into memory. In practice, this allows the gem to read/write files that previously would have been prohibitively large.
 * Better performance for large files, for the same reason as above.
@@ -23,8 +23,8 @@ However, reading or writing data as floating point (i.e. values between -1.0 and
 WaveFile has been tested with these Ruby versions, and appears to be compatible with them:
 
 * MRI 1.9.3, 1.9.2, 1.9.1, 1.8.7
-* JRuby ____ (to do)
-* Rubinius ____ (to do)
+* JRuby 1.6.5
+* Rubinius 1.2.4
 * MacRuby 0.10
 
 If you find any compatibility issues, please let me know by opening a GitHub issue.
