@@ -71,7 +71,7 @@ module WaveFile
       raw_format_chunk, sample_count = HeaderReader.new(file, file_name).read_until_data_chunk()
       file.close()
 
-      return Info.new(file_name, raw_format_chunk, sample_count)
+      Info.new(file_name, raw_format_chunk, sample_count)
     end
 
 
@@ -139,13 +139,13 @@ module WaveFile
       end
 
       buffer = Buffer.new(samples, @native_format)
-      return buffer.convert(@format)
+      buffer.convert(@format)
     end
 
 
     # Returns true if the Reader is closed, and false if it is open and available for reading.
     def closed?()
-      return @file.closed?
+      @file.closed?
     end
 
 
@@ -246,7 +246,7 @@ module WaveFile
         raise_error InvalidFormatError, "Expected RIFF format of '#{WAVEFILE_FORMAT_CODE}', but was '#{riff_header[:riff_format]}'"
       end
 
-      return riff_header
+      riff_header
     end
 
     def read_format_chunk(chunk_id, chunk_size)
@@ -278,7 +278,7 @@ module WaveFile
         # TODO: Parse the extension
       end
 
-      return format_chunk
+      format_chunk
     end
 
     def read_chunk_body(chunk_id, chunk_size)

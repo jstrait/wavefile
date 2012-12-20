@@ -32,7 +32,7 @@ module WaveFile
     # Returns a new Buffer; the existing Buffer is unmodified.
     def convert(new_format)
       new_samples = convert_buffer(@samples.dup, @format, new_format)
-      return Buffer.new(new_samples, new_format)
+      Buffer.new(new_samples, new_format)
     end
 
 
@@ -50,25 +50,25 @@ module WaveFile
     def convert!(new_format)
       @samples = convert_buffer(@samples, @format, new_format)
       @format = new_format
-      return self
+      self
     end
 
 
     # The number of channels the buffer's sample data has
     def channels
-      return @format.channels
+      @format.channels
     end
 
 
     # The bits per sample of the buffer's sample data
     def bits_per_sample
-      return @format.bits_per_sample
+      @format.bits_per_sample
     end
 
 
     # The sample rate of the buffer's sample data
     def sample_rate
-      return @format.sample_rate
+      @format.sample_rate
     end
 
     attr_reader :samples
@@ -84,7 +84,7 @@ module WaveFile
         samples = convert_buffer_bits_per_sample(samples, old_format.bits_per_sample, new_format.bits_per_sample)
       end
 
-      return samples
+      samples
     end
 
     def convert_buffer_channels(samples, old_channels, new_channels)
@@ -106,7 +106,7 @@ module WaveFile
               "Conversion of sample data from #{old_channels} channels to #{new_channels} channels is unsupported"
       end
 
-      return samples
+      samples
     end
 
     def convert_buffer_bits_per_sample(samples, old_bits_per_sample, new_bits_per_sample)
@@ -141,7 +141,7 @@ module WaveFile
         end
       end
 
-      return samples
+      samples
     end
   end
 end

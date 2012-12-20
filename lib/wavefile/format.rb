@@ -25,11 +25,11 @@ module WaveFile
     end
 
     def mono?()
-      return @channels == 1
+      @channels == 1
     end
 
     def stereo?()
-      return @channels == 2
+      @channels == 2
     end
 
     attr_reader :channels, :bits_per_sample, :sample_rate, :block_align, :byte_rate

@@ -62,7 +62,7 @@ module WaveFile
 
     # Returns true if the Writer is closed, and false if it is open and available for writing.
     def closed?()
-      return @file.closed?
+      @file.closed?
     end
 
 
