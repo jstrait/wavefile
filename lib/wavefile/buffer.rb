@@ -111,37 +111,30 @@ module WaveFile
 
     def convert_buffer_bits_per_sample(samples, old_bits_per_sample, new_bits_per_sample)
       shift_amount = (new_bits_per_sample - old_bits_per_sample).abs
-      more_than_one_channel = (Array === samples.first)
 
       if old_bits_per_sample == 8
-        if more_than_one_channel
-          samples.map! do |sample|
-            sample.map! {|sub_sample| (sub_sample - 128) << shift_amount }
-          end
-        else
-          samples.map! {|sample| (sample - 128) << shift_amount }
-        end
+        convert_buffer_bits_per_sample_helper(samples) {|sample| (sample - 128) << shift_amount }
       elsif new_bits_per_sample == 8
-        if more_than_one_channel
-          samples.map! do |sample|
-            sample.map! {|sub_sample| (sub_sample >> shift_amount) + 128 }
-          end
-        else
-          samples.map! {|sample| (sample >> shift_amount) + 128 }
-        end
+        convert_buffer_bits_per_sample_helper(samples) {|sample| (sample >> shift_amount) + 128 }
       else
-        operator = (new_bits_per_sample > old_bits_per_sample) ? :<< : :>>
-
-        if more_than_one_channel
-          samples.map! do |sample|
-            sample.map! {|sub_sample| sub_sample.send(operator, shift_amount) }
-          end
+        if new_bits_per_sample > old_bits_per_sample
+          convert_buffer_bits_per_sample_helper(samples) {|sample| sample << shift_amount }
         else
-          samples.map! {|sample| sample.send(operator, shift_amount) }
+          convert_buffer_bits_per_sample_helper(samples) {|sample| sample >> shift_amount }
         end
       end
+    end
 
-      samples
+    def convert_buffer_bits_per_sample_helper(samples, &converter)
+      more_than_one_channel = (Array === samples.first)
+
+      if more_than_one_channel
+        samples.map! do |sample|
+          sample.map! &converter
+        end
+      else
+        samples.map! &converter
+      end
     end
   end
 end
