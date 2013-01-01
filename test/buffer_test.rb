@@ -80,38 +80,53 @@ class BufferTest < Test::Unit::TestCase
     end
   end
 
-  def test_convert_buffer_bits_per_sample
-    # Assert that not changing the number of channels is a no-op
-    b = Buffer.new([-32768, -24576, -16384, -8192, 0, 8192, 16384, 24575, 32767], Format.new(1, 16, 44100))
-    b.convert!(Format.new(1, 16, 44100))
-    assert_equal([-32768, -24576, -16384, -8192, 0, 8192, 16384, 24575, 32767], b.samples)
+  def test_convert_buffer_bits_per_sample_no_op
+    Format::SUPPORTED_BITS_PER_SAMPLE.each do |bits_per_sample|
+      b = Buffer.new([0, 128, 255], Format.new(1, bits_per_sample, 44100))
+      b.convert!(Format.new(1, bits_per_sample, 44100))
 
+      # Target format is the same as the original format, so the sample data should not change
+      assert_equal([0, 128, 255], b.samples)
+    end
+  end
+
+  def test_convert_buffer_bits_per_sample_8_to_16
     # 8 => 16, Mono
     b = Buffer.new([0, 32, 64, 96, 128, 160, 192, 223, 255], Format.new(1, 8, 44100))
     b.convert!(Format.new(1, 16, 44100))
     assert_equal([-32768, -24576, -16384, -8192, 0, 8192, 16384, 24320, 32512], b.samples)
+  end
 
+  def test_convert_buffer_bits_per_sample_8_to_32
     # 8 => 32, Mono
     b = Buffer.new([0, 32, 64, 96, 128, 160, 192, 223, 255], Format.new(1, 8, 44100))
     b.convert!(Format.new(1, 32, 44100))
     assert_equal([-2147483648, -1610612736, -1073741824, -536870912, 0, 536870912, 1073741824, 1593835520, 2130706432], b.samples)
+  end
 
+  def test_convert_buffer_bits_per_sample_16_to_8
     # 16 => 8, Mono
     b = Buffer.new([-32768, -24576, -16384, -8192, 0, 8192, 16384, 24575, 32767], Format.new(1, 16, 44100))
     b.convert!(Format.new(1, 8, 44100))
     assert_equal([0, 32, 64, 96, 128, 160, 192, 223, 255], b.samples)
+  end
 
+  def test_convert_buffer_bits_per_sample_16_to_32
     # 16 => 32, Mono
     b = Buffer.new([-32768, -24576, -16384, -8192, 0, 8192, 16384, 24575, 32767], Format.new(1, 16, 44100))
     b.convert!(Format.new(1, 32, 44100))
     assert_equal([-2147483648, -1610612736, -1073741824, -536870912, 0, 536870912, 1073741824, 1610547200, 2147418112], b.samples)
+  end
 
+  def test_convert_buffer_bits_per_sample_32_to_8
     # 32 => 8, Mono
     b = Buffer.new([-2147483648, -1610612736, -1073741824, -536870912, 0, 536870912, 1073741824, 1610612735, 2147483647],
                    Format.new(1, 32, 44100))
     b.convert!(Format.new(1, 8, 44100))
     assert_equal([0, 32, 64, 96, 128, 160, 192, 223, 255], b.samples)
+  end
 
+  def test_convert_buffer_bits_per_sample_32_to_16
     # 32 => 16, Mono
     b = Buffer.new([-2147483648, -1610612736, -1073741824, -536870912, 0, 536870912, 1073741824, 1610612735, 2147483647],
                    Format.new(1, 32, 44100))
