@@ -26,7 +26,7 @@ module WaveFile
       @file_name = file_name
       @file = File.open(file_name, "rb")
 
-      raw_format_chunk, sample_count = HeaderReader.new(@file, @file_name).read_until_data_chunk()
+      raw_format_chunk, sample_count = HeaderReader.new(@file, @file_name).read_until_data_chunk
       @sample_count = sample_count
       @samples_remaining = sample_count
 
@@ -46,7 +46,7 @@ module WaveFile
 
       if block_given?
         yield(self)
-        close()
+        close
       end
     end
 
@@ -68,8 +68,8 @@ module WaveFile
     #                           that WaveFile can't read.
     def self.info(file_name)
       file = File.open(file_name, "rb")
-      raw_format_chunk, sample_count = HeaderReader.new(file, file_name).read_until_data_chunk()
-      file.close()
+      raw_format_chunk, sample_count = HeaderReader.new(file, file_name).read_until_data_chunk
+      file.close
 
       Info.new(file_name, raw_format_chunk, sample_count)
     end
@@ -94,7 +94,7 @@ module WaveFile
           yield(read(buffer_size))
         end
       rescue EOFError
-        close()
+        close
       end
     end
 
@@ -125,17 +125,17 @@ module WaveFile
         if(@native_format.channels == 2)
           # Files with more than 2 channels are expected to be less common, so if there are 2 channels
           # using a faster specific algorithm instead of a general one.
-          num_multichannel_samples.times {|i| multichannel_data[i] = [samples.pop(), samples.pop()].reverse!() }
+          num_multichannel_samples.times {|i| multichannel_data[i] = [samples.pop, samples.pop].reverse! }
         else
           # General algorithm that works for any number of channels, 2 or greater.
           num_multichannel_samples.times do |i|
             sample = Array.new(@native_format.channels)
-            @native_format.channels.times {|j| sample[j] = samples.pop() }
-            multichannel_data[i] = sample.reverse!()
+            @native_format.channels.times {|j| sample[j] = samples.pop }
+            multichannel_data[i] = sample.reverse!
           end
         end
 
-        samples = multichannel_data.reverse!()
+        samples = multichannel_data.reverse!
       end
 
       buffer = Buffer.new(samples, @native_format)
@@ -144,7 +144,7 @@ module WaveFile
 
 
     # Returns true if the Reader is closed, and false if it is open and available for reading.
-    def closed?()
+    def closed?
       @file.closed?
     end
 
@@ -153,8 +153,8 @@ module WaveFile
     #
     # Returns nothing.
     # Raises IOError if the Reader is already closed.
-    def close()
-      @file.close()
+    def close
+      @file.close
     end
 
     attr_reader :file_name, :format
@@ -200,8 +200,8 @@ module WaveFile
       @file_name = file_name
     end
 
-    def read_until_data_chunk()
-      read_riff_chunk()
+    def read_until_data_chunk
+      read_riff_chunk
 
       begin
         chunk_id = @file.sysread(4)
@@ -232,7 +232,7 @@ module WaveFile
 
   private
 
-    def read_riff_chunk()
+    def read_riff_chunk
       riff_header = {}
       riff_header[:chunk_id],
       riff_header[:chunk_size],

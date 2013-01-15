@@ -17,7 +17,7 @@ class ReaderTest < Test::Unit::TestCase
   end
 
   def test_invalid_formats
-    # Reader.new() and Reader.info() should raise the same errors for invalid files,
+    # Reader.new and Reader.info should raise the same errors for invalid files,
     # so run the tests for both methods.
     [:new, :info].each do |method_name|
       # File contains 0 bytes
@@ -73,7 +73,7 @@ class ReaderTest < Test::Unit::TestCase
       assert_equal(44100, reader.format.sample_rate)
       assert_equal(false, reader.closed?)
       assert_equal(file_name, reader.file_name)
-      reader.close()
+      reader.close
 
       # Read a non-native format
       reader = Reader.new(file_name, format)
@@ -82,7 +82,7 @@ class ReaderTest < Test::Unit::TestCase
       assert_equal(22050, reader.format.sample_rate)
       assert_equal(false, reader.closed?)
       assert_equal(file_name, reader.file_name)
-      reader.close()
+      reader.close
 
       # Block is given.
       reader = Reader.new(file_name) {|reader| reader.read(1024) }
@@ -180,10 +180,10 @@ class ReaderTest < Test::Unit::TestCase
   def test_closed?
     reader = Reader.new(fixture("valid/valid_mono_16_44100.wav"))
     assert_equal(false, reader.closed?)
-    reader.close()
+    reader.close
     assert(reader.closed?)
 
-    # For Reader.each_buffer()
+    # For Reader.each_buffer
     reader = Reader.new(fixture("valid/valid_mono_16_44100.wav"))
     assert_equal(false, reader.closed?)
     reader.each_buffer(1024) do |buffer|
@@ -195,7 +195,7 @@ class ReaderTest < Test::Unit::TestCase
   def test_read_after_close
     reader = Reader.new(fixture("valid/valid_mono_16_44100.wav"))
     buffer = reader.read(1024)
-    reader.close()
+    reader.close
     assert_raise(IOError) { reader.read(1024) }
   end
 
@@ -210,7 +210,7 @@ private
         buffers << reader.read(buffer_size)
       end
     rescue EOFError
-      reader.close()
+      reader.close
     end
 
     return buffers

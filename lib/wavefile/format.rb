@@ -2,7 +2,7 @@ module WaveFile
   class InvalidFormatError < StandardError; end
 
   class Format
-    # Not using ranges because of 1.8.7 performance problems with Range.max()
+    # Not using ranges because of 1.8.7 performance problems with Range.max
     MIN_CHANNELS = 1
     MAX_CHANNELS = 65535
 
@@ -27,11 +27,11 @@ module WaveFile
       @byte_rate = @block_align * @sample_rate
     end
 
-    def mono?()
+    def mono?
       @channels == 1
     end
 
-    def stereo?()
+    def stereo?
       @channels == 2
     end
 

@@ -21,14 +21,14 @@ module WaveFile
 
 
     # Returns a constructed Writer object which is available for writing sample data to the specified
-    # file (via the write() method). When all sample data has been written, the Writer should be closed.
+    # file (via the write method). When all sample data has been written, the Writer should be closed.
     # Note that the wave file being written to will NOT be valid (and playable in other programs) until
     # the Writer has been closed.
     #
     # If a block is given to this method, sample data can be written inside the given block. When the
     # block terminates, the Writer will be automatically closed (and no more sample data can be written).
     #
-    # If no block is given, then sample data can be written until the close() method is called.
+    # If no block is given, then sample data can be written until the close method is called.
     def initialize(file_name, format)
       @file = File.open(file_name, "wb")
       @format = format
@@ -38,12 +38,12 @@ module WaveFile
 
       # Note that the correct sizes for the RIFF and data chunks can't be determined
       # until all samples have been written, so this header as written will be incorrect.
-      # When close() is called, the correct sizes will be re-written.
+      # When close is called, the correct sizes will be re-written.
       write_header(0)
 
       if block_given?
         yield(self)
-        close()
+        close
       end
     end
 
@@ -61,7 +61,7 @@ module WaveFile
 
 
     # Returns true if the Writer is closed, and false if it is open and available for writing.
-    def closed?()
+    def closed?
       @file.closed?
     end
 
@@ -74,7 +74,7 @@ module WaveFile
     #
     # Returns nothing.
     # Raises IOError if the Writer is already closed.
-    def close()
+    def close
       # The RIFF specification requires that each chunk be aligned to an even number of bytes,
       # even if the byte count is an odd number. Therefore if an odd number of bytes has been
       # written, write an empty padding byte.
@@ -91,7 +91,7 @@ module WaveFile
       @file.sysseek(0)
       write_header(@samples_written)
       
-      @file.close()
+      @file.close
     end
 
     attr_reader :file_name, :format

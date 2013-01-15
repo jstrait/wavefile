@@ -9,7 +9,7 @@ module WaveFile
       @byte_rate = raw_format_chunk[:byte_rate]
       @block_align = raw_format_chunk[:block_align]
       @sample_count = sample_count
-      @duration = calculate_duration()
+      @duration = calculate_duration
     end
 
     attr_reader :file_name,
@@ -22,7 +22,7 @@ module WaveFile
     #
     # Returns a hash listing the number of hours, minutes, seconds, and milliseconds of
     # playback time.
-    def calculate_duration()
+    def calculate_duration
       total_samples = @sample_count
       samples_per_millisecond = @sample_rate / 1000.0
       samples_per_second = @sample_rate
