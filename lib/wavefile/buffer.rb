@@ -76,18 +76,15 @@ module WaveFile
   private
 
     def convert_buffer(samples, old_format, new_format)
-      unless old_format.channels == new_format.channels
-        samples = convert_buffer_channels(samples, old_format.channels, new_format.channels)
-      end
-
-      unless old_format.bits_per_sample == new_format.bits_per_sample
-        samples = convert_buffer_bits_per_sample(samples, old_format.bits_per_sample, new_format.bits_per_sample)
-      end
+      samples = convert_buffer_channels(samples, old_format.channels, new_format.channels)
+      samples = convert_buffer_bits_per_sample(samples, old_format.bits_per_sample, new_format.bits_per_sample)
 
       samples
     end
 
     def convert_buffer_channels(samples, old_channels, new_channels)
+      return samples if old_channels == new_channels
+
       # The cases of mono -> stereo and vice-versa are handled specially,
       # because those conversion methods are faster than the general methods,
       # and the large majority of wave files are expected to be either mono or stereo.
@@ -110,6 +107,8 @@ module WaveFile
     end
 
     def convert_buffer_bits_per_sample(samples, old_bits_per_sample, new_bits_per_sample)
+      return samples if old_bits_per_sample == new_bits_per_sample
+
       shift_amount = (new_bits_per_sample - old_bits_per_sample).abs
 
       if old_bits_per_sample == 8
