@@ -39,7 +39,7 @@ module WaveFileIOTestHelper
   # Executes the given block against different combinations of number of channels and bits per sample.
   def exhaustively_test
     [:mono, :stereo, :tri].each do |channels|
-      Format::SUPPORTED_BITS_PER_SAMPLE.each do |bits_per_sample|
+      Format::SUPPORTED_BITS_PER_SAMPLE[:pcm].each do |bits_per_sample|
         yield(channels, bits_per_sample)
       end
     end

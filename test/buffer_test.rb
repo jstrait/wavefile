@@ -38,7 +38,7 @@ class BufferTest < Test::Unit::TestCase
 
 
   def test_convert_buffer_channels
-    Format::SUPPORTED_BITS_PER_SAMPLE.each do |bits_per_sample|
+    Format::SUPPORTED_BITS_PER_SAMPLE[:pcm].each do |bits_per_sample|
       [44100, 22050].each do |sample_rate|
         # Assert that not changing the number of channels is a no-op
         b = Buffer.new([-100, 0, 200], Format.new(1, bits_per_sample, sample_rate))
@@ -81,7 +81,7 @@ class BufferTest < Test::Unit::TestCase
   end
 
   def test_convert_buffer_bits_per_sample_no_op
-    Format::SUPPORTED_BITS_PER_SAMPLE.each do |bits_per_sample|
+    Format::SUPPORTED_BITS_PER_SAMPLE[:pcm].each do |bits_per_sample|
       b = Buffer.new([0, 128, 255], Format.new(1, bits_per_sample, 44100))
       b.convert!(Format.new(1, bits_per_sample, 44100))
 

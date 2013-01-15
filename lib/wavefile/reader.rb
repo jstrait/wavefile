@@ -170,9 +170,9 @@ module WaveFile
                                       "but only format code 1 (i.e. PCM) is supported."
       end
 
-      unless Format::SUPPORTED_BITS_PER_SAMPLE.include?(raw_format_chunk[:bits_per_sample])
+      unless Format::SUPPORTED_BITS_PER_SAMPLE[:pcm].include?(raw_format_chunk[:bits_per_sample])
         raise UnsupportedFormatError, "Bits per sample is #{raw_format_chunk[:bits_per_sample]}, " +
-                                      "but only #{Format::SUPPORTED_BITS_PER_SAMPLE.inspect} are supported."
+                                      "but only #{Format::SUPPORTED_BITS_PER_SAMPLE[:pcm].inspect} are supported."
       end
 
       unless raw_format_chunk[:channels] > 0
