@@ -11,13 +11,16 @@ module WaveFile
 
     SUPPORTED_BITS_PER_SAMPLE = [8, 16, 32]
 
-    def initialize(channels, bits_per_sample, sample_rate)
+    def initialize(channels, format_code, sample_rate)
       channels = canonicalize_channels(channels)
+      sample_format, bits_per_sample = normalize_format_code(format_code)
       validate_channels(channels)
+      validate_sample_format(sample_format)
       validate_bits_per_sample(bits_per_sample)
       validate_sample_rate(sample_rate)
 
       @channels = channels
+      @sample_format = sample_format
       @bits_per_sample = bits_per_sample
       @sample_rate = sample_rate
       @block_align = (@bits_per_sample / 8) * @channels
@@ -32,7 +35,7 @@ module WaveFile
       @channels == 2
     end
 
-    attr_reader :channels, :bits_per_sample, :sample_rate, :block_align, :byte_rate
+    attr_reader :channels, :sample_format, :bits_per_sample, :sample_rate, :block_align, :byte_rate
   
   private
 
@@ -44,6 +47,19 @@ module WaveFile
       else
         return channels
       end
+    end
+
+    def normalize_format_code(format_code)
+      if SUPPORTED_BITS_PER_SAMPLE.include? format_code
+        [:pcm, format_code]
+      else
+        sample_format, bits_per_sample = format_code.to_s.split("_")
+        [sample_format.to_sym, bits_per_sample.to_i]
+      end
+    end
+
+    def validate_sample_format(sample_format)
+      sample_format == :pcm
     end
 
     def validate_channels(candidate_channels)

@@ -19,15 +19,33 @@ class FormatTest < Test::Unit::TestCase
     end
   end
 
+  def test_valid_sample_format()
+    assert_equal(:pcm, Format.new(1, 8, 44100).sample_format)
+    assert_equal(:pcm, Format.new(1, 16, 44100).sample_format)
+    assert_equal(:pcm, Format.new(1, 32, 44100).sample_format)
+    assert_equal(:pcm, Format.new(1, :pcm_8, 44100).sample_format)
+    assert_equal(:pcm, Format.new(1, :pcm_16, 44100).sample_format)
+    assert_equal(:pcm, Format.new(1, :pcm_32, 44100).sample_format)
+  end
+
+  def test_invalid_sample_format()
+    ["dsfsfsdf", :foo, 12, :pcm_14].each do |invalid_sample_format|
+      assert_raise(InvalidFormatError) { Format.new(1, invalid_sample_format, 44100) }
+    end
+  end
+
   def test_valid_bits_per_sample()
     assert_equal(8, Format.new(1, 8, 44100).bits_per_sample)
     assert_equal(16, Format.new(1, 16, 44100).bits_per_sample)
     assert_equal(32, Format.new(1, 32, 44100).bits_per_sample)
+    assert_equal(8, Format.new(1, :pcm_8, 44100).bits_per_sample)
+    assert_equal(16, Format.new(1, :pcm_16, 44100).bits_per_sample)
+    assert_equal(32, Format.new(1, :pcm_32, 44100).bits_per_sample)
   end
 
   def test_invalid_bits_per_sample()
-    ["dsfsfsdf", :foo, 0, 12].each do |invalid_bits_per_sample|
-      assert_raise(InvalidFormatError) { Format.new(1, invalid_bits_per_sample, 44100) }
+    ["dsfsfsdf", :foo, :pcm, 0, 12, :pcm_14, :pcm_abc].each do |invalid_sample_format|
+      assert_raise(InvalidFormatError) { Format.new(1, invalid_sample_format, 44100) }
     end
   end
 
