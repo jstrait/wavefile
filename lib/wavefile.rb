@@ -1,4 +1,5 @@
 require 'wavefile/buffer'
+require 'wavefile/duration'
 require 'wavefile/format'
 require 'wavefile/info'
 require 'wavefile/reader'
