@@ -78,7 +78,17 @@ class WriterTest < Test::Unit::TestCase
 
     assert_equal(read_file(:expected, file_name), read_file(:actual, file_name))
   end
-  
+
+  def test_file_name
+    file_name = "#{OUTPUT_FOLDER}/example.wav"
+
+    writer = Writer.new(file_name, Format.new(1, 8, 44100))
+    assert_equal("#{OUTPUT_FOLDER}/example.wav", writer.file_name)
+    
+    writer.close
+    assert_equal("#{OUTPUT_FOLDER}/example.wav", writer.file_name)
+  end
+
   def test_closed?
     writer = Writer.new("#{OUTPUT_FOLDER}/closed_test.wav", Format.new(1, 16, 44100))
     assert_equal(false, writer.closed?)
