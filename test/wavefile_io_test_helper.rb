@@ -34,8 +34,8 @@ module WaveFileIOTestHelper
                                    [ 1000000000,  1000000000,  1000000000],
                                    [ 1000000000,  1000000000,  1000000000],
                                    [ 1000000000,  1000000000,  1000000000]]
-  
-  
+
+
   # Executes the given block against different combinations of number of channels and bits per sample.
   def exhaustively_test
     [:mono, :stereo, :tri].each do |channels|

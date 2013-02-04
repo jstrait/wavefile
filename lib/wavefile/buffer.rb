@@ -142,7 +142,7 @@ module WaveFile
       elsif old_bits_per_sample == 16
         convert_buffer_bits_per_sample_helper(samples) {|sample| sample.to_f / 32768.0 }
       elsif old_bits_per_sample == 32
-        convert_buffer_bits_per_sample_helper(samples) {|sample| sample.to_f / 2147483648.0 } 
+        convert_buffer_bits_per_sample_helper(samples) {|sample| sample.to_f / 2147483648.0 }
       end
     end
 
@@ -152,7 +152,7 @@ module WaveFile
       elsif new_bits_per_sample == 16
         convert_buffer_bits_per_sample_helper(samples) {|sample| (sample * 32767.0).to_i }
       elsif new_bits_per_sample == 32
-        convert_buffer_bits_per_sample_helper(samples) {|sample| (sample * 2147483647.0).to_i } 
+        convert_buffer_bits_per_sample_helper(samples) {|sample| (sample * 2147483647.0).to_i }
       end
     end
 

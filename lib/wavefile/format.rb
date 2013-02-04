@@ -40,7 +40,7 @@ module WaveFile
     end
 
     attr_reader :channels, :sample_format, :bits_per_sample, :sample_rate, :block_align, :byte_rate
-  
+
   private
 
     def canonicalize_channels(channels)

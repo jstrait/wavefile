@@ -9,7 +9,7 @@ module WaveFile
 
 
   # Provides the ability to read sample data out of a wave file, as well as query a
-  # wave file about its metadata (e.g. number of channels, sample rate, etc). 
+  # wave file about its metadata (e.g. number of channels, sample rate, etc).
   class Reader
     # Returns a Reader object that is ready to start reading the specified file's sample data.
     #
@@ -121,7 +121,7 @@ module WaveFile
       if @native_format.channels > 1
         num_multichannel_samples = samples.length / @native_format.channels
         multichannel_data = Array.new(num_multichannel_samples)
-      
+
         if(@native_format.channels == 2)
           # Files with more than 2 channels are expected to be less common, so if there are 2 channels
           # using a faster specific algorithm instead of a general one.

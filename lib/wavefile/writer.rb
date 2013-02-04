@@ -71,7 +71,7 @@ module WaveFile
     #
     # Note that the wave file will NOT be valid until this method is called. The wave file
     # format requires certain information about the amount of sample data, and this can't be
-    # determined until all samples have been written. 
+    # determined until all samples have been written.
     #
     # Returns nothing.
     # Raises IOError if the Writer is already closed.
@@ -91,7 +91,7 @@ module WaveFile
       # those chunk headers with the correct sizes.
       @file.sysseek(0)
       write_header(@samples_written)
-      
+
       @file.close
     end
 

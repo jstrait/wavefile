@@ -16,7 +16,7 @@ class WriterTest < Test::Unit::TestCase
   def test_write_file_with_no_sample_data
     writer = Writer.new("#{OUTPUT_FOLDER}/no_samples.wav", Format.new(1, 8, 44100))
     writer.close
-    
+
     assert_equal(read_file(:expected, "no_samples.wav"), read_file(:actual, "no_samples.wav"))
   end
 
@@ -84,7 +84,7 @@ class WriterTest < Test::Unit::TestCase
 
     writer = Writer.new(file_name, Format.new(1, 8, 44100))
     assert_equal("#{OUTPUT_FOLDER}/example.wav", writer.file_name)
-    
+
     writer.close
     assert_equal("#{OUTPUT_FOLDER}/example.wav", writer.file_name)
   end
