@@ -106,6 +106,53 @@ class WriterTest < Test::Unit::TestCase
     assert_raise(IOError) { writer.write(Buffer.new([5, 6, 7, 8], format)) }
   end
 
+  def test_duration_written
+    exhaustively_test do |channels, bits_per_sample|
+      format = Format.new(CHANNEL_ALIAS[channels], bits_per_sample, 44100)
+
+      writer = Writer.new("#{OUTPUT_FOLDER}/duration_written_#{channels}_#{bits_per_sample}_44100.wav", format)
+
+      duration = writer.duration_written
+      assert_equal(0, duration.sample_count)
+      assert_equal(44100, duration.sample_rate)
+      assert_equal(0, duration.hours)
+      assert_equal(0, duration.minutes)
+      assert_equal(0, duration.seconds)
+      assert_equal(0, duration.milliseconds)
+
+      writer.write(Buffer.new(SQUARE_WAVE_CYCLE[channels][bits_per_sample] * 2756, format))
+
+      duration = writer.duration_written
+      assert_equal(8 * 2756, duration.sample_count)
+      assert_equal(44100, duration.sample_rate)
+      assert_equal(0, duration.hours)
+      assert_equal(0, duration.minutes)
+      assert_equal(0, duration.seconds)
+      assert_equal(499, duration.milliseconds)
+
+      writer.write(Buffer.new(SQUARE_WAVE_CYCLE[channels][bits_per_sample] * 2756, format))
+      writer.write(Buffer.new(SQUARE_WAVE_CYCLE[channels][bits_per_sample] * 2756, format))
+
+      duration = writer.duration_written
+      assert_equal(8 * 2756 * 3, duration.sample_count)
+      assert_equal(44100, duration.sample_rate)
+      assert_equal(0, duration.hours)
+      assert_equal(0, duration.minutes)
+      assert_equal(1, duration.seconds)
+      assert_equal(499, duration.milliseconds)
+
+      writer.close
+
+      duration = writer.duration_written
+      assert_equal(8 * 2756 * 3, duration.sample_count)
+      assert_equal(44100, duration.sample_rate)
+      assert_equal(0, duration.hours)
+      assert_equal(0, duration.minutes)
+      assert_equal(1, duration.seconds)
+      assert_equal(499, duration.milliseconds)
+    end
+  end
+
 private
 
   def read_file(type, file_name)
