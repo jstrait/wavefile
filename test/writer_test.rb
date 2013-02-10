@@ -112,6 +112,7 @@ class WriterTest < Test::Unit::TestCase
 
       writer = Writer.new("#{OUTPUT_FOLDER}/duration_written_#{channels}_#{bits_per_sample}_44100.wav", format)
 
+      assert_equal(0, writer.samples_written)
       duration = writer.duration_written
       assert_equal(0, duration.sample_count)
       assert_equal(44100, duration.sample_rate)
@@ -122,6 +123,7 @@ class WriterTest < Test::Unit::TestCase
 
       writer.write(Buffer.new(SQUARE_WAVE_CYCLE[channels][bits_per_sample] * 2756, format))
 
+      assert_equal(8 * 2756, writer.samples_written)
       duration = writer.duration_written
       assert_equal(8 * 2756, duration.sample_count)
       assert_equal(44100, duration.sample_rate)
@@ -133,6 +135,7 @@ class WriterTest < Test::Unit::TestCase
       writer.write(Buffer.new(SQUARE_WAVE_CYCLE[channels][bits_per_sample] * 2756, format))
       writer.write(Buffer.new(SQUARE_WAVE_CYCLE[channels][bits_per_sample] * 2756, format))
 
+      assert_equal(8 * 2756 * 3, writer.samples_written)
       duration = writer.duration_written
       assert_equal(8 * 2756 * 3, duration.sample_count)
       assert_equal(44100, duration.sample_rate)
@@ -143,6 +146,7 @@ class WriterTest < Test::Unit::TestCase
 
       writer.close
 
+      assert_equal(8 * 2756 * 3, writer.samples_written)
       duration = writer.duration_written
       assert_equal(8 * 2756 * 3, duration.sample_count)
       assert_equal(44100, duration.sample_rate)

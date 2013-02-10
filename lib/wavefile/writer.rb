@@ -99,7 +99,7 @@ module WaveFile
       Duration.new(@samples_written, @format.sample_rate)
     end
 
-    attr_reader :file_name, :format
+    attr_reader :file_name, :format, :samples_written
 
   private
 
