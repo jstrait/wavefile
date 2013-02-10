@@ -1,6 +1,28 @@
-A pure Ruby gem for reading and writing sound files in Wave format (*.wav). You can use this gem to create Ruby programs that produce audio, such as [drum machine](http://beatsdrummachine.com).
+A pure Ruby gem for reading and writing sound files in Wave format (*.wav). You can use this gem to create Ruby programs that produce audio, such as [drum machine](http://beatsdrummachine.com). Since it is written in pure Ruby (as opposed to wrapping an existing C library), you can use it without having to compile a separate extension.
 
-# What's New in v0.4.0?
+
+# Example Usage
+
+This is a short example that shows how to append three separate Wave files into a single file:
+
+    require 'wavefile'
+    include WaveFile
+    
+    FILES_TO_APPEND = ["file1.wav", "file2.wav", "file3.wav"]
+    SAMPLES_PER_BUFFER = 4096
+
+    Writer.new("append.wav", Format.new(:stereo, 16, 44100) do |writer|
+      FILES_TO_APPEND.each do |file_name|
+        Reader.new(file_name).each_buffer(SAMPLES_PER_BUFFER) do |buffer|
+          writer.write(buffer)
+        end
+      end
+    end
+
+More examples can be [found on the wiki](https://github.com/jstrait/wavefile/wiki).
+
+
+# Latest Release: v0.4.0
 
 This version is a re-write with a completely new, much improved API. (The old API has been removed). Some improvements due to the new API include:
 
@@ -46,7 +68,3 @@ First, install the WaveFile gem from rubygems.org:
     require 'wavefile'
 
 Note that if you're installing the gem into the default Ruby that comes pre-installed on MacOS (as opposed to a Ruby installed via [RVM](http://beginrescueend.com/)), you should used `sudo gem install wavefile`. Otherwise you might run into a file permission error.
-
-# Usage
-
-For usage instructions with examples, check out the [wiki](https://github.com/jstrait/wavefile/wiki).
