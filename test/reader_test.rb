@@ -73,6 +73,8 @@ class ReaderTest < Test::Unit::TestCase
       assert_equal(44100, reader.format.sample_rate)
       assert_equal(false, reader.closed?)
       assert_equal(file_name, reader.file_name)
+      assert_equal(0, reader.samples_read)
+      assert_equal(2240, reader.samples_remaining)
       reader.close
 
       # Read a non-native format
@@ -82,6 +84,8 @@ class ReaderTest < Test::Unit::TestCase
       assert_equal(22050, reader.format.sample_rate)
       assert_equal(false, reader.closed?)
       assert_equal(file_name, reader.file_name)
+      assert_equal(0, reader.samples_read)
+      assert_equal(2240, reader.samples_remaining)
       reader.close
 
       # Block is given.
@@ -91,6 +95,8 @@ class ReaderTest < Test::Unit::TestCase
       assert_equal(44100, reader.format.sample_rate)
       assert(reader.closed?)
       assert_equal(file_name, reader.file_name)
+      assert_equal(1024, reader.samples_read)
+      assert_equal(1216, reader.samples_remaining)
     end
   end
 
@@ -145,6 +151,8 @@ class ReaderTest < Test::Unit::TestCase
       assert_equal(SQUARE_WAVE_CYCLE[channels][bits_per_sample] * 128, buffers[0].samples)
       assert_equal(SQUARE_WAVE_CYCLE[channels][bits_per_sample] * 128, buffers[1].samples)
       assert_equal(SQUARE_WAVE_CYCLE[channels][bits_per_sample] * 24,  buffers[2].samples)
+      assert_equal(2240, reader.samples_read)
+      assert_equal(0, reader.samples_remaining)
     end
   end
 
@@ -162,6 +170,8 @@ class ReaderTest < Test::Unit::TestCase
     assert_equal(SQUARE_WAVE_CYCLE[:stereo][8] * 128, buffers[0].samples)
     assert_equal(SQUARE_WAVE_CYCLE[:stereo][8] * 128, buffers[1].samples)
     assert_equal(SQUARE_WAVE_CYCLE[:stereo][8] * 24,  buffers[2].samples)
+    assert_equal(2240, reader.samples_read)
+    assert_equal(0, reader.samples_remaining)
   end
 
   def test_each_buffer_with_padding_byte
@@ -175,6 +185,8 @@ class ReaderTest < Test::Unit::TestCase
     assert_equal(SQUARE_WAVE_CYCLE[:mono][8] * 128, buffers[1].samples)
     assert_equal((SQUARE_WAVE_CYCLE[:mono][8] * 23) + [88, 88, 88, 88, 167, 167, 167],
                  buffers[2].samples)
+    assert_equal(2239, reader.samples_read)
+    assert_equal(0, reader.samples_remaining)
   end
 
   def test_closed?
@@ -197,6 +209,55 @@ class ReaderTest < Test::Unit::TestCase
     buffer = reader.read(1024)
     reader.close
     assert_raise(IOError) { reader.read(1024) }
+  end
+
+  def test_sample_counts_manual_reads
+    exhaustively_test do |channels, bits_per_sample|
+      reader = Reader.new(fixture("valid/valid_#{channels}_#{bits_per_sample}_44100.wav"))
+      
+      assert_equal(0, reader.samples_read)
+      assert_equal(2240, reader.samples_remaining)
+
+      reader.read(1024)
+      assert_equal(1024, reader.samples_read)
+      assert_equal(1216, reader.samples_remaining)
+
+      reader.read(1024)
+      assert_equal(2048, reader.samples_read)
+      assert_equal(192, reader.samples_remaining)
+
+      reader.read(192)
+      assert_equal(2240, reader.samples_read)
+      assert_equal(0, reader.samples_remaining)
+ 
+      reader.close
+      assert_equal(2240, reader.samples_read)
+      assert_equal(0, reader.samples_remaining)
+    end
+  end
+
+  def test_sample_counts_each_buffer
+    exhaustively_test do |channels, bits_per_sample|
+      expected_results = [ { :read => 1024, :remaining => 1216 },
+                           { :read => 2048, :remaining => 192 },
+                           { :read => 2240, :remaining => 0 } ]
+
+      file_name = fixture("valid/valid_#{channels}_#{bits_per_sample}_44100.wav")
+      reader = Reader.new(file_name)
+
+      assert_equal(0, reader.samples_read)
+      assert_equal(2240, reader.samples_remaining)
+
+      reader.each_buffer(1024) do |buffer|
+        expected_result = expected_results.slice!(0)
+
+        assert_equal(expected_result[:read], reader.samples_read)
+        assert_equal(expected_result[:remaining], reader.samples_remaining)
+      end
+      
+      assert_equal(2240, reader.samples_read)
+      assert_equal(0, reader.samples_remaining)
+    end
   end
 
 private

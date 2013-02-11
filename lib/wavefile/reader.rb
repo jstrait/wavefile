@@ -28,6 +28,7 @@ module WaveFile
 
       raw_format_chunk, sample_count = HeaderReader.new(@file, @file_name).read_until_data_chunk
       @sample_count = sample_count
+      @samples_read = 0
       @samples_remaining = sample_count
 
       # Make file is in a format we can actually read
@@ -116,6 +117,7 @@ module WaveFile
       end
 
       samples = @file.sysread(buffer_size * @native_format.block_align).unpack(@pack_code)
+      @samples_read += buffer_size
       @samples_remaining -= buffer_size
 
       if @native_format.channels > 1
@@ -157,7 +159,7 @@ module WaveFile
       @file.close
     end
 
-    attr_reader :file_name, :format
+    attr_reader :file_name, :format, :samples_read, :samples_remaining
 
   private
 
