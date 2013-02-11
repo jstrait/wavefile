@@ -16,7 +16,7 @@ module WaveFile
                                 }
 
     def initialize(channels, format_code, sample_rate)
-      channels = canonicalize_channels(channels)
+      channels = normalize_channels(channels)
       sample_format, bits_per_sample = normalize_format_code(format_code)
       validate_channels(channels)
       validate_sample_format(sample_format)
@@ -43,7 +43,7 @@ module WaveFile
 
   private
 
-    def canonicalize_channels(channels)
+    def normalize_channels(channels)
       if channels == :mono
         return 1
       elsif channels == :stereo
