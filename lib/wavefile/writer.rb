@@ -99,7 +99,17 @@ module WaveFile
       Duration.new(@samples_written, @format.sample_rate)
     end
 
-    attr_reader :file_name, :format, :samples_written
+    # Returns the name of the Wave file that is being written to
+    attr_reader :file_name
+
+    # Returns a Format object describing the Wave file being written (number of channels, sample
+    # format and bits per sample, sample rate, etc.)
+    attr_reader :format
+
+    # Returns the number of samples (per channel) that have been written to the file so far.
+    # For example, if 1000 "left" samples and 1000 "right" samples have been written to a stereo file,
+    # this will return 1000.
+    attr_reader :samples_written
 
   private
 

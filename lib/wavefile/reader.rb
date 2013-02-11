@@ -159,7 +159,23 @@ module WaveFile
       @file.close
     end
 
-    attr_reader :file_name, :format, :samples_read, :samples_remaining
+    # Returns the name of the Wave file that is being read
+    attr_reader :file_name
+
+    # Returns a Format object describing how sample data is being read from the Wave file (number of
+    # channels, sample format and bits per sample, etc). Note that this might be different from the
+    # underlying format of the Wave file on disk.
+    attr_reader :format
+
+    # Returns the number of samples (per channel) that have been read so far. For example, if
+    # 1000 "left" samples and 1000 "right" samples have been read from a stereo file, this will
+    # return 1000.
+    attr_reader :samples_read
+
+    # Returns the number of samples (per channel) that are remaining in the file to be read.
+    # For example, if 1000 "left" samples and 1000 "right" samples are remaining in a stereo file,
+    # this will return 1000.
+    attr_reader :samples_remaining
 
   private
 
