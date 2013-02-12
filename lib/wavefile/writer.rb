@@ -43,8 +43,11 @@ module WaveFile
       write_header(0)
 
       if block_given?
-        yield(self)
-        close
+        begin
+          yield(self)
+        ensure
+          close
+        end
       end
     end
 

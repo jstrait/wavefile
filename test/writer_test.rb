@@ -156,6 +156,44 @@ class WriterTest < Test::Unit::TestCase
       assert_equal(499, duration.milliseconds)
     end
   end
+  
+  # Cause an exception before a file has been closed, to prove that
+  # file exists but contains no samples since #close was never called.
+  # This issue can be overcome by passing a block to Writer.new (see
+  # next test, test_exception_with_block).
+  def test_exception_without_block
+    format = Format.new(1, 8, 44100)
+
+    begin
+      writer = Writer.new("#{OUTPUT_FOLDER}/exception_without_block.wav", format)
+      writer.write(Buffer.new([1, 2, 3, 4], format))
+      1 / 0 # cause divide-by-zero exception
+      writer.close
+    rescue
+      # catch the exception and ignore, so test passes OK
+    end
+    
+    reader = Reader.new("#{OUTPUT_FOLDER}/exception_without_block.wav")
+    assert_equal(0, reader.samples_remaining)
+  end
+
+  # Cause an exception within the block passed to Writer.new, to prove
+  # that close is still called (due to an ensure statement in Writer.new).
+  def test_exception_with_block
+    format = Format.new(1, 8, 44100)
+    samples = [1, 2, 3, 4, 5, 6]
+    Writer.new("#{OUTPUT_FOLDER}/exception_with_block.wav", format) do |writer|
+      begin
+        writer.write(Buffer.new(samples, format))
+        1 / 0 # cause divide-by-zero exception
+      rescue
+        # catch the exception and ignore, so test passes OK
+      end
+    end
+    
+    reader = Reader.new("#{OUTPUT_FOLDER}/exception_with_block.wav")
+    assert_equal(samples.size, reader.samples_remaining)
+  end
 
 private
 
