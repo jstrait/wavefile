@@ -63,13 +63,13 @@ class ReaderTest < Test::Unit::TestCase
   def test_initialize
     format = Format.new(:stereo, 16, 22050)
 
-    exhaustively_test do |channels, bits_per_sample|
-      file_name = fixture("valid/valid_#{channels}_pcm_#{bits_per_sample}_44100.wav")
+    exhaustively_test do |channels, sample_format|
+      file_name = fixture("valid/valid_#{channels}_#{sample_format}_44100.wav")
 
       # Read native format
       reader = Reader.new(file_name)
       assert_equal(CHANNEL_ALIAS[channels], reader.format.channels)
-      assert_equal(bits_per_sample, reader.format.bits_per_sample)
+      assert_equal(extract_bits_per_sample(sample_format), reader.format.bits_per_sample)
       assert_equal(44100, reader.format.sample_rate)
       assert_equal(false, reader.closed?)
       assert_equal(file_name, reader.file_name)
@@ -91,7 +91,7 @@ class ReaderTest < Test::Unit::TestCase
       # Block is given.
       reader = Reader.new(file_name) {|reader| reader.read(1024) }
       assert_equal(CHANNEL_ALIAS[channels], reader.format.channels)
-      assert_equal(bits_per_sample, reader.format.bits_per_sample)
+      assert_equal(extract_bits_per_sample(sample_format), reader.format.bits_per_sample)
       assert_equal(44100, reader.format.sample_rate)
       assert(reader.closed?)
       assert_equal(file_name, reader.file_name)
@@ -101,14 +101,14 @@ class ReaderTest < Test::Unit::TestCase
   end
 
   def test_read_native_format
-    exhaustively_test do |channels, bits_per_sample|
-      buffers = read_file("valid/valid_#{channels}_pcm_#{bits_per_sample}_44100.wav", 1024)
+    exhaustively_test do |channels, sample_format|
+      buffers = read_file("valid/valid_#{channels}_#{sample_format}_44100.wav", 1024)
 
       assert_equal(3, buffers.length)
       assert_equal([1024, 1024, 192], buffers.map {|buffer| buffer.samples.length })
-      assert_equal(SQUARE_WAVE_CYCLE[channels][bits_per_sample] * 128, buffers[0].samples)
-      assert_equal(SQUARE_WAVE_CYCLE[channels][bits_per_sample] * 128, buffers[1].samples)
-      assert_equal(SQUARE_WAVE_CYCLE[channels][bits_per_sample] * 24,  buffers[2].samples)
+      assert_equal(SQUARE_WAVE_CYCLE[channels][sample_format] * 128, buffers[0].samples)
+      assert_equal(SQUARE_WAVE_CYCLE[channels][sample_format] * 128, buffers[1].samples)
+      assert_equal(SQUARE_WAVE_CYCLE[channels][sample_format] * 24,  buffers[2].samples)
     end
   end
 
@@ -117,9 +117,9 @@ class ReaderTest < Test::Unit::TestCase
 
     assert_equal(3, buffers.length)
     assert_equal([1024, 1024, 192], buffers.map {|buffer| buffer.samples.length })
-    assert_equal(SQUARE_WAVE_CYCLE[:stereo][8] * 128, buffers[0].samples)
-    assert_equal(SQUARE_WAVE_CYCLE[:stereo][8] * 128, buffers[1].samples)
-    assert_equal(SQUARE_WAVE_CYCLE[:stereo][8] * 24,  buffers[2].samples)
+    assert_equal(SQUARE_WAVE_CYCLE[:stereo][:pcm_8] * 128, buffers[0].samples)
+    assert_equal(SQUARE_WAVE_CYCLE[:stereo][:pcm_8] * 128, buffers[1].samples)
+    assert_equal(SQUARE_WAVE_CYCLE[:stereo][:pcm_8] * 24,  buffers[2].samples)
   end
 
   def test_read_with_padding_byte
@@ -127,9 +127,9 @@ class ReaderTest < Test::Unit::TestCase
 
     assert_equal(3, buffers.length)
     assert_equal([1024, 1024, 191], buffers.map {|buffer| buffer.samples.length })
-    assert_equal(SQUARE_WAVE_CYCLE[:mono][8] * 128, buffers[0].samples)
-    assert_equal(SQUARE_WAVE_CYCLE[:mono][8] * 128, buffers[1].samples)
-    assert_equal((SQUARE_WAVE_CYCLE[:mono][8] * 23) + [88, 88, 88, 88, 167, 167, 167],
+    assert_equal(SQUARE_WAVE_CYCLE[:mono][:pcm_8] * 128, buffers[0].samples)
+    assert_equal(SQUARE_WAVE_CYCLE[:mono][:pcm_8] * 128, buffers[1].samples)
+    assert_equal((SQUARE_WAVE_CYCLE[:mono][:pcm_8] * 23) + [88, 88, 88, 88, 167, 167, 167],
                  buffers[2].samples)
   end
 
@@ -139,8 +139,8 @@ class ReaderTest < Test::Unit::TestCase
   end
 
   def test_each_buffer_native_format
-    exhaustively_test do |channels, bits_per_sample|
-      reader = Reader.new(fixture("valid/valid_#{channels}_pcm_#{bits_per_sample}_44100.wav"))
+    exhaustively_test do |channels, sample_format|
+      reader = Reader.new(fixture("valid/valid_#{channels}_#{sample_format}_44100.wav"))
 
       buffers = []
       reader.each_buffer(1024) {|buffer| buffers << buffer }
@@ -148,9 +148,9 @@ class ReaderTest < Test::Unit::TestCase
       assert(reader.closed?)
       assert_equal(3, buffers.length)
       assert_equal([1024, 1024, 192], buffers.map {|buffer| buffer.samples.length })
-      assert_equal(SQUARE_WAVE_CYCLE[channels][bits_per_sample] * 128, buffers[0].samples)
-      assert_equal(SQUARE_WAVE_CYCLE[channels][bits_per_sample] * 128, buffers[1].samples)
-      assert_equal(SQUARE_WAVE_CYCLE[channels][bits_per_sample] * 24,  buffers[2].samples)
+      assert_equal(SQUARE_WAVE_CYCLE[channels][sample_format] * 128, buffers[0].samples)
+      assert_equal(SQUARE_WAVE_CYCLE[channels][sample_format] * 128, buffers[1].samples)
+      assert_equal(SQUARE_WAVE_CYCLE[channels][sample_format] * 24,  buffers[2].samples)
       assert_equal(2240, reader.samples_read)
       assert_equal(0, reader.samples_remaining)
     end
@@ -167,9 +167,9 @@ class ReaderTest < Test::Unit::TestCase
 
     assert_equal(3, buffers.length)
     assert_equal([1024, 1024, 192], buffers.map {|buffer| buffer.samples.length })
-    assert_equal(SQUARE_WAVE_CYCLE[:stereo][8] * 128, buffers[0].samples)
-    assert_equal(SQUARE_WAVE_CYCLE[:stereo][8] * 128, buffers[1].samples)
-    assert_equal(SQUARE_WAVE_CYCLE[:stereo][8] * 24,  buffers[2].samples)
+    assert_equal(SQUARE_WAVE_CYCLE[:stereo][:pcm_8] * 128, buffers[0].samples)
+    assert_equal(SQUARE_WAVE_CYCLE[:stereo][:pcm_8] * 128, buffers[1].samples)
+    assert_equal(SQUARE_WAVE_CYCLE[:stereo][:pcm_8] * 24,  buffers[2].samples)
     assert_equal(2240, reader.samples_read)
     assert_equal(0, reader.samples_remaining)
   end
@@ -181,9 +181,9 @@ class ReaderTest < Test::Unit::TestCase
 
     assert_equal(3, buffers.length)
     assert_equal([1024, 1024, 191], buffers.map {|buffer| buffer.samples.length })
-    assert_equal(SQUARE_WAVE_CYCLE[:mono][8] * 128, buffers[0].samples)
-    assert_equal(SQUARE_WAVE_CYCLE[:mono][8] * 128, buffers[1].samples)
-    assert_equal((SQUARE_WAVE_CYCLE[:mono][8] * 23) + [88, 88, 88, 88, 167, 167, 167],
+    assert_equal(SQUARE_WAVE_CYCLE[:mono][:pcm_8] * 128, buffers[0].samples)
+    assert_equal(SQUARE_WAVE_CYCLE[:mono][:pcm_8] * 128, buffers[1].samples)
+    assert_equal((SQUARE_WAVE_CYCLE[:mono][:pcm_8] * 23) + [88, 88, 88, 88, 167, 167, 167],
                  buffers[2].samples)
     assert_equal(2239, reader.samples_read)
     assert_equal(0, reader.samples_remaining)
@@ -212,8 +212,8 @@ class ReaderTest < Test::Unit::TestCase
   end
 
   def test_sample_counts_manual_reads
-    exhaustively_test do |channels, bits_per_sample|
-      reader = Reader.new(fixture("valid/valid_#{channels}_pcm_#{bits_per_sample}_44100.wav"))
+    exhaustively_test do |channels, sample_format|
+      reader = Reader.new(fixture("valid/valid_#{channels}_#{sample_format}_44100.wav"))
       
       assert_equal(0, reader.samples_read)
       assert_equal(2240, reader.samples_remaining)
@@ -237,12 +237,12 @@ class ReaderTest < Test::Unit::TestCase
   end
 
   def test_sample_counts_each_buffer
-    exhaustively_test do |channels, bits_per_sample|
+    exhaustively_test do |channels, sample_format|
       expected_results = [ { :read => 1024, :remaining => 1216 },
                            { :read => 2048, :remaining => 192 },
                            { :read => 2240, :remaining => 0 } ]
 
-      file_name = fixture("valid/valid_#{channels}_pcm_#{bits_per_sample}_44100.wav")
+      file_name = fixture("valid/valid_#{channels}_#{sample_format}_44100.wav")
       reader = Reader.new(file_name)
 
       assert_equal(0, reader.samples_read)
@@ -279,5 +279,9 @@ private
 
   def fixture(fixture_name)
     return "#{FIXTURE_ROOT_PATH}/#{fixture_name}"
+  end
+
+  def extract_bits_per_sample(sample_format)
+    sample_format.to_s.split("_").last.to_i
   end
 end

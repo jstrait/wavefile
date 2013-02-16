@@ -21,14 +21,14 @@ class WriterTest < Test::Unit::TestCase
   end
 
   def test_write_basic_file
-    exhaustively_test do |channels, bits_per_sample|
-      file_name = "valid_#{channels}_pcm_#{bits_per_sample}_44100.wav"
-      format = Format.new(CHANNEL_ALIAS[channels], bits_per_sample, 44100)
+    exhaustively_test do |channels, sample_format|
+      file_name = "valid_#{channels}_#{sample_format}_44100.wav"
+      format = Format.new(CHANNEL_ALIAS[channels], sample_format, 44100)
 
       writer = Writer.new("#{OUTPUT_FOLDER}/#{file_name}", format)
-      writer.write(Buffer.new(SQUARE_WAVE_CYCLE[channels][bits_per_sample] * 128, format))
-      writer.write(Buffer.new(SQUARE_WAVE_CYCLE[channels][bits_per_sample] * 128, format))
-      writer.write(Buffer.new(SQUARE_WAVE_CYCLE[channels][bits_per_sample] * 24, format))
+      writer.write(Buffer.new(SQUARE_WAVE_CYCLE[channels][sample_format] * 128, format))
+      writer.write(Buffer.new(SQUARE_WAVE_CYCLE[channels][sample_format] * 128, format))
+      writer.write(Buffer.new(SQUARE_WAVE_CYCLE[channels][sample_format] * 24, format))
       writer.close
 
       assert_equal(read_file(:expected, file_name), read_file(:actual, file_name))
@@ -36,13 +36,13 @@ class WriterTest < Test::Unit::TestCase
   end
 
   def test_write_basic_file_with_a_block
-    exhaustively_test do |channels, bits_per_sample|
-      file_name = "valid_#{channels}_pcm_#{bits_per_sample}_44100.wav"
-      format = Format.new(CHANNEL_ALIAS[channels], bits_per_sample, 44100)
+    exhaustively_test do |channels, sample_format|
+      file_name = "valid_#{channels}_#{sample_format}_44100.wav"
+      format = Format.new(CHANNEL_ALIAS[channels], sample_format, 44100)
 
       writer = Writer.new("#{OUTPUT_FOLDER}/#{file_name}", format) do |writer|
         4.times do
-          writer.write(Buffer.new(SQUARE_WAVE_CYCLE[channels][bits_per_sample] * 70, format))
+          writer.write(Buffer.new(SQUARE_WAVE_CYCLE[channels][sample_format] * 70, format))
         end
       end
 
@@ -58,9 +58,9 @@ class WriterTest < Test::Unit::TestCase
     format_16bit_stereo = Format.new(:stereo, 16, 44100)
 
     writer = Writer.new("#{OUTPUT_FOLDER}/#{file_name}", format_8bit_mono)
-    writer.write(Buffer.new(SQUARE_WAVE_CYCLE[:stereo][16] * 128, format_16bit_stereo))
-    writer.write(Buffer.new(SQUARE_WAVE_CYCLE[:mono][16] * 128,   format_16_bit_mono))
-    writer.write(Buffer.new(SQUARE_WAVE_CYCLE[:stereo][16] * 24,  format_16bit_stereo))
+    writer.write(Buffer.new(SQUARE_WAVE_CYCLE[:stereo][:pcm_16] * 128, format_16bit_stereo))
+    writer.write(Buffer.new(SQUARE_WAVE_CYCLE[:mono][:pcm_16] * 128,   format_16_bit_mono))
+    writer.write(Buffer.new(SQUARE_WAVE_CYCLE[:stereo][:pcm_16] * 24,  format_16bit_stereo))
     writer.close
 
     assert_equal(read_file(:expected, file_name), read_file(:actual, file_name))
@@ -71,9 +71,9 @@ class WriterTest < Test::Unit::TestCase
     format = Format.new(1, 8, 44100)
 
     writer = Writer.new("#{OUTPUT_FOLDER}/#{file_name}", format)
-    writer.write(Buffer.new(SQUARE_WAVE_CYCLE[:mono][8] * 128, format))
-    writer.write(Buffer.new(SQUARE_WAVE_CYCLE[:mono][8] * 128, format))
-    writer.write(Buffer.new(SQUARE_WAVE_CYCLE[:mono][8] * 23 + [88, 88, 88, 88, 167, 167, 167], format))
+    writer.write(Buffer.new(SQUARE_WAVE_CYCLE[:mono][:pcm_8] * 128, format))
+    writer.write(Buffer.new(SQUARE_WAVE_CYCLE[:mono][:pcm_8] * 128, format))
+    writer.write(Buffer.new(SQUARE_WAVE_CYCLE[:mono][:pcm_8] * 23 + [88, 88, 88, 88, 167, 167, 167], format))
     writer.close
 
     assert_equal(read_file(:expected, file_name), read_file(:actual, file_name))
@@ -107,10 +107,10 @@ class WriterTest < Test::Unit::TestCase
   end
 
   def test_duration_written
-    exhaustively_test do |channels, bits_per_sample|
-      format = Format.new(CHANNEL_ALIAS[channels], bits_per_sample, 44100)
+    exhaustively_test do |channels, sample_format|
+      format = Format.new(CHANNEL_ALIAS[channels], sample_format, 44100)
 
-      writer = Writer.new("#{OUTPUT_FOLDER}/duration_written_#{channels}_#{bits_per_sample}_44100.wav", format)
+      writer = Writer.new("#{OUTPUT_FOLDER}/duration_written_#{channels}_#{sample_format}_44100.wav", format)
 
       assert_equal(0, writer.samples_written)
       duration = writer.duration_written
@@ -121,7 +121,7 @@ class WriterTest < Test::Unit::TestCase
       assert_equal(0, duration.seconds)
       assert_equal(0, duration.milliseconds)
 
-      writer.write(Buffer.new(SQUARE_WAVE_CYCLE[channels][bits_per_sample] * 2756, format))
+      writer.write(Buffer.new(SQUARE_WAVE_CYCLE[channels][sample_format] * 2756, format))
 
       assert_equal(8 * 2756, writer.samples_written)
       duration = writer.duration_written
@@ -132,8 +132,8 @@ class WriterTest < Test::Unit::TestCase
       assert_equal(0, duration.seconds)
       assert_equal(499, duration.milliseconds)
 
-      writer.write(Buffer.new(SQUARE_WAVE_CYCLE[channels][bits_per_sample] * 2756, format))
-      writer.write(Buffer.new(SQUARE_WAVE_CYCLE[channels][bits_per_sample] * 2756, format))
+      writer.write(Buffer.new(SQUARE_WAVE_CYCLE[channels][sample_format] * 2756, format))
+      writer.write(Buffer.new(SQUARE_WAVE_CYCLE[channels][sample_format] * 2756, format))
 
       assert_equal(8 * 2756 * 3, writer.samples_written)
       duration = writer.duration_written
