@@ -64,7 +64,7 @@ class ReaderTest < Test::Unit::TestCase
     format = Format.new(:stereo, 16, 22050)
 
     exhaustively_test do |channels, bits_per_sample|
-      file_name = fixture("valid/valid_#{channels}_#{bits_per_sample}_44100.wav")
+      file_name = fixture("valid/valid_#{channels}_pcm_#{bits_per_sample}_44100.wav")
 
       # Read native format
       reader = Reader.new(file_name)
@@ -102,7 +102,7 @@ class ReaderTest < Test::Unit::TestCase
 
   def test_read_native_format
     exhaustively_test do |channels, bits_per_sample|
-      buffers = read_file("valid/valid_#{channels}_#{bits_per_sample}_44100.wav", 1024)
+      buffers = read_file("valid/valid_#{channels}_pcm_#{bits_per_sample}_44100.wav", 1024)
 
       assert_equal(3, buffers.length)
       assert_equal([1024, 1024, 192], buffers.map {|buffer| buffer.samples.length })
@@ -113,7 +113,7 @@ class ReaderTest < Test::Unit::TestCase
   end
 
   def test_read_with_format_conversion
-    buffers = read_file("valid/valid_mono_16_44100.wav", 1024, Format.new(:stereo, 8, 22100))
+    buffers = read_file("valid/valid_mono_pcm_16_44100.wav", 1024, Format.new(:stereo, 8, 22100))
 
     assert_equal(3, buffers.length)
     assert_equal([1024, 1024, 192], buffers.map {|buffer| buffer.samples.length })
@@ -123,7 +123,7 @@ class ReaderTest < Test::Unit::TestCase
   end
 
   def test_read_with_padding_byte
-    buffers = read_file("valid/valid_mono_8_44100_with_padding_byte.wav", 1024)
+    buffers = read_file("valid/valid_mono_pcm_8_44100_with_padding_byte.wav", 1024)
 
     assert_equal(3, buffers.length)
     assert_equal([1024, 1024, 191], buffers.map {|buffer| buffer.samples.length })
@@ -134,13 +134,13 @@ class ReaderTest < Test::Unit::TestCase
   end
 
   def test_each_buffer_no_block_given
-    reader = Reader.new(fixture("valid/valid_mono_16_44100.wav"))
+    reader = Reader.new(fixture("valid/valid_mono_pcm_16_44100.wav"))
     assert_raise(LocalJumpError) { reader.each_buffer(1024) }
   end
 
   def test_each_buffer_native_format
     exhaustively_test do |channels, bits_per_sample|
-      reader = Reader.new(fixture("valid/valid_#{channels}_#{bits_per_sample}_44100.wav"))
+      reader = Reader.new(fixture("valid/valid_#{channels}_pcm_#{bits_per_sample}_44100.wav"))
 
       buffers = []
       reader.each_buffer(1024) {|buffer| buffers << buffer }
@@ -157,7 +157,7 @@ class ReaderTest < Test::Unit::TestCase
   end
 
   def test_each_buffer_with_format_conversion
-    reader = Reader.new(fixture("valid/valid_mono_16_44100.wav"), Format.new(:stereo, 8, 22050))
+    reader = Reader.new(fixture("valid/valid_mono_pcm_16_44100.wav"), Format.new(:stereo, 8, 22050))
     assert_equal(2, reader.format.channels)
     assert_equal(8, reader.format.bits_per_sample)
     assert_equal(22050, reader.format.sample_rate)
@@ -176,7 +176,7 @@ class ReaderTest < Test::Unit::TestCase
 
   def test_each_buffer_with_padding_byte
     buffers = []
-    reader = Reader.new(fixture("valid/valid_mono_8_44100_with_padding_byte.wav"))
+    reader = Reader.new(fixture("valid/valid_mono_pcm_8_44100_with_padding_byte.wav"))
     reader.each_buffer(1024) {|buffer| buffers << buffer }
 
     assert_equal(3, buffers.length)
@@ -190,13 +190,13 @@ class ReaderTest < Test::Unit::TestCase
   end
 
   def test_closed?
-    reader = Reader.new(fixture("valid/valid_mono_16_44100.wav"))
+    reader = Reader.new(fixture("valid/valid_mono_pcm_16_44100.wav"))
     assert_equal(false, reader.closed?)
     reader.close
     assert(reader.closed?)
 
     # For Reader.each_buffer
-    reader = Reader.new(fixture("valid/valid_mono_16_44100.wav"))
+    reader = Reader.new(fixture("valid/valid_mono_pcm_16_44100.wav"))
     assert_equal(false, reader.closed?)
     reader.each_buffer(1024) do |buffer|
       # No-op
@@ -205,7 +205,7 @@ class ReaderTest < Test::Unit::TestCase
   end
 
   def test_read_after_close
-    reader = Reader.new(fixture("valid/valid_mono_16_44100.wav"))
+    reader = Reader.new(fixture("valid/valid_mono_pcm_16_44100.wav"))
     buffer = reader.read(1024)
     reader.close
     assert_raise(IOError) { reader.read(1024) }
@@ -213,7 +213,7 @@ class ReaderTest < Test::Unit::TestCase
 
   def test_sample_counts_manual_reads
     exhaustively_test do |channels, bits_per_sample|
-      reader = Reader.new(fixture("valid/valid_#{channels}_#{bits_per_sample}_44100.wav"))
+      reader = Reader.new(fixture("valid/valid_#{channels}_pcm_#{bits_per_sample}_44100.wav"))
       
       assert_equal(0, reader.samples_read)
       assert_equal(2240, reader.samples_remaining)
@@ -242,7 +242,7 @@ class ReaderTest < Test::Unit::TestCase
                            { :read => 2048, :remaining => 192 },
                            { :read => 2240, :remaining => 0 } ]
 
-      file_name = fixture("valid/valid_#{channels}_#{bits_per_sample}_44100.wav")
+      file_name = fixture("valid/valid_#{channels}_pcm_#{bits_per_sample}_44100.wav")
       reader = Reader.new(file_name)
 
       assert_equal(0, reader.samples_read)

@@ -22,7 +22,7 @@ class WriterTest < Test::Unit::TestCase
 
   def test_write_basic_file
     exhaustively_test do |channels, bits_per_sample|
-      file_name = "valid_#{channels}_#{bits_per_sample}_44100.wav"
+      file_name = "valid_#{channels}_pcm_#{bits_per_sample}_44100.wav"
       format = Format.new(CHANNEL_ALIAS[channels], bits_per_sample, 44100)
 
       writer = Writer.new("#{OUTPUT_FOLDER}/#{file_name}", format)
@@ -37,7 +37,7 @@ class WriterTest < Test::Unit::TestCase
 
   def test_write_basic_file_with_a_block
     exhaustively_test do |channels, bits_per_sample|
-      file_name = "valid_#{channels}_#{bits_per_sample}_44100.wav"
+      file_name = "valid_#{channels}_pcm_#{bits_per_sample}_44100.wav"
       format = Format.new(CHANNEL_ALIAS[channels], bits_per_sample, 44100)
 
       writer = Writer.new("#{OUTPUT_FOLDER}/#{file_name}", format) do |writer|
@@ -52,7 +52,7 @@ class WriterTest < Test::Unit::TestCase
   end
 
   def test_write_buffers_of_different_formats
-    file_name = "valid_mono_8_44100.wav"
+    file_name = "valid_mono_pcm_8_44100.wav"
     format_8bit_mono    = Format.new(:mono,   8,  44100)
     format_16_bit_mono  = Format.new(:mono,   16, 22050)
     format_16bit_stereo = Format.new(:stereo, 16, 44100)
@@ -67,7 +67,7 @@ class WriterTest < Test::Unit::TestCase
   end
 
   def test_write_file_with_padding_byte
-    file_name = "valid_mono_8_44100_with_padding_byte.wav"
+    file_name = "valid_mono_pcm_8_44100_with_padding_byte.wav"
     format = Format.new(1, 8, 44100)
 
     writer = Writer.new("#{OUTPUT_FOLDER}/#{file_name}", format)
