@@ -13,11 +13,12 @@ module WaveFile
     # starts, assuming this canonical format:
     #
     # RIFF Chunk Header (12 bytes)
-    # Format Chunk (No Extension) (16 bytes)
+    # Format Chunk (16 bytes for PCM, 18 bytes for floating point)
+    # FACT Chunk (0 bytes for PCM, 12 bytes for floating point)
     # Data Chunk Header (8 bytes)
     #
     # All wave files written by Writer use this canonical format.
-    CANONICAL_HEADER_BYTE_LENGTH = {:pcm => 36}
+    CANONICAL_HEADER_BYTE_LENGTH = {:pcm => 36, :float => 50}
 
 
     # Returns a constructed Writer object which is available for writing sample data to the specified
@@ -35,7 +36,7 @@ module WaveFile
       @format = format
 
       @samples_written = 0
-      @pack_code = PACK_CODES[:pcm][format.bits_per_sample]
+      @pack_code = PACK_CODES[format.sample_format][format.bits_per_sample]
 
       # Note that the correct sizes for the RIFF and data chunks can't be determined
       # until all samples have been written, so this header as written will be incorrect.
@@ -123,18 +124,28 @@ module WaveFile
 
       # Write the header for the RIFF chunk
       header = CHUNK_IDS[:riff]
-      header += [CANONICAL_HEADER_BYTE_LENGTH[:pcm] + sample_data_byte_count].pack(UNSIGNED_INT_32)
+      header += [CANONICAL_HEADER_BYTE_LENGTH[@format.sample_format] + sample_data_byte_count].pack(UNSIGNED_INT_32)
       header += WAVEFILE_FORMAT_CODE
 
       # Write the format chunk
       header += CHUNK_IDS[:format]
-      header += [FORMAT_CHUNK_BYTE_LENGTH[:pcm]].pack(UNSIGNED_INT_32)
-      header += [FORMAT_CODES[:pcm]].pack(UNSIGNED_INT_16)
+      header += [FORMAT_CHUNK_BYTE_LENGTH[@format.sample_format]].pack(UNSIGNED_INT_32)
+      header += [FORMAT_CODES[@format.sample_format]].pack(UNSIGNED_INT_16)
       header += [@format.channels].pack(UNSIGNED_INT_16)
       header += [@format.sample_rate].pack(UNSIGNED_INT_32)
       header += [@format.byte_rate].pack(UNSIGNED_INT_32)
       header += [@format.block_align].pack(UNSIGNED_INT_16)
       header += [@format.bits_per_sample].pack(UNSIGNED_INT_16)
+      if @format.sample_format == :float
+        header += [0].pack(UNSIGNED_INT_16)
+      end
+
+      # Write the FACT chunk, if necessary
+      unless @format.sample_format == :pcm
+        header += CHUNK_IDS[:fact]
+        header += [4].pack(UNSIGNED_INT_32)
+        header += [sample_count].pack(UNSIGNED_INT_32)
+      end
 
       # Write the header for the data chunk
       header += CHUNK_IDS[:data]
