@@ -17,7 +17,7 @@ module WaveFile
     # Data Chunk Header (8 bytes)
     #
     # All wave files written by Writer use this canonical format.
-    CANONICAL_HEADER_BYTE_LENGTH = 36
+    CANONICAL_HEADER_BYTE_LENGTH = {:pcm => 36}
 
 
     # Returns a constructed Writer object which is available for writing sample data to the specified
@@ -35,7 +35,7 @@ module WaveFile
       @format = format
 
       @samples_written = 0
-      @pack_code = PACK_CODES[format.bits_per_sample]
+      @pack_code = PACK_CODES[:pcm][format.bits_per_sample]
 
       # Note that the correct sizes for the RIFF and data chunks can't be determined
       # until all samples have been written, so this header as written will be incorrect.
@@ -123,13 +123,13 @@ module WaveFile
 
       # Write the header for the RIFF chunk
       header = CHUNK_IDS[:riff]
-      header += [CANONICAL_HEADER_BYTE_LENGTH + sample_data_byte_count].pack(UNSIGNED_INT_32)
+      header += [CANONICAL_HEADER_BYTE_LENGTH[:pcm] + sample_data_byte_count].pack(UNSIGNED_INT_32)
       header += WAVEFILE_FORMAT_CODE
 
       # Write the format chunk
       header += CHUNK_IDS[:format]
-      header += [FORMAT_CHUNK_BYTE_LENGTH].pack(UNSIGNED_INT_32)
-      header += [PCM].pack(UNSIGNED_INT_16)
+      header += [FORMAT_CHUNK_BYTE_LENGTH[:pcm]].pack(UNSIGNED_INT_32)
+      header += [FORMAT_CODES[:pcm]].pack(UNSIGNED_INT_16)
       header += [@format.channels].pack(UNSIGNED_INT_16)
       header += [@format.sample_rate].pack(UNSIGNED_INT_32)
       header += [@format.byte_rate].pack(UNSIGNED_INT_32)

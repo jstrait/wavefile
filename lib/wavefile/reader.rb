@@ -37,7 +37,7 @@ module WaveFile
       @native_format = Format.new(raw_format_chunk[:channels],
                                   raw_format_chunk[:bits_per_sample],
                                   raw_format_chunk[:sample_rate])
-      @pack_code = PACK_CODES[@native_format.bits_per_sample]
+      @pack_code = PACK_CODES[:pcm][@native_format.bits_per_sample]
 
       if format == nil
         @format = @native_format
@@ -183,7 +183,7 @@ module WaveFile
       # :byte_rate and :block_align are not checked to make sure that match :channels/:sample_rate/bits_per_sample
       # because this library doesn't use them.
 
-      unless raw_format_chunk[:audio_format] == PCM
+      unless raw_format_chunk[:audio_format] == FORMAT_CODES[:pcm]
         raise UnsupportedFormatError, "Audio format is #{raw_format_chunk[:audio_format]}, " +
                                       "but only format code 1 (i.e. PCM) is supported."
       end
