@@ -10,11 +10,7 @@ module WaveFile
       @block_align = raw_format_chunk[:block_align]
       @sample_count = sample_count
 
-      duration = Duration.new(@sample_count, @sample_rate)
-      @duration = { :hours => duration.hours,
-                    :minutes => duration.minutes,
-                    :seconds => duration.seconds,
-                    :milliseconds => duration.milliseconds }
+      @duration = Duration.new(@sample_count, @sample_rate)
     end
 
     attr_reader :file_name,
