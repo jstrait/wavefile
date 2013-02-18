@@ -61,7 +61,7 @@ class ReaderTest < Test::Unit::TestCase
   end
 
   def test_initialize
-    format = Format.new(:stereo, 16, 22050)
+    format = Format.new(:stereo, :pcm_16, 22050)
 
     exhaustively_test do |channels, sample_format|
       file_name = fixture("valid/valid_#{channels}_#{sample_format}_44100.wav")
@@ -113,7 +113,7 @@ class ReaderTest < Test::Unit::TestCase
   end
 
   def test_read_with_format_conversion
-    buffers = read_file("valid/valid_mono_pcm_16_44100.wav", 1024, Format.new(:stereo, 8, 22100))
+    buffers = read_file("valid/valid_mono_pcm_16_44100.wav", 1024, Format.new(:stereo, :pcm_8, 22100))
 
     assert_equal(3, buffers.length)
     assert_equal([1024, 1024, 192], buffers.map {|buffer| buffer.samples.length })
@@ -157,7 +157,7 @@ class ReaderTest < Test::Unit::TestCase
   end
 
   def test_each_buffer_with_format_conversion
-    reader = Reader.new(fixture("valid/valid_mono_pcm_16_44100.wav"), Format.new(:stereo, 8, 22050))
+    reader = Reader.new(fixture("valid/valid_mono_pcm_16_44100.wav"), Format.new(:stereo, :pcm_8, 22050))
     assert_equal(2, reader.format.channels)
     assert_equal(8, reader.format.bits_per_sample)
     assert_equal(22050, reader.format.sample_rate)

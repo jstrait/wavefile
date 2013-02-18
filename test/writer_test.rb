@@ -14,7 +14,7 @@ class WriterTest < Test::Unit::TestCase
   end
 
   def test_write_file_with_no_sample_data
-    writer = Writer.new("#{OUTPUT_FOLDER}/no_samples.wav", Format.new(1, 8, 44100))
+    writer = Writer.new("#{OUTPUT_FOLDER}/no_samples.wav", Format.new(:mono, :pcm_8, 44100))
     writer.close
 
     assert_equal(read_file(:expected, "no_samples.wav"), read_file(:actual, "no_samples.wav"))
@@ -53,9 +53,9 @@ class WriterTest < Test::Unit::TestCase
 
   def test_write_buffers_of_different_formats
     file_name = "valid_mono_pcm_8_44100.wav"
-    format_8bit_mono    = Format.new(:mono,   8,  44100)
-    format_16_bit_mono  = Format.new(:mono,   16, 22050)
-    format_16bit_stereo = Format.new(:stereo, 16, 44100)
+    format_8bit_mono    = Format.new(:mono,   :pcm_8,  44100)
+    format_16_bit_mono  = Format.new(:mono,   :pcm_16, 22050)
+    format_16bit_stereo = Format.new(:stereo, :pcm_16, 44100)
 
     writer = Writer.new("#{OUTPUT_FOLDER}/#{file_name}", format_8bit_mono)
     writer.write(Buffer.new(SQUARE_WAVE_CYCLE[:stereo][:pcm_16] * 128, format_16bit_stereo))
@@ -68,7 +68,7 @@ class WriterTest < Test::Unit::TestCase
 
   def test_write_file_with_padding_byte
     file_name = "valid_mono_pcm_8_44100_with_padding_byte.wav"
-    format = Format.new(1, 8, 44100)
+    format = Format.new(:mono, :pcm_8, 44100)
 
     writer = Writer.new("#{OUTPUT_FOLDER}/#{file_name}", format)
     writer.write(Buffer.new(SQUARE_WAVE_CYCLE[:mono][:pcm_8] * 128, format))
@@ -82,7 +82,7 @@ class WriterTest < Test::Unit::TestCase
   def test_file_name
     file_name = "#{OUTPUT_FOLDER}/example.wav"
 
-    writer = Writer.new(file_name, Format.new(1, 8, 44100))
+    writer = Writer.new(file_name, Format.new(:mono, :pcm_8, 44100))
     assert_equal("#{OUTPUT_FOLDER}/example.wav", writer.file_name)
 
     writer.close
@@ -90,14 +90,14 @@ class WriterTest < Test::Unit::TestCase
   end
 
   def test_closed?
-    writer = Writer.new("#{OUTPUT_FOLDER}/closed_test.wav", Format.new(1, 16, 44100))
+    writer = Writer.new("#{OUTPUT_FOLDER}/closed_test.wav", Format.new(:mono, :pcm_16, 44100))
     assert_equal(false, writer.closed?)
     writer.close
     assert(writer.closed?)
   end
 
   def test_attempt_to_write_after_close
-    format = Format.new(1, 8, 44100)
+    format = Format.new(:mono, :pcm_8, 44100)
 
     writer = Writer.new("#{OUTPUT_FOLDER}/write_after_close.wav", format)
     writer.write(Buffer.new([1, 2, 3, 4], format))
@@ -160,7 +160,7 @@ class WriterTest < Test::Unit::TestCase
   # Cause an exception within the block passed to Writer.new, to prove
   # that close is still called (due to an ensure statement in Writer.new).
   def test_exception_with_block
-    format = Format.new(1, 8, 44100)
+    format = Format.new(:mono, :pcm_8, 44100)
     samples = [1, 2, 3, 4, 5, 6]
     Writer.new("#{OUTPUT_FOLDER}/exception_with_block.wav", format) do |writer|
       begin
