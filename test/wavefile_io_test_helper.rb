@@ -54,17 +54,4 @@ module WaveFileIOTestHelper
       end
     end
   end
-
-  # Executes the given block against different combinations of number of channels and sample_format
-  # This exists temporarily until Reader supports reading floating point sample data, to prevent
-  # those tests from breaking.
-  def exhaustively_test_for_writer
-    [:mono, :stereo, :tri].each do |channels|
-      [:pcm, :float].each do |sample_format|
-        Format::SUPPORTED_BITS_PER_SAMPLE[sample_format].each do |bits_per_sample|
-          yield(channels, "#{sample_format}_#{bits_per_sample}".to_sym)
-        end
-      end
-    end
-  end
 end
