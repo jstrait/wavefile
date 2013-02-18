@@ -17,47 +17,59 @@ class ReaderTest < Test::Unit::TestCase
   end
 
   def test_invalid_formats
+    invalid_fixtures = [
+      # File contains 0 bytes
+      "invalid/empty.wav",
+
+      # File consists of "RIFF" and nothing else
+      "invalid/incomplete_riff_header.wav",
+
+      # First 4 bytes in the file are not "RIFF"
+      "invalid/bad_riff_header.wav",
+
+      # The format code in the RIFF header is not "WAVE"
+      "invalid/bad_wavefile_format.wav",
+
+      # The file consists of just a valid RIFF header
+      "invalid/no_format_chunk.wav",
+
+      # The format chunk has 0 bytes in it (despite the chunk size being 16)
+      "invalid/empty_format_chunk.wav",
+
+      # The format chunk has some data, but not all of the minimum required.
+      "invalid/insufficient_format_chunk.wav",
+
+      # The RIFF header and format chunk are OK, but there is no data chunk
+      "invalid/no_data_chunk.wav",
+    ]
+
     # Reader.new and Reader.info should raise the same errors for invalid files,
     # so run the tests for both methods.
     [:new, :info].each do |method_name|
-      # File contains 0 bytes
-      assert_raise(InvalidFormatError) { Reader.send(method_name, fixture("invalid/empty.wav")) }
-
-      # File consists of "RIFF" and nothing else
-      assert_raise(InvalidFormatError) { Reader.send(method_name, fixture("invalid/incomplete_riff_header.wav")) }
-
-      # First 4 bytes in the file are not "RIFF"
-      assert_raise(InvalidFormatError) { Reader.send(method_name, fixture("invalid/bad_riff_header.wav")) }
-
-      # The format code in the RIFF header is not "WAVE"
-      assert_raise(InvalidFormatError) { Reader.send(method_name, fixture("invalid/bad_wavefile_format.wav")) }
-
-      # The file consists of just a valid RIFF header
-      assert_raise(InvalidFormatError) { Reader.send(method_name, fixture("invalid/no_format_chunk.wav")) }
-
-      # The format chunk has 0 bytes in it (despite the chunk size being 16)
-      assert_raise(InvalidFormatError) { Reader.send(method_name, fixture("invalid/empty_format_chunk.wav")) }
-
-      # The format chunk has some data, but not all of the minimum required.
-      assert_raise(InvalidFormatError) { Reader.send(method_name, fixture("invalid/insufficient_format_chunk.wav")) }
-
-      # The RIFF header and format chunk are OK, but there is no data chunk
-      assert_raise(InvalidFormatError) { Reader.send(method_name, fixture("invalid/no_data_chunk.wav")) }
+      invalid_fixtures.each do |fixture_name|
+        assert_raise(InvalidFormatError) { Reader.send(method_name, fixture(fixture_name)) }
+      end
     end
   end
 
   def test_unsupported_formats
-    # Audio format is 2, which is not supported
-    assert_raise(UnsupportedFormatError) { Reader.new(fixture("unsupported/unsupported_audio_format.wav")) }
+    unsupported_fixtures = [
+      # Audio format is 2, which is not supported
+      "unsupported/unsupported_audio_format.wav",
 
-    # Bits per sample is 24, which is not supported
-    assert_raise(UnsupportedFormatError) { Reader.new(fixture("unsupported/unsupported_bits_per_sample.wav")) }
+      # Bits per sample is 24, which is not supported
+      "unsupported/unsupported_bits_per_sample.wav",
 
-    # Channel count is 0
-    assert_raise(UnsupportedFormatError) { Reader.new(fixture("unsupported/bad_channel_count.wav")) }
+      # Channel count is 0
+      "unsupported/bad_channel_count.wav",
 
-    # Sample rate is 0
-    assert_raise(UnsupportedFormatError) { Reader.new(fixture("unsupported/bad_sample_rate.wav")) }
+      # Sample rate is 0
+      "unsupported/bad_sample_rate.wav",
+    ]
+
+    unsupported_fixtures.each do |fixture_name|
+      assert_raise(UnsupportedFormatError) { Reader.new(fixture(fixture_name)) }
+    end
   end
 
   def test_initialize
