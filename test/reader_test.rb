@@ -30,19 +30,19 @@ class ReaderTest < Test::Unit::TestCase
       assert_raise(InvalidFormatError) { Reader.send(method_name, fixture("invalid/bad_riff_header.wav")) }
 
       # The format code in the RIFF header is not "WAVE"
-      assert_raise(InvalidFormatError) { Reader.new(fixture("invalid/bad_wavefile_format.wav")) }
+      assert_raise(InvalidFormatError) { Reader.send(method_name, fixture("invalid/bad_wavefile_format.wav")) }
 
       # The file consists of just a valid RIFF header
-      assert_raise(InvalidFormatError) { Reader.new(fixture("invalid/no_format_chunk.wav")) }
+      assert_raise(InvalidFormatError) { Reader.send(method_name, fixture("invalid/no_format_chunk.wav")) }
 
       # The format chunk has 0 bytes in it (despite the chunk size being 16)
-      assert_raise(InvalidFormatError) { Reader.new(fixture("invalid/empty_format_chunk.wav")) }
+      assert_raise(InvalidFormatError) { Reader.send(method_name, fixture("invalid/empty_format_chunk.wav")) }
 
       # The format chunk has some data, but not all of the minimum required.
-      assert_raise(InvalidFormatError) { Reader.new(fixture("invalid/insufficient_format_chunk.wav")) }
+      assert_raise(InvalidFormatError) { Reader.send(method_name, fixture("invalid/insufficient_format_chunk.wav")) }
 
       # The RIFF header and format chunk are OK, but there is no data chunk
-      assert_raise(InvalidFormatError) { Reader.new(fixture("invalid/no_data_chunk.wav")) }
+      assert_raise(InvalidFormatError) { Reader.send(method_name, fixture("invalid/no_data_chunk.wav")) }
     end
   end
 
