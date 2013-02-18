@@ -34,10 +34,11 @@ module WaveFile
       # Make file is in a format we can actually read
       validate_format_chunk(raw_format_chunk)
 
+      native_sample_format = "#{FORMAT_CODES.invert[raw_format_chunk[:audio_format]]}_#{raw_format_chunk[:bits_per_sample]}".to_sym
       @native_format = Format.new(raw_format_chunk[:channels],
-                                  raw_format_chunk[:bits_per_sample],
+                                  native_sample_format,
                                   raw_format_chunk[:sample_rate])
-      @pack_code = PACK_CODES[:pcm][@native_format.bits_per_sample]
+      @pack_code = PACK_CODES[@native_format.sample_format][@native_format.bits_per_sample]
 
       if format == nil
         @format = @native_format
@@ -183,12 +184,12 @@ module WaveFile
       # :byte_rate and :block_align are not checked to make sure that match :channels/:sample_rate/bits_per_sample
       # because this library doesn't use them.
 
-      unless raw_format_chunk[:audio_format] == FORMAT_CODES[:pcm]
+      unless FORMAT_CODES.values.include? raw_format_chunk[:audio_format]
         raise UnsupportedFormatError, "Audio format is #{raw_format_chunk[:audio_format]}, " +
-                                      "but only format code 1 (i.e. PCM) is supported."
+                                      "but only format code 1 (PCM) or 3 (floating point) is supported."
       end
 
-      unless Format::SUPPORTED_BITS_PER_SAMPLE[:pcm].include?(raw_format_chunk[:bits_per_sample])
+      unless Format::SUPPORTED_BITS_PER_SAMPLE[FORMAT_CODES.invert[raw_format_chunk[:audio_format]]].include?(raw_format_chunk[:bits_per_sample])
         raise UnsupportedFormatError, "Bits per sample is #{raw_format_chunk[:bits_per_sample]}, " +
                                       "but only #{Format::SUPPORTED_BITS_PER_SAMPLE[:pcm].inspect} are supported."
       end
