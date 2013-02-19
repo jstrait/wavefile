@@ -326,6 +326,6 @@ private
     assert_equal(expected_hash[:minutes], duration.minutes)
     assert_equal(expected_hash[:seconds], duration.seconds)
     assert_equal(expected_hash[:milliseconds], duration.milliseconds)
-    assert_equal(expected_hash[:sample_count], duration.sample_count)
+    assert_equal(expected_hash[:sample_count], duration.sample_frame_count)
   end
 end

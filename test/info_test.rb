@@ -26,7 +26,7 @@ class InfoTest < Test::Unit::TestCase
     assert_equal(0, info.duration.minutes)
     assert_equal(1, info.duration.seconds)
     assert_equal(0, info.duration.milliseconds)
-    assert_equal(44100, info.duration.sample_count)
+    assert_equal(44100, info.duration.sample_frame_count)
     assert_equal(44100, info.duration.sample_rate)
   end
 end

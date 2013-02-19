@@ -114,7 +114,7 @@ class WriterTest < Test::Unit::TestCase
 
       assert_equal(0, writer.sample_frames_written)
       duration = writer.duration_written
-      assert_equal(0, duration.sample_count)
+      assert_equal(0, duration.sample_frame_count)
       assert_equal(44100, duration.sample_rate)
       assert_equal(0, duration.hours)
       assert_equal(0, duration.minutes)
@@ -125,7 +125,7 @@ class WriterTest < Test::Unit::TestCase
 
       assert_equal(8 * 2756, writer.sample_frames_written)
       duration = writer.duration_written
-      assert_equal(8 * 2756, duration.sample_count)
+      assert_equal(8 * 2756, duration.sample_frame_count)
       assert_equal(44100, duration.sample_rate)
       assert_equal(0, duration.hours)
       assert_equal(0, duration.minutes)
@@ -137,7 +137,7 @@ class WriterTest < Test::Unit::TestCase
 
       assert_equal(8 * 2756 * 3, writer.sample_frames_written)
       duration = writer.duration_written
-      assert_equal(8 * 2756 * 3, duration.sample_count)
+      assert_equal(8 * 2756 * 3, duration.sample_frame_count)
       assert_equal(44100, duration.sample_rate)
       assert_equal(0, duration.hours)
       assert_equal(0, duration.minutes)
@@ -148,7 +148,7 @@ class WriterTest < Test::Unit::TestCase
 
       assert_equal(8 * 2756 * 3, writer.sample_frames_written)
       duration = writer.duration_written
-      assert_equal(8 * 2756 * 3, duration.sample_count)
+      assert_equal(8 * 2756 * 3, duration.sample_frame_count)
       assert_equal(44100, duration.sample_rate)
       assert_equal(0, duration.hours)
       assert_equal(0, duration.minutes)
