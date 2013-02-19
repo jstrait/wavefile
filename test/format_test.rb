@@ -65,58 +65,52 @@ class FormatTest < Test::Unit::TestCase
     end
   end
 
-  def test_byte_rate
-    format = Format.new(1, 8, 44100)
-    assert_equal(44100, format.byte_rate)
-
-    format = Format.new(1, 16, 44100)
-    assert_equal(88200, format.byte_rate)
-
-    format = Format.new(1, 32, 44100)
-    assert_equal(176400, format.byte_rate)
-
-    format = Format.new(1, :float_64, 44100)
-    assert_equal(352800, format.byte_rate)
-
-    format = Format.new(2, 8, 44100)
-    assert_equal(88200, format.byte_rate)
-
-    format = Format.new(2, 16, 44100)
-    assert_equal(176400, format.byte_rate)
-
-    format = Format.new(2, 32, 44100)
-    assert_equal(352800, format.byte_rate)
-
-    format = Format.new(2, :float_64, 44100)
-    assert_equal(705600, format.byte_rate)
-  end
-
-  def test_block_align
+  def test_byte_and_block_align
     [1, :mono].each do |one_channel|
-      format = Format.new(one_channel, 8, 44100)
-      assert_equal(1, format.block_align)
+      [:pcm_8, 8].each do |format_code|
+        format = Format.new(one_channel, format_code, 44100)
+        assert_equal(44100, format.byte_rate)
+        assert_equal(1, format.block_align)
+      end
 
-      format = Format.new(one_channel, 16, 44100)
-      assert_equal(2, format.block_align)
+      [:pcm_16, 16].each do |format_code|
+        format = Format.new(one_channel, format_code, 44100)
+        assert_equal(88200, format.byte_rate)
+        assert_equal(2, format.block_align)
+      end
 
-      format = Format.new(one_channel, 32, 44100)
-      assert_equal(4, format.block_align)
+      [:pcm_32, 32, :float_32].each do |format_code|
+        format = Format.new(one_channel, format_code, 44100)
+        assert_equal(176400, format.byte_rate)
+        assert_equal(4, format.block_align)
+      end
 
       format = Format.new(one_channel, :float_64, 44100)
-      assert_equal(8, format.block_align)
+      assert_equal(352800, format.byte_rate)
+      assert_equal(8, format.block_align) 
     end
 
     [2, :stereo].each do |two_channels|
-      format = Format.new(two_channels, 8, 44100)
-      assert_equal(2, format.block_align)
+      [:pcm_8, 8].each do |format_code|
+        format = Format.new(two_channels, format_code, 44100)
+        assert_equal(88200, format.byte_rate)
+        assert_equal(2, format.block_align)
+      end
 
-      format = Format.new(two_channels, 16, 44100)
-      assert_equal(4, format.block_align)
+      [:pcm_16, 16].each do |format_code|
+        format = Format.new(two_channels, format_code, 44100)
+        assert_equal(176400, format.byte_rate)
+        assert_equal(4, format.block_align)
+      end
 
-      format = Format.new(two_channels, 32, 44100)
-      assert_equal(8, format.block_align)
+      [:pcm_32, 32, :float_32].each do |format_code|
+        format = Format.new(two_channels, format_code, 44100)
+        assert_equal(352800, format.byte_rate)
+        assert_equal(8, format.block_align)
+      end
 
       format = Format.new(two_channels, :float_64, 44100)
+      assert_equal(705600, format.byte_rate)
       assert_equal(16, format.block_align)
     end
   end
