@@ -160,6 +160,14 @@ module WaveFile
       @file.close
     end
 
+    def duration_read
+      Duration.new(@samples_read, @format.sample_rate)
+    end
+
+    def duration_remaining
+      Duration.new(@samples_remaining, @format.sample_rate)
+    end
+
     # Returns the name of the Wave file that is being read
     attr_reader :file_name
 

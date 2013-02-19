@@ -228,23 +228,47 @@ class ReaderTest < Test::Unit::TestCase
       reader = Reader.new(fixture("valid/valid_#{channels}_#{sample_format}_44100.wav"))
       
       assert_equal(0, reader.samples_read)
+      test_duration({:hours => 0, :minutes => 0, :seconds => 0, :milliseconds => 0, :sample_count => 0},
+                    reader.duration_read)
       assert_equal(2240, reader.samples_remaining)
+      test_duration({:hours => 0, :minutes => 0, :seconds => 0, :milliseconds => 50, :sample_count => 2240},
+                    reader.duration_remaining)
+
 
       reader.read(1024)
       assert_equal(1024, reader.samples_read)
+      test_duration({:hours => 0, :minutes => 0, :seconds => 0, :milliseconds => 23, :sample_count => 1024},
+                    reader.duration_read)
       assert_equal(1216, reader.samples_remaining)
+      test_duration({:hours => 0, :minutes => 0, :seconds => 0, :milliseconds => 27, :sample_count => 1216},
+                    reader.duration_remaining)
+
 
       reader.read(1024)
       assert_equal(2048, reader.samples_read)
+      test_duration({:hours => 0, :minutes => 0, :seconds => 0, :milliseconds => 46, :sample_count => 2048},
+                    reader.duration_read)
       assert_equal(192, reader.samples_remaining)
+      test_duration({:hours => 0, :minutes => 0, :seconds => 0, :milliseconds => 4, :sample_count => 192},
+                    reader.duration_remaining)
+
 
       reader.read(192)
       assert_equal(2240, reader.samples_read)
+      test_duration({:hours => 0, :minutes => 0, :seconds => 0, :milliseconds => 50, :sample_count => 2240},
+                    reader.duration_read)
       assert_equal(0, reader.samples_remaining)
+      test_duration({:hours => 0, :minutes => 0, :seconds => 0, :milliseconds => 0, :sample_count => 0},
+                    reader.duration_remaining)
  
+
       reader.close
       assert_equal(2240, reader.samples_read)
+      test_duration({:hours => 0, :minutes => 0, :seconds => 0, :milliseconds => 50, :sample_count => 2240},
+                    reader.duration_read)
       assert_equal(0, reader.samples_remaining)
+      test_duration({:hours => 0, :minutes => 0, :seconds => 0, :milliseconds => 0, :sample_count => 0},
+                    reader.duration_remaining)
     end
   end
 
@@ -295,5 +319,13 @@ private
 
   def extract_bits_per_sample(sample_format)
     sample_format.to_s.split("_").last.to_i
+  end
+
+  def test_duration(expected_hash, duration)
+    assert_equal(expected_hash[:hours], duration.hours)
+    assert_equal(expected_hash[:minutes], duration.minutes)
+    assert_equal(expected_hash[:seconds], duration.seconds)
+    assert_equal(expected_hash[:milliseconds], duration.milliseconds)
+    assert_equal(expected_hash[:sample_count], duration.sample_count)
   end
 end
