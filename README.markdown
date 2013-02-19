@@ -28,14 +28,15 @@ Work is in progress on the next release, v0.5.0. The current plan (could change)
 
 * Support for reading and writing Wave files containing 32 and 64-bit floating point sample data.
 * Support for buffers that contain floating point data (i.e., samples between -1.0 and 1.0), including the ability to convert to and from PCM buffers.
-* New attributes: `Writer.sample_frames_written`, `Reader.sample_frames_read`, `Reader.sample_frames_remaining`.
-* Ability to get these attibutes as a `Duration` object as well.
+* New attributes: `Writer.sample_frames_written`, `Reader.sample_frames_read`, and `Reader.sample_frames_remaining`.
+* Ability to get these attibutes as a `Duration` object as well: `Writer.duration_written`, `Reader.duration_read`, and `Reader.duration_remaining`.
 * Bug fix: Wave files are no longer corrupted when an unhandled exception occurs inside a `Writer` block. (Thanks to [James Tunnell](https://github.com/jamestunnell) for finding and fixing this).
-* Bug fix: `Writer.file_name` always returns nil (Thanks to [James Tunnell](https://github.com/jamestunnell) for finding this).
+* Bug fix: `Writer.file_name` now returns the file name, instead of always returning nil (Thanks to [James Tunnell](https://github.com/jamestunnell) for reporting this).
 
 This release will include changes that are not backwards compatible with v0.4.0. (Until version v1.0, no guarantees to avoid this will be made, but I'll try to have a good reason before doing so).
 
 * `Info.duration` now returns a `Duration` object, instead of a hash.
+* `Info.sample_count` has been renamed `sample_frame_count`.
 
 
 # Current Release: v0.4.0
@@ -83,4 +84,4 @@ First, install the WaveFile gem from rubygems.org:
 
     require 'wavefile'
 
-Note that if you're installing the gem into the default Ruby that comes pre-installed on MacOS (as opposed to a Ruby installed via [RVM](http://beginrescueend.com/)), you should used `sudo gem install wavefile`. Otherwise you might run into a file permission error.
+Note that if you're installing the gem into the default Ruby that comes pre-installed on MacOS (as opposed to a Ruby installed via [RVM](http://beginrescueend.com/) or [rbenv](https://github.com/sstephenson/rbenv/)), you should used `sudo gem install wavefile`. Otherwise you might run into a file permission error.
