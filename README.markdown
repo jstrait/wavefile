@@ -85,3 +85,12 @@ First, install the WaveFile gem from rubygems.org:
     require 'wavefile'
 
 Note that if you're installing the gem into the default Ruby that comes pre-installed on MacOS (as opposed to a Ruby installed via [RVM](http://beginrescueend.com/) or [rbenv](https://github.com/sstephenson/rbenv/)), you should used `sudo gem install wavefile`. Otherwise you might run into a file permission error.
+
+
+# Contributing
+
+1. Fork my repo
+2. Create a branch for your changes
+3. Add your changes, and please include tests
+4. Make sure the tests pass by running `rake test`
+5. Create a pull request
