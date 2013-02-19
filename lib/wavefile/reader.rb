@@ -54,9 +54,9 @@ module WaveFile
 
 
     # Reads metadata from the specified wave file and returns an Info object with the results.
-    # Metadata includes things like the number of channels, bits per sample, number of samples,
-    # sample encoding format (i.e. PCM, IEEE float, uLaw etc). See the Info object for more
-    # detail on exactly what metadata is available.
+    # Metadata includes things like the number of channels, bits per sample, number of sample
+    # frames, sample encoding format (i.e. PCM, IEEE float, uLaw etc). See the Info object for
+    # more detail on exactly what metadata is available.
     #
     # file_name - The name of the wave file to read from
     #
@@ -81,13 +81,13 @@ module WaveFile
     # sample data to be read. When all sample data has been read, the Reader is automatically closed.
     # Each Buffer is passed to the specified block.
     #
-    # Note that the number of sames to read is for *each channel*. That is, if buffer_size is 1024, then
+    # Note that the number of samples to read is for *each channel*. That is, if buffer_size is 1024, then
     # for a stereo file 1024 samples will be read from the left channel, and 1024 samples will be read from
     # the right channel.
     #
-    # buffer_size - The number of samples to read into each Buffer from each channel. The number of
-    #               samples read into the final Buffer could be less than this size, if there are not
-    #               enough remaining samples.
+    # buffer_size - The number of sample frames to read into each Buffer from each channel. The number of
+    #               sample frames read into the final Buffer could be less than this size, if there are not
+    #               enough remaining sample frames.
     #
     # Returns nothing.
     def each_buffer(buffer_size)
@@ -101,13 +101,13 @@ module WaveFile
     end
 
 
-    # Reads the specified number of samples from the wave file into a Buffer. Note that the Buffer will have
+    # Reads the specified number of sample frames from the wave file into a Buffer. Note that the Buffer will have
     # at most buffer_size samples, but could have less if the file doesn't have enough remaining samples.
     #
-    # buffer_size - The number of samples to read. Note that for multi-channel files, this number of samples
+    # buffer_size - The number of sample frames to read. Note that for multi-channel files, this number of samples
     #               will be read from each channel.
     #
-    # Returns a Buffer containing buffer_size samples
+    # Returns a Buffer containing buffer_size sample frames
     # Raises EOFError if no samples could be read due to reaching the end of the file
     def read(buffer_size)
       if @sample_frames_remaining == 0
@@ -160,10 +160,12 @@ module WaveFile
       @file.close
     end
 
+    # Returns a Duration instance for the number of sample frames read so far
     def duration_read
       Duration.new(@sample_frames_read, @format.sample_rate)
     end
 
+    # Returns a Duration instance for the number of sample frames remaining to be read
     def duration_remaining
       Duration.new(@sample_frames_remaining, @format.sample_rate)
     end

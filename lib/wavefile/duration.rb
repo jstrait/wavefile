@@ -1,5 +1,5 @@
 module WaveFile
-  # Calculates playback time given the number of samples and the sample rate.
+  # Calculates playback time given the number of sample frames and the sample rate.
   class Duration
     def initialize(sample_frame_count, sample_rate)
       @sample_frame_count = sample_frame_count

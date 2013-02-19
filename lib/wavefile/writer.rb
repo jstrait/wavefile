@@ -55,7 +55,7 @@ module WaveFile
 
     # Appends the sample data in the given Buffer to the end of the wave file.
     #
-    # Returns the number of sample that have been written to the file so far.
+    # Returns the number of sample frames that have been written to the file so far.
     # Raises IOError if the Writer has been closed.
     def write(buffer)
       samples = buffer.convert(@format).samples
@@ -75,7 +75,9 @@ module WaveFile
     #
     # Note that the wave file will NOT be valid until this method is called. The wave file
     # format requires certain information about the amount of sample data, and this can't be
-    # determined until all samples have been written.
+    # determined until all samples have been written. (This method doesn't need to be called
+    # when passing a block to Writer.new, as this method will automatically be called when
+    # the block exits).
     #
     # Returns nothing.
     # Raises IOError if the Writer is already closed.
@@ -99,6 +101,7 @@ module WaveFile
       @file.close
     end
 
+    # Returns a Duration instance for the number of sample frames that have been written so far
     def duration_written
       Duration.new(@sample_frames_written, @format.sample_rate)
     end
