@@ -6,62 +6,62 @@ include WaveFile
 class FormatTest < Test::Unit::TestCase
   def test_valid_channels
     [1, 2, 3, 4, 65535].each do |valid_channels|
-      assert_equal(valid_channels, Format.new(valid_channels, 16, 44100).channels)
+      assert_equal(valid_channels, Format.new(valid_channels, :pcm_16, 44100).channels)
     end
 
-    assert_equal(1, Format.new(:mono, 16, 44100).channels)
-    assert_equal(2, Format.new(:stereo, 16, 44100).channels)
+    assert_equal(1, Format.new(:mono, :pcm_16, 44100).channels)
+    assert_equal(2, Format.new(:stereo, :pcm_16, 44100).channels)
   end
 
   def test_invalid_channels
     ["dsfsfsdf", :foo, 0, -1, 65536].each do |invalid_channels|
-      assert_raise(InvalidFormatError) { Format.new(invalid_channels, 16, 44100) }
+      assert_raise(InvalidFormatError) { Format.new(invalid_channels, :pcm_16, 44100) }
     end
   end
 
   def test_valid_sample_format
-    assert_equal(:pcm, Format.new(1, 8, 44100).sample_format)
-    assert_equal(:pcm, Format.new(1, 16, 44100).sample_format)
-    assert_equal(:pcm, Format.new(1, 32, 44100).sample_format)
-    assert_equal(:pcm, Format.new(1, :pcm_8, 44100).sample_format)
-    assert_equal(:pcm, Format.new(1, :pcm_16, 44100).sample_format)
-    assert_equal(:pcm, Format.new(1, :pcm_32, 44100).sample_format)
-    assert_equal(:float, Format.new(1, :float_32, 44100).sample_format)
-    assert_equal(:float, Format.new(1, :float_64, 44100).sample_format)
+    assert_equal(:pcm, Format.new(:mono, 8, 44100).sample_format)
+    assert_equal(:pcm, Format.new(:mono, 16, 44100).sample_format)
+    assert_equal(:pcm, Format.new(:mono, 32, 44100).sample_format)
+    assert_equal(:pcm, Format.new(:mono, :pcm_8, 44100).sample_format)
+    assert_equal(:pcm, Format.new(:mono, :pcm_16, 44100).sample_format)
+    assert_equal(:pcm, Format.new(:mono, :pcm_32, 44100).sample_format)
+    assert_equal(:float, Format.new(:mono, :float_32, 44100).sample_format)
+    assert_equal(:float, Format.new(:mono, :float_64, 44100).sample_format)
   end
 
   def test_invalid_sample_format
     ["dsfsfsdf", :foo, 12, :pcm_14, :float_20].each do |invalid_sample_format|
-      assert_raise(InvalidFormatError) { Format.new(1, invalid_sample_format, 44100) }
+      assert_raise(InvalidFormatError) { Format.new(:mono, invalid_sample_format, 44100) }
     end
   end
 
   def test_valid_bits_per_sample
-    assert_equal(8, Format.new(1, 8, 44100).bits_per_sample)
-    assert_equal(16, Format.new(1, 16, 44100).bits_per_sample)
-    assert_equal(32, Format.new(1, 32, 44100).bits_per_sample)
-    assert_equal(8, Format.new(1, :pcm_8, 44100).bits_per_sample)
-    assert_equal(16, Format.new(1, :pcm_16, 44100).bits_per_sample)
-    assert_equal(32, Format.new(1, :pcm_32, 44100).bits_per_sample)
-    assert_equal(32, Format.new(1, :float_32, 44100).bits_per_sample)
-    assert_equal(64, Format.new(1, :float_64, 44100).bits_per_sample)
+    assert_equal(8, Format.new(:mono, 8, 44100).bits_per_sample)
+    assert_equal(16, Format.new(:mono, 16, 44100).bits_per_sample)
+    assert_equal(32, Format.new(:mono, 32, 44100).bits_per_sample)
+    assert_equal(8, Format.new(:mono, :pcm_8, 44100).bits_per_sample)
+    assert_equal(16, Format.new(:mono, :pcm_16, 44100).bits_per_sample)
+    assert_equal(32, Format.new(:mono, :pcm_32, 44100).bits_per_sample)
+    assert_equal(32, Format.new(:mono, :float_32, 44100).bits_per_sample)
+    assert_equal(64, Format.new(:mono, :float_64, 44100).bits_per_sample)
   end
 
   def test_invalid_bits_per_sample
     ["dsfsfsdf", :foo, :pcm, 0, 12, :pcm_14, :pcm_abc, :float_40].each do |invalid_sample_format|
-      assert_raise(InvalidFormatError) { Format.new(1, invalid_sample_format, 44100) }
+      assert_raise(InvalidFormatError) { Format.new(:mono, invalid_sample_format, 44100) }
     end
   end
 
   def test_valid_sample_rate
     [1, 44100, 4294967296].each do |valid_sample_rate|
-      assert_equal(valid_sample_rate, Format.new(1, 16, valid_sample_rate).sample_rate)
+      assert_equal(valid_sample_rate, Format.new(:mono, :pcm_16, valid_sample_rate).sample_rate)
     end
   end
 
   def test_invalid_sample_rate
     ["dsfsfsdf", :foo, 0, -1, 4294967297].each do |invalid_sample_rate|
-      assert_raise(InvalidFormatError) { Format.new(1, 16, invalid_sample_rate) }
+      assert_raise(InvalidFormatError) { Format.new(:mono, :pcm_16, invalid_sample_rate) }
     end
   end
 
@@ -117,7 +117,7 @@ class FormatTest < Test::Unit::TestCase
 
   def test_mono?
     [1, :mono].each do |one_channel|
-      format = Format.new(one_channel, 8, 44100)
+      format = Format.new(one_channel, :pcm_8, 44100)
       assert_equal(true, format.mono?)
       assert_equal(false, format.stereo?)
     end
@@ -125,7 +125,7 @@ class FormatTest < Test::Unit::TestCase
 
   def test_stereo?
     [2, :stereo].each do |two_channels|
-      format = Format.new(two_channels, 8, 44100)
+      format = Format.new(two_channels, :pcm_8, 44100)
       assert_equal(false, format.mono?)
       assert_equal(true, format.stereo?)
     end
