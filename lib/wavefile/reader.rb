@@ -79,21 +79,22 @@ module WaveFile
 
     # Reads sample data of the into successive Buffers of the specified size, until there is no more
     # sample data to be read. When all sample data has been read, the Reader is automatically closed.
-    # Each Buffer is passed to the specified block.
+    # Each Buffer is passed to the given block.
     #
-    # Note that the number of samples to read is for *each channel*. That is, if buffer_size is 1024, then
+    # Note that sample_frame_count indicates the number of sample frames to read, not number of samples.
+    # A sample frame include one sample for each channel. For example, if sample_frame_count is 1024, then
     # for a stereo file 1024 samples will be read from the left channel, and 1024 samples will be read from
     # the right channel.
     #
-    # buffer_size - The number of sample frames to read into each Buffer from each channel. The number of
-    #               sample frames read into the final Buffer could be less than this size, if there are not
-    #               enough remaining sample frames.
+    # sample_frame_count - The number of sample frames to read into each Buffer from each channel. The number
+    #                      of sample frames read into the final Buffer could be less than this size, if there
+    #                      are not enough remaining.
     #
     # Returns nothing.
-    def each_buffer(buffer_size)
+    def each_buffer(sample_frame_count)
       begin
         while true do
-          yield(read(buffer_size))
+          yield(read(sample_frame_count))
         end
       rescue EOFError
         close
@@ -102,24 +103,24 @@ module WaveFile
 
 
     # Reads the specified number of sample frames from the wave file into a Buffer. Note that the Buffer will have
-    # at most buffer_size samples, but could have less if the file doesn't have enough remaining samples.
+    # at most sample_frame_count sample frames, but could have less if the file doesn't have enough remaining.
     #
-    # buffer_size - The number of sample frames to read. Note that for multi-channel files, this number of samples
-    #               will be read from each channel.
+    # sample_frame_count - The number of sample frames to read. Note that each sample frame includes a sample for
+    #                      each channel.
     #
-    # Returns a Buffer containing buffer_size sample frames
+    # Returns a Buffer containing sample_frame_count sample frames
     # Raises EOFError if no samples could be read due to reaching the end of the file
-    def read(buffer_size)
+    def read(sample_frame_count)
       if @sample_frames_remaining == 0
         #FIXME: Do something different here, because the end of the file has not actually necessarily been reached
         raise EOFError
-      elsif buffer_size > @sample_frames_remaining
-        buffer_size = @sample_frames_remaining
+      elsif sample_frame_count > @sample_frames_remaining
+        sample_frame_count = @sample_frames_remaining
       end
 
-      samples = @file.sysread(buffer_size * @native_format.block_align).unpack(@pack_code)
-      @sample_frames_read += buffer_size
-      @sample_frames_remaining -= buffer_size
+      samples = @file.sysread(sample_frame_count * @native_format.block_align).unpack(@pack_code)
+      @sample_frames_read += sample_frame_count
+      @sample_frames_remaining -= sample_frame_count
 
       if @native_format.channels > 1
         num_multichannel_samples = samples.length / @native_format.channels
