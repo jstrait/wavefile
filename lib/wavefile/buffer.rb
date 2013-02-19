@@ -76,13 +76,13 @@ module WaveFile
   private
 
     def convert_buffer(samples, old_format, new_format)
-      samples = convert_buffer_channels(samples, old_format.channels, new_format.channels)
-      samples = convert_buffer_bits_per_sample(samples, old_format, new_format)
+      samples = convert_channels(samples, old_format.channels, new_format.channels)
+      samples = convert_sample_format(samples, old_format, new_format)
 
       samples
     end
 
-    def convert_buffer_channels(samples, old_channels, new_channels)
+    def convert_channels(samples, old_channels, new_channels)
       return samples if old_channels == new_channels
 
       # The cases of mono -> stereo and vice-versa are handled specially,
@@ -106,57 +106,57 @@ module WaveFile
       samples
     end
 
-    def convert_buffer_bits_per_sample(samples, old_format, new_format)
+    def convert_sample_format(samples, old_format, new_format)
       return samples if old_format.sample_format == :float && new_format.sample_format == :float
 
       if old_format.sample_format == :pcm && new_format.sample_format == :pcm
-        convert_pcm_buffer_bits_per_sample(samples, old_format.bits_per_sample, new_format.bits_per_sample)
+        convert_sample_format_pcm_to_pcm(samples, old_format.bits_per_sample, new_format.bits_per_sample)
       elsif old_format.sample_format == :pcm && new_format.sample_format == :float
-        convert_pcm_to_float_buffer_bits_per_sample(samples, old_format.bits_per_sample, new_format.bits_per_sample)
+        convert_sample_format_pcm_to_float(samples, old_format.bits_per_sample, new_format.bits_per_sample)
       elsif old_format.sample_format == :float && new_format.sample_format == :pcm
-        convert_float_to_pcm_buffer_bits_per_sample(samples, old_format.bits_per_sample, new_format.bits_per_sample)
+        convert_sample_format_float_to_pcm(samples, old_format.bits_per_sample, new_format.bits_per_sample)
       end
     end
 
-    def convert_pcm_buffer_bits_per_sample(samples, old_bits_per_sample, new_bits_per_sample)
+    def convert_sample_format_pcm_to_pcm(samples, old_bits_per_sample, new_bits_per_sample)
       return samples if old_bits_per_sample == new_bits_per_sample
 
       shift_amount = (new_bits_per_sample - old_bits_per_sample).abs
 
       if old_bits_per_sample == 8
-        convert_buffer_bits_per_sample_helper(samples) {|sample| (sample - 128) << shift_amount }
+        convert_sample_format_helper(samples) {|sample| (sample - 128) << shift_amount }
       elsif new_bits_per_sample == 8
-        convert_buffer_bits_per_sample_helper(samples) {|sample| (sample >> shift_amount) + 128 }
+        convert_sample_format_helper(samples) {|sample| (sample >> shift_amount) + 128 }
       else
         if new_bits_per_sample > old_bits_per_sample
-          convert_buffer_bits_per_sample_helper(samples) {|sample| sample << shift_amount }
+          convert_sample_format_helper(samples) {|sample| sample << shift_amount }
         else
-          convert_buffer_bits_per_sample_helper(samples) {|sample| sample >> shift_amount }
+          convert_sample_format_helper(samples) {|sample| sample >> shift_amount }
         end
       end
     end
 
-    def convert_pcm_to_float_buffer_bits_per_sample(samples, old_bits_per_sample, new_bits_per_sample)
+    def convert_sample_format_pcm_to_float(samples, old_bits_per_sample, new_bits_per_sample)
       if old_bits_per_sample == 8
-        convert_buffer_bits_per_sample_helper(samples) {|sample| (sample - 128).to_f / 128.0 }
+        convert_sample_format_helper(samples) {|sample| (sample - 128).to_f / 128.0 }
       elsif old_bits_per_sample == 16
-        convert_buffer_bits_per_sample_helper(samples) {|sample| sample.to_f / 32768.0 }
+        convert_sample_format_helper(samples) {|sample| sample.to_f / 32768.0 }
       elsif old_bits_per_sample == 32
-        convert_buffer_bits_per_sample_helper(samples) {|sample| sample.to_f / 2147483648.0 }
+        convert_sample_format_helper(samples) {|sample| sample.to_f / 2147483648.0 }
       end
     end
 
-    def convert_float_to_pcm_buffer_bits_per_sample(samples, old_bits_per_sample, new_bits_per_sample)
+    def convert_sample_format_float_to_pcm(samples, old_bits_per_sample, new_bits_per_sample)
       if new_bits_per_sample == 8
-        convert_buffer_bits_per_sample_helper(samples) {|sample| (sample * 127.0).to_i + 128 }
+        convert_sample_format_helper(samples) {|sample| (sample * 127.0).to_i + 128 }
       elsif new_bits_per_sample == 16
-        convert_buffer_bits_per_sample_helper(samples) {|sample| (sample * 32767.0).to_i }
+        convert_sample_format_helper(samples) {|sample| (sample * 32767.0).to_i }
       elsif new_bits_per_sample == 32
-        convert_buffer_bits_per_sample_helper(samples) {|sample| (sample * 2147483647.0).to_i }
+        convert_sample_format_helper(samples) {|sample| (sample * 2147483647.0).to_i }
       end
     end
 
-    def convert_buffer_bits_per_sample_helper(samples, &converter)
+    def convert_sample_format_helper(samples, &converter)
       more_than_one_channel = (Array === samples.first)
 
       if more_than_one_channel
