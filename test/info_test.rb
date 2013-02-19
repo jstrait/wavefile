@@ -20,7 +20,7 @@ class InfoTest < Test::Unit::TestCase
     assert_equal(176400, info.byte_rate)
     assert_equal(4, info.block_align)
     assert_equal(16, info.bits_per_sample)
-    assert_equal(44100, info.sample_count)
+    assert_equal(44100, info.sample_frame_count)
 
     assert_equal(0, info.duration.hours)
     assert_equal(0, info.duration.minutes)
