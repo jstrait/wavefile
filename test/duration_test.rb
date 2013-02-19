@@ -15,36 +15,49 @@ class DurationTest < Test::Unit::TestCase
       assert_equal(0, duration.minutes)
       assert_equal(0, duration.seconds)
       assert_equal(0, duration.milliseconds)
+      assert_equal(0, duration.sample_frame_count)
+      assert_equal(sample_rate, duration.sample_rate)
 
       duration = Duration.new(sample_rate / 2, sample_rate)
       assert_equal(0, duration.hours)
       assert_equal(0, duration.minutes)
       assert_equal(0, duration.seconds)
       assert_equal(500, duration.milliseconds)
+      assert_equal(sample_rate / 2, duration.sample_frame_count)
+      assert_equal(sample_rate, duration.sample_rate)
 
       duration = Duration.new(sample_rate, sample_rate)
       assert_equal(0, duration.hours)
       assert_equal(0, duration.minutes)
       assert_equal(1, duration.seconds)
       assert_equal(0, duration.milliseconds)
+      assert_equal(sample_rate, duration.sample_frame_count)
+      assert_equal(sample_rate, duration.sample_rate)
 
       duration = Duration.new(sample_rate * SECONDS_IN_MINUTE, sample_rate)
       assert_equal(0, duration.hours)
       assert_equal(1, duration.minutes)
       assert_equal(0, duration.seconds)
       assert_equal(0, duration.milliseconds)
+      assert_equal(sample_rate * SECONDS_IN_MINUTE, duration.sample_frame_count)
+      assert_equal(sample_rate, duration.sample_rate)
 
       duration = Duration.new(sample_rate * SECONDS_IN_HOUR, sample_rate)
       assert_equal(1, duration.hours)
       assert_equal(0, duration.minutes)
       assert_equal(0, duration.seconds)
       assert_equal(0, duration.milliseconds)
+      assert_equal(sample_rate * SECONDS_IN_HOUR, duration.sample_frame_count)
+      assert_equal(sample_rate, duration.sample_rate)
 
-      duration = Duration.new((sample_rate * SECONDS_IN_MINUTE) + sample_rate + (sample_rate / 2), sample_rate)
+      sample_frame_count = (sample_rate * SECONDS_IN_MINUTE) + sample_rate + (sample_rate / 2)
+      duration = Duration.new(sample_frame_count, sample_rate)
       assert_equal(0, duration.hours)
       assert_equal(1, duration.minutes)
       assert_equal(1, duration.seconds)
       assert_equal(500, duration.milliseconds)
+      assert_equal(sample_frame_count, duration.sample_frame_count)
+      assert_equal(sample_rate, duration.sample_rate)
     end
 
     # Test for when the number of hours is more than a day.
@@ -54,5 +67,7 @@ class DurationTest < Test::Unit::TestCase
     assert_equal(0, duration.minutes)
     assert_equal(0, duration.seconds)
     assert_equal(0, duration.milliseconds)
+    assert_equal(samples_per_hour * 25, duration.sample_frame_count)
+    assert_equal(44100, duration.sample_rate)
   end
 end
