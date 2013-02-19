@@ -85,8 +85,8 @@ class ReaderTest < Test::Unit::TestCase
       assert_equal(44100, reader.format.sample_rate)
       assert_equal(false, reader.closed?)
       assert_equal(file_name, reader.file_name)
-      assert_equal(0, reader.samples_read)
-      assert_equal(2240, reader.samples_remaining)
+      assert_equal(0, reader.sample_frames_read)
+      assert_equal(2240, reader.sample_frames_remaining)
       reader.close
 
       # Read a non-native format
@@ -96,8 +96,8 @@ class ReaderTest < Test::Unit::TestCase
       assert_equal(22050, reader.format.sample_rate)
       assert_equal(false, reader.closed?)
       assert_equal(file_name, reader.file_name)
-      assert_equal(0, reader.samples_read)
-      assert_equal(2240, reader.samples_remaining)
+      assert_equal(0, reader.sample_frames_read)
+      assert_equal(2240, reader.sample_frames_remaining)
       reader.close
 
       # Block is given.
@@ -107,8 +107,8 @@ class ReaderTest < Test::Unit::TestCase
       assert_equal(44100, reader.format.sample_rate)
       assert(reader.closed?)
       assert_equal(file_name, reader.file_name)
-      assert_equal(1024, reader.samples_read)
-      assert_equal(1216, reader.samples_remaining)
+      assert_equal(1024, reader.sample_frames_read)
+      assert_equal(1216, reader.sample_frames_remaining)
     end
   end
 
@@ -163,8 +163,8 @@ class ReaderTest < Test::Unit::TestCase
       assert_equal(SQUARE_WAVE_CYCLE[channels][sample_format] * 128, buffers[0].samples)
       assert_equal(SQUARE_WAVE_CYCLE[channels][sample_format] * 128, buffers[1].samples)
       assert_equal(SQUARE_WAVE_CYCLE[channels][sample_format] * 24,  buffers[2].samples)
-      assert_equal(2240, reader.samples_read)
-      assert_equal(0, reader.samples_remaining)
+      assert_equal(2240, reader.sample_frames_read)
+      assert_equal(0, reader.sample_frames_remaining)
     end
   end
 
@@ -182,8 +182,8 @@ class ReaderTest < Test::Unit::TestCase
     assert_equal(SQUARE_WAVE_CYCLE[:stereo][:pcm_8] * 128, buffers[0].samples)
     assert_equal(SQUARE_WAVE_CYCLE[:stereo][:pcm_8] * 128, buffers[1].samples)
     assert_equal(SQUARE_WAVE_CYCLE[:stereo][:pcm_8] * 24,  buffers[2].samples)
-    assert_equal(2240, reader.samples_read)
-    assert_equal(0, reader.samples_remaining)
+    assert_equal(2240, reader.sample_frames_read)
+    assert_equal(0, reader.sample_frames_remaining)
   end
 
   def test_each_buffer_with_padding_byte
@@ -197,8 +197,8 @@ class ReaderTest < Test::Unit::TestCase
     assert_equal(SQUARE_WAVE_CYCLE[:mono][:pcm_8] * 128, buffers[1].samples)
     assert_equal((SQUARE_WAVE_CYCLE[:mono][:pcm_8] * 23) + [88, 88, 88, 88, 167, 167, 167],
                  buffers[2].samples)
-    assert_equal(2239, reader.samples_read)
-    assert_equal(0, reader.samples_remaining)
+    assert_equal(2239, reader.sample_frames_read)
+    assert_equal(0, reader.sample_frames_remaining)
   end
 
   def test_closed?
@@ -227,46 +227,46 @@ class ReaderTest < Test::Unit::TestCase
     exhaustively_test do |channels, sample_format|
       reader = Reader.new(fixture("valid/valid_#{channels}_#{sample_format}_44100.wav"))
       
-      assert_equal(0, reader.samples_read)
+      assert_equal(0, reader.sample_frames_read)
       test_duration({:hours => 0, :minutes => 0, :seconds => 0, :milliseconds => 0, :sample_count => 0},
                     reader.duration_read)
-      assert_equal(2240, reader.samples_remaining)
+      assert_equal(2240, reader.sample_frames_remaining)
       test_duration({:hours => 0, :minutes => 0, :seconds => 0, :milliseconds => 50, :sample_count => 2240},
                     reader.duration_remaining)
 
 
       reader.read(1024)
-      assert_equal(1024, reader.samples_read)
+      assert_equal(1024, reader.sample_frames_read)
       test_duration({:hours => 0, :minutes => 0, :seconds => 0, :milliseconds => 23, :sample_count => 1024},
                     reader.duration_read)
-      assert_equal(1216, reader.samples_remaining)
+      assert_equal(1216, reader.sample_frames_remaining)
       test_duration({:hours => 0, :minutes => 0, :seconds => 0, :milliseconds => 27, :sample_count => 1216},
                     reader.duration_remaining)
 
 
       reader.read(1024)
-      assert_equal(2048, reader.samples_read)
+      assert_equal(2048, reader.sample_frames_read)
       test_duration({:hours => 0, :minutes => 0, :seconds => 0, :milliseconds => 46, :sample_count => 2048},
                     reader.duration_read)
-      assert_equal(192, reader.samples_remaining)
+      assert_equal(192, reader.sample_frames_remaining)
       test_duration({:hours => 0, :minutes => 0, :seconds => 0, :milliseconds => 4, :sample_count => 192},
                     reader.duration_remaining)
 
 
       reader.read(192)
-      assert_equal(2240, reader.samples_read)
+      assert_equal(2240, reader.sample_frames_read)
       test_duration({:hours => 0, :minutes => 0, :seconds => 0, :milliseconds => 50, :sample_count => 2240},
                     reader.duration_read)
-      assert_equal(0, reader.samples_remaining)
+      assert_equal(0, reader.sample_frames_remaining)
       test_duration({:hours => 0, :minutes => 0, :seconds => 0, :milliseconds => 0, :sample_count => 0},
                     reader.duration_remaining)
  
 
       reader.close
-      assert_equal(2240, reader.samples_read)
+      assert_equal(2240, reader.sample_frames_read)
       test_duration({:hours => 0, :minutes => 0, :seconds => 0, :milliseconds => 50, :sample_count => 2240},
                     reader.duration_read)
-      assert_equal(0, reader.samples_remaining)
+      assert_equal(0, reader.sample_frames_remaining)
       test_duration({:hours => 0, :minutes => 0, :seconds => 0, :milliseconds => 0, :sample_count => 0},
                     reader.duration_remaining)
     end
@@ -281,18 +281,18 @@ class ReaderTest < Test::Unit::TestCase
       file_name = fixture("valid/valid_#{channels}_#{sample_format}_44100.wav")
       reader = Reader.new(file_name)
 
-      assert_equal(0, reader.samples_read)
-      assert_equal(2240, reader.samples_remaining)
+      assert_equal(0, reader.sample_frames_read)
+      assert_equal(2240, reader.sample_frames_remaining)
 
       reader.each_buffer(1024) do |buffer|
         expected_result = expected_results.slice!(0)
 
-        assert_equal(expected_result[:read], reader.samples_read)
-        assert_equal(expected_result[:remaining], reader.samples_remaining)
+        assert_equal(expected_result[:read], reader.sample_frames_read)
+        assert_equal(expected_result[:remaining], reader.sample_frames_remaining)
       end
       
-      assert_equal(2240, reader.samples_read)
-      assert_equal(0, reader.samples_remaining)
+      assert_equal(2240, reader.sample_frames_read)
+      assert_equal(0, reader.sample_frames_remaining)
     end
   end
 

@@ -35,7 +35,7 @@ module WaveFile
       @file = File.open(file_name, "wb")
       @format = format
 
-      @samples_written = 0
+      @sample_frames_written = 0
       @pack_code = PACK_CODES[format.sample_format][format.bits_per_sample]
 
       # Note that the correct sizes for the RIFF and data chunks can't be determined
@@ -61,7 +61,7 @@ module WaveFile
       samples = buffer.convert(@format).samples
 
       @file.syswrite(samples.flatten.pack(@pack_code))
-      @samples_written += samples.length
+      @sample_frames_written += samples.length
     end
 
 
@@ -85,7 +85,7 @@ module WaveFile
       # written, write an empty padding byte.
       #
       # See http://www-mmsp.ece.mcgill.ca/Documents/AudioFormats/WAVE/Docs/riffmci.pdf, page 11.
-      bytes_written = @samples_written * @format.block_align
+      bytes_written = @sample_frames_written * @format.block_align
       if bytes_written.odd?
         @file.syswrite(EMPTY_BYTE)
       end
@@ -94,13 +94,13 @@ module WaveFile
       # samples have been written, so go back to the beginning of the file and re-write
       # those chunk headers with the correct sizes.
       @file.sysseek(0)
-      write_header(@samples_written)
+      write_header(@sample_frames_written)
 
       @file.close
     end
 
     def duration_written
-      Duration.new(@samples_written, @format.sample_rate)
+      Duration.new(@sample_frames_written, @format.sample_rate)
     end
 
     # Returns the name of the Wave file that is being written to
@@ -113,14 +113,14 @@ module WaveFile
     # Returns the number of samples (per channel) that have been written to the file so far.
     # For example, if 1000 "left" samples and 1000 "right" samples have been written to a stereo file,
     # this will return 1000.
-    attr_reader :samples_written
+    attr_reader :sample_frames_written
 
   private
 
     # Writes the RIFF chunk header, format chunk, and the header for the data chunk. After this
     # method is called the file will be "queued up" and ready for writing actual sample data.
-    def write_header(sample_count)
-      sample_data_byte_count = sample_count * @format.block_align
+    def write_header(sample_frame_count)
+      sample_data_byte_count = sample_frame_count * @format.block_align
 
       # Write the header for the RIFF chunk
       header = CHUNK_IDS[:riff]
@@ -144,7 +144,7 @@ module WaveFile
       unless @format.sample_format == :pcm
         header += CHUNK_IDS[:fact]
         header += [4].pack(UNSIGNED_INT_32)
-        header += [sample_count].pack(UNSIGNED_INT_32)
+        header += [sample_frame_count].pack(UNSIGNED_INT_32)
       end
 
       # Write the header for the data chunk

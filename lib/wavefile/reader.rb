@@ -28,8 +28,8 @@ module WaveFile
 
       raw_format_chunk, sample_count = HeaderReader.new(@file, @file_name).read_until_data_chunk
       @sample_count = sample_count
-      @samples_read = 0
-      @samples_remaining = sample_count
+      @sample_frames_read = 0
+      @sample_frames_remaining = sample_count
 
       # Make file is in a format we can actually read
       validate_format_chunk(raw_format_chunk)
@@ -110,16 +110,16 @@ module WaveFile
     # Returns a Buffer containing buffer_size samples
     # Raises EOFError if no samples could be read due to reaching the end of the file
     def read(buffer_size)
-      if @samples_remaining == 0
+      if @sample_frames_remaining == 0
         #FIXME: Do something different here, because the end of the file has not actually necessarily been reached
         raise EOFError
-      elsif buffer_size > @samples_remaining
-        buffer_size = @samples_remaining
+      elsif buffer_size > @sample_frames_remaining
+        buffer_size = @sample_frames_remaining
       end
 
       samples = @file.sysread(buffer_size * @native_format.block_align).unpack(@pack_code)
-      @samples_read += buffer_size
-      @samples_remaining -= buffer_size
+      @sample_frames_read += buffer_size
+      @sample_frames_remaining -= buffer_size
 
       if @native_format.channels > 1
         num_multichannel_samples = samples.length / @native_format.channels
@@ -161,11 +161,11 @@ module WaveFile
     end
 
     def duration_read
-      Duration.new(@samples_read, @format.sample_rate)
+      Duration.new(@sample_frames_read, @format.sample_rate)
     end
 
     def duration_remaining
-      Duration.new(@samples_remaining, @format.sample_rate)
+      Duration.new(@sample_frames_remaining, @format.sample_rate)
     end
 
     # Returns the name of the Wave file that is being read
@@ -176,15 +176,15 @@ module WaveFile
     # underlying format of the Wave file on disk.
     attr_reader :format
 
-    # Returns the number of samples (per channel) that have been read so far. For example, if
-    # 1000 "left" samples and 1000 "right" samples have been read from a stereo file, this will
-    # return 1000.
-    attr_reader :samples_read
+    # Returns the number of samples frames that have been read so far. A sample frame contains a single sample
+    # for each channel. For example, if 1000 "left" samples and 1000 "right" samples have been read from a stereo
+    # file, this will return 1000.
+    attr_reader :sample_frames_read
 
-    # Returns the number of samples (per channel) that are remaining in the file to be read.
-    # For example, if 1000 "left" samples and 1000 "right" samples are remaining in a stereo file,
-    # this will return 1000.
-    attr_reader :samples_remaining
+    # Returns the number of samples frames that are remaining in the file to be read. A sample frame contains a
+    # single sample for each channel. For example, if 1000 "left" samples and 1000 "right" samples are remaining
+    # in a stereo file, this will return 1000.
+    attr_reader :sample_frames_remaining
 
   private
 
