@@ -27,9 +27,8 @@ module WaveFile
       @file = File.open(file_name, "rb")
 
       raw_format_chunk, sample_count = HeaderReader.new(@file, @file_name).read_until_data_chunk
-      @sample_count = sample_count
-      @sample_frames_read = 0
-      @sample_frames_remaining = sample_count
+      @current_sample_frame = 0
+      @total_sample_frames = sample_count
 
       # Make file is in a format we can actually read
       validate_format_chunk(raw_format_chunk)
@@ -111,16 +110,15 @@ module WaveFile
     # Returns a Buffer containing sample_frame_count sample frames
     # Raises EOFError if no samples could be read due to reaching the end of the file
     def read(sample_frame_count)
-      if @sample_frames_remaining == 0
+      if @current_sample_frame >= @total_sample_frames
         #FIXME: Do something different here, because the end of the file has not actually necessarily been reached
         raise EOFError
-      elsif sample_frame_count > @sample_frames_remaining
-        sample_frame_count = @sample_frames_remaining
+      elsif sample_frame_count > sample_frames_remaining
+        sample_frame_count = sample_frames_remaining
       end
 
       samples = @file.sysread(sample_frame_count * @native_format.block_align).unpack(@pack_code)
-      @sample_frames_read += sample_frame_count
-      @sample_frames_remaining -= sample_frame_count
+      @current_sample_frame += sample_frame_count
 
       if @native_format.channels > 1
         num_multichannel_samples = samples.length / @native_format.channels
@@ -161,14 +159,9 @@ module WaveFile
       @file.close
     end
 
-    # Returns a Duration instance for the number of sample frames read so far
-    def duration_read
-      Duration.new(@sample_frames_read, @format.sample_rate)
-    end
-
-    # Returns a Duration instance for the number of sample frames remaining to be read
-    def duration_remaining
-      Duration.new(@sample_frames_remaining, @format.sample_rate)
+    # Returns a Duration instance for the total number of sample frames in the file
+    def total_duration
+      Duration.new(total_sample_frames, @format.sample_rate)
     end
 
     # Returns the name of the Wave file that is being read
@@ -179,17 +172,23 @@ module WaveFile
     # underlying format of the Wave file on disk.
     attr_reader :format
 
-    # Returns the number of samples frames that have been read so far. A sample frame contains a single sample
-    # for each channel. For example, if 1000 "left" samples and 1000 "right" samples have been read from a stereo
-    # file, this will return 1000.
-    attr_reader :sample_frames_read
+    # Returns the index of the sample frame which is "cued up" for reading. I.e., the index
+    # of the next sample frame that will be read. A sample frame contains a single sample
+    # for each channel. So if there are 1,000 sample frames in a stereo file, this means
+    # there are 1,000 left-channel samples and 1,000 right-channel samples.
+    attr_reader :current_sample_frame
 
-    # Returns the number of samples frames that are remaining in the file to be read. A sample frame contains a
-    # single sample for each channel. For example, if 1000 "left" samples and 1000 "right" samples are remaining
-    # in a stereo file, this will return 1000.
-    attr_reader :sample_frames_remaining
+    # Returns the total number of sample frames in the file. A sample frame contains a single
+    # sample for each channel. So if there are 1,000 sample frames in a stereo file, this means
+    # there are 1,000 left-channel samples and 1,000 right-channel samples.
+    attr_reader :total_sample_frames
 
   private
+
+    # The number of sample frames in the file after the current sample frame
+    def sample_frames_remaining
+      @total_sample_frames - @current_sample_frame
+    end
 
     def validate_format_chunk(raw_format_chunk)
       # :byte_rate and :block_align are not checked to make sure that match :channels/:sample_rate/bits_per_sample

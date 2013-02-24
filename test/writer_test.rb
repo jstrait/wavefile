@@ -172,7 +172,7 @@ class WriterTest < Test::Unit::TestCase
     end
     
     reader = Reader.new("#{OUTPUT_FOLDER}/exception_with_block.wav")
-    assert_equal(samples.size, reader.sample_frames_remaining)
+    assert_equal(samples.size, reader.total_sample_frames)
   end
 
 private
