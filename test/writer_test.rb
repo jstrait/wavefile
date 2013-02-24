@@ -178,8 +178,16 @@ class WriterTest < Test::Unit::TestCase
 private
 
   def read_file(type, file_name)
+    if type == :expected
+      fixture_folder = 'valid'
+    elsif type == :actual
+      fixture_folder = 'actual_output'
+    else
+      raise 'Invalid fixture type'
+    end
+
     # For Windows compatibility with binary files, File.read is not directly used
-    return File.open("test/fixtures/#{type}_output/#{file_name}", "rb") {|f| f.read }
+    File.open("test/fixtures/#{fixture_folder}/#{file_name}", "rb") {|f| f.read }
   end
 
   def clean_output_folder
