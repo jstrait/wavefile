@@ -22,14 +22,14 @@ This is a short example that shows how to append three separate Wave files into 
 More examples can be [found on the wiki](https://github.com/jstrait/wavefile/wiki).
 
 
-# Next Release (Updated Feb 18, 2013): v0.5.0
+# Next Release (Updated Feb 23, 2013): v0.5.0
 
 Work is in progress on the next release, v0.5.0. The current plan (could change):
 
 * Support for reading and writing Wave files containing 32 and 64-bit floating point sample data.
 * Support for buffers that contain floating point data (i.e., samples between -1.0 and 1.0), including the ability to convert to and from PCM buffers.
-* New attributes: `Writer.sample_frames_written`, `Reader.sample_frames_read`, and `Reader.sample_frames_remaining`.
-* Ability to get these attibutes as a `Duration` object as well: `Writer.duration_written`, `Reader.duration_read`, and `Reader.duration_remaining`.
+* New attributes: `Writer.sample_frames_written`, `Reader.current_sample_frame`, and `Reader.total_sample_frames`.
+* Ability to get these attibutes as a `Duration` object as well: `Writer.duration_written`, `Reader.total_duration`.
 * Bug fix: Wave files are no longer corrupted when an unhandled exception occurs inside a `Writer` block. (Thanks to [James Tunnell](https://github.com/jamestunnell) for finding and fixing this).
 * Bug fix: `Writer.file_name` now returns the file name, instead of always returning nil (Thanks to [James Tunnell](https://github.com/jamestunnell) for reporting this).
 
