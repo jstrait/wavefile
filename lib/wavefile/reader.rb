@@ -26,9 +26,9 @@ module WaveFile
       @file_name = file_name
       @file = File.open(file_name, "rb")
 
-      raw_format_chunk, sample_count = HeaderReader.new(@file, @file_name).read_until_data_chunk
+      raw_format_chunk, sample_frame_count = HeaderReader.new(@file, @file_name).read_until_data_chunk
       @current_sample_frame = 0
-      @total_sample_frames = sample_count
+      @total_sample_frames = sample_frame_count
 
       # Make file is in a format we can actually read
       validate_format_chunk(raw_format_chunk)
@@ -64,10 +64,10 @@ module WaveFile
     #                           that WaveFile can't read.
     def self.info(file_name)
       file = File.open(file_name, "rb")
-      raw_format_chunk, sample_count = HeaderReader.new(file, file_name).read_until_data_chunk
+      raw_format_chunk, sample_frame_count = HeaderReader.new(file, file_name).read_until_data_chunk
       file.close
 
-      Info.new(file_name, raw_format_chunk, sample_count)
+      Info.new(file_name, raw_format_chunk, sample_frame_count)
     end
 
 
@@ -249,9 +249,9 @@ module WaveFile
         raise_error InvalidFormatError, "The format chunk is either missing, or it comes after the data chunk."
       end
 
-      sample_count = chunk_size / format_chunk[:block_align]
+      sample_frame_count = chunk_size / format_chunk[:block_align]
 
-      return format_chunk, sample_count
+      return format_chunk, sample_frame_count
     end
 
   private
