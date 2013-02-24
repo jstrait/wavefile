@@ -11,7 +11,7 @@ This is a short example that shows how to append three separate Wave files into 
     FILES_TO_APPEND = ["file1.wav", "file2.wav", "file3.wav"]
     SAMPLES_PER_BUFFER = 4096
 
-    Writer.new("append.wav", Format.new(:stereo, 16, 44100) do |writer|
+    Writer.new("append.wav", Format.new(:stereo, 16, 44100)) do |writer|
       FILES_TO_APPEND.each do |file_name|
         Reader.new(file_name).each_buffer(SAMPLES_PER_BUFFER) do |buffer|
           writer.write(buffer)
@@ -28,8 +28,10 @@ Work is in progress on the next release, v0.5.0. The current plan (could change)
 
 * Support for reading and writing Wave files containing 32 and 64-bit floating point sample data.
 * Support for buffers that contain floating point data (i.e., samples between -1.0 and 1.0), including the ability to convert to and from PCM buffers.
+* A new `Duration` object which can be used to calculate the playback time given a sample rate and number of sample frames.
+* Ability to get these attributes as a `Duration` object as well: `Writer.duration_written`, `Reader.total_duration`.
 * New attributes: `Writer.sample_frames_written`, `Reader.current_sample_frame`, and `Reader.total_sample_frames`.
-* Ability to get these attibutes as a `Duration` object as well: `Writer.duration_written`, `Reader.total_duration`.
+* The 2nd argument to `Format.new` is now indicates the sample format, not the bits per sample. For example, `:pcm_16` or `:float_32` instead of `8` or `16`. For backwards compatibility, `8`, `16`, and `32` can still be given and will be interpreted as `:pcm_8`, `:pcm_16`, and `:pcm_32`, but this support might be removed in the future.
 * Bug fix: Wave files are no longer corrupted when an unhandled exception occurs inside a `Writer` block. (Thanks to [James Tunnell](https://github.com/jamestunnell) for finding and fixing this).
 * Bug fix: `Writer.file_name` now returns the file name, instead of always returning nil (Thanks to [James Tunnell](https://github.com/jamestunnell) for reporting this).
 
@@ -37,7 +39,7 @@ This release will include changes that are not backwards compatible with v0.4.0.
 
 * `Info.duration` now returns a `Duration` object, instead of a hash.
 * `Info.sample_count` has been renamed `sample_frame_count`.
-
+* Some constants in the `WaveFile` module have changed. (In general, you should probably treat these as internal to this gem and not use them in your own program).
 
 # Current Release: v0.4.0
 
