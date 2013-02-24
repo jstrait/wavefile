@@ -26,6 +26,7 @@ class FormatTest < Test::Unit::TestCase
     assert_equal(:pcm, Format.new(:mono, :pcm_8, 44100).sample_format)
     assert_equal(:pcm, Format.new(:mono, :pcm_16, 44100).sample_format)
     assert_equal(:pcm, Format.new(:mono, :pcm_32, 44100).sample_format)
+    assert_equal(:float, Format.new(:mono, :float, 44100).sample_format)
     assert_equal(:float, Format.new(:mono, :float_32, 44100).sample_format)
     assert_equal(:float, Format.new(:mono, :float_64, 44100).sample_format)
   end
@@ -43,6 +44,7 @@ class FormatTest < Test::Unit::TestCase
     assert_equal(8, Format.new(:mono, :pcm_8, 44100).bits_per_sample)
     assert_equal(16, Format.new(:mono, :pcm_16, 44100).bits_per_sample)
     assert_equal(32, Format.new(:mono, :pcm_32, 44100).bits_per_sample)
+    assert_equal(32, Format.new(:mono, :float, 44100).bits_per_sample)
     assert_equal(32, Format.new(:mono, :float_32, 44100).bits_per_sample)
     assert_equal(64, Format.new(:mono, :float_64, 44100).bits_per_sample)
   end
@@ -79,7 +81,7 @@ class FormatTest < Test::Unit::TestCase
         assert_equal(2, format.block_align)
       end
 
-      [:pcm_32, 32, :float_32].each do |format_code|
+      [:pcm_32, 32, :float, :float_32].each do |format_code|
         format = Format.new(one_channel, format_code, 44100)
         assert_equal(176400, format.byte_rate)
         assert_equal(4, format.block_align)
@@ -103,7 +105,7 @@ class FormatTest < Test::Unit::TestCase
         assert_equal(4, format.block_align)
       end
 
-      [:pcm_32, 32, :float_32].each do |format_code|
+      [:pcm_32, 32, :float, :float_32].each do |format_code|
         format = Format.new(two_channels, format_code, 44100)
         assert_equal(352800, format.byte_rate)
         assert_equal(8, format.block_align)
