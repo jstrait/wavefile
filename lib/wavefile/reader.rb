@@ -38,12 +38,7 @@ module WaveFile
                                   native_sample_format,
                                   raw_format_chunk[:sample_rate])
       @pack_code = PACK_CODES[@native_format.sample_format][@native_format.bits_per_sample]
-
-      if format == nil
-        @format = @native_format
-      else
-        @format = format
-      end
+      @format = (format == nil) ? @native_format : format
 
       if block_given?
         yield(self)
