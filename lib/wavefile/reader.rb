@@ -41,8 +41,11 @@ module WaveFile
       @format = (format == nil) ? @native_format : format
 
       if block_given?
-        yield(self)
-        close
+        begin
+          yield(self)
+        ensure
+          close
+        end
       end
     end
 
