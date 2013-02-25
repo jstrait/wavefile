@@ -11,7 +11,7 @@ This is a short example that shows how to append three separate Wave files into 
     FILES_TO_APPEND = ["file1.wav", "file2.wav", "file3.wav"]
     SAMPLES_PER_BUFFER = 4096
 
-    Writer.new("append.wav", Format.new(:stereo, 16, 44100)) do |writer|
+    Writer.new("append.wav", Format.new(:stereo, :pcm_16, 44100)) do |writer|
       FILES_TO_APPEND.each do |file_name|
         Reader.new(file_name).each_buffer(SAMPLES_PER_BUFFER) do |buffer|
           writer.write(buffer)
@@ -22,41 +22,46 @@ This is a short example that shows how to append three separate Wave files into 
 More examples can be [found on the wiki](https://github.com/jstrait/wavefile/wiki).
 
 
-# Next Release (Updated Feb 23, 2013): v0.5.0
+# Features
 
-Work is in progress on the next release, v0.5.0. The current plan (could change):
+* Ability to read and write Wave files with any number of channels in the following formats:
+  * PCM (8, 16, and 32 bits per sample)
+  * Floating Point (32 and 64 bits per sample)
+* Ability to read sample data from a file in any of the supported formats, regardless of the file's actual sample format
+
+            # Sample data will be returned as 32-bit floating point samples,
+            # regardless of the actual sample format in the file.
+            Reader.new("some_file.wav", Format.new(:mono, :float_32, 44100))
+
+* Automatic file management, similar to how `IO.open` works. That is, you can open a file for reading or writing, and if a block is given, the file will automatically be closed when the block exits.
+
+        Writer.new("some_file.wav", Format.new(:mono, :pcm_16, 44100) do |writer|
+          # write some sample data
+        end
+        # At this point, the writer will automatically be closed, no need to do it manually
+
+* Ability to query metadata about Wave files (sample rate, number of channels, number of sample frames, etc.), including files that are in a format this gem can't read or write.
+* Pure Ruby, so no need to compile a separate extension in order to use it.
+
+
+# Current Release: v0.5.0
+
+This release includes these improvements:
 
 * Support for reading and writing Wave files containing 32 and 64-bit floating point sample data.
 * Support for buffers that contain floating point data (i.e., samples between -1.0 and 1.0), including the ability to convert to and from PCM buffers.
 * A new `Duration` object which can be used to calculate the playback time given a sample rate and number of sample frames.
-* Ability to get these attributes as a `Duration` object as well: `Writer.duration_written`, `Reader.total_duration`.
-* New attributes: `Writer.sample_frames_written`, `Reader.current_sample_frame`, and `Reader.total_sample_frames`.
-* The 2nd argument to `Format.new` is now indicates the sample format, not the bits per sample. For example, `:pcm_16` or `:float_32` instead of `8` or `16`. For backwards compatibility, `8`, `16`, and `32` can still be given and will be interpreted as `:pcm_8`, `:pcm_16`, and `:pcm_32`, but this support might be removed in the future.
-* Bug fix: Wave files are no longer corrupted when an unhandled exception occurs inside a `Writer` block. (Thanks to [James Tunnell](https://github.com/jamestunnell) for finding and fixing this).
+* New attributes: `Reader.current_sample_frame`, `Reader.total_sample_frames`, and `Writer.total_sample_frames`.
+* Ability to get these attributes as a `Duration` object as well: `Reader.total_duration`, `Writer.duration_written`.
+* The 2nd argument to `Format.new` now indicates the sample format, not the bits per sample. For example, `:pcm_16` or `:float_32` instead of `8` or `16`. For backwards compatibility, `8`, `16`, and `32` can still be given and will be interpreted as `:pcm_8`, `:pcm_16`, and `:pcm_32`, but this support might be removed in the future.
+* Bug fix: Wave files are no longer corrupted when an unhandled exception occurs inside a `Writer` block. (Thanks to [James Tunnell](https://github.com/jamestunnell) for reporting and fixing this).
 * Bug fix: `Writer.file_name` now returns the file name, instead of always returning nil (Thanks to [James Tunnell](https://github.com/jamestunnell) for reporting this).
 
-This release will include changes that are not backwards compatible with v0.4.0. (Until version v1.0, no guarantees to avoid this will be made, but I'll try to have a good reason before doing so).
+This release also includes changes that are not backwards compatible with v0.4.0. (Until version v1.0, no guarantees to avoid this will be made, but I'll try to have a good reason before doing so).
 
 * `Info.duration` now returns a `Duration` object, instead of a hash.
 * `Info.sample_count` has been renamed `sample_frame_count`.
 * Some constants in the `WaveFile` module have changed. (In general, you should probably treat these as internal to this gem and not use them in your own program).
-
-# Current Release: v0.4.0
-
-This version is a re-write with a completely new, much improved API. (The old API has been removed). Some improvements due to the new API include:
-
-* Reduced memory consumption, due to not having to load the entire file into memory. In practice, this allows the gem to read/write files that previously would have been prohibitively large.
-* Better performance for large files, for the same reason as above.
-* Ability to progressively append data to the end of a file, instead of writing the entire file at once.
-* Ability to easily read and write data in an arbitrary format, regardless of the file's native format. For example, you can transparently read data out of a 16-bit stereo file as 8-bit mono.
-* Automatic file management, similar to how IO.open() works. It's easy to continually read the sample data from a file, passing each buffer to a block, and have the file automatically close when there is no more data left.
-
-Other improvements include:
-
-* Ability to query format metadata of files without opening them, even for formats that this gem can't read or write.
-* Support for reading and writing 32-bit PCM files.
-
-However, reading or writing data as floating point (i.e. values between -1.0 and 1.0) won't be supported in v0.4.0 to keep the scope in check. It might be re-added in the future.
 
 
 # Compatibility
