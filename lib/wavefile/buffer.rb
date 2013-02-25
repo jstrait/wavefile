@@ -148,11 +148,11 @@ module WaveFile
 
     def convert_sample_format_float_to_pcm(samples, old_bits_per_sample, new_bits_per_sample)
       if new_bits_per_sample == 8
-        convert_sample_format_helper(samples) {|sample| (sample * 127.0).to_i + 128 }
+        convert_sample_format_helper(samples) {|sample| (sample * 127.0).round + 128 }
       elsif new_bits_per_sample == 16
-        convert_sample_format_helper(samples) {|sample| (sample * 32767.0).to_i }
+        convert_sample_format_helper(samples) {|sample| (sample * 32767.0).round }
       elsif new_bits_per_sample == 32
-        convert_sample_format_helper(samples) {|sample| (sample * 2147483647.0).to_i }
+        convert_sample_format_helper(samples) {|sample| (sample * 2147483647.0).round }
       end
     end
 
