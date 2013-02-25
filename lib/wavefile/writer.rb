@@ -35,7 +35,7 @@ module WaveFile
       @file = File.open(file_name, "wb")
       @format = format
 
-      @sample_frames_written = 0
+      @total_sample_frames = 0
       @pack_code = PACK_CODES[format.sample_format][format.bits_per_sample]
 
       # Note that the correct sizes for the RIFF and data chunks can't be determined
@@ -61,7 +61,7 @@ module WaveFile
       samples = buffer.convert(@format).samples
 
       @file.syswrite(samples.flatten.pack(@pack_code))
-      @sample_frames_written += samples.length
+      @total_sample_frames += samples.length
     end
 
 
@@ -87,7 +87,7 @@ module WaveFile
       # written, write an empty padding byte.
       #
       # See http://www-mmsp.ece.mcgill.ca/Documents/AudioFormats/WAVE/Docs/riffmci.pdf, page 11.
-      bytes_written = @sample_frames_written * @format.block_align
+      bytes_written = @total_sample_frames * @format.block_align
       if bytes_written.odd?
         @file.syswrite(EMPTY_BYTE)
       end
@@ -96,14 +96,14 @@ module WaveFile
       # samples have been written, so go back to the beginning of the file and re-write
       # those chunk headers with the correct sizes.
       @file.sysseek(0)
-      write_header(@sample_frames_written)
+      write_header(@total_sample_frames)
 
       @file.close
     end
 
     # Returns a Duration instance for the number of sample frames that have been written so far
-    def duration_written
-      Duration.new(@sample_frames_written, @format.sample_rate)
+    def total_duration
+      Duration.new(@total_sample_frames, @format.sample_rate)
     end
 
     # Returns the name of the Wave file that is being written to
@@ -116,7 +116,7 @@ module WaveFile
     # Returns the number of samples (per channel) that have been written to the file so far.
     # For example, if 1000 "left" samples and 1000 "right" samples have been written to a stereo file,
     # this will return 1000.
-    attr_reader :sample_frames_written
+    attr_reader :total_sample_frames
 
   private
 

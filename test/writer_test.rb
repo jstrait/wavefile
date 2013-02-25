@@ -106,14 +106,14 @@ class WriterTest < Test::Unit::TestCase
     assert_raise(IOError) { writer.write(Buffer.new([5, 6, 7, 8], format)) }
   end
 
-  def test_duration_written
+  def test_total_duration
     exhaustively_test do |channels, sample_format|
       format = Format.new(CHANNEL_ALIAS[channels], sample_format, 44100)
 
-      writer = Writer.new("#{OUTPUT_FOLDER}/duration_written_#{channels}_#{sample_format}_44100.wav", format)
+      writer = Writer.new("#{OUTPUT_FOLDER}/total_duration_#{channels}_#{sample_format}_44100.wav", format)
 
-      assert_equal(0, writer.sample_frames_written)
-      duration = writer.duration_written
+      assert_equal(0, writer.total_sample_frames)
+      duration = writer.total_duration
       assert_equal(0, duration.sample_frame_count)
       assert_equal(44100, duration.sample_rate)
       assert_equal(0, duration.hours)
@@ -123,8 +123,8 @@ class WriterTest < Test::Unit::TestCase
 
       writer.write(Buffer.new(SQUARE_WAVE_CYCLE[channels][sample_format] * 2756, format))
 
-      assert_equal(8 * 2756, writer.sample_frames_written)
-      duration = writer.duration_written
+      assert_equal(8 * 2756, writer.total_sample_frames)
+      duration = writer.total_duration
       assert_equal(8 * 2756, duration.sample_frame_count)
       assert_equal(44100, duration.sample_rate)
       assert_equal(0, duration.hours)
@@ -135,8 +135,8 @@ class WriterTest < Test::Unit::TestCase
       writer.write(Buffer.new(SQUARE_WAVE_CYCLE[channels][sample_format] * 2756, format))
       writer.write(Buffer.new(SQUARE_WAVE_CYCLE[channels][sample_format] * 2756, format))
 
-      assert_equal(8 * 2756 * 3, writer.sample_frames_written)
-      duration = writer.duration_written
+      assert_equal(8 * 2756 * 3, writer.total_sample_frames)
+      duration = writer.total_duration
       assert_equal(8 * 2756 * 3, duration.sample_frame_count)
       assert_equal(44100, duration.sample_rate)
       assert_equal(0, duration.hours)
@@ -146,8 +146,8 @@ class WriterTest < Test::Unit::TestCase
 
       writer.close
 
-      assert_equal(8 * 2756 * 3, writer.sample_frames_written)
-      duration = writer.duration_written
+      assert_equal(8 * 2756 * 3, writer.total_sample_frames)
+      duration = writer.total_duration
       assert_equal(8 * 2756 * 3, duration.sample_frame_count)
       assert_equal(44100, duration.sample_rate)
       assert_equal(0, duration.hours)
