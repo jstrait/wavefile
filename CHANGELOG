@@ -1,13 +1,27 @@
 0.5.0
 ===============================================================================
-* Added support for reading and writing Wave files containing 32 and 64-bit floating point sample data.
-* Added support for buffers that contain floating point data (i.e., samples between -1.0 and 1.0), including the ability to convert to and from PCM buffers.
-* Added a new Duration object which can be used to calculate the playback time given a sample rate and number of sample frames.
-* New attributes: Reader.current_sample_frame, Reader.total_sample_frames, and Writer.total_sample_frames.
-* Ability to get these attributes as a Duration object as well: Reader.total_duration, Writer.total_duration.
-* The 2nd argument to Format.new now indicates the sample format, not the bits per sample. For example, :pcm_16 or :float_32 instead of 8 or 16. For backwards compatibility, 8, 16, and 32 can still be given and will be interpreted as :pcm_8, :pcm_16, and :pcm_32, but this support might be removed in the future.
-* Bug fix: Wave files are no longer corrupted when an unhandled exception occurs inside a Writer block. (Thanks to James Tunnell (https://github.com/jamestunnell) for reporting and fixing this).
-* Bug fix: Writer.file_name now returns the file name, instead of always returning nil (Thanks to James Tunnell (https://github.com/jamestunnell) for reporting this).
+* Added support for reading and writing Wave files containing 32 and 64-bit
+  floating point sample data.
+* Added support for buffers that contain floating point data (i.e., samples
+  between -1.0 and 1.0), including the ability to convert to and from
+  PCM buffers.
+* Added a new Duration object which can be used to calculate the playback
+  time given a sample rate and number of sample frames.
+* New attributes: Reader.current_sample_frame, Reader.total_sample_frames,
+  and Writer.total_sample_frames.
+* Ability to get these attributes as a Duration object as well:
+  Reader.total_duration, Writer.total_duration.
+* The 2nd argument to Format.new now indicates the sample format, not the
+  bits per sample. For example, :pcm_16 or :float_32 instead of 8 or 16.
+  For backwards compatibility, 8, 16, and 32 can still be given and will be
+  interpreted as :pcm_8, :pcm_16, and :pcm_32, but this support might be
+  removed in the future.
+* Bug fix: Wave files are no longer corrupted when an unhandled exception
+  occurs inside a Writer block. (Thanks to James Tunnell
+  (https://github.com/jamestunnell) for reporting and fixing this).
+* Bug fix: Writer.file_name now returns the file name, instead of always
+  returning nil (Thanks to James Tunnell (https://github.com/jamestunnell)
+  for reporting this).
 * Info.duration now returns a Duration object, instead of a hash.
 * Info.sample_count has been renamed sample_frame_count.
 
