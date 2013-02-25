@@ -1,4 +1,6 @@
-A pure Ruby gem for reading and writing sound files in Wave format (*.wav). You can use this gem to create Ruby programs that produce audio, such as [drum machine](http://beatsdrummachine.com). Since it is written in pure Ruby (as opposed to wrapping an existing C library), you can use it without having to compile a separate extension.
+A pure Ruby gem for reading and writing sound files in Wave format (*.wav).
+
+You can use this gem to create Ruby programs that produce audio, such as [drum machine](http://beatsdrummachine.com). Since it is written in pure Ruby (as opposed to wrapping an existing C library), you can use it without having to compile a separate extension.
 
 
 # Example Usage
@@ -35,7 +37,7 @@ More examples can be [found on the wiki](https://github.com/jstrait/wavefile/wik
 
 * Automatic file management, similar to how `IO.open` works. That is, you can open a file for reading or writing, and if a block is given, the file will automatically be closed when the block exits.
 
-        Writer.new("some_file.wav", Format.new(:mono, :pcm_16, 44100) do |writer|
+        Writer.new("some_file.wav", Format.new(:mono, :pcm_16, 44100)) do |writer|
           # write some sample data
         end
         # At this point, the writer will automatically be closed, no need to do it manually
@@ -52,7 +54,7 @@ This release includes these improvements:
 * Support for buffers that contain floating point data (i.e., samples between -1.0 and 1.0), including the ability to convert to and from PCM buffers.
 * A new `Duration` object which can be used to calculate the playback time given a sample rate and number of sample frames.
 * New attributes: `Reader.current_sample_frame`, `Reader.total_sample_frames`, and `Writer.total_sample_frames`.
-* Ability to get these attributes as a `Duration` object as well: `Reader.total_duration`, `Writer.duration_written`.
+* Ability to get these attributes as a `Duration` object as well: `Reader.total_duration`, `Writer.total_duration`.
 * The 2nd argument to `Format.new` now indicates the sample format, not the bits per sample. For example, `:pcm_16` or `:float_32` instead of `8` or `16`. For backwards compatibility, `8`, `16`, and `32` can still be given and will be interpreted as `:pcm_8`, `:pcm_16`, and `:pcm_32`, but this support might be removed in the future.
 * Bug fix: Wave files are no longer corrupted when an unhandled exception occurs inside a `Writer` block. (Thanks to [James Tunnell](https://github.com/jamestunnell) for reporting and fixing this).
 * Bug fix: `Writer.file_name` now returns the file name, instead of always returning nil (Thanks to [James Tunnell](https://github.com/jamestunnell) for reporting this).
@@ -61,7 +63,7 @@ This release also includes changes that are not backwards compatible with v0.4.0
 
 * `Info.duration` now returns a `Duration` object, instead of a hash.
 * `Info.sample_count` has been renamed `sample_frame_count`.
-* Some constants in the `WaveFile` module have changed. (In general, you should probably treat these as internal to this gem and not use them in your own program).
+* Some constants in the `WaveFile` module have changed. (In general, you should treat these as internal to this gem and not use them in your own program).
 
 
 # Compatibility
