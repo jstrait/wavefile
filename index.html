@@ -1,7 +1,46 @@
 <html>
-<head><title>WaveFile Gem</title>
+<head>
+  <title>WaveFile Gem</title>
+  <link rel="stylesheet" type="text/css" href="wavefile.css">
+</head>
 <body>
-<h1>WaveFile Gem</h1>
-<p>Welcome to the future home of the WaveFile gem</p>
+<div id="container">
+  <h1>WaveFile Gem</h1>
+  <p id="tagline">Read and write *.wav sound files in pure Ruby.</p>
+  <div id="example">
+    <h2>For Example</h2>
+  <pre><code>
+require 'wavefile'
+include WaveFile
+
+format = Format.new(:mono, :pcm_16, 44100)
+writer = Writer.new("my_file.wav", format)
+
+# Write a 1 second long 440Hz square wave
+cycle = ([0.5] * 50) + ([-0.5] * 50)
+buffer = Buffer.new(cycle, Format.new(:mono, :float, 44100))
+220.times do
+  writer.write(buffer)
+end
+
+writer.close()</pre></code>
+  </div>
+  <div id="installation">
+    <h2>Installation</h2>
+    <p>First, install the WaveFile gem from rubygems.org:<p>
+
+    <pre><code>gem install wavefile</code></pre>
+
+    <p>...and include it in your Ruby program:</p>
+
+    <pre><code>require 'wavefile'</code></pre>
+
+    <p>Note that if you're installing the gem into the default Ruby that comes pre-installed on MacOS (as opposed to a Ruby installed via <a href="http://beginrescueend.com">RVM</a> or <a href="https://github.com/sstephenson/rbenv/">rbenv</a>, you should used <code>sudo gem install wavefile</code>. Otherwise you might run into a file permission error.</p>
+  </div>
+  <div id="credits">
+    <h2>Who Made This?</h2>
+    <p><a href="http://www.joelstrait.com">Joel Strait</a>. Copyright &copy; 2009-13.</p>
+  </div>
+</div>
 </body>
 </html>
