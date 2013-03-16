@@ -41,3 +41,11 @@ code {
   line-height: 2.0em;
   font-family: menlo, courier, monospace;
 }
+
+span.label {
+  font-weight: bold;
+}
+
+th {
+  text-align: left;
+}
