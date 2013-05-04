@@ -1,12 +1,13 @@
 body {
   margin: 0px;
-  font-size: 16px;
+  font-size: 20px;
   line-height: 1.5em;
   font-family: "Helvetica Neue", Helvetica, arial, sans-serif;
+  font-weight: 300;
 }
 
 div#container {
-  border-top: 8px solid black;
+  /*border-top: 8px solid black;*/
   margin-top: 3.0em;
   margin-bottom: 6.0em;
   margin-left: auto;
@@ -26,7 +27,7 @@ p#tagline {
 }
 
 div {
-  border-top: 4px solid black;
+  /*border-top: 4px solid black;*/
   margin-top: 3.0em;
 }
 
