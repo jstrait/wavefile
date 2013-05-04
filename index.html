@@ -13,17 +13,12 @@
 require 'wavefile'
 include WaveFile
 
-format = Format.new(:mono, :pcm_16, 44100)
-writer = Writer.new("my_file.wav", format)
-
 # Write a 1 second long 440Hz square wave
 cycle = ([0.5] * 50) + ([-0.5] * 50)
 buffer = Buffer.new(cycle, Format.new(:mono, :float, 44100))
-220.times do
-  writer.write(buffer)
-end
-
-writer.close()</pre></code>
+Writer.new("my_file.wav", Format.new(:mono, :pcm_16, 44100)) do |writer|
+  220.times { writer.write(buffer) }
+end</pre></code>
   </div>
   <div id="installation">
     <h2>Installation</h2>
