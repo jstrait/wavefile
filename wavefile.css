@@ -8,24 +8,12 @@ body {
 
 div#container {
   /*border-top: 8px solid black;*/
-  margin-top: 3.0em;
+  margin-top: 1.5em;
   margin-bottom: 6.0em;
   margin-left: auto;
   margin-right: auto;
   max-width: 744px;
   background: white;
-}
-
-ul#navigation {
-  width: 100%;
-  margin: 0.0em;
-  padding: 0.0em;
-  overflow: auto;
-}
-
-ul#navigation li {
-  list-style-type: none;
-  float: left;
 }
 
 h1 {
@@ -35,8 +23,30 @@ h1 {
 }
 
 p#tagline {
-  margin-top: 0.0em;
+  margin: 0.0em;
 }
+
+ul#navigation {
+  width: 100%;
+  margin: 0.0em 0.0em 1.5em 0.0em;
+  padding: 0.0em;
+  overflow: auto;
+  border-top: 4px solid black;
+}
+
+ul#navigation li {
+  list-style-type: none;
+  float: left;
+}
+
+ul#navigation li a {
+  color: #000;
+}
+
+ul#navigation li a:hover {
+  color: #f00;
+}
+
 
 div {
   /*border-top: 4px solid black;*/
