@@ -16,6 +16,18 @@ div#container {
   background: white;
 }
 
+ul#navigation {
+  width: 100%;
+  margin: 0.0em;
+  padding: 0.0em;
+  overflow: auto;
+}
+
+ul#navigation li {
+  list-style-type: none;
+  float: left;
+}
+
 h1 {
   font-size: 4.0em;
   line-height: 1.0em;
