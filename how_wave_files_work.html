@@ -18,7 +18,7 @@
   <h2>How Wave Files Work</h2>
   <p id="tagline">Classified Until Just Recently</p>
   <div id="intro">
-    <h2>Wave Files Store Audio Data</h2>
+    <h3>Wave Files Store Audio Data</h3>
     <p>Wave files store audio data, encoded using one of several sample formats. Some sample formats contain raw, uncompressed data, while some formats (e.g. &mu;-law) are compressed. The most common sample format is <em>PCM</em>, which stands for <em>pulse code modulation</em>. This is raw, uncompressed sample data where each sample is an integer.</p>
     <p>Currently, the WaveFile gem supports these sample formats:</p>
     <ul>
@@ -28,12 +28,12 @@
     <p>For more info on what all this talk of sampling and digital audio means, check out <a href="http://www.joelstrait.com/blog/2009/10/12/a_digital_audio_primer">this blog post</a>. </p>
   </div>
   <div id="riff">
-    <h2>Wave Files are RIFF Files</h2>
+    <h3>Wave Files are RIFF Files</h3>
     <p>Back in the late 80s Electronic Arts came up with a general container file format that could be used to store different types of data &ndash; audio, graphics, etc. It was called <em>IFF</em>, for <em>Interchange File Format</em>. Microsoft then took this format, switched the byte order to little endian to match Intel processors, and dubbed it <em>RIFF (Resource Interchange File Format</em>). Many of the venerable Microsoft multimedia file formats are stored as RIFF files, including *.rtf (&ldquo;rich text format&rdquo;, a WYSIWYG text format), *.avi (a basically obsolete movie format), and of course, *.wav.</p>
     <p>As mentioned above, all data in a RIFF file is stored as little-endian, owing to its Wintel heritage.</p>
   </div>
   <div id="chunks">
-    <h2>RIFF Files Contain &ldquo;Chunks&rdquo;</h2>
+    <h3>RIFF Files Contain &ldquo;Chunks&rdquo;</h3>
     <p>A RIFF file is broken up into several &ldquo;chunks&rdquo; of data. Each chunk has an 8-byte header containing a 4-byte identifier code, and a 4-byte size field. The identifier code (also known as a FourCC) is typically a more-or-less human-readable ASCII string, such as &ldquo;<code>wave</code>&rdquo;, &ldquo;<code>fmt </code>&rdquo;, or &ldquo;<code>data</code>&rdquo;. (Note that this code is case-sensitive). The size field does not include the 8-bytes in the header. I.e., if a chunk consists of the header plus 1,000 bytes of data, the size field will indicate 1,000, not 1,008. Chunks can internally contain nested sub-chunks, if the spec for that chunk allows it.</p>
     <p>A Wave file consists of two levels of nested chunks. At the top level, it consists of a single &ldquo;<code>RIFF</code>&rdquo; chunk, which contains all of the data for the wave file. The RIFF chunk includes a format code &ldquo;<code>WAVE</code>&rdquo; which indicates that the sub-chunks are for a Wave file. Internally, the &ldquo;<code>RIFF</code>&rdquo; chunk includes at minimum a format chunk (&ldquo;<code>fmt </code>&rdquo;) and a data chunk (&ldquo;<code>data</code>&rdquo;). As the name suggests, the format chunk describes the, well, format of the wave file. The data chunk contains all of the raw sample data. A wave file might also contain other optional chunks, but it must include a format and data chunk, and the format chunk must come first.</p>
     <p>Got all that? Visually this is what it looks like:</p>
@@ -45,7 +45,7 @@
     </div>
   </div>
   <div id="riff-chunk">
-    <h2>The RIFF Chunk</h2>
+    <h3>The RIFF Chunk</h3>
     <p>Like all chunks, the RIFF chunk starts with an ID code, in this case the ASCII string &ldquo;<code>RIFF</code>&rdquo;. Next is the size field, which is the size of the entire Wave file except for the 8-byte RIFF header.</p>
     <p>The first 4 bytes following the header will identify the type of RIFF chunk. In the case of Wave files, it will be &ldquo;<code>WAVE</code>&rdquo;. Immediately following that will be the inner Wave file chunks.</p>
     <table>
@@ -78,7 +78,7 @@
     <p></p>
   </div>
   <div id="format-chunk">
-    <h2>The Format Chunk (Basic Version)</h2>
+    <h3>The Format Chunk (Basic Version)</h3>
     <table>
       <tr>
         <th>Field</th>
@@ -171,11 +171,11 @@
     <p><span class="label">Bits per sample</span> &ndash; For PCM data, typical values will be 8, 16, or 32. I'm not sure why this is a two-byte field in the spec, since any values over 255 would seem pretty excessive. TODO: Do other non-PCM formats take advantage of it being two bytes?</p>
   </div>
    <div id="format-chunk">
-    <h2>The Format Chunk (More Exact Version)</h2>
+    <h3>The Format Chunk (More Exact Version)</h3>
     <p>OK, so I simplified some things a bit. That last section described the format chunk when the sample format is PCM. The full format chunk spec is actually a bit more complicated when the sample format is something else.</p>
   </div>
   <div id="data-chunk">
-    <h2>The Data Chunk</h2>
+    <h3>The Data Chunk</h3>
     <p>The layout for the data chunk is simpler than the format chunk: the normal 8-byte chunk header, followed by nothing but sweet, raw, unfiltered sample data. The sample data can be stored in a number of formats, which will be indicated by the format chunk.</p>
     <h3>PCM</h3>
     <p>The simplest, and most common, is to store PCM samples (format code 1). This is just raw sample data stored as integers. The bits per sample field will indicate the range of the sample data:</p>
@@ -217,7 +217,7 @@
     <p>According to the RIFF spec*, chunk sizes must be an even number of bytes. So for example if writing a monophonic file with an odd number of samples, you should append a blank* byte to the end of the data chunk to get it to an even size. TODO: How will this be interpreted as audio?</p>
   </div>
   <div id="references">
-    <h2>References</h2>
+    <h3>References</h3>
     <ul>
       <li><a href="http://www-mmsp.ece.mcgill.ca/Documents/AudioFormats/WAVE/Docs/riffmci.pdf">Multimedia Programming Interface
 and Data Specifications 1.0, August 1991</a></li>
