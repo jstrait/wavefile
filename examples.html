@@ -3,20 +3,24 @@
 <head>
   <title>WaveFile Gem</title>
   <meta charset="utf-8">
+  <link href='http://fonts.googleapis.com/css?family=Lato:100,400' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=PT+Mono">
   <link rel="stylesheet" type="text/css" href="wavefile.css">
 </head>
 <body>
-<div id="container">
-  <h1>WaveFile Gem</h1>
+<div id="header">
+  <div class="container">
+  <h1><a href="/wavefile">WaveFile Gem</a></h1>
   <p id="tagline">Read and write *.wav sound files in pure Ruby.</p>
   <ul id="navigation">
-    <li><a href="/wavefile">Home</a>&nbsp;&ndash;&nbsp;</li>
     <li><a href="examples.html">Examples</a>&nbsp;&ndash;&nbsp;</li>
     <li><a href="documentation.html">Documentation</a>&nbsp;&ndash;&nbsp;</li>
     <li><a href="how_wave_files_work.html">How Wave Files Work</a></li>
   </ul>
-  <h2>WaveFile Gem Examples</h2>
-  <h3>Reading a Wave File With a Block (Automatic File Closing Edition)</h3>
+  </div>
+</div>
+<div class="container">
+  <h2>Reading a Wave File With a Block (Automatic File Closing Edition)</h2>
 
 <p>The example below shows the preferred way of reading an entire wave file:</p>
 
@@ -34,7 +38,7 @@ end
 
 <p>Note that when calling <code>each_buffer()</code> (and <code>read()</code>), the number you pass indicates the number of samples to read for <strong><em>each channel</em></strong>. That is, if you call <code>each_buffer(1024)</code> on a stereo/16-bit file, then the returned buffer will contain 1024 samples for the left channel, and 1024 samples for the right channel.</p>
 
-<h3>Reading a Wave File (Manual File Closing Edition)</h3>
+<h2>Reading a Wave File (Manual File Closing Edition)</h2>
 
 <p>Alternately, you can manually call <code>read()</code> to control exactly how much of the file to read. When doing this, make sure to close the <code>Reader</code> when you're done.</p>
 
@@ -54,7 +58,7 @@ rescue EOFError
 end
 </code></pre>
 
-<h3>Reading a Wave File Into an Arbitrary Format</h3>
+<h2>Reading a Wave File Into an Arbitrary Format</h2>
 
 <p>It's easy to read sample data out of a file in whatever format you need, regardless of what format is used inside the file. For example, suppose that <code>my_file.wav</code> is stereo/16-bit, but you need mono normalized floating point samples. No problem, as shown below.</p>
 
@@ -71,7 +75,7 @@ reader = Reader.new("my_file.wav", format).each_buffer(SAMPLES_PER_BUFFER) do |b
 end
 </code></pre>
 
-<h3>Getting Metadata About a Wave File</h3>
+<h2>Getting Metadata About a Wave File</h2>
 
 <pre><code>require 'wavefile'
 include WaveFile
@@ -93,7 +97,7 @@ formatted_duration = duration.hours.to_s.rjust(2, "0") &lt;&lt; ":" &lt;&lt;
 puts "  Play time:           #{formatted_duration}"
 </code></pre>
 
-<h3>Writing a Wave File</h3>
+<h2>Writing a Wave File</h2>
 
 <p>The <code>Writer</code> object is used to write data to a wave file. The example below shows how to write a basic square wave to a file.</p>
 
@@ -113,7 +117,7 @@ end
 writer.close()
 </code></pre>
 
-<h3>Copying a Wave File to Different Format</h3>
+<h2>Copying a Wave File to Different Format</h2>
 
 <p>In this example, the sample data in the file <code>original.wav</code> will be written to <code>copy.wav</code> as stereo/16-bit with a 44,100Hz sample rate, regardless of what format the sample data in <code>original.wav</code> is stored in.</p>
 
@@ -131,7 +135,7 @@ Writer.new("copy.wav", Format.new(:stereo, :pcm_16, 44100) do |writer|
 end
 </code></pre>
 
-<h3>Appending Wave Files</h3>
+<h2>Appending Wave Files</h2>
 
 <pre><code>require 'wavefile'
 include WaveFile
@@ -147,9 +151,7 @@ Writer.new("append.wav", Format.new(:stereo, :pcm_16, 44100) do |writer|
   end
 end
 </code></pre>
-  <div id="credits">
-    <p>Copyright &copy; <a href="http://www.joelstrait.com">Joel Strait</a> 2009-13.</p>
-  </div>
+  <p>Copyright &copy; <a href="http://www.joelstrait.com">Joel Strait</a> 2009-13.</p>
 </div>
 </body>
 </html>

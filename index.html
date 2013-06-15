@@ -3,20 +3,24 @@
 <head>
   <title>WaveFile Gem</title>
   <meta charset="utf-8">
+  <link href='http://fonts.googleapis.com/css?family=Lato:100,400' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=PT+Mono">
   <link rel="stylesheet" type="text/css" href="wavefile.css">
 </head>
 <body>
-<div id="container">
-  <h1>WaveFile Gem</h1>
+<div id="header">
+  <div class="container">
+  <h1><a href="/wavefile">WaveFile Gem</a></h1>
   <p id="tagline">Read and write *.wav sound files in pure Ruby.</p>
   <ul id="navigation">
-    <li><a href="/wavefile">Home</a>&nbsp;&ndash;&nbsp;</li>
     <li><a href="examples.html">Examples</a>&nbsp;&ndash;&nbsp;</li>
     <li><a href="documentation.html">Documentation</a>&nbsp;&ndash;&nbsp;</li>
     <li><a href="how_wave_files_work.html">How Wave Files Work</a></li>
   </ul>
-  <div id="example">
-    <h2>For Example</h2>
+  </div>
+</div>
+<div class="container">
+  <h2>For Example</h2>
   <pre><code>
 require 'wavefile'
 include WaveFile
@@ -27,9 +31,8 @@ buffer = Buffer.new(cycle, Format.new(:mono, :float, 44100))
 Writer.new("my_file.wav", Format.new(:mono, :pcm_16, 44100)) do |writer|
   220.times { writer.write(buffer) }
 end</pre></code>
-  </div>
-  <div id="installation">
-    <h2>Installation</h2>
+
+  <h2>Installation</h2>
     <p>First, install the WaveFile gem from rubygems.org:<p>
 
     <pre><code>gem install wavefile</code></pre>
@@ -39,11 +42,9 @@ end</pre></code>
     <pre><code>require 'wavefile'</code></pre>
 
     <p>Note that if you're installing the gem into the default Ruby that comes pre-installed on MacOS (as opposed to a Ruby installed via <a href="http://beginrescueend.com">RVM</a> or <a href="https://github.com/sstephenson/rbenv/">rbenv</a>), you should used <code>sudo gem install wavefile</code>. Otherwise you might run into a file permission error.</p>
-  </div>
-  <div id="credits">
-    <h2>Who Made This?</h2>
-    <p><a href="http://www.joelstrait.com">Joel Strait</a>. Copyright &copy; 2009-13.</p>
-  </div>
+
+  <h2>Who Made This?</h2>
+  <p><a href="http://www.joelstrait.com">Joel Strait</a>. Copyright &copy; 2009-13.</p>
 </div>
 </body>
 </html>
