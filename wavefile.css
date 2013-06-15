@@ -89,6 +89,32 @@ ul#navigation li a:hover {
   background: #E3A374;
 }
 
+ul#feature-list {
+  overflow: auto;
+  max-width: 744px;
+  margin: 0.0em;
+  padding: 0.0em;
+}
+
+ul#feature-list li {
+  list-style-type: none;
+  width: 45%;
+  padding-right: 5%;
+  float: left;
+  margin-bottom: 1.5em;
+}
+
+ul#format-list {
+  margin: 0.0em;
+  padding-left: 1.0em;
+}
+
+ul#format-list li {
+  list-style-type: square;
+  float: none;
+  width: auto;
+  margin: 0.0em;
+}
 
 div {
   /*border-top: 4px solid black;*/
@@ -102,6 +128,14 @@ h2 {
   margin-top: 3.0em;
   margin-bottom: 1.0em;
   color: #4fa5e3;
+}
+
+h3 {
+  font-weight: normal;
+  font-size: 1.0em;
+  line-height: 1.5em;
+  margin: 0.0em;
+  color: #e38d4f;
 }
 
 code {
