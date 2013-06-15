@@ -15,6 +15,7 @@ div#header {
   color: #fff;
   margin: 0.0em;
   padding-top: 1.5em;
+  text-align: center;
 }
 
 .container {
@@ -28,8 +29,9 @@ div#header {
 h1 {
   font-size: 3.0em;
   line-height: 1.0em;
-  margin: 0.0em;
   font-weight: 100;
+  max-width: 744px;
+  margin: 0.0em auto;
 }
 
 h1 a {
@@ -37,31 +39,54 @@ h1 a {
   color: #fff;
 }
 
-p#tagline {
-  margin: 0.0em;
+#header p {
   font-weight: 100;
+  max-width: 744px;
+  margin: 0.0em auto;
+}
+
+.nav-container {
+  background: #2380C4;
+  margin: 0.0em;
 }
 
 ul#navigation {
-  width: 100%;
-  margin: 0.0em;
+  max-width: 744px;
+  margin: 1.5em auto 0.0em auto;
   padding: 0.0em;
   overflow: auto;
-  border-top: 2px solid #fff;
+  background: blue;
 }
 
 ul#navigation li {
   list-style-type: none;
   float: left;
+  width: 33.33333333333333%;
 }
 
 ul#navigation li a {
   color: #fff;
   font-weight: 100;
+  text-decoration: none;
+  width: 100%;
+  display: inline-block;
+  line-height: 2.0em;
+}
+
+.navlink1 {
+  background: #2A92DE;
+}
+
+.navlink2 {
+  background: #2B9BED;
+}
+
+.navlink3 {
+  background: #2A92DE; /* #2688D1; */
 }
 
 ul#navigation li a:hover {
-  color: #E3A374;
+  background: #E3A374;
 }
 
 
