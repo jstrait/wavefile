@@ -2,12 +2,39 @@ body {
   margin: 0px;
   font-size: 20px;
   line-height: 1.5em;
-  font-family: "Lato", "Gill Sans", "Helvetica Neue", Helvetica, arial, sans-serif;
+  font-family: "Lato", "Helvetica Neue", Helvetica, arial, sans-serif;
   background: #fafafa;
 }
 
 a {
-  color: #4FA5E3;
+  color: #4fa5e3;
+}
+
+a:hover {
+  color: #e38d4f
+}
+
+h2 {
+  font-weight: normal;
+  font-size: 1.5em;
+  line-height: 1.0em;
+  margin-top: 3.0em;
+  margin-bottom: 1.0em;
+  color: #4fa5e3;
+}
+
+h3 {
+  font-weight: normal;
+  font-size: 1.0em;
+  line-height: 1.5em;
+  margin: 0.0em;
+  color: #e38d4f;
+}
+
+code {
+  font-size: 0.75em;
+  line-height: 2.0em;
+  font-family: "PT Mono", menlo, courier, monospace;
 }
 
 div#header {
@@ -82,7 +109,7 @@ ul#navigation li a {
 }
 
 .navlink3 {
-  background: #2A92DE; /* #2688D1; */
+  background: #2A92DE;
 }
 
 ul#navigation li a:hover {
@@ -114,34 +141,6 @@ ul#format-list li {
   float: none;
   width: auto;
   margin: 0.0em;
-}
-
-div {
-  /*border-top: 4px solid black;*/
-  margin-top: 3.0em;
-}
-
-h2 {
-  font-weight: normal;
-  font-size: 1.5em;
-  line-height: 1.0em;
-  margin-top: 3.0em;
-  margin-bottom: 1.0em;
-  color: #4fa5e3;
-}
-
-h3 {
-  font-weight: normal;
-  font-size: 1.0em;
-  line-height: 1.5em;
-  margin: 0.0em;
-  color: #e38d4f;
-}
-
-code {
-  font-size: 0.75em;
-  line-height: 2.0em;
-  font-family: "PT Mono", menlo, courier, monospace;
 }
 
 span.label {
