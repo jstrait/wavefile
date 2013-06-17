@@ -20,218 +20,215 @@
   </div>
 </div>
 <div class="container">
-  <h2>How Wave Files Work</h2>
-  <p>Classified Until Just Recently</p>
-  <div id="intro">
-    <h2>Wave Files Store Audio Data</h2>
-    <p>Wave files store audio data, encoded using one of several sample formats. Some sample formats contain raw, uncompressed data, while some formats (e.g. &mu;-law) are compressed. The most common sample format is <em>PCM</em>, which stands for <em>pulse code modulation</em>. This is raw, uncompressed sample data where each sample is an integer.</p>
-    <p>Currently, the WaveFile gem supports these sample formats:</p>
-    <ul>
-      <li>PCM at 8, 16, and 32 bits per sample</li>
-      <li>IEEE floating point at 32 or 64 bits per sample</li>
-    </ul>
-    <p>For more info on what all this talk of sampling and digital audio means, check out <a href="http://www.joelstrait.com/blog/2009/10/12/a_digital_audio_primer">this blog post</a>. </p>
+  <h2>Getting Started</h2>
+  <p>If you're just getting started with audio programming, you might want to read up on some of the basics of digital audio first. Check out <a href="http://www.joelstrait.com/blog/2009/10/12/a_digital_audio_primer">this blog post</a> for an introduction.</p>
+
+  <h2>Wave Files Store Audio Data</h2>
+  <p>Wave files store audio data, encoded using one of several sample formats. Some sample formats contain raw, uncompressed data, while some formats (e.g. &mu;-law) are compressed. The most common sample format is <em>PCM</em>, which stands for <em>pulse code modulation</em>. This is raw, uncompressed sample data where each sample is an integer.</p>
+  <p>Currently, the WaveFile gem supports these sample formats:</p>
+  <ul>
+    <li>PCM at 8, 16, and 32 bits per sample</li>
+    <li>IEEE floating point at 32 or 64 bits per sample</li>
+  </ul>
+
+  <h2>Wave Files are RIFF Files</h2>
+  <p>Back in the late 80s Electronic Arts came up with a general container file format that could be used to store different types of data &ndash; audio, graphics, etc. It was called <em>IFF</em>, for <em>Interchange File Format</em>. Microsoft then took this format, switched the byte order to <a href="http://en.wikipedia.org/wiki/Endianness">little-endian</a> to match Intel processors, and dubbed it <em>RIFF (Resource Interchange File Format</em>). Many of the venerable Microsoft multimedia file formats are stored as RIFF files, including <code>*.rtf</code> (&ldquo;rich text format&rdquo;, a WYSIWYG text format), <code>*.avi</code> (a basically obsolete movie format), and of course, <code>*.wav</code>.</p>
+  <p>As mentioned above, all data in a RIFF file is stored as <a href="http://en.wikipedia.org/wiki/Endianness">little-endian</a>, owing to its Wintel heritage.</p>
+  <h2>RIFF Files Contain &ldquo;Chunks&rdquo;</h2>
+  <p>A RIFF file is broken up into several &ldquo;chunks&rdquo; of data. Each chunk has an 8-byte header containing a 4-byte identifier code, and a 4-byte size field.</p>
+  <p>The identifier code (also known as a <a href="http://en.wikipedia.org/wiki/Fourcc">FourCC</a>) is typically a more-or-less human-readable ASCII string, such as &ldquo;<code>wave</code>&rdquo;, &ldquo;<code>fmt </code>&rdquo;, or &ldquo;<code>data</code>&rdquo;. (Note that this identifier is case-sensitive).</p>
+  <p>The size field indicates the size of the chunk in bytes. The size does not include the 8-bytes in the header. I.e., if a chunk consists of the header plus 1,000 bytes of data, the size field will indicate 1,000, not 1,008. Chunks can internally contain nested sub-chunks, if the spec for that chunk allows it.</p>
+  <p>A Wave file consists of two levels of nested chunks. At the top level, it consists of a single &ldquo;<code>RIFF</code>&rdquo; chunk, which contains all of the data for the wave file. The RIFF chunk includes a format code &ldquo;<code>WAVE</code>&rdquo; which indicates that the sub-chunks are for a Wave file. Internally, the &ldquo;<code>RIFF</code>&rdquo; chunk includes at minimum a format chunk (&ldquo;<code>fmt </code>&rdquo;) and a data chunk (&ldquo;<code>data</code>&rdquo;). As the name suggests, the format chunk describes the, well, format of the wave file. The data chunk contains all of the raw sample data. A wave file might also contain other optional chunks, but it must include a format and data chunk, and the format chunk must come first.</p>
+  <p>Got all that? Visually this is what it looks like:</p>
+  <div style="border: 2px solid black; padding: 1.5em 1.5em 0.0em 1.5em; width: 15.0em; margin: 0.0em auto; border-radius: 0.5em;">
+    RIFF Chunk<br />
+    Format: &ldquo;<code>WAVE</code>&rdquo;
+    <div style="border: 2px solid black; padding: 1.5em; margin: 1.5em 0.0em 1.5em 0.0em;">Format Chunk (&ldquo;<code>fmt </code>&rdquo;)</div>
+    <div style="border: 2px solid black; padding: 1.5em; margin: 1.5em 0.0em 1.5em 0.0em;"><em>other optional chunks*1</em></div>
+    <div style="border: 2px solid black; padding: 1.5em; margin: 1.5em 0.0em 1.5em 0.0em;">Data Chunk (&ldquo;<code>data</code>&rdquo;)</div>
   </div>
-  <div id="riff">
-    <h2>Wave Files are RIFF Files</h2>
-    <p>Back in the late 80s Electronic Arts came up with a general container file format that could be used to store different types of data &ndash; audio, graphics, etc. It was called <em>IFF</em>, for <em>Interchange File Format</em>. Microsoft then took this format, switched the byte order to little endian to match Intel processors, and dubbed it <em>RIFF (Resource Interchange File Format</em>). Many of the venerable Microsoft multimedia file formats are stored as RIFF files, including *.rtf (&ldquo;rich text format&rdquo;, a WYSIWYG text format), *.avi (a basically obsolete movie format), and of course, *.wav.</p>
-    <p>As mentioned above, all data in a RIFF file is stored as little-endian, owing to its Wintel heritage.</p>
-  </div>
-  <div id="chunks">
-    <h2>RIFF Files Contain &ldquo;Chunks&rdquo;</h2>
-    <p>A RIFF file is broken up into several &ldquo;chunks&rdquo; of data. Each chunk has an 8-byte header containing a 4-byte identifier code, and a 4-byte size field. The identifier code (also known as a FourCC) is typically a more-or-less human-readable ASCII string, such as &ldquo;<code>wave</code>&rdquo;, &ldquo;<code>fmt </code>&rdquo;, or &ldquo;<code>data</code>&rdquo;. (Note that this code is case-sensitive). The size field does not include the 8-bytes in the header. I.e., if a chunk consists of the header plus 1,000 bytes of data, the size field will indicate 1,000, not 1,008. Chunks can internally contain nested sub-chunks, if the spec for that chunk allows it.</p>
-    <p>A Wave file consists of two levels of nested chunks. At the top level, it consists of a single &ldquo;<code>RIFF</code>&rdquo; chunk, which contains all of the data for the wave file. The RIFF chunk includes a format code &ldquo;<code>WAVE</code>&rdquo; which indicates that the sub-chunks are for a Wave file. Internally, the &ldquo;<code>RIFF</code>&rdquo; chunk includes at minimum a format chunk (&ldquo;<code>fmt </code>&rdquo;) and a data chunk (&ldquo;<code>data</code>&rdquo;). As the name suggests, the format chunk describes the, well, format of the wave file. The data chunk contains all of the raw sample data. A wave file might also contain other optional chunks, but it must include a format and data chunk, and the format chunk must come first.</p>
-    <p>Got all that? Visually this is what it looks like:</p>
-    <div style="border: 2px solid black; padding: 1.5em 1.5em 0.0em 1.5em; width: 15.0em; margin: 0.0em auto; border-radius: 0.5em;">
-      RIFF Chunk
-      <div style="border: 2px solid black; padding: 1.5em; margin: 1.5em 0.0em 1.5em 0.0em;">Format Chunk (&ldquo;<code>fmt </code>&rdquo;)</div>
-      <div style="border: 2px solid black; padding: 1.5em; margin: 1.5em 0.0em 1.5em 0.0em;"><em>other optional chunks*1</em></div>
-      <div style="border: 2px solid black; padding: 1.5em; margin: 1.5em 0.0em 1.5em 0.0em;">Data Chunk (&ldquo;<code>data</code>&rdquo;)</div>
-    </div>
-  </div>
-  <div id="riff-chunk">
-    <h2>The RIFF Chunk</h2>
-    <p>Like all chunks, the RIFF chunk starts with an ID code, in this case the ASCII string &ldquo;<code>RIFF</code>&rdquo;. Next is the size field, which is the size of the entire Wave file except for the 8-byte RIFF header.</p>
-    <p>The first 4 bytes following the header will identify the type of RIFF chunk. In the case of Wave files, it will be &ldquo;<code>WAVE</code>&rdquo;. Immediately following that will be the inner Wave file chunks.</p>
-    <table>
-      <tr>
-        <th>Field</th>
-        <th>Size</th>
-        <th>Description</th>
-      </tr>
-      <tr>
-        <td>Chunk ID</td>
-        <td>4</td>
-        <td>ASCII string "RIFF"</td>
-      </tr>
-      <tr>
-        <td>Chunk Size</td>
-        <td>4</td>
-        <td>Size of entire file, except for 8-byte RIFF chunk header</td>
-      </tr>
-      <tr>
-        <td>RIFF Format Code</td>
-        <td>4</td>
-        <td>ASCII string "WAVE"</td>
-      </tr>
-      <tr>
-        <td>Sub Chunks</td>
-        <td>?</td>
-        <td>The Wave format sub chunks (format, data, etc.)</td>
-      </tr>
-    </table>
-    <p></p>
-  </div>
-  <div id="format-chunk">
-    <h2>The Format Chunk (Basic Version)</h2>
-    <table>
-      <tr>
-        <th>Field</th>
-        <th>Size</th>
-        <th>Description</th>
-      </tr>
-      <tr>
-        <td>Chunk ID</td>
-        <td>4</td>
-        <td>"fmt " (note the space after 't')</td>
-      </tr>
-      <tr>
-        <td>Chunk Size</td>
-        <td>4</td>
-        <td>In practice, 16, 18, or 40</td>
-      </tr>
-      <tr>
-        <td>Format Code</td>
-        <td>2</td>
-        <td>Indicates PCM, floating point, &mu;-law, etc.</td>
-      </tr>
-      <tr>
-        <td>Number of Channels</td>
-        <td>2</td>
-        <td>1 for mono, 2 for stereo, up to 65535*</td>
-      </tr>
-      <tr>
-        <td>Samples per second (a.k.a. sample rate)</td>
-        <td>4</td>
-        <td>44100 for CD quality</td>
-      </tr>
-      <tr>
-        <td>Bytes per Second</td>
-        <td>4</td>
-        <td>Bytes per sample frame * samples per second</td>
-      </tr>
-      <tr>
-        <td>Bytes per Sample Frame (a.k.a block align)</td>
-        <td>2</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>Bits per sample</td>
-        <td>2</td>
-        <td>8, 16, 32, etc.</td>
-      </tr>
-    </table>
-    <p>While some of these fields have a large range of possible values, in practice there are only a few that will actually be used.</p>
-    <p>Here is more detail on what these fields mean. For some background on what some of this terminology means, check out <a href="http://www.joelstrait.com/blog/2009/10/12/a_digital_audio_primer">this blog post</a>.</p>
-    <p><span class="label">Format Code</span> &ndash; Indicates how the sample data for the wave file is stored. The most common format is PCM, which has a code of 1. TODO: Add link to list of other format codes</p>
-    <p><span class="label">Number of channels</span> &ndash; Typically a file will have 1 channel (mono) or 2 channels (stereo). A surround sound file would have 6* channels. Although this field technically allows you to have up to 65,535 channels, for audio data that would be flat out ridiculous. You would only hear all of the channels if you had 65,535 different speakers, and since a chunk can only hold 4GB of data (due to the 32-bit size field), you would only be able to store about a second and a half** of 8-bit PCM data.</p>
-    <p><span class="label">Sample rate</span> &ndash; The number of sample frames that occur each second. A typical value would be 44,100, which is the same as an audio CD*. Another reasonable value is 22,050. Although this field supports any arbitrary value between 1 and ______, in practice there are only a few values you should use. TODO: What kind of support to audio programs have for wacky sample rate values?</p>
-    <p><span class="label">Bytes per second (byte rate)</span> &ndash; The spec calls this <em>byte rate</em>, which means the number of bytes required for one second of audio data. This is equal to the bytes per sample frame times the sample rate. So with a bytes per sample frame of 32, and a sample rate of 44,100, this should equal 1,411,200. TODO: Does the spec have a flaw that would cause the proper value of this to be larger than the field supports?</p>
-    <p><span class="label">Bytes per sample frame</span> &ndash; Called <em>block align</em> by the spec, this is the number of bytes required to store a single sample frame, i.e. a single sample for each channel. It should be equal to the number of channels times the bits per sample rounded up to a multiple of 8. For example:
-        <table>
-          <tr>
-            <th>Channels</th>
-            <th>Bits Per Sample</th>
-            <th>Bytes per sample frame</th>
-          </tr>
-          <tr>
-            <td>1</td>
-            <td>8</td>
-            <td>8</td>
-          </tr>
-          <tr>
-            <td>2</td>
-            <td>8</td>
-            <td>16</td>
-          </tr>
-          <tr>
-            <td>1</td>
-            <td>16</td>
-            <td>16</td>
-          </tr>
-          <tr>
-            <td>2</td>
-            <td>16</td>
-            <td>32</td>
-          </tr>
-          <tr>
-            <td>6</td>
-            <td>32</td>
-            <td>192</td>
-          </tr>
-        </table>
-        This field can be used to calculate the bytes per sample frame field. Another possible use is for seeking around in a file. For example, if the bytes per sample frame is 32, then to seek forward 10 sample frames you need to seek forward 320 bytes.
-        Note that for PCM data, this field is essentially redundant since it can be calculated from the other fields. However, be sure to note the point of rounding bits per sample values to the nearest multiple of 8.
-    </p>
-    <p><span class="label">Bits per sample</span> &ndash; For PCM data, typical values will be 8, 16, or 32. I'm not sure why this is a two-byte field in the spec, since any values over 255 would seem pretty excessive. TODO: Do other non-PCM formats take advantage of it being two bytes?</p>
-  </div>
-   <div id="format-chunk">
-    <h2>The Format Chunk (More Exact Version)</h2>
-    <p>OK, so I simplified some things a bit. That last section described the format chunk when the sample format is PCM. The full format chunk spec is actually a bit more complicated when the sample format is something else.</p>
-  </div>
-  <div id="data-chunk">
-    <h2>The Data Chunk</h2>
-    <p>The layout for the data chunk is simpler than the format chunk: the normal 8-byte chunk header, followed by nothing but sweet, raw, unfiltered sample data. The sample data can be stored in a number of formats, which will be indicated by the format chunk.</p>
-    <h2>PCM</h2>
-    <p>The simplest, and most common, is to store PCM samples (format code 1). This is just raw sample data stored as integers. The bits per sample field will indicate the range of the sample data:</p>
-    <table>
-      <tr>
-        <th>Bits per sample</th>
-        <th>Minimum Sample</th>
-        <th>Maximum Sample</th>
-      </tr>
-      <tr>
-        <td>8</td>
-        <td>0</td>
-        <td>255</td>
-      </tr>
-      <tr>
-        <td>16</td>
-        <td>-32,768</td>
-        <td>32,767</td>
-      </tr>
-      <tr>
-        <td>32</td>
-        <td>-2,147,483,648</td>
-        <td>2,147,483,647</td>
-      </tr>
-    </table>
-    <p>Yeah, so that's not weird at all. Notice that 8-bit samples are unsigned, while other bit depths are signed. TODO: Add note about non-multiple-of-8 bit depths</p>
-    <p>Samples in a multi-channel PCM wave file are interleaved. That is, in a stereo file, one sample for the left channel will be followed by one sample for the right channel, followed by another sample for the left channel, then right channel, and so forth.</p>
-    <p>The samples for all channels at a moment in time are called a sample frame. That is, a sample frame will contain one sample for each channel. In a monophonic file, a sample frame will consist on 1 sample. In a stereo file, a sample frame has 2 samples (one for the left channel, one for the right channel). In a 5-channel file, a sample frame has 5 samples. The block align field in the format chunk gives the size in bytes of each sample frame. This can be useful when seeking to a particular sample frame in the file.</p>
-    <h2>Floating Point</h2>
-    <p>Another basic format is to store samples as floating point values (format code 3). This is essentially the same as PCM format, except that samples are in the range -1.0 to 1.0. The bits per sample field for floating point files should be set to 32 or 64. TODO: What about non-32 or 64 bit sizes?</p>
-    <h2>Compressed Formats</h2>
-    <p>Sample data can also be stored in a compressed format. Examples include ______. I'm not too familiar with how these algoritms work, and the WaveFile gem doesn't currently support them. But, you can read up on them at Wikipedia if you're interested:</p>
-    <ul>
-      <li>Links go here</li>
-    </ul>
-    <h2>Wave Format Extensible</h2>
-    <p>TODO</p>
-    <h2>The More You Know: Even Chunk Sizes</h2>
-    <p>According to the RIFF spec*, chunk sizes must be an even number of bytes. So for example if writing a monophonic file with an odd number of samples, you should append a blank* byte to the end of the data chunk to get it to an even size. TODO: How will this be interpreted as audio?</p>
-  </div>
-  <div id="references">
-    <h2>References</h2>
-    <ul>
-      <li><a href="http://www-mmsp.ece.mcgill.ca/Documents/AudioFormats/WAVE/Docs/riffmci.pdf">Multimedia Programming Interface
+
+  <h2>The RIFF Chunk</h2>
+  <p>Like all chunks, the RIFF chunk starts with an ID code, in this case the ASCII string &ldquo;<code>RIFF</code>&rdquo;. Next is the size field, which is the size of the entire Wave file except for the 8-byte RIFF header.</p>
+  <p>The first 4 bytes following the header will identify the type of RIFF chunk. In the case of Wave files, it will be &ldquo;<code>WAVE</code>&rdquo;. Immediately following that will be the inner Wave file chunks.</p>
+  <table>
+    <tr>
+      <th>Field</th>
+      <th>Size</th>
+      <th>Description</th>
+    </tr>
+    <tr>
+      <td>Chunk ID</td>
+      <td>4</td>
+      <td>ASCII string "RIFF"</td>
+    </tr>
+    <tr>
+      <td>Chunk Size</td>
+      <td>4</td>
+      <td>Size of entire file, except for 8-byte RIFF chunk header</td>
+    </tr>
+    <tr>
+      <td>RIFF Format Code</td>
+      <td>4</td>
+      <td>ASCII string "WAVE"</td>
+    </tr>
+    <tr>
+      <td>Sub Chunks</td>
+      <td>?</td>
+      <td>The Wave format sub chunks (format, data, etc.)</td>
+    </tr>
+  </table>
+
+  <h2>The Format Chunk (Basic Version)</h2>
+  <p>The format chunk describes the format that the samples in the data chunk are encoded in. It contains these fields:</p>
+  <table>
+    <tr>
+      <th>Field</th>
+      <th>Size</th>
+      <th>Description</th>
+    </tr>
+    <tr>
+      <td>Chunk ID</td>
+      <td>4</td>
+      <td>"fmt " (note the space after 't')</td>
+    </tr>
+    <tr>
+      <td>Chunk Size</td>
+      <td>4</td>
+      <td>In practice, 16, 18, or 40</td>
+    </tr>
+    <tr>
+      <td>Format Code</td>
+      <td>2</td>
+      <td>Indicates PCM, floating point, &mu;-law, etc.</td>
+    </tr>
+    <tr>
+      <td>Number of Channels</td>
+      <td>2</td>
+      <td>1 for mono, 2 for stereo, up to 65535*</td>
+    </tr>
+    <tr>
+      <td>Samples per second<br />(a.k.a. sample rate)</td>
+      <td>4</td>
+      <td>44100 for CD quality</td>
+    </tr>
+    <tr>
+      <td>Bytes per Second</td>
+      <td>4</td>
+      <td>Bytes per sample frame * samples per second</td>
+    </tr>
+    <tr>
+      <td>Bytes per Sample Frame<br />(a.k.a block align)</td>
+      <td>2</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>Bits per sample</td>
+      <td>2</td>
+      <td>8, 16, 32, etc.</td>
+    </tr>
+  </table>
+  <p>While some of these fields have a large range of possible values, in practice there are only a few that will actually be used.</p>
+  <p>Here is more detail on what these fields mean. For some background on what some of this terminology means, check out <a href="http://www.joelstrait.com/blog/2009/10/12/a_digital_audio_primer">this blog post</a>.</p>
+  <p><span class="label">Format Code</span> &ndash; Indicates how the sample data for the wave file is stored. The most common format is PCM, which has a code of 1. TODO: Add link to list of other format codes</p>
+  <p><span class="label">Number of channels</span> &ndash; Typically a file will have 1 channel (mono) or 2 channels (stereo). A surround sound file would have 6* channels. Although this field technically allows you to have up to 65,535 channels, for audio data that would be flat out ridiculous. You would only hear all of the channels if you had 65,535 different speakers, and since a chunk can only hold 4GB of data (due to the 32-bit size field), you would only be able to store about a second and a half** of 8-bit PCM data.</p>
+  <p><span class="label">Sample rate</span> &ndash; The number of sample frames that occur each second. A typical value would be 44,100, which is the same as an audio CD*. Another reasonable value is 22,050. Although this field supports any arbitrary value between 1 and ______, in practice there are only a few values you should use. TODO: What kind of support to audio programs have for wacky sample rate values?</p>
+  <p><span class="label">Bytes per second (byte rate)</span> &ndash; The spec calls this <em>byte rate</em>, which means the number of bytes required for one second of audio data. This is equal to the bytes per sample frame times the sample rate. So with a bytes per sample frame of 32, and a sample rate of 44,100, this should equal 1,411,200. TODO: Does the spec have a flaw that would cause the proper value of this to be larger than the field supports?</p>
+  <p><span class="label">Bytes per sample frame</span> &ndash; Called <em>block align</em> by the spec, this is the number of bytes required to store a single sample frame, i.e. a single sample for each channel. It should be equal to the number of channels times the bits per sample rounded up to a multiple of 8. For example:
+      <table>
+        <tr>
+          <th>Channels</th>
+          <th>Bits Per Sample</th>
+          <th>Bytes per sample frame</th>
+        </tr>
+        <tr>
+          <td>1</td>
+          <td>8</td>
+          <td>8</td>
+        </tr>
+        <tr>
+          <td>2</td>
+          <td>8</td>
+          <td>16</td>
+        </tr>
+        <tr>
+          <td>1</td>
+          <td>16</td>
+          <td>16</td>
+        </tr>
+        <tr>
+          <td>2</td>
+          <td>16</td>
+          <td>32</td>
+        </tr>
+        <tr>
+          <td>6</td>
+          <td>32</td>
+          <td>192</td>
+        </tr>
+      </table>
+      <p>This field can be used to calculate the bytes per sample frame field. Another possible use is for seeking around in a file. For example, if the bytes per sample frame is 32, then to seek forward 10 sample frames you need to seek forward 320 bytes.</p>
+      <p>Note that for PCM data, this field is essentially redundant since it can be calculated from the other fields. However, be sure to note the point of rounding bits per sample values to the nearest multiple of 8.</p>
+  <p><span class="label">Bits per sample</span> &ndash; For PCM data, typical values will be 8, 16, or 32. I'm not sure why this is a two-byte field in the spec, since any values over 255 would seem pretty excessive. TODO: Do other non-PCM formats take advantage of it being two bytes?</p>
+
+  <h2>The Format Chunk (More Exact Version)</h2>
+  <p>OK, so I simplified some things a bit. That last section described the format chunk when the sample format is PCM. The full format chunk spec is actually a bit more complicated when the sample format is something else.</p>
+  <p>Rest of this section: TODO</p>
+
+  <h2>The Data Chunk</h2>
+  <p>The layout for the data chunk is simpler than the format chunk: the normal 8-byte chunk header, followed by nothing but sweet, raw, unfiltered sample data. The sample data can be stored in a number of formats, which will be indicated by the format chunk.</p>
+  <p>The next several sections describe various formats that data in the data chunk can be stored as.</p>
+
+  <h2>PCM Data Chunk</h2>
+  <p>The simplest, and most common, is to store PCM samples (format code 1). This is just raw sample data stored as integers. The bits per sample field will indicate the range of the sample data:</p>
+  <table>
+    <tr>
+      <th>Bits per sample</th>
+      <th>Minimum Sample</th>
+      <th>Maximum Sample</th>
+    </tr>
+    <tr>
+      <td>8</td>
+      <td>0</td>
+      <td>255</td>
+    </tr>
+    <tr>
+      <td>16</td>
+      <td>-32,768</td>
+      <td>32,767</td>
+    </tr>
+    <tr>
+      <td>32</td>
+      <td>-2,147,483,648</td>
+      <td>2,147,483,647</td>
+    </tr>
+  </table>
+  <p>Yeah, so that's not weird at all. Notice that 8-bit samples are unsigned, while other bit depths are signed. TODO: Add note about non-multiple-of-8 bit depths</p>
+  <p>Samples in a multi-channel PCM wave file are interleaved. That is, in a stereo file, one sample for the left channel will be followed by one sample for the right channel, followed by another sample for the left channel, then right channel, and so forth.</p>
+  <p>The samples for all channels at a moment in time are called a sample frame. That is, a sample frame will contain one sample for each channel. In a monophonic file, a sample frame will consist on 1 sample. In a stereo file, a sample frame has 2 samples (one for the left channel, one for the right channel). In a 5-channel file, a sample frame has 5 samples. The block align field in the format chunk gives the size in bytes of each sample frame. This can be useful when seeking to a particular sample frame in the file.</p>
+  <h2>Floating Point Data Chunk</h2>
+  <p>Another basic format is to store samples as floating point values (format code 3). This is essentially the same as PCM format, except that samples are in the range -1.0 to 1.0. The bits per sample field for floating point files should be set to 32 or 64. TODO: What about non-32 or 64 bit sizes?</p>
+  <h2>Compressed Data Chunk Formats</h2>
+  <p>Sample data can also be stored in a compressed format. Examples include ______. I'm not too familiar with how these algoritms work, and the WaveFile gem doesn't currently support them. But, you can read up on them at Wikipedia if you're interested:</p>
+  <ul>
+    <li>Links go here</li>
+  </ul>
+
+  <h2>Wave Format Extensible</h2>
+  <p>TODO</p>
+
+  <h2>The More You Know: Even Chunk Sizes</h2>
+  <p>According to the RIFF spec*, chunk sizes must be an even number of bytes. So for example if writing a monophonic file with an odd number of samples, you should append a blank* byte to the end of the data chunk to get it to an even size. TODO: How will this be interpreted as audio?</p>
+
+  <h2>References</h2>
+  <ul>
+    <li><a href="http://www-mmsp.ece.mcgill.ca/Documents/AudioFormats/WAVE/Docs/riffmci.pdf">Multimedia Programming Interface
 and Data Specifications 1.0, August 1991</a></li>
-      <li><a href="http://download.microsoft.com/download/9/8/6/9863C72A-A3AA-4DDB-B1BA-CA8D17EFD2D4/RIFFNEW.pdf">New Multimedia Data Types and Data Techniques, August 1994</a></li>
-      <li><a href="http://msdn.microsoft.com/en-us/library/windows/hardware/gg463006.aspx">Multiple Channel Audio Data and WAVE Files</a></li>
-      <li><a href="http://www-mmsp.ece.mcgill.ca/Documents/AudioFormats/WAVE/WAVE.html">http://www-mmsp.ece.mcgill.ca/Documents/AudioFormats/WAVE/WAVE.html</a></li>
-      <li><a href="http://en.wikipedia.org/wiki/WAV">Wikipedia article on the *.wav format</a></li>
-    </ul>
-  </div>
+    <li><a href="http://download.microsoft.com/download/9/8/6/9863C72A-A3AA-4DDB-B1BA-CA8D17EFD2D4/RIFFNEW.pdf">New Multimedia Data Types and Data Techniques, August 1994</a></li>
+    <li><a href="http://msdn.microsoft.com/en-us/library/windows/hardware/gg463006.aspx">Multiple Channel Audio Data and WAVE Files</a></li>
+    <li><a href="http://www-mmsp.ece.mcgill.ca/Documents/AudioFormats/WAVE/WAVE.html">http://www-mmsp.ece.mcgill.ca/Documents/AudioFormats/WAVE/WAVE.html</a></li>
+    <li><a href="http://en.wikipedia.org/wiki/WAV">Wikipedia article on the *.wav format</a></li>
+  </ul>
   <div id="footnotes">
   <p>*1 - I'm not sure that the spec prevents chunks also coming after the data chunk, but I'm not sure how common that is. It doesn't seem like a great idea to do that.</p>
   </div>

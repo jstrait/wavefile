@@ -38,6 +38,20 @@ code {
   font-family: "PT Mono", menlo, courier, monospace;
 }
 
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+th {
+  text-align: left;
+  border-bottom: 2px solid #ddd;
+}
+
+td {
+  vertical-align: top;
+}
+
 div#header {
   background: #74B4E3;
   color: #fff;
@@ -149,8 +163,4 @@ ul#format-list li {
 
 span.label {
   font-weight: bold;
-}
-
-th {
-  text-align: left;
 }
