@@ -1,6 +1,12 @@
 module WaveFile
   class InvalidFormatError < StandardError; end
 
+  # Represents information about the data format for a Wave file, such as number of 
+  # channels, bits per sample, sample rate, and so forth. A Format instance is used
+  # by Reader to indicate what format to read samples out as, and by Writer to 
+  # indicate what format to write samples as.
+  #
+  # This class is immutable - once a new Format is constructed, it can't be modified.
   class Format
     # Not using ranges because of 1.8.7 performance problems with Range.max
     MIN_CHANNELS = 1
@@ -15,6 +21,15 @@ module WaveFile
                                   :float => [32, 64],
                                 }
 
+    # Constructs a new immutable Format.
+    #
+    # channels - The number of channels in the format. Can either be a Fixnum
+    #            (e.g. 1, 2, 3) or the symbols :mono (equivalent to 1) or
+    #            :stereo (equivalent to 2).
+    # format_code - A symbol indicating the format of each sample. Consists of
+    #               two parts: a format code, and the bits per sample. For
+    #               example, :pcm_16 or :float_32.
+    # sample_rate - The number of samples per second, such as 44100
     def initialize(channels, format_code, sample_rate)
       channels = normalize_channels(channels)
       sample_format, bits_per_sample = normalize_format_code(format_code)
@@ -31,15 +46,37 @@ module WaveFile
       @byte_rate = @block_align * @sample_rate
     end
 
+    # Returns true if the format has 1 channel, false otherwise.
     def mono?
       @channels == 1
     end
 
+    # Returns true if the format has 2 channels, false otherwise.
     def stereo?
       @channels == 2
     end
 
-    attr_reader :channels, :sample_format, :bits_per_sample, :sample_rate, :block_align, :byte_rate
+    # Returns the number of channels, such as 1 or 2. This will always return a 
+    # Fixnum, even if the number of channels is specified with a symbol (e.g. :mono) 
+    # in the constructor.
+    attr_reader :channels
+
+    # Returns a symbol indicating the sample format, such as :pcm or :float
+    attr_reader :sample_format
+
+    # Returns the number of bits per sample, such as 8, 16, 32, or 64.
+    attr_reader :bits_per_sample
+
+    # Returns the number of samples per second, such as 44100.
+    attr_reader :sample_rate
+
+    # Returns the number of bytes in each sample frame. For example, in a 16-bit stereo file, 
+    # this will be 4 (2 bytes for each 16-bit sample, times 2 channels).
+    attr_reader :block_align
+
+    # Returns the number of bytes contained in 1 second of sample data. 
+    # Is equivalent to block_align * sample_rate.
+    attr_reader :byte_rate
 
   private
 
