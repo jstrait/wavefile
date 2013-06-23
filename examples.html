@@ -20,7 +20,7 @@
   </div>
 </div>
 <div class="container">
-  <h2>Reading a Wave File With a Block (Automatic File Closing Edition)</h2>
+  <h2>Reading a Wave File With a Block</h2>
 
 <p>The example below shows the preferred way of reading an entire wave file:</p>
 
@@ -54,7 +54,7 @@ begin
     puts "Read #{buffer.samples.length} samples."
   end
 rescue EOFError
-  reader.close()
+  reader.close
 end
 </code></pre>
 
@@ -97,15 +97,29 @@ formatted_duration = duration.hours.to_s.rjust(2, "0") &lt;&lt; ":" &lt;&lt;
 puts "  Play time:           #{formatted_duration}"
 </code></pre>
 
-<h2>Writing a Wave File</h2>
+<h2>Writing a Wave File With A Block</h2>
 
-<p>The <code>Writer</code> object is used to write data to a wave file. The example below shows how to write a basic square wave to a file.</p>
+<p>The <code>Writer</code> object is used to write data to a wave file. When constructing the <code>Writer</code>, one can pass a block inside which the writing will occur. When the block exits the file will automatically be closed. The example below shows how to write a basic square wave to a file.</p>
 
 <pre><code>require 'wavefile'
 include WaveFile
 
-format = Format.new(:mono, :pcm_16, 44100)
-writer = Writer.new("my_file.wav", format)
+# Write a 1 second long 440Hz square wave
+cycle = ([0.5] * 50) + ([-0.5] * 50)
+buffer = Buffer.new(cycle, Format.new(:mono, :float, 44100))
+Writer.new("my_file.wav", Format.new(:mono, :pcm_16, 44100)) do |writer|
+  220.times { writer.write(buffer) }
+end
+</code></pre>
+
+<h2>Writing a Wave File (Manual File Close Edition)</h2>
+
+<p>Alternately, one can manually control when to close the file, as shown below. Note that a file won't be valid for playback until it is closed. This is because some data required for playback (such as the total number of samples) isn't written to the file until it is closed.</p>
+
+<pre><code>require 'wavefile'
+include WaveFile
+
+writer = Writer.new("my_file.wav", Format.new(:mono, :pcm_16, 44100))
 
 # Write a 1 second long 440Hz square wave
 cycle = ([0.5] * 50) + ([-0.5] * 50)
@@ -114,7 +128,7 @@ buffer = Buffer.new(cycle, Format.new(:mono, :float, 44100))
   writer.write(buffer)
 end
 
-writer.close()
+writer.close
 </code></pre>
 
 <h2>Copying a Wave File to Different Format</h2>
@@ -136,6 +150,8 @@ end
 </code></pre>
 
 <h2>Appending Wave Files</h2>
+
+<p>This example will take 3 Wave files, and write them to a single file containing each input file played one after another. Note that the individual files can be in different formats.</p>
 
 <pre><code>require 'wavefile'
 include WaveFile
