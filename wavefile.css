@@ -24,6 +24,10 @@ h2 {
   color: #4fa5e3;
 }
 
+h2 a {
+  text-decoration: none;
+}
+
 h3 {
   font-weight: 400;
   font-size: 1.0em;
