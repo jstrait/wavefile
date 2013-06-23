@@ -7,7 +7,7 @@ module WaveFile
     # count is an odd number.
     #
     # See http://www-mmsp.ece.mcgill.ca/Documents/AudioFormats/WAVE/Docs/riffmci.pdf, page 11.
-    EMPTY_BYTE = "\000"
+    EMPTY_BYTE = "\000"    # :nodoc:
 
     # The number of bytes at the beginning of a wave file before the sample data in the data chunk
     # starts, assuming this canonical format:
@@ -18,7 +18,7 @@ module WaveFile
     # Data Chunk Header (8 bytes)
     #
     # All wave files written by Writer use this canonical format.
-    CANONICAL_HEADER_BYTE_LENGTH = {:pcm => 36, :float => 50}
+    CANONICAL_HEADER_BYTE_LENGTH = {:pcm => 36, :float => 50}    # :nodoc:
 
 
     # Returns a constructed Writer object which is available for writing sample data to the specified

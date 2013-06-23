@@ -8,9 +8,9 @@ require 'wavefile/writer'
 module WaveFile
   VERSION = "0.5.0"
 
-  WAVEFILE_FORMAT_CODE = "WAVE"
-  FORMAT_CHUNK_BYTE_LENGTH = {:pcm => 16, :float => 18}
-  FORMAT_CODES = {:pcm => 1, :float => 3}
+  WAVEFILE_FORMAT_CODE = "WAVE"    # :nodoc:
+  FORMAT_CHUNK_BYTE_LENGTH = {:pcm => 16, :float => 18}    # :nodoc:
+  FORMAT_CODES = {:pcm => 1, :float => 3}    # :nodoc:
   CHUNK_IDS = {:riff         => "RIFF",
                :format       => "fmt ",
                :data         => "data",
@@ -23,12 +23,12 @@ module WaveFile
                :labeled_text => "ltxt",
                :note         => "note",
                :sample       => "smpl",
-               :instrument   => "inst" }
+               :instrument   => "inst" }    # :nodoc:
 
   PACK_CODES = {:pcm => {8 => "C*", 16 => "s*", 32 => "l*"},
-                :float => { 32 => "e*", 64 => "E*"}}
+                :float => { 32 => "e*", 64 => "E*"}}    # :nodoc:
 
-  UNSIGNED_INT_16 = "v"
-  UNSIGNED_INT_32 = "V"
+  UNSIGNED_INT_16 = "v"    # :nodoc:
+  UNSIGNED_INT_32 = "V"    # :nodoc:
 end
 
