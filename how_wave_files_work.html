@@ -80,7 +80,7 @@
   </table>
 
   <h2>The Format Chunk (Basic Version)</h2>
-  <p>The format chunk describes the format that the samples in the data chunk are encoded in. It contains these fields:</p>
+  <p>The format chunk describes the format that the samples in the data chunk are encoded in. At minimum, it contains these fields:</p>
   <table>
     <tr>
       <th>Field</th>
@@ -95,7 +95,7 @@
     <tr>
       <td>Chunk Size</td>
       <td>4</td>
-      <td>In practice, 16, 18, or 40</td>
+      <td>16, 18, or 40 (why not always 16? see below)</td>
     </tr>
     <tr>
       <td>Format Code</td>
@@ -115,7 +115,7 @@
     <tr>
       <td>Bytes per Second</td>
       <td>4</td>
-      <td>Bytes per sample frame * samples per second</td>
+      <td>Bytes per sample frame &times; samples per second</td>
     </tr>
     <tr>
       <td>Bytes per Sample Frame<br />(a.k.a block align)</td>
@@ -130,11 +130,11 @@
   </table>
   <p>While some of these fields have a large range of possible values, in practice there are only a few that will actually be used.</p>
   <p>Here is more detail on what these fields mean. For some background on what some of this terminology means, check out <a href="http://www.joelstrait.com/blog/2009/10/12/a_digital_audio_primer">this blog post</a>.</p>
-  <p><span class="label">Format Code</span> &ndash; Indicates how the sample data for the wave file is stored. The most common format is PCM, which has a code of 1. TODO: Add link to list of other format codes</p>
+  <p><span class="label">Format Code</span> &ndash; Indicates how the sample data for the wave file is stored. The most common format is PCM, which has a code of 1. Other formats include IEEE floating point (3), ADPCM (TODO), &mu;-law (TODO), and WaveFormatExtensable (65534).</p>
   <p><span class="label">Number of channels</span> &ndash; Typically a file will have 1 channel (mono) or 2 channels (stereo). A surround sound file would have 6* channels. Although this field technically allows you to have up to 65,535 channels, for audio data that would be flat out ridiculous. You would only hear all of the channels if you had 65,535 different speakers, and since a chunk can only hold 4GB of data (due to the 32-bit size field), you would only be able to store about a second and a half** of 8-bit PCM data.</p>
   <p><span class="label">Sample rate</span> &ndash; The number of sample frames that occur each second. A typical value would be 44,100, which is the same as an audio CD*. Another reasonable value is 22,050. Although this field supports any arbitrary value between 1 and ______, in practice there are only a few values you should use. TODO: What kind of support to audio programs have for wacky sample rate values?</p>
   <p><span class="label">Bytes per second (byte rate)</span> &ndash; The spec calls this <em>byte rate</em>, which means the number of bytes required for one second of audio data. This is equal to the bytes per sample frame times the sample rate. So with a bytes per sample frame of 32, and a sample rate of 44,100, this should equal 1,411,200. TODO: Does the spec have a flaw that would cause the proper value of this to be larger than the field supports?</p>
-  <p><span class="label">Bytes per sample frame</span> &ndash; Called <em>block align</em> by the spec, this is the number of bytes required to store a single sample frame, i.e. a single sample for each channel. It should be equal to the number of channels times the bits per sample rounded up to a multiple of 8. For example:
+  <p><span class="label">Bytes per sample frame</span> &ndash; Called <em>block align</em> by the spec, this is the number of bytes required to store a single sample frame, i.e. a single sample for each channel. (Sometimes a sample frame is also referred to as a <em>block</em>). It should be equal to the number of channels times the bits per sample rounded up to a multiple of 8. For example:
       <table>
         <tr>
           <th>Channels</th>
@@ -172,8 +172,48 @@
   <p><span class="label">Bits per sample</span> &ndash; For PCM data, typical values will be 8, 16, or 32. I'm not sure why this is a two-byte field in the spec, since any values over 255 would seem pretty excessive. TODO: Do other non-PCM formats take advantage of it being two bytes?</p>
 
   <h2>The Format Chunk (More Exact Version)</h2>
-  <p>OK, so I simplified some things a bit. That last section described the format chunk when the sample format is PCM. The full format chunk spec is actually a bit more complicated when the sample format is something else.</p>
-  <p>Rest of this section: TODO</p>
+  <p>OK, so I simplified some things a bit. That last section described the format chunk when the sample format is PCM, has 1 or two channels, and has 8 or 16 bits per sample. (In other words, a classic old school Wave file). The full format chunk spec actually includes an extension if the format is something else:</p>
+  <table>
+    <tr>
+      <th>Field</th>
+      <th>Size</th>
+      <th>Description</th>
+    </tr>
+    <tr>
+      <td>Extension Size</td>
+      <td>2</td>
+      <td>0 or 22</td>
+    </tr>
+    <tr>
+      <td>Valid Bits Per Sample</td>
+      <td>2</td>
+      <td>TODO</td>
+    </tr>
+    <tr>
+      <td>Channel Mask</td>
+      <td>4</td>
+      <td>TODO</td>
+    </tr>
+    <tr>
+      <td>Sub Format</td>
+      <td>16</td>
+      <td>TODO</td>
+    </tr>
+  </table>
+  <p>If format does not meet the criteria below, then the extension size field should be present:</p>
+  <ul>
+    <li>Sample format is PCM (i.e. 1)</li>
+    <li>Number of channels is 1 or 2</li>
+    <li>Bits per sample is 8 or 16</li>
+  </ul>
+  <p>For all formats except WaveFormatExtensible (i.e. 65534), the extension size should be 0 (i.e, two blank bytes), and that should be the end of the format chunk.</p>
+  <p>When the format is WaveFormatExtensible, the extension size should be 22, and the remaining three fields should be included:</p>
+  <p><span class="label">Valid Bits Per Sample</span> &ndash; TODO</p>
+  <p><span class="label">Channel Mask</span> &ndash; TODO</p>
+  <p><span class="label">Sub Format</span> &ndash; TODO</p>
+  <p>Note that the presence or absense of these fields determines the format chunk size - if both are absent, the chunk size should be 16, if the extension size is present the chunk size should be 18, and if all are present the chunk size should be 40.</p>
+  <p>These variations in the format chunk are a result of adding support for formats that the original wave file spec wasn't capable of specifying.</p>
+
 
   <h2>The Data Chunk</h2>
   <p>The layout for the data chunk is simpler than the format chunk: the normal 8-byte chunk header, followed by nothing but sweet, raw, unfiltered sample data. The sample data can be stored in a number of formats, which will be indicated by the format chunk.</p>
@@ -203,9 +243,9 @@
       <td>2,147,483,647</td>
     </tr>
   </table>
-  <p>Yeah, so that's not weird at all. Notice that 8-bit samples are unsigned, while other bit depths are signed. TODO: Add note about non-multiple-of-8 bit depths</p>
+  <p>Notice that 8-bit samples are unsigned, while other bit depths are signed. Yeah, not weird at all. TODO: Add note about non-multiple-of-8 bit depths</p>
   <p>Samples in a multi-channel PCM wave file are interleaved. That is, in a stereo file, one sample for the left channel will be followed by one sample for the right channel, followed by another sample for the left channel, then right channel, and so forth.</p>
-  <p>The samples for all channels at a moment in time are called a sample frame. That is, a sample frame will contain one sample for each channel. In a monophonic file, a sample frame will consist on 1 sample. In a stereo file, a sample frame has 2 samples (one for the left channel, one for the right channel). In a 5-channel file, a sample frame has 5 samples. The block align field in the format chunk gives the size in bytes of each sample frame. This can be useful when seeking to a particular sample frame in the file.</p>
+  <p>The samples for all channels at a moment in time are called a <em>sample frame</em> (also called a <em>block</em>). That is, a sample frame will contain one sample for each channel. In a monophonic file, a sample frame will consist on 1 sample. In a stereo file, a sample frame has 2 samples (one for the left channel, one for the right channel). In a 5-channel file, a sample frame has 5 samples. The block align field in the format chunk gives the size in bytes of each sample frame. This can be useful when seeking to a particular sample frame in the file.</p>
   <h2>Floating Point Data Chunk</h2>
   <p>Another basic format is to store samples as floating point values (format code 3). This is essentially the same as PCM format, except that samples are in the range -1.0 to 1.0. The bits per sample field for floating point files should be set to 32 or 64. TODO: What about non-32 or 64 bit sizes?</p>
   <h2>Compressed Data Chunk Formats</h2>
@@ -213,9 +253,6 @@
   <ul>
     <li>Links go here</li>
   </ul>
-
-  <h2>Wave Format Extensible</h2>
-  <p>TODO</p>
 
   <h2>The More You Know: Even Chunk Sizes</h2>
   <p>According to the RIFF spec*, chunk sizes must be an even number of bytes. So for example if writing a monophonic file with an odd number of samples, you should append a blank* byte to the end of the data chunk to get it to an even size. TODO: How will this be interpreted as audio?</p>
@@ -230,7 +267,7 @@ and Data Specifications 1.0, August 1991</a></li>
     <li><a href="http://en.wikipedia.org/wiki/WAV">Wikipedia article on the *.wav format</a></li>
   </ul>
   <div id="footnotes">
-  <p>*1 - I'm not sure that the spec prevents chunks also coming after the data chunk, but I'm not sure how common that is. It doesn't seem like a great idea to do that.</p>
+  <p>*1 - I'm not sure that the spec prevents chunks also coming after the data chunk, but I'm not sure how common that is. It doesn't seem like a good idea to do that.</p>
   </div>
     <p>Copyright &copy; <a href="http://www.joelstrait.com">Joel Strait</a> 2009-13.</p>
 </body>
