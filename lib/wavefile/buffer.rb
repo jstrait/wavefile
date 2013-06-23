@@ -11,8 +11,8 @@ module WaveFile
   # Contains methods to convert the sample data in the buffer to a different format.
   class Buffer
 
-    # Creates a new Buffer. You are on the honor system to make sure that the given 
-    # sample data matches the given format.
+    # Creates a new Buffer. The sample array is not compared with the format to make sure 
+    # they match - you are on the honor system to make sure they do.
     def initialize(samples, format)
       @samples = samples
       @format = format
@@ -54,23 +54,38 @@ module WaveFile
     end
 
 
-    # The number of channels the buffer's sample data has
+    # Returns the number of channels the buffer's sample data has
     def channels
       @format.channels
     end
 
 
-    # The bits per sample of the buffer's sample data
+    # Returns the bits per sample of the buffer's sample data
     def bits_per_sample
       @format.bits_per_sample
     end
 
 
-    # The sample rate of the buffer's sample data
+    # Returns the sample rate of the buffer's sample data
     def sample_rate
       @format.sample_rate
     end
 
+    # Returns the sample data contained in the Buffer as an Array. If the Format has 
+    # 1 channel, the Array will be a flat list of samples. If the Format has 2 or more
+    # channels, the Array will include sub arrays for each sample frame, with a sample
+    # for each channel.
+    #
+    # Examples
+    #
+    #   samples = mono_buffer.samples
+    #   # => [-0.5, 0.3, 0.2, -0.9, ...]
+    #
+    #   samples = stereo_buffer.samples
+    #   # => [[-0.2, 0.5], [0.1, 0.2], [-0.4, 0.7], [0.1, 0.2], ...]
+    #
+    #   samples = three_channel_buffer.samples
+    #   # => [[0.3, 0.5, 0.2], [-0.1, 0.2, -0.9], [0.2, 0.3, -0.4], [0.1, 0.2, -0.8], ...]
     attr_reader :samples
 
   private
