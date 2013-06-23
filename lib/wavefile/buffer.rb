@@ -26,7 +26,7 @@ module WaveFile
     #
     # Examples
     #
-    #   new_format = Format.new(:mono, 16, 44100)
+    #   new_format = Format.new(:mono, :pcm_16, 44100)
     #   new_buffer = old_buffer.convert(new_format)
     #
     # Returns a new Buffer; the existing Buffer is unmodified.
@@ -43,7 +43,7 @@ module WaveFile
     #
     # Examples
     #
-    #   new_format = Format.new(:mono, 16, 44100)
+    #   new_format = Format.new(:mono, :pcm_16, 44100)
     #   old_buffer.convert!(new_format)
     #
     # Returns self.
