@@ -1,17 +1,17 @@
 module WaveFile
-  # Error that is raised when an attempt is made to perform an unsupported or undefined
+  # Error that is raised when an attempt is made to perform an unsupported or undefined 
   # conversion between two sample data formats.
   class BufferConversionError < StandardError; end
 
 
-  # Represents a collection of samples in a certain format (e.g. 16-bit mono).
-  # Reader returns sample data contained in Buffers, and Writer expects incoming sample
+  # Represents a collection of samples in a certain format (e.g. 16-bit mono). 
+  # Reader returns sample data contained in Buffers, and Writer expects incoming sample 
   # data to be contained in a Buffer as well.
   #
   # Contains methods to convert the sample data in the buffer to a different format.
   class Buffer
 
-    # Creates a new Buffer. You are on the honor system to make sure that the given
+    # Creates a new Buffer. You are on the honor system to make sure that the given 
     # sample data matches the given format.
     def initialize(samples, format)
       @samples = samples
@@ -19,7 +19,7 @@ module WaveFile
     end
 
 
-    # Creates a new Buffer containing the sample data of this Buffer, but converted to
+    # Creates a new Buffer containing the sample data of this Buffer, but converted to 
     # a different format.
     #
     # new_format - The format that the sample data should be converted to
@@ -36,7 +36,7 @@ module WaveFile
     end
 
 
-    # Converts the sample data contained in the Buffer to a new format. The sample data
+    # Converts the sample data contained in the Buffer to a new format. The sample data 
     # is converted in place, so the existing Buffer is modified.
     #
     # new_format - The format that the sample data should be converted to
@@ -130,7 +130,7 @@ module WaveFile
       else
         if new_bits_per_sample > old_bits_per_sample
           convert_sample_format_helper(samples) {|sample| sample << shift_amount }
-        else
+        elses
           convert_sample_format_helper(samples) {|sample| sample >> shift_amount }
         end
       end
