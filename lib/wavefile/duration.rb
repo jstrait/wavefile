@@ -1,5 +1,5 @@
 module WaveFile
-  # Calculates playback time given the number of sample frames and the sample rate. For
+  # Calculates playback time given the number of sample frames and the sample rate. For 
   # example, you can use this to calculate how long a given Wave file is.
   #
   # This class is immutable - once a new Duration is constructed, it can't be modified.

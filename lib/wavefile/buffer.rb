@@ -72,8 +72,8 @@ module WaveFile
     end
 
     # Returns the sample data contained in the Buffer as an Array. If the Format has 
-    # 1 channel, the Array will be a flat list of samples. If the Format has 2 or more
-    # channels, the Array will include sub arrays for each sample frame, with a sample
+    # 1 channel, the Array will be a flat list of samples. If the Format has 2 or more 
+    # channels, the Array will include sub arrays for each sample frame, with a sample 
     # for each channel.
     #
     # Examples
