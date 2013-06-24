@@ -145,7 +145,7 @@ module WaveFile
       else
         if new_bits_per_sample > old_bits_per_sample
           convert_sample_format_helper(samples) {|sample| sample << shift_amount }
-        elses
+        else
           convert_sample_format_helper(samples) {|sample| sample >> shift_amount }
         end
       end
