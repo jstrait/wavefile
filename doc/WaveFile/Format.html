@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
+
+<title>class WaveFile::Format - RDoc Documentation</title>
+
+<link type="text/css" media="screen" href="../rdoc.css" rel="stylesheet">
+
+<script type="text/javascript">
+  var rdoc_rel_prefix = "../";
+</script>
+
+<script type="text/javascript" charset="utf-8" src="../js/jquery.js"></script>
+<script type="text/javascript" charset="utf-8" src="../js/navigation.js"></script>
+<script type="text/javascript" charset="utf-8" src="../js/search_index.js"></script>
+<script type="text/javascript" charset="utf-8" src="../js/search.js"></script>
+<script type="text/javascript" charset="utf-8" src="../js/searcher.js"></script>
+<script type="text/javascript" charset="utf-8" src="../js/darkfish.js"></script>
+
+
+<body id="top" class="class">
+<nav id="metadata">
+  <nav id="home-section" class="section">
+  <h3 class="section-header">
+    <a href="../index.html">Home</a>
+    <a href="../table_of_contents.html#classes">Classes</a>
+    <a href="../table_of_contents.html#methods">Methods</a>
+  </h3>
+</nav>
+
+
+  <nav id="search-section" class="section project-section" class="initially-hidden">
+  <form action="#" method="get" accept-charset="utf-8">
+    <h3 class="section-header">
+      <input type="text" name="search" placeholder="Search" id="search-field"
+             title="Type to search, Up and Down to navigate, Enter to load">
+    </h3>
+  </form>
+
+  <ul id="search-results" class="initially-hidden"></ul>
+</nav>
+
+
+  
+
+  <div id="file-metadata">
+    <nav id="file-list-section" class="section">
+  <h3 class="section-header">Defined In</h3>
+  <ul>
+    <li>lib/wavefile/format.rb
+    <li>lib/wavefile/reader.rb
+  </ul>
+</nav>
+
+    
+  </div>
+
+  <div id="class-metadata">
+    
+    <nav id="parent-class-section" class="section">
+  <h3 class="section-header">Parent</h3>
+  
+  <p class="link">Object
+  
+</nav>
+
+    
+    
+    <!-- Method Quickref -->
+<nav id="method-list-section" class="section">
+  <h3 class="section-header">Methods</h3>
+
+  <ul class="link-list">
+    
+    <li ><a href="#method-c-new">::new</a>
+    
+    <li ><a href="#method-i-mono-3F">#mono?</a>
+    
+    <li ><a href="#method-i-stereo-3F">#stereo?</a>
+    
+  </ul>
+</nav>
+
+  </div>
+
+  <div id="project-metadata">
+    
+    <nav id="classindex-section" class="section project-section">
+  <h3 class="section-header">Class and Module Index</h3>
+
+  <ul class="link-list">
+  
+    <li><a href="../WaveFile.html">WaveFile</a>
+  
+    <li><a href="../WaveFile/Buffer.html">WaveFile::Buffer</a>
+  
+    <li><a href="../WaveFile/BufferConversionError.html">WaveFile::BufferConversionError</a>
+  
+    <li><a href="../WaveFile/Duration.html">WaveFile::Duration</a>
+  
+    <li><a href="../WaveFile/Format.html">WaveFile::Format</a>
+  
+    <li><a href="../WaveFile/Info.html">WaveFile::Info</a>
+  
+    <li><a href="../WaveFile/InvalidFormatError.html">WaveFile::InvalidFormatError</a>
+  
+    <li><a href="../WaveFile/Reader.html">WaveFile::Reader</a>
+  
+    <li><a href="../WaveFile/UnsupportedFormatError.html">WaveFile::UnsupportedFormatError</a>
+  
+    <li><a href="../WaveFile/Writer.html">WaveFile::Writer</a>
+  
+  </ul>
+</nav>
+
+  </div>
+</nav>
+
+<div id="documentation">
+  <h1 class="class">class WaveFile::Format</h1>
+
+  <div id="description" class="description">
+    
+<p>Represents information about the data format for a Wave file, such as
+number of channels, bits per sample, sample rate, and so forth. A <a
+href="Format.html">Format</a> instance is usedby <a
+href="Reader.html">Reader</a> to indicate what format to read samples out
+as, and by <a href="Writer.html">Writer</a> to indicate what format to
+write samples as.</p>
+
+<p>This class is immutable - once a new <a href="Format.html">Format</a> is
+constructed, it can’t be modified.</p>
+
+  </div><!-- description -->
+
+  
+  
+  
+  <section id="5Buntitled-5D" class="documentation-section">
+    
+
+    
+
+    
+    <!-- Constants -->
+    <section id="constants-list" class="section">
+      <h3 class="section-header">Constants</h3>
+      <dl>
+      
+        <dt id="MAX_CHANNELS">MAX_CHANNELS
+        
+        <dd class="description">
+        
+      
+        <dt id="MAX_SAMPLE_RATE">MAX_SAMPLE_RATE
+        
+        <dd class="description">
+        
+      
+        <dt id="MIN_CHANNELS">MIN_CHANNELS
+        
+        <dd class="description"><p>Not using ranges because of 1.8.7 performance problems with Range.max</p>
+        
+      
+        <dt id="MIN_SAMPLE_RATE">MIN_SAMPLE_RATE
+        
+        <dd class="description">
+        
+      
+        <dt id="SUPPORTED_BITS_PER_SAMPLE">SUPPORTED_BITS_PER_SAMPLE
+        
+        <dd class="description">
+        
+      
+        <dt id="SUPPORTED_SAMPLE_FORMATS">SUPPORTED_SAMPLE_FORMATS
+        
+        <dd class="description">
+        
+      
+      </dl>
+    </section>
+    
+
+    
+    <!-- Attributes -->
+    <section id="attribute-method-details" class="method-section section">
+      <h3 class="section-header">Attributes</h3>
+
+      
+      <div id="attribute-i-bits_per_sample" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">bits_per_sample</span><span
+            class="attribute-access-type">[R]</span>
+        </div>
+
+        <div class="method-description">
+        
+        <p>Returns the number of bits per sample, such as 8, 16, 32, or 64.</p>
+        
+        </div>
+      </div>
+      
+      <div id="attribute-i-block_align" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">block_align</span><span
+            class="attribute-access-type">[R]</span>
+        </div>
+
+        <div class="method-description">
+        
+        <p>Returns the number of bytes in each sample frame. For example, in a 16-bit
+stereo file, this will be 4 (2 bytes for each 16-bit sample, times 2
+channels).</p>
+        
+        </div>
+      </div>
+      
+      <div id="attribute-i-byte_rate" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">byte_rate</span><span
+            class="attribute-access-type">[R]</span>
+        </div>
+
+        <div class="method-description">
+        
+        <p>Returns the number of bytes contained in 1 second of sample data. Is
+equivalent to <a
+href="Format.html#attribute-i-block_align">#block_align</a> * sample_rate.</p>
+        
+        </div>
+      </div>
+      
+      <div id="attribute-i-channels" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">channels</span><span
+            class="attribute-access-type">[R]</span>
+        </div>
+
+        <div class="method-description">
+        
+        <p>Returns the number of channels, such as 1 or 2. This will always return a
+Fixnum, even if the number of channels is specified with a symbol (e.g.
+:mono) in the constructor.</p>
+        
+        </div>
+      </div>
+      
+      <div id="attribute-i-sample_format" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">sample_format</span><span
+            class="attribute-access-type">[R]</span>
+        </div>
+
+        <div class="method-description">
+        
+        <p>Returns a symbol indicating the sample format, such as :pcm or :float</p>
+        
+        </div>
+      </div>
+      
+      <div id="attribute-i-sample_rate" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">sample_rate</span><span
+            class="attribute-access-type">[R]</span>
+        </div>
+
+        <div class="method-description">
+        
+        <p>Returns the number of samples per second, such as 44100.</p>
+        
+        </div>
+      </div>
+      
+    </section><!-- attribute-method-details -->
+    
+
+    <!-- Methods -->
+    
+     <section id="public-class-5Buntitled-5D-method-details" class="method-section section">
+      <h3 class="section-header">Public Class Methods</h3>
+
+    
+      <div id="method-c-new" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">new</span><span
+            class="method-args">(channels, format_code, sample_rate)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Constructs a new immutable <a href="Format.html">Format</a>.</p>
+<dl class="rdoc-list note-list"><dt>channels
+<dd>
+<p>The number of channels in the format. Can either be a Fixnum(e.g. 1, 2, 3)
+or the symbols :mono (equivalent to 1) or:stereo (equivalent to 2).</p>
+</dd><dt>format_code
+<dd>
+<p>A symbol indicating the format of each sample. Consists oftwo parts: a
+format code, and the bits per sample. Forexample, :pcm_16 or :float_32.</p>
+</dd><dt><a href="Format.html#attribute-i-sample_rate">#sample_rate</a>
+<dd>
+<p>The number of samples per second, such as 44100</p>
+</dd></dl>
+          
+          
+
+          
+          <div class="method-source-code" id="new-source">
+            <pre><span class="ruby-comment"># File lib/wavefile/format.rb, line 33</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">channels</span>, <span class="ruby-identifier">format_code</span>, <span class="ruby-identifier">sample_rate</span>)
+  <span class="ruby-identifier">channels</span> = <span class="ruby-identifier">normalize_channels</span>(<span class="ruby-identifier">channels</span>)
+  <span class="ruby-identifier">sample_format</span>, <span class="ruby-identifier">bits_per_sample</span> = <span class="ruby-identifier">normalize_format_code</span>(<span class="ruby-identifier">format_code</span>)
+  <span class="ruby-identifier">validate_channels</span>(<span class="ruby-identifier">channels</span>)
+  <span class="ruby-identifier">validate_sample_format</span>(<span class="ruby-identifier">sample_format</span>)
+  <span class="ruby-identifier">validate_bits_per_sample</span>(<span class="ruby-identifier">sample_format</span>, <span class="ruby-identifier">bits_per_sample</span>)
+  <span class="ruby-identifier">validate_sample_rate</span>(<span class="ruby-identifier">sample_rate</span>)
+
+  <span class="ruby-ivar">@channels</span> = <span class="ruby-identifier">channels</span>
+  <span class="ruby-ivar">@sample_format</span> = <span class="ruby-identifier">sample_format</span>
+  <span class="ruby-ivar">@bits_per_sample</span> = <span class="ruby-identifier">bits_per_sample</span>
+  <span class="ruby-ivar">@sample_rate</span> = <span class="ruby-identifier">sample_rate</span>
+  <span class="ruby-ivar">@block_align</span> = (<span class="ruby-ivar">@bits_per_sample</span> <span class="ruby-operator">/</span> <span class="ruby-value">8</span>) <span class="ruby-operator">*</span> <span class="ruby-ivar">@channels</span>
+  <span class="ruby-ivar">@byte_rate</span> = <span class="ruby-ivar">@block_align</span> <span class="ruby-operator">*</span> <span class="ruby-ivar">@sample_rate</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- new-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- new-method -->
+
+    
+    </section><!-- public-class-method-details -->
+  
+     <section id="public-instance-5Buntitled-5D-method-details" class="method-section section">
+      <h3 class="section-header">Public Instance Methods</h3>
+
+    
+      <div id="method-i-mono-3F" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">mono?</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Returns true if the format has 1 channel, false otherwise.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="mono-3F-source">
+            <pre><span class="ruby-comment"># File lib/wavefile/format.rb, line 50</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">mono?</span>
+  <span class="ruby-ivar">@channels</span> <span class="ruby-operator">==</span> <span class="ruby-value">1</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- mono-3F-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- mono-3F-method -->
+
+    
+      <div id="method-i-stereo-3F" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">stereo?</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Returns true if the format has 2 channels, false otherwise.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="stereo-3F-source">
+            <pre><span class="ruby-comment"># File lib/wavefile/format.rb, line 55</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">stereo?</span>
+  <span class="ruby-ivar">@channels</span> <span class="ruby-operator">==</span> <span class="ruby-value">2</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- stereo-3F-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- stereo-3F-method -->
+
+    
+    </section><!-- public-instance-method-details -->
+  
+  </section><!-- 5Buntitled-5D -->
+
+</div><!-- documentation -->
+
+
+<footer id="validator-badges">
+  <p><a href="http://validator.w3.org/check/referer">[Validate]</a>
+  <p>Generated by <a href="https://github.com/rdoc/rdoc">RDoc</a> 4.0.1.
+  <p>Generated with the <a href="http://deveiate.org/projects/Darkfish-Rdoc/">Darkfish Rdoc Generator</a> 3.
+</footer>
+

@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
+
+<title>class WaveFile::Buffer - RDoc Documentation</title>
+
+<link type="text/css" media="screen" href="../rdoc.css" rel="stylesheet">
+
+<script type="text/javascript">
+  var rdoc_rel_prefix = "../";
+</script>
+
+<script type="text/javascript" charset="utf-8" src="../js/jquery.js"></script>
+<script type="text/javascript" charset="utf-8" src="../js/navigation.js"></script>
+<script type="text/javascript" charset="utf-8" src="../js/search_index.js"></script>
+<script type="text/javascript" charset="utf-8" src="../js/search.js"></script>
+<script type="text/javascript" charset="utf-8" src="../js/searcher.js"></script>
+<script type="text/javascript" charset="utf-8" src="../js/darkfish.js"></script>
+
+
+<body id="top" class="class">
+<nav id="metadata">
+  <nav id="home-section" class="section">
+  <h3 class="section-header">
+    <a href="../index.html">Home</a>
+    <a href="../table_of_contents.html#classes">Classes</a>
+    <a href="../table_of_contents.html#methods">Methods</a>
+  </h3>
+</nav>
+
+
+  <nav id="search-section" class="section project-section" class="initially-hidden">
+  <form action="#" method="get" accept-charset="utf-8">
+    <h3 class="section-header">
+      <input type="text" name="search" placeholder="Search" id="search-field"
+             title="Type to search, Up and Down to navigate, Enter to load">
+    </h3>
+  </form>
+
+  <ul id="search-results" class="initially-hidden"></ul>
+</nav>
+
+
+  
+
+  <div id="file-metadata">
+    <nav id="file-list-section" class="section">
+  <h3 class="section-header">Defined In</h3>
+  <ul>
+    <li>lib/wavefile/buffer.rb
+  </ul>
+</nav>
+
+    
+  </div>
+
+  <div id="class-metadata">
+    
+    <nav id="parent-class-section" class="section">
+  <h3 class="section-header">Parent</h3>
+  
+  <p class="link">Object
+  
+</nav>
+
+    
+    
+    <!-- Method Quickref -->
+<nav id="method-list-section" class="section">
+  <h3 class="section-header">Methods</h3>
+
+  <ul class="link-list">
+    
+    <li ><a href="#method-c-new">::new</a>
+    
+    <li ><a href="#method-i-bits_per_sample">#bits_per_sample</a>
+    
+    <li ><a href="#method-i-channels">#channels</a>
+    
+    <li ><a href="#method-i-convert">#convert</a>
+    
+    <li ><a href="#method-i-convert-21">#convert!</a>
+    
+    <li ><a href="#method-i-sample_rate">#sample_rate</a>
+    
+  </ul>
+</nav>
+
+  </div>
+
+  <div id="project-metadata">
+    
+    <nav id="classindex-section" class="section project-section">
+  <h3 class="section-header">Class and Module Index</h3>
+
+  <ul class="link-list">
+  
+    <li><a href="../WaveFile.html">WaveFile</a>
+  
+    <li><a href="../WaveFile/Buffer.html">WaveFile::Buffer</a>
+  
+    <li><a href="../WaveFile/BufferConversionError.html">WaveFile::BufferConversionError</a>
+  
+    <li><a href="../WaveFile/Duration.html">WaveFile::Duration</a>
+  
+    <li><a href="../WaveFile/Format.html">WaveFile::Format</a>
+  
+    <li><a href="../WaveFile/Info.html">WaveFile::Info</a>
+  
+    <li><a href="../WaveFile/InvalidFormatError.html">WaveFile::InvalidFormatError</a>
+  
+    <li><a href="../WaveFile/Reader.html">WaveFile::Reader</a>
+  
+    <li><a href="../WaveFile/UnsupportedFormatError.html">WaveFile::UnsupportedFormatError</a>
+  
+    <li><a href="../WaveFile/Writer.html">WaveFile::Writer</a>
+  
+  </ul>
+</nav>
+
+  </div>
+</nav>
+
+<div id="documentation">
+  <h1 class="class">class WaveFile::Buffer</h1>
+
+  <div id="description" class="description">
+    
+<p>Represents a collection of samples in a certain format (e.g. 16-bit mono).
+<a href="Reader.html">Reader</a> returns sample data contained in Buffers,
+and <a href="Writer.html">Writer</a> expects incoming sample data to be
+contained in a <a href="Buffer.html">Buffer</a> as well.</p>
+
+<p>Contains methods to convert the sample data in the buffer to a different
+format.</p>
+
+  </div><!-- description -->
+
+  
+  
+  
+  <section id="5Buntitled-5D" class="documentation-section">
+    
+
+    
+
+    
+
+    
+    <!-- Attributes -->
+    <section id="attribute-method-details" class="method-section section">
+      <h3 class="section-header">Attributes</h3>
+
+      
+      <div id="attribute-i-samples" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">samples</span><span
+            class="attribute-access-type">[R]</span>
+        </div>
+
+        <div class="method-description">
+        
+        <p>Returns the sample data contained in the <a href="Buffer.html">Buffer</a>
+as an Array. If the <a href="Format.html">Format</a> has 1 channel, the
+Array will be a flat list of samples. If the <a
+href="Format.html">Format</a> has 2 or morechannels, the Array will include
+sub arrays for each sample frame, with a samplefor each channel.</p>
+
+<h3 id="attribute-i-samples-label-Examples">Examples<span><a href="#attribute-i-samples-label-Examples">&para;</a> <a href="#documentation">&uarr;</a></span></h3>
+
+<pre class="ruby"><span class="ruby-identifier">samples</span> = <span class="ruby-identifier">mono_buffer</span>.<span class="ruby-identifier">samples</span>
+<span class="ruby-comment"># =&gt; [-0.5, 0.3, 0.2, -0.9, ...]</span>
+
+<span class="ruby-identifier">samples</span> = <span class="ruby-identifier">stereo_buffer</span>.<span class="ruby-identifier">samples</span>
+<span class="ruby-comment"># =&gt; [[-0.2, 0.5], [0.1, 0.2], [-0.4, 0.7], [0.1, 0.2], ...]</span>
+
+<span class="ruby-identifier">samples</span> = <span class="ruby-identifier">three_channel_buffer</span>.<span class="ruby-identifier">samples</span>
+<span class="ruby-comment"># =&gt; [[0.3, 0.5, 0.2], [-0.1, 0.2, -0.9], [0.2, 0.3, -0.4], [0.1, 0.2, -0.8], ...]</span>
+</pre>
+        
+        </div>
+      </div>
+      
+    </section><!-- attribute-method-details -->
+    
+
+    <!-- Methods -->
+    
+     <section id="public-class-5Buntitled-5D-method-details" class="method-section section">
+      <h3 class="section-header">Public Class Methods</h3>
+
+    
+      <div id="method-c-new" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">new</span><span
+            class="method-args">(samples, format)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Creates a new <a href="Buffer.html">Buffer</a>. The sample array is not
+compared with the format to make sure they match - you are on the honor
+system to make sure they do.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="new-source">
+            <pre><span class="ruby-comment"># File lib/wavefile/buffer.rb, line 16</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">samples</span>, <span class="ruby-identifier">format</span>)
+  <span class="ruby-ivar">@samples</span> = <span class="ruby-identifier">samples</span>
+  <span class="ruby-ivar">@format</span> = <span class="ruby-identifier">format</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- new-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- new-method -->
+
+    
+    </section><!-- public-class-method-details -->
+  
+     <section id="public-instance-5Buntitled-5D-method-details" class="method-section section">
+      <h3 class="section-header">Public Instance Methods</h3>
+
+    
+      <div id="method-i-bits_per_sample" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">bits_per_sample</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Returns the bits per sample of the buffer’s sample data</p>
+          
+          
+
+          
+          <div class="method-source-code" id="bits_per_sample-source">
+            <pre><span class="ruby-comment"># File lib/wavefile/buffer.rb, line 64</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">bits_per_sample</span>
+  <span class="ruby-ivar">@format</span>.<span class="ruby-identifier">bits_per_sample</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- bits_per_sample-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- bits_per_sample-method -->
+
+    
+      <div id="method-i-channels" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">channels</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Returns the number of channels the buffer’s sample data has</p>
+          
+          
+
+          
+          <div class="method-source-code" id="channels-source">
+            <pre><span class="ruby-comment"># File lib/wavefile/buffer.rb, line 58</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">channels</span>
+  <span class="ruby-ivar">@format</span>.<span class="ruby-identifier">channels</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- channels-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- channels-method -->
+
+    
+      <div id="method-i-convert" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">convert</span><span
+            class="method-args">(new_format)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Creates a new <a href="Buffer.html">Buffer</a> containing the sample data
+of this <a href="Buffer.html">Buffer</a>, but converted to a different
+format.</p>
+<dl class="rdoc-list note-list"><dt>new_format
+<dd>
+<p>The format that the sample data should be converted to</p>
+</dd></dl>
+
+<h3 id="method-i-convert-label-Examples">Examples<span><a href="#method-i-convert-label-Examples">&para;</a> <a href="#documentation">&uarr;</a></span></h3>
+
+<pre class="ruby"><span class="ruby-identifier">new_format</span> = <span class="ruby-constant">Format</span>.<span class="ruby-identifier">new</span>(:<span class="ruby-identifier">mono</span>, :<span class="ruby-identifier">pcm_16</span>, <span class="ruby-value">44100</span>)
+<span class="ruby-identifier">new_buffer</span> = <span class="ruby-identifier">old_buffer</span>.<span class="ruby-identifier">convert</span>(<span class="ruby-identifier">new_format</span>)
+</pre>
+
+<p>Returns a new <a href="Buffer.html">Buffer</a>; the existing <a
+href="Buffer.html">Buffer</a> is unmodified.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="convert-source">
+            <pre><span class="ruby-comment"># File lib/wavefile/buffer.rb, line 33</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">convert</span>(<span class="ruby-identifier">new_format</span>)
+  <span class="ruby-identifier">new_samples</span> = <span class="ruby-identifier">convert_buffer</span>(<span class="ruby-ivar">@samples</span>.<span class="ruby-identifier">dup</span>, <span class="ruby-ivar">@format</span>, <span class="ruby-identifier">new_format</span>)
+  <span class="ruby-constant">Buffer</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">new_samples</span>, <span class="ruby-identifier">new_format</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- convert-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- convert-method -->
+
+    
+      <div id="method-i-convert-21" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">convert!</span><span
+            class="method-args">(new_format)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Converts the sample data contained in the <a href="Buffer.html">Buffer</a>
+to a new format. The sample data is converted in place, so the existing <a
+href="Buffer.html">Buffer</a> is modified.</p>
+<dl class="rdoc-list note-list"><dt>new_format
+<dd>
+<p>The format that the sample data should be converted to</p>
+</dd></dl>
+
+<h3 id="method-i-convert-21-label-Examples">Examples<span><a href="#method-i-convert-21-label-Examples">&para;</a> <a href="#documentation">&uarr;</a></span></h3>
+
+<pre class="ruby"><span class="ruby-identifier">new_format</span> = <span class="ruby-constant">Format</span>.<span class="ruby-identifier">new</span>(:<span class="ruby-identifier">mono</span>, :<span class="ruby-identifier">pcm_16</span>, <span class="ruby-value">44100</span>)
+<span class="ruby-identifier">old_buffer</span>.<span class="ruby-identifier">convert!</span>(<span class="ruby-identifier">new_format</span>)
+</pre>
+
+<p>Returns self.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="convert-21-source">
+            <pre><span class="ruby-comment"># File lib/wavefile/buffer.rb, line 50</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">convert!</span>(<span class="ruby-identifier">new_format</span>)
+  <span class="ruby-ivar">@samples</span> = <span class="ruby-identifier">convert_buffer</span>(<span class="ruby-ivar">@samples</span>, <span class="ruby-ivar">@format</span>, <span class="ruby-identifier">new_format</span>)
+  <span class="ruby-ivar">@format</span> = <span class="ruby-identifier">new_format</span>
+  <span class="ruby-keyword">self</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- convert-21-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- convert-21-method -->
+
+    
+      <div id="method-i-sample_rate" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">sample_rate</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Returns the sample rate of the buffer’s sample data</p>
+          
+          
+
+          
+          <div class="method-source-code" id="sample_rate-source">
+            <pre><span class="ruby-comment"># File lib/wavefile/buffer.rb, line 70</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">sample_rate</span>
+  <span class="ruby-ivar">@format</span>.<span class="ruby-identifier">sample_rate</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- sample_rate-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- sample_rate-method -->
+
+    
+    </section><!-- public-instance-method-details -->
+  
+  </section><!-- 5Buntitled-5D -->
+
+</div><!-- documentation -->
+
+
+<footer id="validator-badges">
+  <p><a href="http://validator.w3.org/check/referer">[Validate]</a>
+  <p>Generated by <a href="https://github.com/rdoc/rdoc">RDoc</a> 4.0.1.
+  <p>Generated with the <a href="http://deveiate.org/projects/Darkfish-Rdoc/">Darkfish Rdoc Generator</a> 3.
+</footer>
+

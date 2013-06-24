@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
+
+<title>class WaveFile::Writer - RDoc Documentation</title>
+
+<link type="text/css" media="screen" href="../rdoc.css" rel="stylesheet">
+
+<script type="text/javascript">
+  var rdoc_rel_prefix = "../";
+</script>
+
+<script type="text/javascript" charset="utf-8" src="../js/jquery.js"></script>
+<script type="text/javascript" charset="utf-8" src="../js/navigation.js"></script>
+<script type="text/javascript" charset="utf-8" src="../js/search_index.js"></script>
+<script type="text/javascript" charset="utf-8" src="../js/search.js"></script>
+<script type="text/javascript" charset="utf-8" src="../js/searcher.js"></script>
+<script type="text/javascript" charset="utf-8" src="../js/darkfish.js"></script>
+
+
+<body id="top" class="class">
+<nav id="metadata">
+  <nav id="home-section" class="section">
+  <h3 class="section-header">
+    <a href="../index.html">Home</a>
+    <a href="../table_of_contents.html#classes">Classes</a>
+    <a href="../table_of_contents.html#methods">Methods</a>
+  </h3>
+</nav>
+
+
+  <nav id="search-section" class="section project-section" class="initially-hidden">
+  <form action="#" method="get" accept-charset="utf-8">
+    <h3 class="section-header">
+      <input type="text" name="search" placeholder="Search" id="search-field"
+             title="Type to search, Up and Down to navigate, Enter to load">
+    </h3>
+  </form>
+
+  <ul id="search-results" class="initially-hidden"></ul>
+</nav>
+
+
+  
+
+  <div id="file-metadata">
+    <nav id="file-list-section" class="section">
+  <h3 class="section-header">Defined In</h3>
+  <ul>
+    <li>lib/wavefile/writer.rb
+  </ul>
+</nav>
+
+    
+  </div>
+
+  <div id="class-metadata">
+    
+    <nav id="parent-class-section" class="section">
+  <h3 class="section-header">Parent</h3>
+  
+  <p class="link">Object
+  
+</nav>
+
+    
+    
+    <!-- Method Quickref -->
+<nav id="method-list-section" class="section">
+  <h3 class="section-header">Methods</h3>
+
+  <ul class="link-list">
+    
+    <li ><a href="#method-c-new">::new</a>
+    
+    <li ><a href="#method-i-close">#close</a>
+    
+    <li ><a href="#method-i-closed-3F">#closed?</a>
+    
+    <li ><a href="#method-i-total_duration">#total_duration</a>
+    
+    <li ><a href="#method-i-write">#write</a>
+    
+  </ul>
+</nav>
+
+  </div>
+
+  <div id="project-metadata">
+    
+    <nav id="classindex-section" class="section project-section">
+  <h3 class="section-header">Class and Module Index</h3>
+
+  <ul class="link-list">
+  
+    <li><a href="../WaveFile.html">WaveFile</a>
+  
+    <li><a href="../WaveFile/Buffer.html">WaveFile::Buffer</a>
+  
+    <li><a href="../WaveFile/BufferConversionError.html">WaveFile::BufferConversionError</a>
+  
+    <li><a href="../WaveFile/Duration.html">WaveFile::Duration</a>
+  
+    <li><a href="../WaveFile/Format.html">WaveFile::Format</a>
+  
+    <li><a href="../WaveFile/Info.html">WaveFile::Info</a>
+  
+    <li><a href="../WaveFile/InvalidFormatError.html">WaveFile::InvalidFormatError</a>
+  
+    <li><a href="../WaveFile/Reader.html">WaveFile::Reader</a>
+  
+    <li><a href="../WaveFile/UnsupportedFormatError.html">WaveFile::UnsupportedFormatError</a>
+  
+    <li><a href="../WaveFile/Writer.html">WaveFile::Writer</a>
+  
+  </ul>
+</nav>
+
+  </div>
+</nav>
+
+<div id="documentation">
+  <h1 class="class">class WaveFile::Writer</h1>
+
+  <div id="description" class="description">
+    
+<p>Provides the ability to write data to a wave file.</p>
+
+  </div><!-- description -->
+
+  
+  
+  
+  <section id="5Buntitled-5D" class="documentation-section">
+    
+
+    
+
+    
+
+    
+    <!-- Attributes -->
+    <section id="attribute-method-details" class="method-section section">
+      <h3 class="section-header">Attributes</h3>
+
+      
+      <div id="attribute-i-file_name" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">file_name</span><span
+            class="attribute-access-type">[R]</span>
+        </div>
+
+        <div class="method-description">
+        
+        <p>Returns the name of the Wave file that is being written to</p>
+        
+        </div>
+      </div>
+      
+      <div id="attribute-i-format" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">format</span><span
+            class="attribute-access-type">[R]</span>
+        </div>
+
+        <div class="method-description">
+        
+        <p>Returns a <a href="Format.html">Format</a> object describing the Wave file
+being written (number of channels, sample format and bits per sample,
+sample rate, etc.)</p>
+        
+        </div>
+      </div>
+      
+      <div id="attribute-i-total_sample_frames" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">total_sample_frames</span><span
+            class="attribute-access-type">[R]</span>
+        </div>
+
+        <div class="method-description">
+        
+        <p>Returns the number of samples (per channel) that have been written to the
+file so far. For example, if 1000 “left” samples and 1000 “right” samples
+have been written to a stereo file, this will return 1000.</p>
+        
+        </div>
+      </div>
+      
+    </section><!-- attribute-method-details -->
+    
+
+    <!-- Methods -->
+    
+     <section id="public-class-5Buntitled-5D-method-details" class="method-section section">
+      <h3 class="section-header">Public Class Methods</h3>
+
+    
+      <div id="method-c-new" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">new</span><span
+            class="method-args">(file_name, format) { |self| ... }</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Returns a constructed <a href="Writer.html">Writer</a> object which is
+available for writing sample data to the specified file (via the write
+method). When all sample data has been written, the <a
+href="Writer.html">Writer</a> should be closed. Note that the wave file
+being written to will NOT be valid (and playable in other programs) until
+the <a href="Writer.html">Writer</a> has been closed.</p>
+
+<p>If a block is given to this method, sample data can be written inside the
+given block. When the block terminates, the <a
+href="Writer.html">Writer</a> will be automatically closed (and no more
+sample data can be written).</p>
+
+<p>If no block is given, then sample data can be written until the close
+method is called.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="new-source">
+            <pre><span class="ruby-comment"># File lib/wavefile/writer.rb, line 33</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">file_name</span>, <span class="ruby-identifier">format</span>)
+  <span class="ruby-ivar">@file_name</span> = <span class="ruby-identifier">file_name</span>
+  <span class="ruby-ivar">@file</span> = <span class="ruby-constant">File</span>.<span class="ruby-identifier">open</span>(<span class="ruby-identifier">file_name</span>, <span class="ruby-string">&quot;wb&quot;</span>)
+  <span class="ruby-ivar">@format</span> = <span class="ruby-identifier">format</span>
+
+  <span class="ruby-ivar">@total_sample_frames</span> = <span class="ruby-value">0</span>
+  <span class="ruby-ivar">@pack_code</span> = <span class="ruby-constant">PACK_CODES</span>[<span class="ruby-identifier">format</span>.<span class="ruby-identifier">sample_format</span>][<span class="ruby-identifier">format</span>.<span class="ruby-identifier">bits_per_sample</span>]
+
+  <span class="ruby-comment"># Note that the correct sizes for the RIFF and data chunks can't be determined</span>
+  <span class="ruby-comment"># until all samples have been written, so this header as written will be incorrect.</span>
+  <span class="ruby-comment"># When close is called, the correct sizes will be re-written.</span>
+  <span class="ruby-identifier">write_header</span>(<span class="ruby-value">0</span>)
+
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">block_given?</span>
+    <span class="ruby-keyword">begin</span>
+      <span class="ruby-keyword">yield</span>(<span class="ruby-keyword">self</span>)
+    <span class="ruby-keyword">ensure</span>
+      <span class="ruby-identifier">close</span>
+    <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- new-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- new-method -->
+
+    
+    </section><!-- public-class-method-details -->
+  
+     <section id="public-instance-5Buntitled-5D-method-details" class="method-section section">
+      <h3 class="section-header">Public Instance Methods</h3>
+
+    
+      <div id="method-i-close" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">close</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Closes the <a href="Writer.html">Writer</a>. After a <a
+href="Writer.html">Writer</a> is closed, no more sample data can be written
+to it.</p>
+
+<p>Note that the wave file will NOT be valid until this method is called. The
+wave file format requires certain information about the amount of sample
+data, and this can’t be determined until all samples have been written.
+(This method doesn’t need to be called when passing a block to <a
+href="Writer.html#method-c-new">::new</a>, as this method will
+automatically be called when the block exits).</p>
+
+<p>Returns nothing.Raises IOError if the <a href="Writer.html">Writer</a> is
+already closed.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="close-source">
+            <pre><span class="ruby-comment"># File lib/wavefile/writer.rb, line 84</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">close</span>
+  <span class="ruby-comment"># The RIFF specification requires that each chunk be aligned to an even number of bytes,</span>
+  <span class="ruby-comment"># even if the byte count is an odd number. Therefore if an odd number of bytes has been</span>
+  <span class="ruby-comment"># written, write an empty padding byte.</span>
+  <span class="ruby-comment">#</span>
+  <span class="ruby-comment"># See http://www-mmsp.ece.mcgill.ca/Documents/AudioFormats/WAVE/Docs/riffmci.pdf, page 11.</span>
+  <span class="ruby-identifier">bytes_written</span> = <span class="ruby-ivar">@total_sample_frames</span> <span class="ruby-operator">*</span> <span class="ruby-ivar">@format</span>.<span class="ruby-identifier">block_align</span>
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">bytes_written</span>.<span class="ruby-identifier">odd?</span>
+    <span class="ruby-ivar">@file</span>.<span class="ruby-identifier">syswrite</span>(<span class="ruby-constant">EMPTY_BYTE</span>)
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-comment"># We can't know what chunk sizes to write for the RIFF and data chunks until all</span>
+  <span class="ruby-comment"># samples have been written, so go back to the beginning of the file and re-write</span>
+  <span class="ruby-comment"># those chunk headers with the correct sizes.</span>
+  <span class="ruby-ivar">@file</span>.<span class="ruby-identifier">sysseek</span>(<span class="ruby-value">0</span>)
+  <span class="ruby-identifier">write_header</span>(<span class="ruby-ivar">@total_sample_frames</span>)
+
+  <span class="ruby-ivar">@file</span>.<span class="ruby-identifier">close</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- close-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- close-method -->
+
+    
+      <div id="method-i-closed-3F" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">closed?</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Returns true if the <a href="Writer.html">Writer</a> is closed, and false
+if it is open and available for writing.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="closed-3F-source">
+            <pre><span class="ruby-comment"># File lib/wavefile/writer.rb, line 69</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">closed?</span>
+  <span class="ruby-ivar">@file</span>.<span class="ruby-identifier">closed?</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- closed-3F-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- closed-3F-method -->
+
+    
+      <div id="method-i-total_duration" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">total_duration</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Returns a <a href="Duration.html">Duration</a> instance for the number of
+sample frames that have been written so far</p>
+          
+          
+
+          
+          <div class="method-source-code" id="total_duration-source">
+            <pre><span class="ruby-comment"># File lib/wavefile/writer.rb, line 105</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">total_duration</span>
+  <span class="ruby-constant">Duration</span>.<span class="ruby-identifier">new</span>(<span class="ruby-ivar">@total_sample_frames</span>, <span class="ruby-ivar">@format</span>.<span class="ruby-identifier">sample_rate</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- total_duration-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- total_duration-method -->
+
+    
+      <div id="method-i-write" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">write</span><span
+            class="method-args">(buffer)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Appends the sample data in the given <a href="Buffer.html">Buffer</a> to
+the end of the wave file.</p>
+
+<p>Returns the number of sample frames that have been written to the file so
+far.Raises IOError if the <a href="Writer.html">Writer</a> has been closed.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="write-source">
+            <pre><span class="ruby-comment"># File lib/wavefile/writer.rb, line 60</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">write</span>(<span class="ruby-identifier">buffer</span>)
+  <span class="ruby-identifier">samples</span> = <span class="ruby-identifier">buffer</span>.<span class="ruby-identifier">convert</span>(<span class="ruby-ivar">@format</span>).<span class="ruby-identifier">samples</span>
+
+  <span class="ruby-ivar">@file</span>.<span class="ruby-identifier">syswrite</span>(<span class="ruby-identifier">samples</span>.<span class="ruby-identifier">flatten</span>.<span class="ruby-identifier">pack</span>(<span class="ruby-ivar">@pack_code</span>))
+  <span class="ruby-ivar">@total_sample_frames</span> <span class="ruby-operator">+=</span> <span class="ruby-identifier">samples</span>.<span class="ruby-identifier">length</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- write-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- write-method -->
+
+    
+    </section><!-- public-instance-method-details -->
+  
+  </section><!-- 5Buntitled-5D -->
+
+</div><!-- documentation -->
+
+
+<footer id="validator-badges">
+  <p><a href="http://validator.w3.org/check/referer">[Validate]</a>
+  <p>Generated by <a href="https://github.com/rdoc/rdoc">RDoc</a> 4.0.1.
+  <p>Generated with the <a href="http://deveiate.org/projects/Darkfish-Rdoc/">Darkfish Rdoc Generator</a> 3.
+</footer>
+
