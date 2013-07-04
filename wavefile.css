@@ -8,11 +8,11 @@ body {
 }
 
 a {
-  color: #4fa5e3;
+  color: #2380C4;
 }
 
 a:hover {
-  color: #e38d4f
+  color: #FF862E;
 }
 
 h2 {
@@ -21,7 +21,7 @@ h2 {
   line-height: 1.0em;
   margin-top: 3.0em;
   margin-bottom: 1.0em;
-  color: #4fa5e3;
+  color: #2380C4;
 }
 
 h2 a {
@@ -33,7 +33,7 @@ h3 {
   font-size: 1.0em;
   line-height: 1.5em;
   margin: 0.0em;
-  color: #e38d4f;
+  color: #FF862E;
 }
 
 code {
@@ -58,10 +58,12 @@ td {
 
 div#header {
   background: #74B4E3;
+  background: #fff;
   color: #fff;
   margin: 0.0em;
-  padding-top: 1.5em;
+  padding-top: 0.0em;
   text-align: center;
+  overflow: auto;
 }
 
 .container {
@@ -73,48 +75,37 @@ div#header {
 }
 
 h1 {
-  font-size: 4.0em;
+  font-size: 2.0em;
   font-variant: small-caps;
   line-height: 1.0em;
-  font-weight: 100;
-  max-width: 744px;
+  font-weight: 400;
   margin: 0.0em auto;
+  float: left;
+  margin: 1.0em 0.0em 1.0em 1.0em;
+  padding: 0.0em;
 }
 
 h1 a {
   text-decoration: none;
-  color: #fff;
-}
-
-#header p {
-  font-weight: 100;
-  text-transform: uppercase;
-  max-width: 744px;
-  margin: 0.0em auto;
-}
-
-.nav-container {
-  background: #2380C4;
-  margin: 0.0em;
+  color: #000;
 }
 
 ul#navigation {
-  max-width: 744px;
-  margin: 1.5em auto 0.0em auto;
+  margin: 2.0em auto 0.0em auto;
   padding: 0.0em;
   overflow: auto;
-  background: blue;
+  float: right;
 }
 
 ul#navigation li {
   list-style-type: none;
   float: left;
-  width: 33.33333333333333%;
+  margin-right: 1.5em;
 }
 
 ul#navigation li a {
-  color: #fff;
-  font-weight: 100;
+  color: #000;
+  font-weight: 400;
   font-variant: small-caps;
   text-decoration: none;
   width: 100%;
@@ -122,20 +113,19 @@ ul#navigation li a {
   line-height: 2.0em;
 }
 
-.navlink1 {
-  background: #2A92DE;
-}
-
-.navlink2 {
-  background: #2B9BED;
-}
-
-.navlink3 {
-  background: #2A92DE;
-}
-
 ul#navigation li a:hover {
-  background: #E3A374;
+  color: #FF862E;
+}
+
+p#tagline {
+  text-align: center;
+  padding-top: 2.0em;
+  padding-bottom: 2.0em;
+  background: #2380C4;
+  color: #fff;
+  font-size: 2.0em;
+  margin: 0.0em;
+  font-family: 'Playfair Display', serif;
 }
 
 ul#feature-list {
