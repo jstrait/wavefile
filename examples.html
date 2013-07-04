@@ -17,30 +17,32 @@
     <li><a href="how_wave_files_work.html">How Wave Files Work</a></li>
   </ul>
 </div>
-<div class="container">
+
+<div class="section">
   <h2>Reading a Wave File With a Block</h2>
 
-<p>The example below shows the preferred way of reading an entire wave file:</p>
+  <p>The example below shows the preferred way of reading an entire wave file:</p>
 
-<pre><code>require 'wavefile'
+  <pre><code>require 'wavefile'
 include WaveFile 
 
 SAMPLE_FRAMES_PER_BUFFER = 4096
 
 Reader.new("my_file.wav").each_buffer(SAMPLE_FRAMES_PER_BUFFER) do |buffer|
   puts "Read #{buffer.samples.length} samples."
-end
-</code></pre>
+end</code></pre>
 
-<p>First construct a <code>Reader</code> object, then call <code>each_buffer()</code> on it. Successive sample buffers will be read from the file and passed to the given block, until all sample data in the file has been read. Finally, the <code>Reader</code> will automatically be closed. (Note that this is essentially the same as how <code>IO.open</code> works if you pass it a block).</p>
+  <p>First construct a <code>Reader</code> object, then call <code>each_buffer()</code> on it. Successive sample buffers will be read from the file and passed to the given block, until all sample data in the file has been read. Finally, the <code>Reader</code> will automatically be closed. (Note that this is essentially the same as how <code>IO.open</code> works if you pass it a block).</p>
 
-<p>Note that when calling <code>each_buffer()</code> (and <code>read()</code>), the number you pass indicates the number of samples to read for <strong><em>each channel</em></strong>. That is, if you call <code>each_buffer(1024)</code> on a stereo/16-bit file, then the returned buffer will contain 1024 samples for the left channel, and 1024 samples for the right channel.</p>
+  <p>Note that when calling <code>each_buffer()</code> (and <code>read()</code>), the number you pass indicates the number of samples to read for <strong><em>each channel</em></strong>. That is, if you call <code>each_buffer(1024)</code> on a stereo/16-bit file, then the returned buffer will contain 1024 samples for the left channel, and 1024 samples for the right channel.</p>
+</div>
 
-<h2>Reading a Wave File (Manual File Closing Edition)</h2>
+<div class="section bg-white">
+  <h2>Reading a Wave File (Manual File Closing Edition)</h2>
 
-<p>Alternately, you can manually call <code>read()</code> to control exactly how much of the file to read. When doing this, make sure to close the <code>Reader</code> when you're done.</p>
+  <p>Alternately, you can manually call <code>read()</code> to control exactly how much of the file to read. When doing this, make sure to close the <code>Reader</code> when you're done.</p>
 
-<pre><code>require 'wavefile'
+  <pre><code>require 'wavefile'
 include WaveFile
 
 SAMPLES_PER_BUFFER = 4096
@@ -53,14 +55,15 @@ begin
   end
 rescue EOFError
   reader.close
-end
-</code></pre>
+end</code></pre>
+</div>
 
-<h2>Reading a Wave File Into an Arbitrary Format</h2>
+<div class="section">
+  <h2>Reading a Wave File Into an Arbitrary Format</h2>
 
-<p>It's easy to read sample data out of a file in whatever format you need, regardless of what format is used inside the file. For example, suppose that <code>my_file.wav</code> is stereo/16-bit, but you need mono normalized floating point samples. No problem, as shown below.</p>
+  <p>It's easy to read sample data out of a file in whatever format you need, regardless of what format is used inside the file. For example, suppose that <code>my_file.wav</code> is stereo/16-bit, but you need mono normalized floating point samples. No problem, as shown below.</p>
 
-<pre><code>require 'wavefile'
+  <pre><code>require 'wavefile'
 include WaveFile
 
 SAMPLES_PER_BUFFER = 4096
@@ -70,12 +73,13 @@ SAMPLES_PER_BUFFER = 4096
 format = Format.new(:mono, :float, 44100)
 reader = Reader.new("my_file.wav", format).each_buffer(SAMPLES_PER_BUFFER) do |buffer|
   puts "Read #{buffer.samples.length} samples."
-end
-</code></pre>
+end</code></pre>
+</div>
 
-<h2>Getting Metadata About a Wave File</h2>
+<div class="section bg-white">
+  <h2>Getting Metadata About a Wave File</h2>
 
-<pre><code>require 'wavefile'
+  <pre><code>require 'wavefile'
 include WaveFile
 
 info = Reader.info("my_file.wav")
@@ -92,14 +96,15 @@ formatted_duration = duration.hours.to_s.rjust(2, "0") &lt;&lt; ":" &lt;&lt;
                      duration.minutes.to_s.rjust(2, "0") &lt;&lt; ":" &lt;&lt;
                      duration.seconds.to_s.rjust(2, "0") &lt;&lt; ":" &lt;&lt;
                      duration.milliseconds.to_s.rjust(3, "0")
-puts "  Play time:           #{formatted_duration}"
-</code></pre>
+puts "  Play time:           #{formatted_duration}"</code></pre>
+</div>
 
-<h2>Writing a Wave File With A Block</h2>
+<div class="section">
+  <h2>Writing a Wave File With A Block</h2>
 
-<p>The <code>Writer</code> object is used to write data to a wave file. When constructing the <code>Writer</code>, one can pass a block inside which the writing will occur. When the block exits the file will automatically be closed. The example below shows how to write a basic square wave to a file.</p>
+  <p>The <code>Writer</code> object is used to write data to a wave file. When constructing the <code>Writer</code>, one can pass a block inside which the writing will occur. When the block exits the file will automatically be closed. The example below shows how to write a basic square wave to a file.</p>
 
-<pre><code>require 'wavefile'
+  <pre><code>require 'wavefile'
 include WaveFile
 
 # Write a 1 second long 440Hz square wave
@@ -107,14 +112,15 @@ cycle = ([0.5] * 50) + ([-0.5] * 50)
 buffer = Buffer.new(cycle, Format.new(:mono, :float, 44100))
 Writer.new("my_file.wav", Format.new(:mono, :pcm_16, 44100)) do |writer|
   220.times { writer.write(buffer) }
-end
-</code></pre>
+end</code></pre>
+</div>
 
-<h2>Writing a Wave File (Manual File Close Edition)</h2>
+<div class="section bg-white">
+  <h2>Writing a Wave File (Manual File Close Edition)</h2>
 
-<p>Alternately, one can manually control when to close the file, as shown below. Note that a file won't be valid for playback until it is closed. This is because some data required for playback (such as the total number of samples) isn't written to the file until it is closed.</p>
+  <p>Alternately, one can manually control when to close the file, as shown below. Note that a file won't be valid for playback until it is closed. This is because some data required for playback (such as the total number of samples) isn't written to the file until it is closed.</p>
 
-<pre><code>require 'wavefile'
+  <pre><code>require 'wavefile'
 include WaveFile
 
 writer = Writer.new("my_file.wav", Format.new(:mono, :pcm_16, 44100))
@@ -126,16 +132,17 @@ buffer = Buffer.new(cycle, Format.new(:mono, :float, 44100))
   writer.write(buffer)
 end
 
-writer.close
-</code></pre>
+writer.close</code></pre>
+</div>
 
-<h2>Copying a Wave File to Different Format</h2>
+<div class="section">
+  <h2>Copying a Wave File to Different Format</h2>
 
-<p>In this example, the sample data in the file <code>original.wav</code> will be written to <code>copy.wav</code> as stereo/16-bit with a 44,100Hz sample rate, regardless of what format the sample data in <code>original.wav</code> is stored in.</p>
+  <p>In this example, the sample data in the file <code>original.wav</code> will be written to <code>copy.wav</code> as stereo/16-bit with a 44,100Hz sample rate, regardless of what format the sample data in <code>original.wav</code> is stored in.</p>
 
-<p>This example also shows that you can also pass a block to <code>Writer.new()</code>, and the <code>Writer</code> will automatically be closed when the block exits.</p>
+  <p>This example also shows that you can also pass a block to <code>Writer.new()</code>, and the <code>Writer</code> will automatically be closed when the block exits.</p>
 
-<pre><code>require 'wavefile'
+  <pre><code>require 'wavefile'
 include WaveFile
 
 SAMPLES_PER_BUFFER = 4096
@@ -144,14 +151,15 @@ Writer.new("copy.wav", Format.new(:stereo, :pcm_16, 44100) do |writer|
   Reader.new("original.wav").each_buffer(SAMPLES_PER_BUFFER) do |buffer|
     writer.write(buffer)
   end
-end
-</code></pre>
+end</code></pre>
+</div>
 
-<h2>Appending Wave Files</h2>
+<div class="section bg-white">
+  <h2>Appending Wave Files</h2>
 
-<p>This example will take 3 Wave files, and write them to a single file containing each input file played one after another. Note that the individual files can be in different formats.</p>
+  <p>This example will take 3 Wave files, and write them to a single file containing each input file played one after another. Note that the individual files can be in different formats.</p>
 
-<pre><code>require 'wavefile'
+  <pre><code>require 'wavefile'
 include WaveFile
 
 FILES_TO_APPEND = ["file1.wav", "file2.wav", "file3.wav"]

@@ -22,6 +22,15 @@ h2 {
   margin-top: 3.0em;
   margin-bottom: 1.0em;
   color: #2380C4;
+  max-width: 744px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+p {
+  max-width: 744px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 h2 a {
@@ -34,6 +43,13 @@ h3 {
   line-height: 1.5em;
   margin: 0.0em;
   color: #FF862E;
+}
+
+pre {
+  max-width: 744px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 0.0em;
 }
 
 code {
@@ -126,6 +142,7 @@ p#tagline {
   font-size: 2.0em;
   margin: 0.0em;
   font-family: 'Playfair Display', serif;
+  max-width: 100%;
 }
 
 ul#feature-list {
@@ -159,6 +176,19 @@ span.label {
   font-weight: bold;
 }
 
+.section {
+  width: 100%;
+  padding: 4.5em 0.0em;
+}
+
+.section h2 {
+  margin-top: 0.0em;
+}
+
+.bg-white {
+  background: #fff;
+}
+
 .footer {
   background: #000;
   color: #fff;
@@ -168,5 +198,4 @@ span.label {
 
 .footer p {
   margin: 0.0em auto;
-  max-width: 744px;
 }
