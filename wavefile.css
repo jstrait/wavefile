@@ -158,3 +158,15 @@ ul#format-list li {
 span.label {
   font-weight: bold;
 }
+
+.footer {
+  background: #000;
+  color: #fff;
+}
+
+.footer p {
+  max-width: 744px;
+  padding-top: 1.5em;
+  padding-bottom: 1.5em;
+  margin: 0.0em auto;
+}
