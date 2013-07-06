@@ -42,7 +42,7 @@ h3 {
   font-size: 1.0em;
   line-height: 1.5em;
   margin: 0.0em;
-  color: #FF862E;
+  color: #2380C4;
 }
 
 pre {
@@ -148,7 +148,7 @@ p#tagline {
 ul#feature-list {
   overflow: auto;
   max-width: 744px;
-  margin: 0.0em;
+  margin: 0.0em auto;
   padding: 0.0em;
 }
 

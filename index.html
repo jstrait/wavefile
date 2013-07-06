@@ -18,8 +18,7 @@
   </ul>
 </div>
 <p id="tagline">Read and write .wav sound files in pure Ruby</p>
-<div class="container">
-  <h2 id="features"><a href="#features">Features</a></h2>
+<div class="section">
   <ul id="feature-list">
     <li>
       <h3>Read/Write Common Formats</h3>
@@ -33,6 +32,8 @@
     <li><h3>Query Metadata</h3>Get the sample format, sample rate, number of channels, number of sample frames, and so forth from a Wave file, even if it&rsquo;s in a format this gem can&rsquo;t read or write.</li>
     <li><h3>Pure Ruby</h3>No need to deal with compiling a separate extension in order to use it.</li>
   </ul>
+</div>
+<div class="section bg-white">
   <h2 id="example"><a href="#example">For Example</a></h2>
   <pre><code>
 require 'wavefile'
@@ -45,7 +46,8 @@ Writer.new("my_file.wav", Format.new(:mono, :pcm_16, 44100)) do |writer|
   220.times { writer.write(buffer) }
 end</pre></code>
   <p>Intrigued? Check out <a href="/examples.html">more examples</a>.</p>
-
+</div>
+<div class="section">
   <h2 id="installation"><a href="#installation">Installation</a></h2>
     <p>First, install the WaveFile gem from rubygems.org:<p>
 
@@ -56,7 +58,8 @@ end</pre></code>
     <pre><code>require 'wavefile'</code></pre>
 
     <p>Note that if you&rsquo;re installing the gem into the default Ruby that comes pre-installed on MacOS (as opposed to a Ruby installed via <a href="http://beginrescueend.com">RVM</a> or <a href="https://github.com/sstephenson/rbenv/">rbenv</a>), you should used <code>sudo gem install wavefile</code>. Otherwise you might run into a file permission error.</p>
-
+</div>
+<div class="section bg-white">
   <h2>Who Made This?</h2>
   <p><a href="http://www.joelstrait.com">Joel Strait</a> did.</p>
 </div>
