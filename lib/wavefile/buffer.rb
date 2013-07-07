@@ -12,7 +12,15 @@ module WaveFile
   class Buffer
 
     # Creates a new Buffer. The sample array is not compared with the format to make sure 
-    # they match - you are on the honor system to make sure they do.
+    # they match - you are on the honor system to make sure they do. If they don't match, 
+    # unexpected things will happen.
+    #
+    # Examples
+    #
+    #   samples = ([0.5] * 50) + ([-0.5] * 50)   # A 440Hz square wave
+    #   buffer = Buffer.new(samples, Format.new(:mono, :float, 44100)
+    #
+    # Returns a constructed Buffer.
     def initialize(samples, format)
       @samples = samples
       @format = format
