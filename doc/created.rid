@@ -1,8 +1,8 @@
-Sun, 23 Jun 2013 15:33:34 -0700
-lib/wavefile/buffer.rb	Sun, 23 Jun 2013 15:00:02 -0700
-lib/wavefile/duration.rb	Sun, 23 Jun 2013 15:28:59 -0700
-lib/wavefile/format.rb	Sun, 23 Jun 2013 14:34:55 -0700
-lib/wavefile/info.rb	Sun, 24 Feb 2013 19:40:22 -0800
-lib/wavefile/reader.rb	Sun, 23 Jun 2013 14:37:29 -0700
-lib/wavefile/writer.rb	Sun, 23 Jun 2013 14:38:09 -0700
-lib/wavefile.rb	Sun, 23 Jun 2013 14:34:39 -0700
+Sun, 07 Jul 2013 15:11:25 -0700
+lib/wavefile/buffer.rb	Sun, 07 Jul 2013 14:57:42 -0700
+lib/wavefile/duration.rb	Sun, 07 Jul 2013 15:05:06 -0700
+lib/wavefile/format.rb	Sat, 06 Jul 2013 23:19:33 -0700
+lib/wavefile/info.rb	Sat, 06 Jul 2013 23:57:48 -0700
+lib/wavefile/reader.rb	Sun, 23 Jun 2013 22:35:01 -0700
+lib/wavefile/writer.rb	Sun, 23 Jun 2013 22:35:01 -0700
+lib/wavefile.rb	Sun, 23 Jun 2013 22:35:01 -0700

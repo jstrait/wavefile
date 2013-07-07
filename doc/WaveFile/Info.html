@@ -4,7 +4,7 @@
 <head>
 <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
 
-<title>class WaveFile::Info - RDoc Documentation</title>
+<title>class WaveFile::Info - the WaveFile Gem</title>
 
 <link type="text/css" media="screen" href="../rdoc.css" rel="stylesheet">
 
@@ -67,17 +67,7 @@
 
     
     
-    <!-- Method Quickref -->
-<nav id="method-list-section" class="section">
-  <h3 class="section-header">Methods</h3>
-
-  <ul class="link-list">
     
-    <li ><a href="#method-c-new">::new</a>
-    
-  </ul>
-</nav>
-
   </div>
 
   <div id="project-metadata">
@@ -118,6 +108,12 @@
 
   <div id="description" class="description">
     
+<p>Contains metadata about an existing wave file. Returned by <a
+href="Reader.html#method-c-info">WaveFile::Reader.info</a>.</p>
+
+<p>This class is immutable - once a new <a href="Info.html">Info</a> is
+constructed, it can’t be modified.</p>
+
   </div><!-- description -->
 
   
@@ -144,7 +140,8 @@
 
         <div class="method-description">
         
-        
+        <p>Returns a Fixnum indicating the audio format, such as 1 for PCM or 3 for
+IEEE float.</p>
         
         </div>
       </div>
@@ -157,7 +154,7 @@
 
         <div class="method-description">
         
-        
+        <p>Returns the number of bits per sample, such as 8, 16, 32, or 64.</p>
         
         </div>
       </div>
@@ -170,7 +167,9 @@
 
         <div class="method-description">
         
-        
+        <p>Returns the number of bytes in each sample frame. For example, in a 16-bit
+stereo file, this will be 4 (2 bytes for each 16-bit sample, times 2
+channels).</p>
         
         </div>
       </div>
@@ -183,7 +182,9 @@
 
         <div class="method-description">
         
-        
+        <p>Returns the number of bytes contained in 1 second of sample data. Is
+equivalent to <a href="Info.html#attribute-i-block_align">#block_align</a>
+* sample_rate.</p>
         
         </div>
       </div>
@@ -196,7 +197,7 @@
 
         <div class="method-description">
         
-        
+        <p>Returns the number of channels, such as 1 or 2.</p>
         
         </div>
       </div>
@@ -209,7 +210,8 @@
 
         <div class="method-description">
         
-        
+        <p>Returns a <a href="Duration.html">Duration</a> instance for the total
+number of sample frames in the file</p>
         
         </div>
       </div>
@@ -222,7 +224,8 @@
 
         <div class="method-description">
         
-        
+        <p>Returns the name of file this <a href="Info.html">Info</a> contains
+metadata about.</p>
         
         </div>
       </div>
@@ -235,7 +238,10 @@
 
         <div class="method-description">
         
-        
+        <p>Returns the total number of sample frames in the file. A sample frame
+contains a single sample for each channel. So if there are 1,000 sample
+frames in a stereo file, this means there are 1,000 left-channel samples
+and 1,000 right-channel samples.</p>
         
         </div>
       </div>
@@ -248,7 +254,7 @@
 
         <div class="method-description">
         
-        
+        <p>Returns the number of samples per second, such as 44100.</p>
         
         </div>
       </div>
@@ -258,54 +264,6 @@
 
     <!-- Methods -->
     
-     <section id="public-class-5Buntitled-5D-method-details" class="method-section section">
-      <h3 class="section-header">Public Class Methods</h3>
-
-    
-      <div id="method-c-new" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">new</span><span
-            class="method-args">(file_name, raw_format_chunk, sample_frame_count)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
-        </div>
-        
-
-        <div class="method-description">
-          
-          
-          
-          
-
-          
-          <div class="method-source-code" id="new-source">
-            <pre><span class="ruby-comment"># File lib/wavefile/info.rb, line 3</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">file_name</span>, <span class="ruby-identifier">raw_format_chunk</span>, <span class="ruby-identifier">sample_frame_count</span>)
-  <span class="ruby-ivar">@file_name</span> = <span class="ruby-identifier">file_name</span>
-  <span class="ruby-ivar">@audio_format</span> = <span class="ruby-identifier">raw_format_chunk</span>[<span class="ruby-value">:audio_format</span>]
-  <span class="ruby-ivar">@channels</span> = <span class="ruby-identifier">raw_format_chunk</span>[<span class="ruby-value">:channels</span>]
-  <span class="ruby-ivar">@bits_per_sample</span> = <span class="ruby-identifier">raw_format_chunk</span>[<span class="ruby-value">:bits_per_sample</span>]
-  <span class="ruby-ivar">@sample_rate</span> = <span class="ruby-identifier">raw_format_chunk</span>[<span class="ruby-value">:sample_rate</span>]
-  <span class="ruby-ivar">@byte_rate</span> = <span class="ruby-identifier">raw_format_chunk</span>[<span class="ruby-value">:byte_rate</span>]
-  <span class="ruby-ivar">@block_align</span> = <span class="ruby-identifier">raw_format_chunk</span>[<span class="ruby-value">:block_align</span>]
-  <span class="ruby-ivar">@sample_frame_count</span> = <span class="ruby-identifier">sample_frame_count</span>
-
-  <span class="ruby-ivar">@duration</span> = <span class="ruby-constant">Duration</span>.<span class="ruby-identifier">new</span>(<span class="ruby-ivar">@sample_frame_count</span>, <span class="ruby-ivar">@sample_rate</span>)
-<span class="ruby-keyword">end</span></pre>
-          </div><!-- new-source -->
-          
-        </div>
-
-        
-
-        
-      </div><!-- new-method -->
-
-    
-    </section><!-- public-class-method-details -->
-  
   </section><!-- 5Buntitled-5D -->
 
 </div><!-- documentation -->

@@ -4,7 +4,7 @@
 <head>
 <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
 
-<title>class WaveFile::Format - RDoc Documentation</title>
+<title>class WaveFile::Format - the WaveFile Gem</title>
 
 <link type="text/css" media="screen" href="../rdoc.css" rel="stylesheet">
 
@@ -125,7 +125,7 @@
     
 <p>Represents information about the data format for a Wave file, such as
 number of channels, bits per sample, sample rate, and so forth. A <a
-href="Format.html">Format</a> instance is usedby <a
+href="Format.html">Format</a> instance is used by <a
 href="Reader.html">Reader</a> to indicate what format to read samples out
 as, and by <a href="Writer.html">Writer</a> to indicate what format to
 write samples as.</p>
@@ -143,44 +143,6 @@ constructed, it can’t be modified.</p>
 
     
 
-    
-    <!-- Constants -->
-    <section id="constants-list" class="section">
-      <h3 class="section-header">Constants</h3>
-      <dl>
-      
-        <dt id="MAX_CHANNELS">MAX_CHANNELS
-        
-        <dd class="description">
-        
-      
-        <dt id="MAX_SAMPLE_RATE">MAX_SAMPLE_RATE
-        
-        <dd class="description">
-        
-      
-        <dt id="MIN_CHANNELS">MIN_CHANNELS
-        
-        <dd class="description"><p>Not using ranges because of 1.8.7 performance problems with Range.max</p>
-        
-      
-        <dt id="MIN_SAMPLE_RATE">MIN_SAMPLE_RATE
-        
-        <dd class="description">
-        
-      
-        <dt id="SUPPORTED_BITS_PER_SAMPLE">SUPPORTED_BITS_PER_SAMPLE
-        
-        <dd class="description">
-        
-      
-        <dt id="SUPPORTED_SAMPLE_FORMATS">SUPPORTED_SAMPLE_FORMATS
-        
-        <dd class="description">
-        
-      
-      </dl>
-    </section>
     
 
     
@@ -298,22 +260,32 @@ Fixnum, even if the number of channels is specified with a symbol (e.g.
           <p>Constructs a new immutable <a href="Format.html">Format</a>.</p>
 <dl class="rdoc-list note-list"><dt>channels
 <dd>
-<p>The number of channels in the format. Can either be a Fixnum(e.g. 1, 2, 3)
-or the symbols :mono (equivalent to 1) or:stereo (equivalent to 2).</p>
+<p>The number of channels in the format. Can either be a Fixnum (e.g. 1, 2, 3)
+or the symbols :mono (equivalent to 1) or :stereo (equivalent to 2).</p>
 </dd><dt>format_code
 <dd>
-<p>A symbol indicating the format of each sample. Consists oftwo parts: a
-format code, and the bits per sample. Forexample, :pcm_16 or :float_32.</p>
+<p>A symbol indicating the format of each sample. Consists of two parts: a
+format code, and the bits per sample. The valid values are :pcm_8, :pcm_16,
+:pcm_32, :float_32, :float_64,and :float (equivalent to :float_32)</p>
 </dd><dt><a href="Format.html#attribute-i-sample_rate">#sample_rate</a>
 <dd>
 <p>The number of samples per second, such as 44100</p>
 </dd></dl>
+
+<h3 id="method-c-new-label-Examples">Examples<span><a href="#method-c-new-label-Examples">&para;</a> <a href="#documentation">&uarr;</a></span></h3>
+
+<pre class="ruby"><span class="ruby-identifier">format</span> = <span class="ruby-constant">Format</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">1</span>, :<span class="ruby-identifier">pcm_16</span>, <span class="ruby-value">44100</span>)
+<span class="ruby-identifier">format</span> = <span class="ruby-constant">Format</span>.<span class="ruby-identifier">new</span>(:<span class="ruby-identifier">mono</span>, :<span class="ruby-identifier">pcm_16</span>, <span class="ruby-value">44100</span>)  <span class="ruby-comment"># Equivalent to above</span>
+
+<span class="ruby-identifier">format</span> = <span class="ruby-constant">Format</span>.<span class="ruby-identifier">new</span>(:<span class="ruby-identifier">stereo</span>, :<span class="ruby-identifier">float_32</span>, <span class="ruby-value">44100</span>)
+<span class="ruby-identifier">format</span> = <span class="ruby-constant">Format</span>.<span class="ruby-identifier">new</span>(:<span class="ruby-identifier">stereo</span>, :<span class="ruby-identifier">float</span>, <span class="ruby-value">44100</span>)
+</pre>
           
           
 
           
           <div class="method-source-code" id="new-source">
-            <pre><span class="ruby-comment"># File lib/wavefile/format.rb, line 33</span>
+            <pre><span class="ruby-comment"># File lib/wavefile/format.rb, line 42</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">channels</span>, <span class="ruby-identifier">format_code</span>, <span class="ruby-identifier">sample_rate</span>)
   <span class="ruby-identifier">channels</span> = <span class="ruby-identifier">normalize_channels</span>(<span class="ruby-identifier">channels</span>)
   <span class="ruby-identifier">sample_format</span>, <span class="ruby-identifier">bits_per_sample</span> = <span class="ruby-identifier">normalize_format_code</span>(<span class="ruby-identifier">format_code</span>)
@@ -364,7 +336,7 @@ format code, and the bits per sample. Forexample, :pcm_16 or :float_32.</p>
 
           
           <div class="method-source-code" id="mono-3F-source">
-            <pre><span class="ruby-comment"># File lib/wavefile/format.rb, line 50</span>
+            <pre><span class="ruby-comment"># File lib/wavefile/format.rb, line 59</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">mono?</span>
   <span class="ruby-ivar">@channels</span> <span class="ruby-operator">==</span> <span class="ruby-value">1</span>
 <span class="ruby-keyword">end</span></pre>
@@ -397,7 +369,7 @@ format code, and the bits per sample. Forexample, :pcm_16 or :float_32.</p>
 
           
           <div class="method-source-code" id="stereo-3F-source">
-            <pre><span class="ruby-comment"># File lib/wavefile/format.rb, line 55</span>
+            <pre><span class="ruby-comment"># File lib/wavefile/format.rb, line 64</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">stereo?</span>
   <span class="ruby-ivar">@channels</span> <span class="ruby-operator">==</span> <span class="ruby-value">2</span>
 <span class="ruby-keyword">end</span></pre>

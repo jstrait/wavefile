@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
+
+<title>README.markdown - WaveFile Gem API Documentation</title>
+
+<link type="text/css" media="screen" href="./rdoc.css" rel="stylesheet">
+
+<script type="text/javascript">
+  var rdoc_rel_prefix = "./";
+</script>
+
+<script type="text/javascript" charset="utf-8" src="./js/jquery.js"></script>
+<script type="text/javascript" charset="utf-8" src="./js/navigation.js"></script>
+<script type="text/javascript" charset="utf-8" src="./js/search_index.js"></script>
+<script type="text/javascript" charset="utf-8" src="./js/search.js"></script>
+<script type="text/javascript" charset="utf-8" src="./js/searcher.js"></script>
+<script type="text/javascript" charset="utf-8" src="./js/darkfish.js"></script>
+
+
+<body class="file">
+<nav id="metadata">
+  <nav id="home-section" class="section">
+  <h3 class="section-header">
+    <a href="./index.html">Home</a>
+    <a href="./table_of_contents.html#classes">Classes</a>
+    <a href="./table_of_contents.html#methods">Methods</a>
+  </h3>
+</nav>
+
+
+  <nav id="search-section" class="section project-section" class="initially-hidden">
+  <form action="#" method="get" accept-charset="utf-8">
+    <h3 class="section-header">
+      <input type="text" name="search" placeholder="Search" id="search-field"
+             title="Type to search, Up and Down to navigate, Enter to load">
+    </h3>
+  </form>
+
+  <ul id="search-results" class="initially-hidden"></ul>
+</nav>
+
+
+  
+<div id="table-of-contents">
+  <nav class="section">
+    <h3 class="section-header">Table of Contents</h3>
+    <ul>
+      <li><a href="#label-Example+Usage">Example Usage</a>
+      <li><a href="#label-Features">Features</a>
+      <li><a href="#label-Current+Release%3A+v0.5.0">Current Release: v0.5.0</a>
+      <li><a href="#label-Compatibility">Compatibility</a>
+      <li><a href="#label-Dependencies">Dependencies</a>
+      <li><a href="#label-Installation">Installation</a>
+      <li><a href="#label-Contributing">Contributing</a>
+    </ul>
+  </nav>
+</div>
+
+
+  <div id="project-metadata">
+    <nav id="fileindex-section" class="section project-section">
+  <h3 class="section-header">Pages</h3>
+
+  <ul>
+  
+    <li class="file"><a href="./README_markdown.html">README.markdown</a>
+  
+  </ul>
+</nav>
+
+    <nav id="classindex-section" class="section project-section">
+  <h3 class="section-header">Class and Module Index</h3>
+
+  <ul class="link-list">
+  
+    <li><a href="./WaveFile.html">WaveFile</a>
+  
+    <li><a href="./WaveFile/Buffer.html">WaveFile::Buffer</a>
+  
+    <li><a href="./WaveFile/BufferConversionError.html">WaveFile::BufferConversionError</a>
+  
+    <li><a href="./WaveFile/Duration.html">WaveFile::Duration</a>
+  
+    <li><a href="./WaveFile/Format.html">WaveFile::Format</a>
+  
+    <li><a href="./WaveFile/Info.html">WaveFile::Info</a>
+  
+    <li><a href="./WaveFile/InvalidFormatError.html">WaveFile::InvalidFormatError</a>
+  
+    <li><a href="./WaveFile/Reader.html">WaveFile::Reader</a>
+  
+    <li><a href="./WaveFile/UnsupportedFormatError.html">WaveFile::UnsupportedFormatError</a>
+  
+    <li><a href="./WaveFile/Writer.html">WaveFile::Writer</a>
+  
+  </ul>
+</nav>
+
+  </div>
+</nav>
+
+<div id="documentation" class="description">
+  
+<p>A pure Ruby gem for reading and writing sound files in Wave format (*.wav).</p>
+
+<p>You can use this gem to create Ruby programs that produce audio, such as <a
+href="http://beatsdrummachine.com">drum machine</a>. Since it is written in
+pure Ruby (as opposed to wrapping an existing C library), you can use it
+without having to compile a separate extension.</p>
+
+<h1 id="label-Example+Usage">Example Usage<span><a href="#label-Example+Usage">&para;</a> <a href="#documentation">&uarr;</a></span></h1>
+
+<p>This is a short example that shows how to append three separate Wave files
+into a single file:</p>
+
+<pre class="ruby"><span class="ruby-identifier">require</span> <span class="ruby-string">'wavefile'</span>
+<span class="ruby-identifier">include</span> <span class="ruby-constant">WaveFile</span>
+
+<span class="ruby-constant">FILES_TO_APPEND</span> = [<span class="ruby-string">&quot;file1.wav&quot;</span>, <span class="ruby-string">&quot;file2.wav&quot;</span>, <span class="ruby-string">&quot;file3.wav&quot;</span>]
+<span class="ruby-constant">SAMPLES_PER_BUFFER</span> = <span class="ruby-value">4096</span>
+
+<span class="ruby-constant">Writer</span>.<span class="ruby-identifier">new</span>(<span class="ruby-string">&quot;append.wav&quot;</span>, <span class="ruby-constant">Format</span>.<span class="ruby-identifier">new</span>(:<span class="ruby-identifier">stereo</span>, :<span class="ruby-identifier">pcm_16</span>, <span class="ruby-value">44100</span>)) <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">writer</span><span class="ruby-operator">|</span>
+  <span class="ruby-constant">FILES_TO_APPEND</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">file_name</span><span class="ruby-operator">|</span>
+    <span class="ruby-constant">Reader</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">file_name</span>).<span class="ruby-identifier">each_buffer</span>(<span class="ruby-constant">SAMPLES_PER_BUFFER</span>) <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">buffer</span><span class="ruby-operator">|</span>
+      <span class="ruby-identifier">writer</span>.<span class="ruby-identifier">write</span>(<span class="ruby-identifier">buffer</span>)
+    <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span>
+</pre>
+
+<p>More examples can be <a
+href="https://github.com/jstrait/wavefile/wiki">found on the wiki</a>.</p>
+
+<h1 id="label-Features">Features<span><a href="#label-Features">&para;</a> <a href="#documentation">&uarr;</a></span></h1>
+<ul><li>
+<p>Ability to read and write Wave files with any number of channels in the
+following formats:</p>
+</li><li>
+<p>PCM (8, 16, and 32 bits per sample)</p>
+</li><li>
+<p>Floating Point (32 and 64 bits per sample)</p>
+</li><li>
+<p>Ability to read sample data from a file in any of the supported formats,
+regardless of the file's actual sample format</p>
+
+<pre>    # Sample data will be returned as 32-bit floating point samples,
+    # regardless of the actual sample format in the file.
+    Reader.new(&quot;some_file.wav&quot;, Format.new(:mono, :float_32, 44100))</pre>
+</li><li>
+<p>Automatic file management, similar to how <code>IO.open</code> works. That
+is, you can open a file for reading or writing, and if a block is given,
+the file will automatically be closed when the block exits.</p>
+
+<pre class="ruby"><span class="ruby-constant">Writer</span>.<span class="ruby-identifier">new</span>(<span class="ruby-string">&quot;some_file.wav&quot;</span>, <span class="ruby-constant">Format</span>.<span class="ruby-identifier">new</span>(:<span class="ruby-identifier">mono</span>, :<span class="ruby-identifier">pcm_16</span>, <span class="ruby-value">44100</span>)) <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">writer</span><span class="ruby-operator">|</span>
+  <span class="ruby-comment"># write some sample data</span>
+<span class="ruby-keyword">end</span>
+<span class="ruby-comment"># At this point, the writer will automatically be closed, no need to do it manually</span>
+</pre>
+</li><li>
+<p>Ability to query metadata about Wave files (sample rate, number of
+channels, number of sample frames, etc.), including files that are in a
+format this gem can't read or write.</p>
+</li><li>
+<p>Pure Ruby, so no need to compile a separate extension in order to use it.</p>
+</li></ul>
+
+<h1 id="label-Current+Release%3A+v0.5.0">Current Release: v0.5.0<span><a href="#label-Current+Release%3A+v0.5.0">&para;</a> <a href="#documentation">&uarr;</a></span></h1>
+
+<p>This release includes these improvements:</p>
+<ul><li>
+<p>Support for reading and writing Wave files containing 32 and 64-bit
+floating point sample data.</p>
+</li><li>
+<p>Support for buffers that contain floating point data (i.e., samples between
+-1.0 and 1.0), including the ability to convert to and from PCM buffers.</p>
+</li><li>
+<p>A new <code>Duration</code> object which can be used to calculate the
+playback time given a sample rate and number of sample frames.</p>
+</li><li>
+<p>New attributes: <code>Reader.current_sample_frame</code>,
+<code>Reader.total_sample_frames</code>, and
+<code>Writer.total_sample_frames</code>.</p>
+</li><li>
+<p>Ability to get these attributes as a <code>Duration</code> object as well:
+<code>Reader.total_duration</code>, <code>Writer.total_duration</code>.</p>
+</li><li>
+<p>The 2nd argument to <code>Format.new</code> now indicates the sample
+format, not the bits per sample. For example, <code>:pcm_16</code> or
+<code>:float_32</code> instead of <code>8</code> or <code>16</code>. For
+backwards compatibility, <code>8</code>, <code>16</code>, and
+<code>32</code> can still be given and will be interpreted as
+<code>:pcm_8</code>, <code>:pcm_16</code>, and <code>:pcm_32</code>, but
+this support might be removed in the future.</p>
+</li><li>
+<p>Bug fix: Wave files are no longer corrupted when an unhandled exception
+occurs inside a <code>Writer</code> block. (Thanks to <a
+href="https://github.com/jamestunnell">James Tunnell</a> for reporting and
+fixing this).</p>
+</li><li>
+<p>Bug fix: <code>Writer.file_name</code> now returns the file name, instead
+of always returning nil (Thanks to <a
+href="https://github.com/jamestunnell">James Tunnell</a> for reporting
+this).</p>
+</li></ul>
+
+<p>This release also includes changes that are not backwards compatible with
+v0.4.0. (Until version v1.0, no guarantees to avoid this will be made, but
+I’ll try to have a good reason before doing so).</p>
+<ul><li>
+<p><code>Info.duration</code> now returns a <code>Duration</code> object,
+instead of a hash.</p>
+</li><li>
+<p><code>Info.sample_count</code> has been renamed
+<code>sample_frame_count</code>.</p>
+</li><li>
+<p>Some constants in the <code>WaveFile</code> module have changed. (In
+general, you should treat these as internal to this gem and not use them in
+your own program).</p>
+</li></ul>
+
+<h1 id="label-Compatibility">Compatibility<span><a href="#label-Compatibility">&para;</a> <a href="#documentation">&uarr;</a></span></h1>
+
+<p><a href="WaveFile.html">WaveFile</a> has been tested with these Ruby
+versions, and appears to be compatible with them:</p>
+<ul><li>
+<p>MRI 2.0.0, 1.9.3, 1.9.2, 1.9.1, 1.8.7</p>
+</li><li>
+<p>JRuby 1.7.3</p>
+</li><li>
+<p>Rubinius 1.2.4</p>
+</li><li>
+<p>MacRuby 0.12</p>
+</li></ul>
+
+<p>If you find any compatibility issues, please let me know by opening a
+GitHub issue.</p>
+
+<h1 id="label-Dependencies">Dependencies<span><a href="#label-Dependencies">&para;</a> <a href="#documentation">&uarr;</a></span></h1>
+
+<p><a href="WaveFile.html">WaveFile</a> has no external dependencies. It is
+written in pure Ruby, and is entirely self-contained.</p>
+
+<h1 id="label-Installation">Installation<span><a href="#label-Installation">&para;</a> <a href="#documentation">&uarr;</a></span></h1>
+
+<p>First, install the <a href="WaveFile.html">WaveFile</a> gem from
+rubygems.org:</p>
+
+<pre>gem install wavefile</pre>
+
+<p>…and include it in your Ruby program:</p>
+
+<pre class="ruby"><span class="ruby-identifier">require</span> <span class="ruby-string">'wavefile'</span>
+</pre>
+
+<p>Note that if you’re installing the gem into the default Ruby that comes
+pre-installed on MacOS (as opposed to a Ruby installed via <a
+href="http://beginrescueend.com/">RVM</a> or <a
+href="https://github.com/sstephenson/rbenv/">rbenv</a>), you should used
+<code>sudo gem install wavefile</code>. Otherwise you might run into a file
+permission error.</p>
+
+<h1 id="label-Contributing">Contributing<span><a href="#label-Contributing">&para;</a> <a href="#documentation">&uarr;</a></span></h1>
+<ol><li>
+<p>Fork my repo</p>
+</li><li>
+<p>Create a branch for your changes</p>
+</li><li>
+<p>Add your changes, and please include tests</p>
+</li><li>
+<p>Make sure the tests pass by running <code>rake test</code></p>
+</li><li>
+<p>Create a pull request</p>
+</li></ol>
+
+</div>
+
+
+
+<footer id="validator-badges">
+  <p><a href="http://validator.w3.org/check/referer">[Validate]</a>
+  <p>Generated by <a href="https://github.com/rdoc/rdoc">RDoc</a> 4.0.1.
+  <p>Generated with the <a href="http://deveiate.org/projects/Darkfish-Rdoc/">Darkfish Rdoc Generator</a> 3.
+</footer>
+

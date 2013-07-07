@@ -4,7 +4,7 @@
 <head>
 <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
 
-<title>class WaveFile::Buffer - RDoc Documentation</title>
+<title>class WaveFile::Buffer - the WaveFile Gem</title>
 
 <link type="text/css" media="screen" href="../rdoc.css" rel="stylesheet">
 
@@ -165,8 +165,8 @@ format.</p>
         <p>Returns the sample data contained in the <a href="Buffer.html">Buffer</a>
 as an Array. If the <a href="Format.html">Format</a> has 1 channel, the
 Array will be a flat list of samples. If the <a
-href="Format.html">Format</a> has 2 or morechannels, the Array will include
-sub arrays for each sample frame, with a samplefor each channel.</p>
+href="Format.html">Format</a> has 2 or more channels, the Array will
+include sub arrays for each sample frame, with a sample for each channel.</p>
 
 <h3 id="attribute-i-samples-label-Examples">Examples<span><a href="#attribute-i-samples-label-Examples">&para;</a> <a href="#documentation">&uarr;</a></span></h3>
 
@@ -205,15 +205,40 @@ sub arrays for each sample frame, with a samplefor each channel.</p>
 
         <div class="method-description">
           
-          <p>Creates a new <a href="Buffer.html">Buffer</a>. The sample array is not
-compared with the format to make sure they match - you are on the honor
-system to make sure they do.</p>
+          <p>Creates a new <a href="Buffer.html">Buffer</a>.</p>
+<dl class="rdoc-list note-list"><dt>samples
+<dd>
+<p>An array of samples. If the <a href="Format.html">Format</a> has 1 channel
+(i.e. is mono), this should be a flat array of samples such as [0.5, 0.4,
+-0.3, …]. If the <a href="Format.html">Format</a> has 2 or more channels
+the array should include a sub-array for each sample frame. For example,
+[[0.5, 0.2], [0.1, 0.6], [-0.2, 0.4], …] for a stereo file.</p>
+</dd><dt>format
+<dd>
+<p>A <a href="Format.html">Format</a> instance which describes the sample
+format of the sample array.</p>
+
+<p>Note that the sample array is not compared with the format to make sure
+they match - you are on the honor system to make sure they do. If theydon’t
+match, unexpected things will happen.</p>
+</dd></dl>
+
+<h3 id="method-c-new-label-Examples">Examples<span><a href="#method-c-new-label-Examples">&para;</a> <a href="#documentation">&uarr;</a></span></h3>
+
+<pre class="ruby"><span class="ruby-identifier">samples</span> = ([<span class="ruby-value">0.5</span>] <span class="ruby-operator">*</span> <span class="ruby-value">50</span>) <span class="ruby-operator">+</span> ([<span class="ruby-value">-0.5</span>] <span class="ruby-operator">*</span> <span class="ruby-value">50</span>)   <span class="ruby-comment"># A 440Hz mono square wave</span>
+<span class="ruby-identifier">buffer</span> = <span class="ruby-constant">Buffer</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">samples</span>, <span class="ruby-constant">Format</span>.<span class="ruby-identifier">new</span>(:<span class="ruby-identifier">mono</span>, :<span class="ruby-identifier">float</span>, <span class="ruby-value">44100</span>)
+
+<span class="ruby-identifier">samples</span> = ([<span class="ruby-value">0.5</span>, <span class="ruby-value">0.5</span>] <span class="ruby-operator">*</span> <span class="ruby-value">50</span>) <span class="ruby-operator">+</span> ([<span class="ruby-value">-0.5</span>, <span class="ruby-value">-0.5</span>] <span class="ruby-operator">*</span> <span class="ruby-value">50</span>)   <span class="ruby-comment"># A 440Hz stereo square wave</span>
+<span class="ruby-identifier">buffer</span> = <span class="ruby-constant">Buffer</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">samples</span>, <span class="ruby-constant">Format</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">2</span>, :<span class="ruby-identifier">float</span>, <span class="ruby-value">44100</span>)
+</pre>
+
+<p>Returns a constructed <a href="Buffer.html">Buffer</a>.</p>
           
           
 
           
           <div class="method-source-code" id="new-source">
-            <pre><span class="ruby-comment"># File lib/wavefile/buffer.rb, line 16</span>
+            <pre><span class="ruby-comment"># File lib/wavefile/buffer.rb, line 38</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">samples</span>, <span class="ruby-identifier">format</span>)
   <span class="ruby-ivar">@samples</span> = <span class="ruby-identifier">samples</span>
   <span class="ruby-ivar">@format</span> = <span class="ruby-identifier">format</span>
@@ -253,7 +278,7 @@ system to make sure they do.</p>
 
           
           <div class="method-source-code" id="bits_per_sample-source">
-            <pre><span class="ruby-comment"># File lib/wavefile/buffer.rb, line 64</span>
+            <pre><span class="ruby-comment"># File lib/wavefile/buffer.rb, line 86</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">bits_per_sample</span>
   <span class="ruby-ivar">@format</span>.<span class="ruby-identifier">bits_per_sample</span>
 <span class="ruby-keyword">end</span></pre>
@@ -286,7 +311,7 @@ system to make sure they do.</p>
 
           
           <div class="method-source-code" id="channels-source">
-            <pre><span class="ruby-comment"># File lib/wavefile/buffer.rb, line 58</span>
+            <pre><span class="ruby-comment"># File lib/wavefile/buffer.rb, line 80</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">channels</span>
   <span class="ruby-ivar">@format</span>.<span class="ruby-identifier">channels</span>
 <span class="ruby-keyword">end</span></pre>
@@ -334,7 +359,7 @@ href="Buffer.html">Buffer</a> is unmodified.</p>
 
           
           <div class="method-source-code" id="convert-source">
-            <pre><span class="ruby-comment"># File lib/wavefile/buffer.rb, line 33</span>
+            <pre><span class="ruby-comment"># File lib/wavefile/buffer.rb, line 55</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">convert</span>(<span class="ruby-identifier">new_format</span>)
   <span class="ruby-identifier">new_samples</span> = <span class="ruby-identifier">convert_buffer</span>(<span class="ruby-ivar">@samples</span>.<span class="ruby-identifier">dup</span>, <span class="ruby-ivar">@format</span>, <span class="ruby-identifier">new_format</span>)
   <span class="ruby-constant">Buffer</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">new_samples</span>, <span class="ruby-identifier">new_format</span>)
@@ -382,7 +407,7 @@ href="Buffer.html">Buffer</a> is modified.</p>
 
           
           <div class="method-source-code" id="convert-21-source">
-            <pre><span class="ruby-comment"># File lib/wavefile/buffer.rb, line 50</span>
+            <pre><span class="ruby-comment"># File lib/wavefile/buffer.rb, line 72</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">convert!</span>(<span class="ruby-identifier">new_format</span>)
   <span class="ruby-ivar">@samples</span> = <span class="ruby-identifier">convert_buffer</span>(<span class="ruby-ivar">@samples</span>, <span class="ruby-ivar">@format</span>, <span class="ruby-identifier">new_format</span>)
   <span class="ruby-ivar">@format</span> = <span class="ruby-identifier">new_format</span>
@@ -417,7 +442,7 @@ href="Buffer.html">Buffer</a> is modified.</p>
 
           
           <div class="method-source-code" id="sample_rate-source">
-            <pre><span class="ruby-comment"># File lib/wavefile/buffer.rb, line 70</span>
+            <pre><span class="ruby-comment"># File lib/wavefile/buffer.rb, line 92</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">sample_rate</span>
   <span class="ruby-ivar">@format</span>.<span class="ruby-identifier">sample_rate</span>
 <span class="ruby-keyword">end</span></pre>
