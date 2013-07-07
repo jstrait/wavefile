@@ -9,27 +9,36 @@ module WaveFile
   # This class is immutable - once a new Format is constructed, it can't be modified.
   class Format
     # Not using ranges because of 1.8.7 performance problems with Range.max
-    MIN_CHANNELS = 1
-    MAX_CHANNELS = 65535
+    MIN_CHANNELS = 1    # :nodoc:
+    MAX_CHANNELS = 65535    # :nodoc:
 
-    MIN_SAMPLE_RATE = 1
-    MAX_SAMPLE_RATE = 4_294_967_296
+    MIN_SAMPLE_RATE = 1    # :nodoc:
+    MAX_SAMPLE_RATE = 4_294_967_296    # :nodoc:
 
-    SUPPORTED_SAMPLE_FORMATS = [:pcm, :float]
+    SUPPORTED_SAMPLE_FORMATS = [:pcm, :float]    # :nodoc:
     SUPPORTED_BITS_PER_SAMPLE = {
                                   :pcm => [8, 16, 32],
                                   :float => [32, 64],
-                                }
+                                }    # :nodoc:
 
     # Constructs a new immutable Format.
     #
-    # channels - The number of channels in the format. Can either be a Fixnum
-    #            (e.g. 1, 2, 3) or the symbols :mono (equivalent to 1) or
+    # channels - The number of channels in the format. Can either be a Fixnum 
+    #            (e.g. 1, 2, 3) or the symbols :mono (equivalent to 1) or 
     #            :stereo (equivalent to 2).
-    # format_code - A symbol indicating the format of each sample. Consists of
-    #               two parts: a format code, and the bits per sample. For
-    #               example, :pcm_16 or :float_32.
+    # format_code - A symbol indicating the format of each sample. Consists of 
+    #               two parts: a format code, and the bits per sample. The valid 
+    #               values are :pcm_8, :pcm_16, :pcm_32, :float_32, :float_64,
+    #               and :float (equivalent to :float_32)
     # sample_rate - The number of samples per second, such as 44100
+    #
+    # Examples
+    #
+    #   format = Format.new(1, :pcm_16, 44100)
+    #   format = Format.new(:mono, :pcm_16, 44100)  # Equivalent to above
+    #
+    #   format = Format.new(:stereo, :float_32, 44100)
+    #   format = Format.new(:stereo, :float, 44100)
     def initialize(channels, format_code, sample_rate)
       channels = normalize_channels(channels)
       sample_format, bits_per_sample = normalize_format_code(format_code)
