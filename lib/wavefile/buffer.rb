@@ -12,14 +12,27 @@ module WaveFile
   # Contains methods to convert the sample data in the buffer to a different format.
   class Buffer
 
-    # Creates a new Buffer. The sample array is not compared with the format to make sure 
-    # they match - you are on the honor system to make sure they do. If they don't match, 
-    # unexpected things will happen.
+    # Creates a new Buffer.
+    #
+    # samples - An array of samples. If the Format has 1 channel (i.e. is mono), this 
+    #           should be a flat array of samples such as [0.5, 0.4, -0.3, ...]. If the 
+    #           Format has 2 or more channels the array should include a sub-array for 
+    #           each sample frame. For example, [[0.5, 0.2], [0.1, 0.6], [-0.2, 0.4], ...] 
+    #           for a stereo file.
+    #
+    # format - A Format instance which describes the sample format of the sample array. 
+    #
+    #          Note that the sample array is not compared with the format to make sure 
+    #          they match - you are on the honor system to make sure they do. If they
+    #          don't match, unexpected things will happen.
     #
     # Examples
     #
-    #   samples = ([0.5] * 50) + ([-0.5] * 50)   # A 440Hz square wave
+    #   samples = ([0.5] * 50) + ([-0.5] * 50)   # A 440Hz mono square wave
     #   buffer = Buffer.new(samples, Format.new(:mono, :float, 44100)
+    #
+    #   samples = ([0.5, 0.5] * 50) + ([-0.5, -0.5] * 50)   # A 440Hz stereo square wave
+    #   buffer = Buffer.new(samples, Format.new(2, :float, 44100)
     #
     # Returns a constructed Buffer.
     def initialize(samples, format)
