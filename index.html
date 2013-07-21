@@ -13,7 +13,7 @@
   <h1><a href="http://wavefilegem.com/">WaveFile Gem</a></h1>
   <ul id="navigation">
     <li><a href="getting_started">Getting Started</a></li>
-    <li><a href="documentation.html">Documentation</a></li>
+    <li><a href="documentation">Documentation</a></li>
   </ul>
 </div>
 <p id="tagline">Read and write .wav sound files in pure Ruby</p>
@@ -44,7 +44,7 @@ buffer = Buffer.new(cycle, Format.new(:mono, :float, 44100))
 Writer.new("my_file.wav", Format.new(:mono, :pcm_16, 44100)) do |writer|
   220.times { writer.write(buffer) }
 end</pre></code>
-  <p>Intrigued? Check out <a href="/examples.html">more examples</a>.</p>
+  <p>Intrigued? Check out <a href="/examples">more examples</a>.</p>
 </div>
 <div class="section">
   <h2 id="installation"><a href="#installation">Installation</a></h2>
