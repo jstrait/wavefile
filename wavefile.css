@@ -146,6 +146,15 @@ p#tagline {
   max-width: 100%;
 }
 
+div.warning {
+  text-align: center;
+  background: #FF4D4D;
+  color: #fff;
+  margin: 0.0em;
+  padding-top: 2.0em;
+  padding-bottom: 2.0em;
+}
+
 ul#feature-list {
   overflow: auto;
   max-width: 744px;
