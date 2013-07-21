@@ -237,8 +237,7 @@ span.label {
   }
 
   p#tagline {
-    padding-top: 1.0em;
-    padding-bottom: 1.0em;
+    padding: 0.75em;
   }
 
   ul#navigation {
