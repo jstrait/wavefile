@@ -236,6 +236,22 @@ span.label {
     width: 100%;
   }
 
+  p#tagline {
+    padding-top: 1.0em;
+    padding-bottom: 1.0em;
+  }
+
+  ul#navigation {
+    margin: 0.0em auto 1.5em auto;
+    width: 100%;
+  }
+
+  ul#navigation li {
+    float: left;
+    margin-right: 0.0em;
+    width: 50%;
+  }
+
   ul#feature-list {
     max-width: 100%;
   }
@@ -246,15 +262,8 @@ span.label {
     float: none;
   }
 
-  ul#navigation {
-    margin: 0.0em auto;
-    width: 100%;
-  }
-
-  ul#navigation li {
-    float: left;
-    margin-right: 0.0em;
-    width: 50%;
+  ul#format-list li {
+    padding: 0.0em;
   }
 
   .section {
@@ -287,4 +296,3 @@ span.label {
     margin-right: 1.5em;
   }
 }
-
