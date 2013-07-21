@@ -201,7 +201,7 @@ span.label {
 
 .doc-list {
   margin: 0.0em auto;
-  padding: 0px;
+  padding: 0.0em;
   max-width: 744px;
 }
 
@@ -220,3 +220,63 @@ span.label {
 .footer p {
   margin: 0.0em auto;
 }
+
+
+@media (max-width: 744px) {
+  h1 {
+    margin: 1.0em 0.0em 0.0em 0.0em;
+    text-align: center;
+    width: 100%;
+  }
+
+  ul#feature-list {
+    max-width: 100%;
+  }
+
+  ul#feature-list li {
+    width: inherit;
+    padding: 0.0em 1.5em 0.0em 1.5em;
+    float: none;
+  }
+
+  ul#navigation {
+    margin: 0.0em auto;
+    width: 100%;
+  }
+
+  ul#navigation li {
+    float: left;
+    margin-right: 0.0em;
+    width: 50%;
+  }
+
+  .section {
+    padding: 3.0em 0.0em;
+  }
+
+  h2 {
+    margin-left: 1.0em;
+    margin-right: 1.0em;
+  }
+
+  p {
+    margin-left: 1.5em;
+    margin-right: 1.5em;
+  }
+
+  pre {
+    margin-left: 1.5em;
+    margin-right: 1.5em;
+  }
+
+  .doc-list {
+    margin-left: 1.5em;
+    margin-right: 1.5em;
+  }
+
+  .footer p {
+    margin-left: 1.5em;
+    margin-right: 1.5em;
+  }
+}
+
