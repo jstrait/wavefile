@@ -72,7 +72,9 @@
   end
   </code></pre>
   <p>When you run this program it should create a file called "<code>square.wav</code>" in the current working directory. If you play this file (for example on a Mac using <code>afplay square.wav</code> from the command line) it should sound like this:</p>
-  <p>AUDIO TAG GOES HERE</p>
+  <audio controls>
+    <source src="square_too_short.wav" type="audio/wav">
+  </audio>
   <p>...which... doesn't sound like anything! The reason is that we didn't generate enough samples. At the sample rate we're using, 44,100Hz, you'll need 44,100 samples for 1 second of sound. We only generated 100 samples, or about 1/441th of a second. No problem, we can easily fix this by repeating our cycle more times:</p>
   <pre><code>
   CYCLE_COUNT = 441   # 441 x 100 samples == 44,100 samples, or 1 second of sound
@@ -82,7 +84,9 @@
   end
   </code></pre>
   <p>Now when you re-run the program and play "<code>square.wav</code>" it should sound like this.</p>
-  <p>AUDIO TAG GOES HERE</p>
+  <audio controls>
+    <source src="square.wav" type="audio/wav">
+  </audio>
   <p>You are well on your way to writing an epic <a href="">NES</a> soundtrack!</p>
   <p>Here's the full program:</p>
   <pre><code>

@@ -58,6 +58,12 @@ code {
   font-family: "PT Mono", menlo, courier, monospace;
 }
 
+audio {
+  max-width: 744px;
+  margin: 3.0em auto;
+  display: block;
+}
+
 table {
   border-collapse: collapse;
   width: 100%;
