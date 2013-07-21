@@ -190,6 +190,17 @@ span.label {
   background: #fff;
 }
 
+.doc-list {
+  margin: 0.0em auto;
+  padding: 0px;
+  max-width: 744px;
+}
+
+.doc-list li {
+  list-style-type: none;
+  margin-bottom: 1.5em;
+}
+
 .footer {
   background: #000;
   color: #fff;
