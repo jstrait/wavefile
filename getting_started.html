@@ -113,22 +113,20 @@
 
   SAMPLE_FRAMES_PER_BUFFER = 4096
 
-  Reader.new("square.wav").each_buffer(SAMPLE_FRAMES_PER_BUFFER) do |reader|
-    buffer = reader.read(SAMPLES_PER_BUFFER)
-
+  Reader.new("square.wav").each_buffer(SAMPLE_FRAMES_PER_BUFFER) do |buffer|
     puts "Buffer number of channels:   #{buffer.channels}"
-    puts "Buffer sample format:        #{buffer.sample_format}"
     puts "Buffer bits per sample:      #{buffer.bits_per_sample}"
     puts "Number of samples in buffer: #{buffer.samples.length}"
-    puts "First 10 samples in buffer:  #{buffer.samples[0...10].inspect}
-    puts "----------------------------------"
+    puts "First 10 samples in buffer:  #{buffer.samples[0...10].inspect}"
+    puts "--------------------------------------------------------------"
   end
   </code></pre>
   <p>After constructing the <code>Reader </code> we call the <code>each_buffer</code> method. This method is useful when you want to read an entire file. It reads successive buffers of the given size, and passes each to the given block. When all buffers have been read, the file is automatically closed. (You can also manually control what to read and when to close the file, see the <a href="examples.html">examples</a> page for more info.</p>
   <p>When you run the program, it should print out repeated output similar to the following:</p>
-  <pre><code>
-  EXAMPLE OUTPUT GOES HERE
-  </code></pre>
+  <pre><code>Buffer number of channels:   1
+Buffer bits per sample:      16
+Number of samples in buffer: 4096
+First 10 samples in buffer:  [9830, 9830, 9830, 9830, 9830, 9830, 9830, 9830, 9830, 9830]</code></pre>
   <p>Notice how these samples are integers, rather than the floats that we generated in the last section. This is because when we saved that file, we write the samples as 16-bit PCM samples instead of floating point.</p>
   <p>Also notice that we only read 4,096 samples at a time, instead of trying to the read the whole file. It's a generally a good idea to reading a larger number of smaller buffers, rather than one giant buffer.</p>
   <p>OK, well that's cool, but let's say we want to read this file so we can do some transformation on it, and it will be easier for us if the samples are in floating point format, and are stereo (since we want to combine it will some other files that are stereo). No problem, when constructing the <code>Reader</code> we just need to pass a <code>Format</code> instance that describes how we want to samples to be read as (regardless of the actual underlaying format in the file).</p>
@@ -139,21 +137,28 @@
   SAMPLE_FRAMES_PER_BUFFER = 4096
 
   reader = Reader.new("square.wav", Format.new(:stereo, :float, 44100))
-  reader.each_buffer(SAMPLE_FRAMES_PER_BUFFER) do |reader|
-    buffer = reader.read(SAMPLES_PER_BUFFER)
-
+  reader.each_buffer(SAMPLE_FRAMES_PER_BUFFER) do |buffer|
     puts "Buffer number of channels:   #{buffer.channels}"
-    puts "Buffer sample format:        #{buffer.sample_format}"
     puts "Buffer bits per sample:      #{buffer.bits_per_sample}"
     puts "Number of samples in buffer: #{buffer.samples.length}"
-    puts "First 10 samples in buffer:  #{buffer.samples[0...10].inspect}
-    puts "----------------------------------"
+    puts "First 10 samples in buffer:  #{buffer.samples[0...10].inspect}"
+    puts "--------------------------------------------------------------"
   end
   </code></pre>
   <p>Now when you run this program, the output should look like this:</p>
-  <pre><code>
-  EXAMPLE OUTPUT GOES HERE
-  </code></pre>
+  <pre><code>Buffer number of channels:   2
+Buffer bits per sample:      32
+Number of samples in buffer: 4096
+First 10 samples in buffer:  [[0.29998779296875, 0.29998779296875],
+                              [0.29998779296875, 0.29998779296875],
+                              [0.29998779296875, 0.29998779296875],
+                              [0.29998779296875, 0.29998779296875],
+                              [0.29998779296875, 0.29998779296875],
+                              [0.29998779296875, 0.29998779296875],
+                              [0.29998779296875, 0.29998779296875],
+                              [0.29998779296875, 0.29998779296875],
+                              [0.29998779296875, 0.29998779296875],
+                              [0.29998779296875, 0.29998779296875]]</code></pre>
 </div>
 <div class="section">
   <h2>Next Steps</h2>
