@@ -10,6 +10,19 @@ module WaveFile
 
   # Provides the ability to read sample data out of a wave file, as well as query a 
   # wave file about its metadata (e.g. number of channels, sample rate, etc).
+  #
+  # When constructing a Reader a block can be given. All data should be read inside this 
+  # block, and when the block exits the Reader will automatically be closed.
+  #
+  #     Reader.new("my_file.wav") do |reader|
+  #       # Read sample data here
+  #     end
+  #
+  # Alternately, if a block isn't given you should make sure to call close when finished reading.
+  #
+  #     reader = Reader.new("my_file.wav")
+  #     # Read sample data here
+  #     reader.close
   class Reader
     # Returns a Reader object that is ready to start reading the specified file's sample data. 
     #
