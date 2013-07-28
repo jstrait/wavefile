@@ -1,5 +1,19 @@
 module WaveFile
   # Provides the ability to write data to a wave file.
+  #
+  # When a Writer is constructed it can be given a block. All samples should be written inside this 
+  # block, and when the block exits the file will automatically be closed:
+  #
+  #    Writer.new("my_file.wav", Format.new(:mono, :pcm_16, 44100)) do |writer|
+  #      # Write sample data here
+  #    end
+  #
+  # If no block is given, you'll need to manually close the Writer when done. The underlaying 
+  # file will not be valid or playable until close is called.
+  #
+  #    writer = Writer.new("my_file.wav", Format.new(:mono, :pcm_16, 44100))
+  #    # Write sample data here
+  #    writer.close
   class Writer
 
     # Padding value written to the end of chunks whose payload is an odd number of bytes. The RIFF 
