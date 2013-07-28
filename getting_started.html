@@ -28,20 +28,20 @@
   <h2>Basic Concepts</h2>
   <p>The WaveFile gem lets you both read and write wave files. Reading is done using the <code>Reader</code> class, and writing is done using the <code>Writer</code> class.</p>
   <p>The <code>Buffer</code> class represents a collection of samples in a given sample format (e.g. stereo 16-bit PCM samples at a 44,100Hz sample rate). When samples are read using <code>Reader</code> they are returned in <code>Buffer</code> instances. Samples to be written are given to <code>Writer</code> wrapped in <code>Buffer</code> instances as well.</p>
-  <p>A <code>Buffer</code> consists of two parts: a Ruby array of samples, and a <code>Format</code> instance that describes what sample format. For example, the sample array in a <code>Buffer</code> read out of a mono 8-bit PCM file (in which each sample is an integer between 0 and 255) might look like this:</p>
+  <p>A <code>Buffer</code> consists of two parts: an array of samples, and a <code>Format</code> instance that describes the sample format (since it might not be possible to determine just by looking at the raw samples). For example, the sample array in a <code>Buffer</code> read out of a mono 8-bit PCM file (in which each sample is an integer between 0 and 255) might look like this:</p>
   <pre><code>[45, 192, 13, 231, 201, 101, 15, ...etc...]</code></pre>
   <p>When there is more than one channel, each sample frame will be represent by a sub array. For example, a set of stereo floating point samples (in which each sample is between -1.0 and 1.0) might look like this:</p>
   <pre><code>[[-0.2, 0.4], [0.3, 0.9], [-0.4, -0.8], [0.9, -0.2], [-0.3, 0.4], ...etc...]</code></pre>
-  <p>If writing a program that creates sound, you would generate an array like this with the sample data, then wrap it in a <code>Buffer</code>, and then use <code>Writer</code> to write the samples in the <code>Buffer</code> to disk.</p>
-  <p><code>Buffer</code>s have the ability to convert their samples to a different format. This means that you can read samples from a file in a different format than what is actually in the file (e.g. read a file with 8-bit samples and get 16-bit samples back). You can also do the same with <code>Writer</code> - for example, generate floating point samples between -1.0 and 1.0, and transparently write them to a file as PCM samples.</p>
+  <p>When writing a program that creates sound, you would generate an array like this with the sample data, then wrap it in a <code>Buffer</code>, and then use <code>Writer</code> to write the samples in the <code>Buffer</code> to disk.</p>
+  <p><code>Buffers</code> have the ability to convert their samples to any other format this gem supports. This means you can read samples from a file in whatever format you like, regardless of the actual sample format in the file (e.g. read a file with 8-bit samples and get 16-bit samples back). You can also do the same with <code>Writer</code> - for example, rather than remember the sample range of a PCM format (was it 32,767? or 32,768?) you can just generate floating point samples between -1.0 and 1.0, and transparently write them out as PCM samples.</p>
 </div>
 <div class="section">
   <h2>Creating a New Wave File</h2>
   <p>Let's write a simple tone to a wave file. A <a href="">square wave</a> is about the simplest way to create a sound, so let's do that. A square wave consists a some repeated samples, followed by the same number of repeated samples at the opposite amplitude. For example:</p>
   <pre><code>[0.3, 0.3, 0.3, 0.3, -0.3, -0.3, -0.3, -0.3,  ...and repeated...]</code></pre>
-  <p>So, we'll write some code to generate these samples, and then wrap them in a <code>Buffer</code>, and then write these buffers to a file using <code>Writer</code>.</p>
-  <p>The samples we'll generate will be in float format, which means they should be between -1.0 and 1.0. The larger each sample value, the louder it will sound (i.e. 0.5 will sound louder than 0.3). The faster that we alternate between the positive and negative samples, the higher the frequency of the tone (i.e., <code>[0.2, 0.2, -0.2, -0.2]</code> will sound higher than <code>[0.2, 0.2, 0.2, -0.2, -0.2, -0.2]</code>). (This is a really simplified explanation of things).</p>
-  <p>50 positive samples followed by 50 negative samples will produce the same pitch as middle A on a piano (when the sample rate in 44,100Hz). Let's use that and generate our sample array:</p>
+  <p>We'll write some code to generate these samples, wrap them in a <code>Buffer</code>, and then write these <code>Buffers</code> to a file using <code>Writer</code>.</p>
+  <p>The samples we'll generate will be in float format, which means they should be between -1.0 and 1.0. The larger each sample value, the higher the amplitude (i.e. how loud it is). The faster that we alternate between the positive and negative samples, the higher the frequency of the tone (i.e., <code>[0.2, 0.2, -0.2, -0.2]</code> will have a higher pitch than <code>[0.2, 0.2, 0.2, -0.2, -0.2, -0.2]</code>). (This is a really simplified explanation of things).</p>
+  <p>50 positive samples followed by 50 negative samples will produce the same pitch as middle A on a piano when the sample rate in 44,100Hz. Let's use that and generate our sample array:</p>
   <pre><code>AMPLITUDE = 0.3
 one_square_cycle = ([AMPLITUDE] * 50) + ([-AMPLITUDE] * 50)</code></pre>
   <p>Next, let's wrap the samples in a <code>Buffer</code>:</p>
@@ -51,8 +51,8 @@ one_square_cycle = ([AMPLITUDE] * 50) + ([-AMPLITUDE] * 50)</code></pre>
   <pre><code>Writer.new("square.wav", Format.new(:mono, :pcm_16, 44100)) do |writer|
   writer.write(buffer)
 end</code></pre>
-  <p>Notice that we gave the <code>Writer</code> a <code>Format</code> as well. This tells <code>Writer</code> what format to write any samples in. Also notice that the sample format (<code>:pcm_16</code>) is different from the <code>Buffer</code> we created - things will be translated behind the scenes.</p>
-  <p>All of the code to write the samples is done inside a block. When the block exits the file will automatically be closed, so we don't have to do that here. If you want more manually control over when the file is closed you can do that as well by not passing a block and manually calling <code>close()</code>.</p>
+  <p>Notice that we gave the <code>Writer</code> a <code>Format</code> as well. This determines which format samples will be written as. Notice that the sample format (<code>:pcm_16</code>) is different from the <code>Buffer</code> we created - the gem will handle the necessary translation behind the scenes.</p>
+  <p>All of the code to write the samples is done inside a block. When the block exits the file will automatically be closed. (If you want more manually control over when the file is closed you can do that as well by not passing a block and manually calling <code>close())</code>.</p>
   <p>Here's the full program so far:</p>
   <pre><code>require 'wavefile'
 include WaveFile    # So we don't have to prefix all classes with 'WaveFile::'
@@ -96,7 +96,7 @@ end</code></pre>
 </div>
 <div class="section bg-white">
   <h2>Reading a Wave File</h2>
-  <p>Let's now read the file we just wrote. For that we can use the <code>Reader</code> class.</p>
+  <p>Let's now read the file we just wrote. We can use the <code>Reader</code> class for that.</p>
   <pre><code>require 'wavefile'
 include WaveFile    # So we don't have to prefix all classes with 'WaveFile::'
 
@@ -109,21 +109,21 @@ Reader.new("square.wav").each_buffer(SAMPLE_FRAMES_PER_BUFFER) do |buffer|
   puts "First 10 samples in buffer:  #{buffer.samples[0...10].inspect}"
   puts "--------------------------------------------------------------"
 end</code></pre>
-  <p>After constructing the <code>Reader </code> we call the <code>each_buffer</code> method. This method is useful when you want to read an entire file. It reads successive buffers of the given size, and passes each to the given block. When all buffers have been read, the file is automatically closed. (You can also manually control what to read and when to close the file, see the <a href="examples.html">examples</a> page for more info.</p>
+  <p>After constructing the <code>Reader</code> we call the <code>each_buffer</code> method. This method is useful when you want to read an entire file. It reads successive buffers of a given size, and passes each to the given block. When all buffers have been read, the file is automatically closed. (You can also manually control what to read and when to close the file, see the <a href="examples.html">examples</a> page for more info.</p>
   <p>When you run the program, it should print out repeated output similar to the following:</p>
   <pre><code>Buffer number of channels:   1
 Buffer bits per sample:      16
 Number of samples in buffer: 4096
 First 10 samples in buffer:  [9830, 9830, 9830, 9830, 9830, 9830, 9830, 9830, 9830, 9830]</code></pre>
-  <p>Notice how these samples are integers, rather than the floats that we generated in the last section. This is because when we saved that file, we write the samples as 16-bit PCM samples instead of floating point.</p>
-  <p>Also notice that we only read 4,096 samples at a time, instead of trying to the read the whole file. It's a generally a good idea to reading a larger number of smaller buffers, rather than one giant buffer.</p>
-  <p>OK, well that's cool, but let's say we want to read this file so we can do some transformation on it, and it will be easier for us if the samples are in floating point format, and are stereo (since we want to combine it will some other files that are stereo). No problem, when constructing the <code>Reader</code> we just need to pass a <code>Format</code> instance that describes how we want to samples to be read as (regardless of the actual underlaying format in the file).</p>
+  <p>Notice how these samples are integers, rather than the floats that we generated in the last section. This is because when we saved that file, we indicated (via the <code>Format</code> instance we gave) that the samples should be written as 16-bit PCM samples instead of floating point.</p>
+  <p>Also notice that we only read 4,096 samples at a time, instead of trying to the read the whole file. It's a generally a good idea to read a larger number of smaller buffers, rather than one giant buffer. In this instance it probably doesn't matter, but longer files can have millions of samples, and Ruby can have trouble with arrays this large.</p>
+  <p>OK, well that's cool, but let's say we want to read this file so we can do some transformation on it, and it will be easier to work with if the samples are in floating point format, and are stereo (since we want to combine it with some other files that are stereo). No problem, when constructing the <code>Reader</code> we just need to pass a <code>Format</code> instance that describes our desired sample format.</p>
   <pre><code>require 'wavefile'
 include WaveFile    # So we don't have to prefix all classes with 'WaveFile::'
 
 SAMPLE_FRAMES_PER_BUFFER = 4096
 
-reader = Reader.new("square.wav", Format.new(:stereo, :float, 44100))
+reader = Reader.new("square.wav", <span class="highlight">Format.new(:stereo, :float, 44100)</span>)
 reader.each_buffer(SAMPLE_FRAMES_PER_BUFFER) do |buffer|
   puts "Buffer number of channels:   #{buffer.channels}"
   puts "Buffer bits per sample:      #{buffer.bits_per_sample}"

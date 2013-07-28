@@ -78,6 +78,10 @@ td {
   vertical-align: top;
 }
 
+span.highlight {
+  background: yellow;
+}
+
 div#header {
   background: #fff;
 }
