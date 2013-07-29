@@ -4,7 +4,7 @@
 <head>
 <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
 
-<title>class WaveFile::Writer - the WaveFile Gem</title>
+<title>class WaveFile::Writer - WaveFile Gem</title>
 
 <link type="text/css" media="screen" href="../rdoc.css" rel="stylesheet">
 
@@ -89,7 +89,16 @@
   </div>
 
   <div id="project-metadata">
-    
+    <nav id="fileindex-section" class="section project-section">
+  <h3 class="section-header">Pages</h3>
+
+  <ul>
+  
+    <li class="file"><a href="../README.html">README</a>
+  
+  </ul>
+</nav>
+
     <nav id="classindex-section" class="section project-section">
   <h3 class="section-header">Class and Module Index</h3>
 
@@ -127,6 +136,23 @@
   <div id="description" class="description">
     
 <p>Provides the ability to write data to a wave file.</p>
+
+<p>When a <a href="Writer.html">Writer</a> is constructed it can be given a
+block. All samples should be written inside this block, and when the block
+exits the file will automatically be closed:</p>
+
+<pre class="ruby"><span class="ruby-constant">Writer</span>.<span class="ruby-identifier">new</span>(<span class="ruby-string">&quot;my_file.wav&quot;</span>, <span class="ruby-constant">Format</span>.<span class="ruby-identifier">new</span>(:<span class="ruby-identifier">mono</span>, :<span class="ruby-identifier">pcm_16</span>, <span class="ruby-value">44100</span>)) <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">writer</span><span class="ruby-operator">|</span>
+  <span class="ruby-comment"># Write sample data here</span>
+<span class="ruby-keyword">end</span>
+</pre>
+
+<p>If no block is given, you’ll need to manually close the <a
+href="Writer.html">Writer</a> when done. The underlaying file will not be
+valid or playable until close is called.</p>
+
+<pre>writer = Writer.new(&quot;my_file.wav&quot;, Format.new(:mono, :pcm_16, 44100))
+# Write sample data here
+writer.close</pre>
 
   </div><!-- description -->
 
@@ -230,7 +256,7 @@ method is called.</p>
 
           
           <div class="method-source-code" id="new-source">
-            <pre><span class="ruby-comment"># File lib/wavefile/writer.rb, line 33</span>
+            <pre><span class="ruby-comment"># File lib/wavefile/writer.rb, line 47</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">file_name</span>, <span class="ruby-identifier">format</span>)
   <span class="ruby-ivar">@file_name</span> = <span class="ruby-identifier">file_name</span>
   <span class="ruby-ivar">@file</span> = <span class="ruby-constant">File</span>.<span class="ruby-identifier">open</span>(<span class="ruby-identifier">file_name</span>, <span class="ruby-string">&quot;wb&quot;</span>)
@@ -299,7 +325,7 @@ already closed.</p>
 
           
           <div class="method-source-code" id="close-source">
-            <pre><span class="ruby-comment"># File lib/wavefile/writer.rb, line 84</span>
+            <pre><span class="ruby-comment"># File lib/wavefile/writer.rb, line 98</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">close</span>
   <span class="ruby-comment"># The RIFF specification requires that each chunk be aligned to an even number of bytes,</span>
   <span class="ruby-comment"># even if the byte count is an odd number. Therefore if an odd number of bytes has been</span>
@@ -349,7 +375,7 @@ if it is open and available for writing.</p>
 
           
           <div class="method-source-code" id="closed-3F-source">
-            <pre><span class="ruby-comment"># File lib/wavefile/writer.rb, line 69</span>
+            <pre><span class="ruby-comment"># File lib/wavefile/writer.rb, line 83</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">closed?</span>
   <span class="ruby-ivar">@file</span>.<span class="ruby-identifier">closed?</span>
 <span class="ruby-keyword">end</span></pre>
@@ -383,7 +409,7 @@ sample frames that have been written so far</p>
 
           
           <div class="method-source-code" id="total_duration-source">
-            <pre><span class="ruby-comment"># File lib/wavefile/writer.rb, line 105</span>
+            <pre><span class="ruby-comment"># File lib/wavefile/writer.rb, line 119</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">total_duration</span>
   <span class="ruby-constant">Duration</span>.<span class="ruby-identifier">new</span>(<span class="ruby-ivar">@total_sample_frames</span>, <span class="ruby-ivar">@format</span>.<span class="ruby-identifier">sample_rate</span>)
 <span class="ruby-keyword">end</span></pre>
@@ -420,7 +446,7 @@ far.Raises IOError if the <a href="Writer.html">Writer</a> has been closed.</p>
 
           
           <div class="method-source-code" id="write-source">
-            <pre><span class="ruby-comment"># File lib/wavefile/writer.rb, line 60</span>
+            <pre><span class="ruby-comment"># File lib/wavefile/writer.rb, line 74</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">write</span>(<span class="ruby-identifier">buffer</span>)
   <span class="ruby-identifier">samples</span> = <span class="ruby-identifier">buffer</span>.<span class="ruby-identifier">convert</span>(<span class="ruby-ivar">@format</span>).<span class="ruby-identifier">samples</span>
 

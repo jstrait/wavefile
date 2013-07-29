@@ -4,7 +4,7 @@
 <head>
 <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
 
-<title>class WaveFile::Reader - the WaveFile Gem</title>
+<title>class WaveFile::Reader - WaveFile Gem</title>
 
 <link type="text/css" media="screen" href="../rdoc.css" rel="stylesheet">
 
@@ -93,7 +93,16 @@
   </div>
 
   <div id="project-metadata">
-    
+    <nav id="fileindex-section" class="section project-section">
+  <h3 class="section-header">Pages</h3>
+
+  <ul>
+  
+    <li class="file"><a href="../README.html">README</a>
+  
+  </ul>
+</nav>
+
     <nav id="classindex-section" class="section project-section">
   <h3 class="section-header">Class and Module Index</h3>
 
@@ -133,6 +142,22 @@
 <p>Provides the ability to read sample data out of a wave file, as well as
 query a wave file about its metadata (e.g. number of channels, sample rate,
 etc).</p>
+
+<p>When constructing a <a href="Reader.html">Reader</a> a block can be given.
+All data should be read inside this block, and when the block exits the <a
+href="Reader.html">Reader</a> will automatically be closed.</p>
+
+<pre class="ruby"><span class="ruby-constant">Reader</span>.<span class="ruby-identifier">new</span>(<span class="ruby-string">&quot;my_file.wav&quot;</span>) <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">reader</span><span class="ruby-operator">|</span>
+  <span class="ruby-comment"># Read sample data here</span>
+<span class="ruby-keyword">end</span>
+</pre>
+
+<p>Alternately, if a block isn’t given you should make sure to call close when
+finished reading.</p>
+
+<pre>reader = Reader.new(&quot;my_file.wav&quot;)
+# Read sample data here
+reader.close</pre>
 
   </div><!-- description -->
 
@@ -261,7 +286,7 @@ href="../WaveFile.html">WaveFile</a> can’t read.</p>
 
           
           <div class="method-source-code" id="info-source">
-            <pre><span class="ruby-comment"># File lib/wavefile/reader.rb, line 68</span>
+            <pre><span class="ruby-comment"># File lib/wavefile/reader.rb, line 81</span>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">info</span>(<span class="ruby-identifier">file_name</span>)
   <span class="ruby-identifier">file</span> = <span class="ruby-constant">File</span>.<span class="ruby-identifier">open</span>(<span class="ruby-identifier">file_name</span>, <span class="ruby-string">&quot;rb&quot;</span>)
   <span class="ruby-identifier">raw_format_chunk</span>, <span class="ruby-identifier">sample_frame_count</span> = <span class="ruby-constant">HeaderReader</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">file</span>, <span class="ruby-identifier">file_name</span>).<span class="ruby-identifier">read_until_data_chunk</span>
@@ -316,7 +341,7 @@ href="Reader.html">Reader</a> doesn’t know how to process.</p>
 
           
           <div class="method-source-code" id="new-source">
-            <pre><span class="ruby-comment"># File lib/wavefile/reader.rb, line 25</span>
+            <pre><span class="ruby-comment"># File lib/wavefile/reader.rb, line 38</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">file_name</span>, <span class="ruby-identifier">format</span>=<span class="ruby-keyword">nil</span>)
   <span class="ruby-ivar">@file_name</span> = <span class="ruby-identifier">file_name</span>
   <span class="ruby-ivar">@file</span> = <span class="ruby-constant">File</span>.<span class="ruby-identifier">open</span>(<span class="ruby-identifier">file_name</span>, <span class="ruby-string">&quot;rb&quot;</span>)
@@ -383,7 +408,7 @@ already closed.</p>
 
           
           <div class="method-source-code" id="close-source">
-            <pre><span class="ruby-comment"># File lib/wavefile/reader.rb, line 156</span>
+            <pre><span class="ruby-comment"># File lib/wavefile/reader.rb, line 169</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">close</span>
   <span class="ruby-ivar">@file</span>.<span class="ruby-identifier">close</span>
 <span class="ruby-keyword">end</span></pre>
@@ -417,7 +442,7 @@ if it is open and available for reading.</p>
 
           
           <div class="method-source-code" id="closed-3F-source">
-            <pre><span class="ruby-comment"># File lib/wavefile/reader.rb, line 147</span>
+            <pre><span class="ruby-comment"># File lib/wavefile/reader.rb, line 160</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">closed?</span>
   <span class="ruby-ivar">@file</span>.<span class="ruby-identifier">closed?</span>
 <span class="ruby-keyword">end</span></pre>
@@ -468,7 +493,7 @@ than this size, if there are not enough remaining.</p>
 
           
           <div class="method-source-code" id="each_buffer-source">
-            <pre><span class="ruby-comment"># File lib/wavefile/reader.rb, line 91</span>
+            <pre><span class="ruby-comment"># File lib/wavefile/reader.rb, line 104</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">each_buffer</span>(<span class="ruby-identifier">sample_frame_count</span>)
   <span class="ruby-keyword">begin</span>
     <span class="ruby-keyword">while</span> <span class="ruby-keyword">true</span> <span class="ruby-keyword">do</span>
@@ -519,7 +544,7 @@ the end of the file</p>
 
           
           <div class="method-source-code" id="read-source">
-            <pre><span class="ruby-comment"># File lib/wavefile/reader.rb, line 110</span>
+            <pre><span class="ruby-comment"># File lib/wavefile/reader.rb, line 123</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">read</span>(<span class="ruby-identifier">sample_frame_count</span>)
   <span class="ruby-keyword">if</span> <span class="ruby-ivar">@current_sample_frame</span> <span class="ruby-operator">&gt;=</span> <span class="ruby-ivar">@total_sample_frames</span>
     <span class="ruby-comment">#FIXME: Do something different here, because the end of the file has not actually necessarily been reached</span>
@@ -584,7 +609,7 @@ number of sample frames in the file</p>
 
           
           <div class="method-source-code" id="total_duration-source">
-            <pre><span class="ruby-comment"># File lib/wavefile/reader.rb, line 161</span>
+            <pre><span class="ruby-comment"># File lib/wavefile/reader.rb, line 174</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">total_duration</span>
   <span class="ruby-constant">Duration</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">total_sample_frames</span>, <span class="ruby-ivar">@format</span>.<span class="ruby-identifier">sample_rate</span>)
 <span class="ruby-keyword">end</span></pre>
