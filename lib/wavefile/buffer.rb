@@ -113,8 +113,13 @@ module WaveFile
   private
 
     def convert_buffer(samples, old_format, new_format)
-      samples = convert_channels(samples, old_format.channels, new_format.channels)
-      samples = convert_sample_format(samples, old_format, new_format)
+      if old_format.channels > new_format.channels
+        samples = convert_channels(samples, old_format.channels, new_format.channels)
+        samples = convert_sample_format(samples, old_format, new_format)
+      else
+        samples = convert_sample_format(samples, old_format, new_format)
+        samples = convert_channels(samples, old_format.channels, new_format.channels)
+      end
 
       samples
     end
