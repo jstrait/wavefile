@@ -132,23 +132,7 @@ module WaveFile
       @current_sample_frame += sample_frame_count
 
       if @native_format.channels > 1
-        num_multichannel_samples = samples.length / @native_format.channels
-        multichannel_data = Array.new(num_multichannel_samples)
-
-        if(@native_format.channels == 2)
-          # Files with more than 2 channels are expected to be less common, so if there are 2 channels
-          # using a faster specific algorithm instead of a general one.
-          num_multichannel_samples.times {|i| multichannel_data[i] = [samples.pop, samples.pop].reverse! }
-        else
-          # General algorithm that works for any number of channels, 2 or greater.
-          num_multichannel_samples.times do |i|
-            sample = Array.new(@native_format.channels)
-            @native_format.channels.times {|j| sample[j] = samples.pop }
-            multichannel_data[i] = sample.reverse!
-          end
-        end
-
-        samples = multichannel_data.reverse!
+        samples = samples.each_slice(@native_format.channels).to_a
       end
 
       buffer = Buffer.new(samples, @native_format)
