@@ -131,6 +131,16 @@ module WaveFile
       samples = @file.sysread(sample_frame_count * @native_format.block_align).unpack(@pack_code)
       @current_sample_frame += sample_frame_count
 
+      if @native_format.bits_per_sample == 24
+        # Since the sample data is little endian, the 3 bytes will go from least->most significant
+        samples = samples.each_slice(3).map {|least_significant_byte, middle_byte, most_significant_byte|
+          # Convert the byte read as "C" to one read as "c"
+          most_significant_byte = [most_significant_byte].pack("c").unpack("c").first
+          
+          (most_significant_byte << 16) | (middle_byte << 8) | least_significant_byte
+        }
+      end
+
       if @native_format.channels > 1
         samples = samples.each_slice(@native_format.channels).to_a
       end

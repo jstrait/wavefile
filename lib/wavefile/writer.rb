@@ -74,7 +74,14 @@ module WaveFile
     def write(buffer)
       samples = buffer.convert(@format).samples
 
-      @file.syswrite(samples.flatten.pack(@pack_code))
+      if @format.bits_per_sample == 24 && @format.sample_format == :pcm
+        samples.flatten.each do |sample|
+          @file.syswrite([sample].pack("lX"))
+        end
+      else
+        @file.syswrite(samples.flatten.pack(@pack_code))
+      end
+
       @total_sample_frames += samples.length
     end
 

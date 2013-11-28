@@ -106,6 +106,22 @@ class BufferTest < Test::Unit::TestCase
                  b.samples)
   end
 
+  def test_convert_buffer_bits_per_sample_8_to_24
+    # Mono
+    b = Buffer.new([0, 32, 64, 96, 128, 160, 192, 223, 255], Format.new(:mono, :pcm_8, 44100))
+    b.convert!(Format.new(:mono, :pcm_24, 44100))
+    assert_equal([-8388608, -6291456, -4194304, -2097152, 0, 2097152, 4194304, 6225920, 8323072], b.samples)
+
+    # Stereo
+    b = Buffer.new([[0, 255],  [32, 223], [64, 192], [96, 160], [128, 128],
+                    [160, 96], [192, 64], [223, 32], [255, 0]],
+                   Format.new(:stereo, :pcm_8, 44100))
+    b.convert!(Format.new(:stereo, :pcm_24, 44100))
+    assert_equal([[-8388608, 8323072], [-6291456, 6225920], [-4194304, 4194304], [-2097152, 2097152], [0, 0],
+                  [2097152, -2097152],   [4194304, -4194304], [6225920, -6291456], [8323072, -8388608]],
+                 b.samples)
+  end
+
   def test_convert_buffer_bits_per_sample_8_to_32
     # Mono
     b = Buffer.new([0, 32, 64, 96, 128, 160, 192, 223, 255], Format.new(:mono, :pcm_8, 44100))
@@ -158,6 +174,22 @@ class BufferTest < Test::Unit::TestCase
                  b.samples)
   end
 
+  def test_convert_buffer_bits_per_sample_16_to_24
+    # Mono
+    b = Buffer.new([-32768, -24576, -16384, -8192, 0, 8192, 16384, 24575, 32767], Format.new(:mono, :pcm_16, 44100))
+    b.convert!(Format.new(:mono, :pcm_24, 44100))
+    assert_equal([-8388608, -6291456, -4194304, -2097152, 0, 2097152, 4194304, 6291200, 8388352], b.samples)
+
+    # Stereo
+    b = Buffer.new([[-32768, 32767], [-24576, 24575], [-16384, 16384], [-8192, 8192], [0, 0],
+                    [8192, -8192],   [16384, -16384], [24575, -24576], [32767, -32768]],
+                   Format.new(:stereo, :pcm_16, 44100))
+    b.convert!(Format.new(:stereo, :pcm_24, 44100))
+    assert_equal([[-8388608, 8388352], [-6291456, 6291200], [-4194304, 4194304], [-2097152, 2097152], [0, 0],
+                  [2097152, -2097152], [4194304, -4194304], [6291200, -6291456], [8388352, -8388608]],
+                 b.samples)
+  end
+
   def test_convert_buffer_bits_per_sample_16_to_32
     # Mono
     b = Buffer.new([-32768, -24576, -16384, -8192, 0, 8192, 16384, 24575, 32767], Format.new(:mono, :pcm_16, 44100))
@@ -194,6 +226,78 @@ class BufferTest < Test::Unit::TestCase
     end
   end
 
+  def test_convert_buffer_bits_per_sample_24_to_8
+    # Mono
+    b = Buffer.new([-8388608, -6291456, -4194304, -2097152, 0, 2097152, 4194304, 6291455, 8388607],
+                   Format.new(:mono, :pcm_24, 44100))
+    b.convert!(Format.new(:mono, :pcm_8, 44100))
+    assert_equal([0, 32, 64, 96, 128, 160, 192, 223, 255], b.samples)
+
+    # Stereo
+    b = Buffer.new([[-8388608, 8388607], [-6291456, 6291455], [-4194304, 4194304], [-2097152, 2097152], [0, 0],
+                    [2097152, -2097152], [4194304, -4194304], [6291455, -6291456], [8388607, -8388608]],
+                   Format.new(:stereo, :pcm_24, 44100))
+    b.convert!(Format.new(:stereo, :pcm_8, 44100))
+    assert_equal([[0, 255],  [32, 223], [64, 192], [96, 160], [128, 128],
+                  [160, 96], [192, 64], [223, 32], [255, 0]],
+                 b.samples)
+  end
+
+  def test_convert_buffer_bits_per_sample_24_to_16
+    # Mono
+    b = Buffer.new([-8388608, -6291456, -4194304, -2097152, 0, 2097152, 4194304, 6291455, 8388607],
+                   Format.new(:mono, :pcm_24, 44100))
+    b.convert!(Format.new(:mono, :pcm_16, 44100))
+    assert_equal([-32768, -24576, -16384, -8192, 0, 8192, 16384, 24575, 32767], b.samples)
+
+    # Stereo
+    b = Buffer.new([[-8388608, 8388607], [-6291456, 6291455], [-4194304, 4194304], [-2097152, 2097152], [0, 0],
+                    [2097152, -2097152], [4194304, -4194304], [6291455, -6291456], [8388607, -8388608]],
+                   Format.new(:stereo, :pcm_24, 44100))
+    b.convert!(Format.new(:stereo, :pcm_16, 44100))
+    assert_equal([[-32768, 32767], [-24576, 24575], [-16384, 16384], [-8192, 8192], [0, 0],
+                  [8192, -8192],   [16384, -16384], [24575, -24576], [32767, -32768]],
+                 b.samples)
+  end
+
+  def test_convert_buffer_bits_per_sample_24_to_32
+    # Mono
+    b = Buffer.new([-8388608, -6291456, -4194304, -2097152, 0, 2097152, 4194304, 6291455, 8388607],
+                   Format.new(:mono, :pcm_24, 44100))
+    b.convert!(Format.new(:mono, :pcm_32, 44100))
+    assert_equal([-2147483648, -1610612736, -1073741824, -536870912, 0, 536870912, 1073741824, 1610612480, 2147483392], b.samples)
+
+    # Stereo
+    b = Buffer.new([[-8388608, 8388607], [-6291456, 6291455], [-4194304, 4194304], [-2097152, 2097152], [0, 0],
+                    [2097152, -2097152], [4194304, -4194304], [6291455, -6291456], [8388607, -8388608]],
+                   Format.new(:stereo, :pcm_24, 44100))
+    b.convert!(Format.new(:stereo, :pcm_32, 44100))
+    assert_equal([[-2147483648, 2147483392], [-1610612736, 1610612480], [-1073741824, 1073741824], [-536870912, 536870912], [0, 0],
+                  [536870912, -536870912],   [1073741824, -1073741824], [1610612480, -1610612736], [2147483392, -2147483648]],
+                 b.samples)
+  end
+
+  def test_convert_buffer_bits_per_sample_24_to_float
+    Format::SUPPORTED_BITS_PER_SAMPLE[:float].each do |bits_per_sample|
+      float_format = "float_#{bits_per_sample}".to_sym
+
+      # Mono
+      b = Buffer.new([-8388608, -6291456, -4194304, -2097152, 0, 2097152, 4194304, 6291455, 8388607],
+                     Format.new(:mono, :pcm_24, 44100))
+      b.convert!(Format.new(:mono, float_format, 44100))
+      assert_equal([-1.0, -0.75, -0.5, -0.25, 0.0, 0.25, 0.5, 0.7499998807907104, 0.9999998807907104], b.samples)
+
+      # Stereo
+      b = Buffer.new([[-8388608, 8388607], [-6291456, 6291455], [-4194304, 4194304], [-2097152, 2097152], [0, 0],
+                      [2097152, -2097152], [4194304, -4194304], [6291455, -6291456], [8388607, -8388608]],
+                     Format.new(:stereo, :pcm_24, 44100))
+      b.convert!(Format.new(:stereo, float_format, 44100))
+      assert_equal([[-1.0, 0.9999998807907104], [-0.75, 0.7499998807907104 ], [-0.5, 0.5], [-0.25, 0.25], [0.0, 0.0],
+                    [0.25, -0.25], [0.5, -0.5], [0.7499998807907104 , -0.75], [0.9999998807907104, -1.0]],
+                   b.samples)
+    end
+  end
+
   def test_convert_buffer_bits_per_sample_32_to_8
     # Mono
     b = Buffer.new([-2147483648, -1610612736, -1073741824, -536870912, 0, 536870912, 1073741824, 1610612735, 2147483647],
@@ -225,6 +329,23 @@ class BufferTest < Test::Unit::TestCase
     b.convert!(Format.new(:stereo, :pcm_16, 44100))
     assert_equal([[-32768, 32767], [-24576, 24575], [-16384, 16384], [-8192, 8192], [0, 0],
                   [8192, -8192],   [16384, -16384], [24575, -24576], [32767, -32768]],
+                 b.samples)
+  end
+
+  def test_convert_buffer_bits_per_sample_32_to_24
+    # Mono
+    b = Buffer.new([-2147483648, -1610612736, -1073741824, -536870912, 0, 536870912, 1073741824, 1610612735, 2147483647],
+                   Format.new(:mono, :pcm_32, 44100))
+    b.convert!(Format.new(:mono, :pcm_24, 44100))
+    assert_equal([-8388608, -6291456, -4194304, -2097152, 0, 2097152, 4194304, 6291455, 8388607], b.samples)
+
+    # Stereo
+    b = Buffer.new([[-2147483648, 2147483647], [-1610612736, 1610612735], [-1073741824, 1073741824], [-536870912, 536870912], [0, 0],
+                  [536870912, -536870912],   [1073741824, -1073741824], [1610612735, -1610612736], [2147483647, -2147483648]],
+                   Format.new(:stereo, :pcm_32, 44100))
+    b.convert!(Format.new(:stereo, :pcm_24, 44100))
+    assert_equal([[-8388608, 8388607], [-6291456, 6291455], [-4194304, 4194304], [-2097152, 2097152], [0, 0],
+                  [2097152, -2097152],   [4194304, -4194304], [6291455, -6291456], [8388607, -8388608]],
                  b.samples)
   end
 
@@ -285,6 +406,26 @@ class BufferTest < Test::Unit::TestCase
       b.convert!(Format.new(:stereo, :pcm_16, 44100))
       assert_equal([[-32767, 32767], [-24575, 24575], [-16384, 16384], [-8192, 8192], [0, 0],
                     [8192, -8192], [16384, -16384], [24575, -24575], [32767, -32767]],
+                   b.samples)
+    end
+  end
+
+  def test_convert_buffer_bits_per_sample_float_to_24
+    Format::SUPPORTED_BITS_PER_SAMPLE[:float].each do |bits_per_sample|
+      float_format = "float_#{bits_per_sample}".to_sym
+
+      # Mono
+      b = Buffer.new([-1.0, -0.75, -0.5, -0.25, 0.0, 0.25, 0.5, 0.75, 1.0], Format.new(:mono, float_format, 44100))
+      b.convert!(Format.new(:mono, :pcm_24, 44100))
+      assert_equal([-8388607, -6291455, -4194304, -2097152, 0, 2097152, 4194304, 6291455, 8388607], b.samples)
+
+      # Stereo
+      b = Buffer.new([[-1.0, 1.0], [-0.75, 0.75], [-0.5, 0.5], [-0.25, 0.25], [0.0, 0.0],
+                      [0.25, -0.25], [0.5, -0.5], [0.75, -0.75], [1.0, -1.0]],
+                     Format.new(:stereo, float_format, 44100))
+      b.convert!(Format.new(:stereo, :pcm_24, 44100))
+      assert_equal([[-8388607, 8388607], [-6291455, 6291455], [-4194304, 4194304], [-2097152, 2097152], [0, 0],
+                    [2097152, -2097152], [4194304, -4194304], [6291455, -6291455], [8388607, -8388607]],
                    b.samples)
     end
   end

@@ -183,6 +183,8 @@ module WaveFile
         convert_sample_format_helper(samples) {|sample| (sample - 128).to_f / 128.0 }
       elsif old_bits_per_sample == 16
         convert_sample_format_helper(samples) {|sample| sample.to_f / 32768.0 }
+      elsif old_bits_per_sample == 24
+        convert_sample_format_helper(samples) {|sample| sample.to_f / 8388608.0 }
       elsif old_bits_per_sample == 32
         convert_sample_format_helper(samples) {|sample| sample.to_f / 2147483648.0 }
       end
@@ -193,6 +195,8 @@ module WaveFile
         convert_sample_format_helper(samples) {|sample| (sample * 127.0).round + 128 }
       elsif new_bits_per_sample == 16
         convert_sample_format_helper(samples) {|sample| (sample * 32767.0).round }
+      elsif new_bits_per_sample == 24
+        convert_sample_format_helper(samples) {|sample| (sample * 8388607.0).round }
       elsif new_bits_per_sample == 32
         convert_sample_format_helper(samples) {|sample| (sample * 2147483647.0).round }
       end

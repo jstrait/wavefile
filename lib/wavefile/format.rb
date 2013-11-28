@@ -17,7 +17,7 @@ module WaveFile
 
     SUPPORTED_SAMPLE_FORMATS = [:pcm, :float]    # :nodoc:
     SUPPORTED_BITS_PER_SAMPLE = {
-                                  :pcm => [8, 16, 32],
+                                  :pcm => [8, 16, 24, 32],
                                   :float => [32, 64],
                                 }    # :nodoc:
 
@@ -73,7 +73,7 @@ module WaveFile
     # Returns a symbol indicating the sample format, such as :pcm or :float
     attr_reader :sample_format
 
-    # Returns the number of bits per sample, such as 8, 16, 32, or 64.
+    # Returns the number of bits per sample, such as 8, 16, 24, 32, or 64.
     attr_reader :bits_per_sample
 
     # Returns the number of samples per second, such as 44100.

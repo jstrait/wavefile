@@ -57,7 +57,7 @@ class ReaderTest < Test::Unit::TestCase
       # Audio format is 2, which is not supported
       "unsupported/unsupported_audio_format.wav",
 
-      # Bits per sample is 24, which is not supported
+      # Bits per sample is 20, which is not supported
       "unsupported/unsupported_bits_per_sample.wav",
 
       # Channel count is 0
