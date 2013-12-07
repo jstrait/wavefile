@@ -244,6 +244,14 @@ module WaveFile
           if chunk_id == CHUNK_IDS[:format]
             format_chunk = read_format_chunk(chunk_id, chunk_size)
           else
+            # The RIFF specification requires that each chunk be aligned to an even number of bytes,
+            # even if the byte count is an odd number.
+            #
+            # See http://www-mmsp.ece.mcgill.ca/Documents/AudioFormats/WAVE/Docs/riffmci.pdf, page 11.
+            if chunk_size.odd?
+              chunk_size += 1
+            end
+
             # Other chunk types besides the format chunk are ignored. This may change in the future.
             @file.sysread(chunk_size)
           end

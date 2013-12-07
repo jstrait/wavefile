@@ -201,6 +201,14 @@ class ReaderTest < Test::Unit::TestCase
     assert_equal(2239, reader.total_sample_frames)
   end
 
+  def test_read_non_data_chunk_with_padding_byte
+    reader = Reader.new(fixture("valid/valid_mono_pcm_16_44100_junk_chunk_with_padding_byte.wav"))
+    buffer = reader.read(1024)
+    assert_equal(buffer.samples, SQUARE_WAVE_CYCLE[:mono][:pcm_16] * 128)
+    assert_equal(1024, reader.current_sample_frame)
+    assert_equal(2240, reader.total_sample_frames)
+  end
+
   def test_closed?
     reader = Reader.new(fixture("valid/valid_mono_pcm_16_44100.wav"))
     assert_equal(false, reader.closed?)
