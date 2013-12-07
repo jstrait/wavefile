@@ -1,3 +1,11 @@
+0.6.0
+===============================================================================
+* Support for reading and writing Wave files containing 24-bit PCM sample data, and the ability to convert buffers containing 24-bit PCM sample data to/from other formats.
+* Reading files with 2 or more channels is now faster.
+* Converting buffers from one format to another is now faster in certain cases.
+* Bug fix: According to the Wave file spec, all chunks should be aligned to an even number of bytes. If the chunk has an odd size, a padding byte should be appended to bring the chunk to an even size. Wave file now properly takes this expected padding byte into account for all chunks when reading files.
+
+
 0.5.0
 ===============================================================================
 * Added support for reading and writing Wave files containing 32 and 64-bit

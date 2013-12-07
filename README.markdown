@@ -28,7 +28,7 @@ More examples can be [found on the wiki](https://github.com/jstrait/wavefile/wik
 # Features
 
 * Ability to read and write Wave files with any number of channels in the following formats:
-  * PCM (8, 16, and 32 bits per sample)
+  * PCM (8, 16, 24, and 32 bits per sample)
   * Floating Point (32 and 64 bits per sample)
 * Ability to read sample data from a file in any of the supported formats, regardless of the file's actual sample format
 
@@ -47,24 +47,14 @@ More examples can be [found on the wiki](https://github.com/jstrait/wavefile/wik
 * Pure Ruby, so no need to compile a separate extension in order to use it.
 
 
-# Current Release: v0.5.0
+# Current Release: v0.6.0
 
 This release includes these improvements:
 
-* Support for reading and writing Wave files containing 32 and 64-bit floating point sample data.
-* Support for buffers that contain floating point data (i.e., samples between -1.0 and 1.0), including the ability to convert to and from PCM buffers.
-* A new `Duration` object which can be used to calculate the playback time given a sample rate and number of sample frames.
-* New attributes: `Reader.current_sample_frame`, `Reader.total_sample_frames`, and `Writer.total_sample_frames`.
-* Ability to get these attributes as a `Duration` object as well: `Reader.total_duration`, `Writer.total_duration`.
-* The 2nd argument to `Format.new` now indicates the sample format, not the bits per sample. For example, `:pcm_16` or `:float_32` instead of `8` or `16`. For backwards compatibility, `8`, `16`, and `32` can still be given and will be interpreted as `:pcm_8`, `:pcm_16`, and `:pcm_32`, but this support might be removed in the future.
-* Bug fix: Wave files are no longer corrupted when an unhandled exception occurs inside a `Writer` block. (Thanks to [James Tunnell](https://github.com/jamestunnell) for reporting and fixing this).
-* Bug fix: `Writer.file_name` now returns the file name, instead of always returning nil (Thanks to [James Tunnell](https://github.com/jamestunnell) for reporting this).
-
-This release also includes changes that are not backwards compatible with v0.4.0. (Until version v1.0, no guarantees to avoid this will be made, but I'll try to have a good reason before doing so).
-
-* `Info.duration` now returns a `Duration` object, instead of a hash.
-* `Info.sample_count` has been renamed `sample_frame_count`.
-* Some constants in the `WaveFile` module have changed. (In general, you should treat these as internal to this gem and not use them in your own program).
+* Support for reading and writing Wave files containing 24-bit PCM sample data, and the ability to convert buffers containing 24-bit PCM sample data to/from other formats.
+* Reading files with 2 or more channels is now faster.
+* Converting buffers from one format to another is now faster in certain cases.
+* Bug fix: According to the Wave file spec, all chunks should be aligned to an even number of bytes. If the chunk has an odd size, a padding byte should be appended to bring the chunk to an even size. Wave file now properly takes this expected padding byte into account for all chunks when reading files.
 
 
 # Compatibility
