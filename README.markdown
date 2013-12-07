@@ -2,6 +2,7 @@ A pure Ruby gem for reading and writing sound files in Wave format (*.wav).
 
 You can use this gem to create Ruby programs that produce audio, such as [drum machine](http://beatsdrummachine.com). Since it is written in pure Ruby (as opposed to wrapping an existing C library), you can use it without having to compile a separate extension.
 
+For more info, check out the website: <http://wavefilegem.com/>
 
 # Example Usage
 
