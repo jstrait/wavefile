@@ -202,6 +202,9 @@ class ReaderTest < Test::Unit::TestCase
   end
 
   def test_read_non_data_chunk_with_padding_byte
+    # This fixture file contains a JUNK chunk with an odd size, aligned to an even number of
+    # bytes via an appended padding byte. If the padding byte is not taken into account, this
+    # test will blow up due to the file not being synced up to the data chunk in the right place.
     reader = Reader.new(fixture("valid/valid_mono_pcm_16_44100_junk_chunk_with_padding_byte.wav"))
     buffer = reader.read(1024)
     assert_equal(buffer.samples, SQUARE_WAVE_CYCLE[:mono][:pcm_16] * 128)
