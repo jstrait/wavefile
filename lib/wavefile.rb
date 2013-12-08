@@ -6,7 +6,7 @@ require 'wavefile/reader'
 require 'wavefile/writer'
 
 module WaveFile
-  VERSION = "0.5.0"
+  VERSION = "0.6.0"
 
   WAVEFILE_FORMAT_CODE = "WAVE"    # :nodoc:
   FORMAT_CHUNK_BYTE_LENGTH = {:pcm => 16, :float => 18}    # :nodoc:
