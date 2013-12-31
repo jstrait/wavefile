@@ -39,16 +39,27 @@
   <h2 id="example"><a href="#example">For Example</a></h2>
   <pre><code>
 require 'wavefile'
-include WaveFile
+include WaveFile    # To avoid prefixing classes with 'WaveFile::'
 
-# Write a 440Hz square wave beep
-cycle = ([0.5] * 50) + ([-0.5] * 50)
-buffer = Buffer.new(cycle, Format.new(:mono, :float, 44100))
-Writer.new("my_file.wav", Format.new(:mono, :pcm_16, 44100)) do |writer|
-  100.times { writer.write(buffer) }
-end</pre></code>
+AMPLITUDE = 0.3     # Should be between -1.0 and 1.0
+CYCLE_COUNT = 441   # 441 x 100 samples == 44,100 samples,
+                    # or 1 second of sound
+SQUARE_WAVE_440HZ_CYCLE = ([AMPLITUDE] * 50) + ([-AMPLITUDE] * 50)
+
+buffer = Buffer.new(SQUARE_WAVE_440HZ_CYCLE,
+                    Format.new(:mono, :float, 44100))
+
+Writer.new("square.wav", Format.new(:mono, :pcm_16, 44100)) do |writer|
+  CYCLE_COUNT.times { writer.write(buffer) }
+end
+
+</pre></code>
+  <p>When you run this program it will write a file called <code>square.wav</code> that will sound like a beep when you play it:</p>
+  <audio controls>
+    <source src="square.wav" type="audio/wav">
+  </audio>
   <p>Intrigued? Check out <a href="/examples.html">more examples</a>.</p>
-  <p>Don&rsquo;t have any idea what this means? Check out the <a href="/getting_started.html">Getting Started</a> guide.</p>
+  <p>Don&rsquo;t have any idea what this code means? Check out the <a href="/getting_started.html">Getting Started</a> guide.</p>
 </div>
 <div class="section">
   <h2 id="installation"><a href="#installation">Installation</a></h2>
