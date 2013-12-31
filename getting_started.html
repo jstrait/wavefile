@@ -33,11 +33,11 @@
   <p>When there is more than one channel, each sample frame will be represent by a sub array. For example, a set of stereo floating point samples (in which each sample is between -1.0 and 1.0) might look like this:</p>
   <pre><code>[[-0.2, 0.4], [0.3, 0.9], [-0.4, -0.8], [0.9, -0.2], [-0.3, 0.4], ...etc...]</code></pre>
   <p>When writing a program that creates sound, you would generate an array like this with the sample data, then wrap it in a <code>Buffer</code>, and then use <code>Writer</code> to write the samples in the <code>Buffer</code> to disk.</p>
-  <p><code>Buffers</code> have the ability to convert their samples to any other format this gem supports. This means you can read samples from a file in whatever format you like, regardless of the actual sample format in the file (e.g. read a file with 8-bit samples and get 16-bit samples back). You can also do the same with <code>Writer</code> - for example, rather than remember the sample range of a PCM format (was it 32,767? or 32,768?) you can just generate floating point samples between -1.0 and 1.0, and transparently write them out as PCM samples.</p>
+  <p><code>Buffers</code> have the ability to convert their samples to any other format this gem supports. This means you can read samples from a file in whatever format you like, regardless of the actual sample format in the file (e.g. read a file with 8-bit samples and get 16-bit samples back). You can also do the same with <code>Writer</code> &ndash; for example, rather than remember the sample range of a PCM format (was it 32,767? or 32,768?) you can just generate floating point samples between -1.0 and 1.0, and transparently write them out as PCM samples.</p>
 </div>
 <div class="section">
   <h2>Creating a New Wave File</h2>
-  <p>Let&rsquo;s write a simple tone to a wave file. A <a href="">square wave</a> is about the simplest way to create a sound, so let&rsquo;s do that. A square wave consists a some repeated samples, followed by the same number of repeated samples at the opposite amplitude. For example:</p>
+  <p>Let&rsquo;s write a simple tone to a wave file. A <a href="http://en.wikipedia.org/wiki/Square_wave">square wave</a> is about the simplest way to create a sound, so let&rsquo;s do that. A square wave consists a some repeated samples, followed by the same number of repeated samples at the opposite amplitude. For example:</p>
   <pre><code>[0.3, 0.3, 0.3, 0.3, -0.3, -0.3, -0.3, -0.3,  ...and repeated...]</code></pre>
   <p>We&rsquo;ll write some code to generate these samples, wrap them in a <code>Buffer</code>, and then write these <code>Buffers</code> to a file using <code>Writer</code>.</p>
   <p>The samples we&rsquo;ll generate will be in float format, which means they should be between -1.0 and 1.0. The larger each sample value, the higher the amplitude (i.e. how loud it is). The faster that we alternate between the positive and negative samples, the higher the frequency of the tone (i.e., <code>[0.2, 0.2, -0.2, -0.2]</code> will have a higher pitch than <code>[0.2, 0.2, 0.2, -0.2, -0.2, -0.2]</code>). (This is a really simplified explanation of things).</p>
@@ -51,7 +51,7 @@ one_square_cycle = ([AMPLITUDE] * 50) + ([-AMPLITUDE] * 50)</code></pre>
   <pre><code>Writer.new("square.wav", Format.new(:mono, :pcm_16, 44100)) do |writer|
   writer.write(buffer)
 end</code></pre>
-  <p>Notice that we gave the <code>Writer</code> a <code>Format</code> as well. This determines which format samples will be written as. Notice that the sample format (<code>:pcm_16</code>) is different from the <code>Buffer</code> we created - the gem will handle the necessary translation behind the scenes.</p>
+  <p>Notice that we gave the <code>Writer</code> a <code>Format</code> as well. This determines which format samples will be written as. Notice that the sample format (<code>:pcm_16</code>) is different from the <code>Buffer</code> we created &ndash; the gem will handle the necessary translation behind the scenes.</p>
   <p>All of the code to write the samples is done inside a block. When the block exits the file will automatically be closed. (If you want more manually control over when the file is closed you can do that as well by not passing a block and manually calling <code>close())</code>.</p>
   <p>Here&rsquo;s the full program so far:</p>
   <pre><code>require 'wavefile'
