@@ -37,27 +37,52 @@
 </div>
 <div class="section bg-white">
   <h2 id="example"><a href="#example">For Example</a></h2>
+  <p>Let&rsquo;s say you have these three Wave files:</p>
+  <ul class="audio-list">
+    <li>
+      <label><code>one.wav</code>:</label>
+      <audio controls class="inline">
+        <source src="one.wav" type="audio/wav">
+      </audio>
+    </li>
+    <li>
+      <label><code>two.wav</code>:</label>
+      <audio controls class="inline">
+        <source src="two.wav" type="audio/wav">
+      </audio>
+    </li>
+    <li>
+      <label><code>three.wav</code>:</label>
+      <audio controls class="inline">
+        <source src="three.wav" type="audio/wav">
+      </audio>
+    </li>
+  </ul>
+  <p>This program will concatenate them into one file called <code>one_two_three.wav</code>:</p>
+  <ul class="audio-list">
+    <li>
+      <label><code>one_two_three.wav</code>:</label>
+      <audio controls class="inline">
+        <source src="one_two_three.wav" type="audio/wav">
+      </audio>
+    </li>
+  </ul>
   <pre><code>
 require 'wavefile'
 include WaveFile    # To avoid prefixing classes with 'WaveFile::'
 
-AMPLITUDE = 0.3     # Should be between -1.0 and 1.0
-CYCLE_COUNT = 441   # 441 x 100 samples == 44,100 samples,
-                    # or 1 second of sound
-SQUARE_WAVE_440HZ_CYCLE = ([AMPLITUDE] * 50) + ([-AMPLITUDE] * 50)
+FILES_TO_APPEND = ["one.wav", "two.wav", "three.wav"]
+SAMPLE_FRAMES_PER_BUFFER = 4096
+OUTPUT_FORMAT = Format.new(:stereo, :pcm_16, 44100)
 
-buffer = Buffer.new(SQUARE_WAVE_440HZ_CYCLE,
-                    Format.new(:mono, :float, 44100))
-
-Writer.new("square.wav", Format.new(:mono, :pcm_16, 44100)) do |writer|
-  CYCLE_COUNT.times { writer.write(buffer) }
+Writer.new("one_two_three.wav", OUTPUT_FORMAT) do |writer|
+  FILES_TO_APPEND.each do |file_name|
+    Reader.new(file_name).each_buffer(SAMPLE_FRAMES_PER_BUFFER) do |buffer|
+      writer.write(buffer)
+    end
+  end
 end
-
 </pre></code>
-  <p>When you run this program it will write a file called <code>square.wav</code> that will sound like a beep when you play it:</p>
-  <audio controls>
-    <source src="square.wav" type="audio/wav">
-  </audio>
   <p>Intrigued? Check out <a href="/examples.html">more examples</a>.</p>
   <p>Don&rsquo;t have any idea what this code means? Check out the <a href="/getting_started.html">Getting Started</a> guide.</p>
 </div>

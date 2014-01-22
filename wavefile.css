@@ -64,6 +64,32 @@ audio {
   display: block;
 }
 
+label {
+  display: inline-block;
+  vertical-align: super;
+}
+
+audio.inline {
+  display: inline-block;
+  margin: 0;
+}
+
+ul.audio-list {
+  margin: 0;
+  padding: 0;
+}
+
+ul.audio-list li {
+  list-style-type: none;
+  max-width: 744px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+ul.audio-list li label {
+  width: 180px;
+}
+
 table {
   border-collapse: collapse;
   width: 100%;
