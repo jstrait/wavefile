@@ -1,9 +1,9 @@
-require 'test/unit'
+require 'test_helper'
 require 'wavefile.rb'
 
 include WaveFile
 
-class InfoTest < Test::Unit::TestCase
+class InfoTest < Minitest::Test
   FILE_NAME = "foo.wav"
   SECONDS_IN_MINUTE = 60
   SECONDS_IN_HOUR = SECONDS_IN_MINUTE * 60
