@@ -1,19 +1,19 @@
-require 'test/unit'
+require 'test_helper'
 require 'wavefile.rb'
 require 'wavefile_io_test_helper.rb'
 
 include WaveFile
 
-class ReaderTest < Test::Unit::TestCase
+class ReaderTest < Minitest::Test
   include WaveFileIOTestHelper
 
   FIXTURE_ROOT_PATH = "test/fixtures"
 
 
   def test_nonexistent_file
-    assert_raise(Errno::ENOENT) { Reader.new(fixture("i_do_not_exist.wav")) }
+    assert_raises(Errno::ENOENT) { Reader.new(fixture("i_do_not_exist.wav")) }
 
-    assert_raise(Errno::ENOENT) { Reader.info(fixture("i_do_not_exist.wav")) }
+    assert_raises(Errno::ENOENT) { Reader.info(fixture("i_do_not_exist.wav")) }
   end
 
   def test_invalid_formats
@@ -47,7 +47,7 @@ class ReaderTest < Test::Unit::TestCase
     # so run the tests for both methods.
     [:new, :info].each do |method_name|
       invalid_fixtures.each do |fixture_name|
-        assert_raise(InvalidFormatError) { Reader.send(method_name, fixture(fixture_name)) }
+        assert_raises(InvalidFormatError) { Reader.send(method_name, fixture(fixture_name)) }
       end
     end
   end
@@ -68,7 +68,7 @@ class ReaderTest < Test::Unit::TestCase
     ]
 
     unsupported_fixtures.each do |fixture_name|
-      assert_raise(UnsupportedFormatError) { Reader.new(fixture(fixture_name)) }
+      assert_raises(UnsupportedFormatError) { Reader.new(fixture(fixture_name)) }
     end
   end
 
@@ -147,7 +147,7 @@ class ReaderTest < Test::Unit::TestCase
 
   def test_each_buffer_no_block_given
     reader = Reader.new(fixture("valid/valid_mono_pcm_16_44100.wav"))
-    assert_raise(LocalJumpError) { reader.each_buffer(1024) }
+    assert_raises(LocalJumpError) { reader.each_buffer(1024) }
   end
 
   def test_each_buffer_native_format
@@ -231,7 +231,7 @@ class ReaderTest < Test::Unit::TestCase
     reader = Reader.new(fixture("valid/valid_mono_pcm_16_44100.wav"))
     buffer = reader.read(1024)
     reader.close
-    assert_raise(IOError) { reader.read(1024) }
+    assert_raises(IOError) { reader.read(1024) }
   end
 
   def test_sample_counts_manual_reads
