@@ -1,6 +1,4 @@
 module WaveFile
-  class InvalidFormatError < StandardError; end
-
   # Represents information about the data format for a Wave file, such as number of 
   # channels, bits per sample, sample rate, and so forth. A Format instance is used 
   # by Reader to indicate what format to read samples out as, and by Writer to 
