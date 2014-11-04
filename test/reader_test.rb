@@ -68,7 +68,7 @@ class ReaderTest < Test::Unit::TestCase
     ]
 
     unsupported_fixtures.each do |fixture_name|
-      assert_raise(UnsupportedFormatError) { Reader.new(fixture(fixture_name)) }
+      assert_raise(InvalidFormatError) { Reader.new(fixture(fixture_name)) }
     end
   end
 

@@ -43,9 +43,6 @@ module WaveFile
       @current_sample_frame = 0
       @total_sample_frames = sample_frame_count
 
-      # Make file is in a format we can actually read
-      validate_native_format(native_format)
-
       native_sample_format = "#{FORMAT_CODES.invert[native_format.audio_format]}_#{native_format.bits_per_sample}".to_sym
       @native_format = Format.new(native_format.channels,
                                   native_sample_format,
@@ -193,31 +190,6 @@ module WaveFile
     # The number of sample frames in the file after the current sample frame
     def sample_frames_remaining
       @total_sample_frames - @current_sample_frame
-    end
-
-    def validate_native_format(native_format)
-      # :byte_rate and :block_align are not checked to make sure that match :channels/:sample_rate/bits_per_sample
-      # because this library doesn't use them.
-
-      unless FORMAT_CODES.values.include?(native_format.audio_format)
-        raise UnsupportedFormatError, "Audio format is #{native_format.audio_format}, " +
-                                      "but only format code 1 (PCM) or 3 (floating point) is supported."
-      end
-
-      unless Format::SUPPORTED_BITS_PER_SAMPLE[FORMAT_CODES.invert[native_format.audio_format]].include?(native_format.bits_per_sample)
-        raise UnsupportedFormatError, "Bits per sample is #{native_format.bits_per_sample}, " +
-                                      "but only #{Format::SUPPORTED_BITS_PER_SAMPLE[:pcm].inspect} are supported."
-      end
-
-      unless native_format.channels > 0
-        raise UnsupportedFormatError, "Number of channels is #{native_format.channels}, " +
-                                      "but only #{Format::MIN_CHANNELS}-#{Format::MAX_CHANNELS} are supported."
-      end
-
-      unless native_format.sample_rate > 0
-        raise UnsupportedFormatError, "Sample rate is #{native_format.sample_rate}, " +
-                                      "but only #{Format::MIN_SAMPLE_RATE}-#{Format::MAX_SAMPLE_RATE} are supported."
-      end
     end
   end
 
