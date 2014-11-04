@@ -112,6 +112,24 @@ class ReaderTest < Test::Unit::TestCase
     end
   end
 
+  def test_info
+    info = Reader.info(fixture("valid/valid_stereo_pcm_16_44100.wav"))
+    assert_equal(fixture("valid/valid_stereo_pcm_16_44100.wav"), info.file_name)
+    assert_equal(1, info.audio_format)
+    assert_equal(2, info.channels)
+    assert_equal(16, info.bits_per_sample)
+    assert_equal(44100, info.sample_rate)
+    assert_equal(176400, info.byte_rate)
+    assert_equal(4, info.block_align)
+
+    assert_equal(0, info.duration.hours)
+    assert_equal(0, info.duration.minutes)
+    assert_equal(0, info.duration.seconds)
+    assert_equal(50, info.duration.milliseconds)
+    assert_equal(2240, info.duration.sample_frame_count)
+    assert_equal(44100, info.duration.sample_rate)
+  end
+
   def test_read_native_format
     exhaustively_test do |channels, sample_format|
       buffers = read_file("valid/valid_#{channels}_#{sample_format}_44100.wav", 1024)

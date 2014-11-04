@@ -3,6 +3,7 @@ require 'wavefile/duration'
 require 'wavefile/format'
 require 'wavefile/info'
 require 'wavefile/reader'
+require 'wavefile/unvalidated_format'
 require 'wavefile/writer'
 
 module WaveFile

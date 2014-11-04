@@ -11,7 +11,7 @@ class InfoTest < Test::Unit::TestCase
   def test_basic
     format_chunk = { :audio_format => 1, :channels => 2, :sample_rate => 44100,
                      :byte_rate => 176400, :block_align => 4, :bits_per_sample => 16 }
-    info = Info.new(FILE_NAME, format_chunk, 44100)
+    info = Info.new(FILE_NAME, UnvalidatedFormat.new(format_chunk), 44100)
 
     assert_equal(FILE_NAME, info.file_name)
     assert_equal(1, info.audio_format)

@@ -39,17 +39,17 @@ module WaveFile
       @file_name = file_name
       @file = File.open(file_name, "rb")
 
-      raw_format_chunk, sample_frame_count = HeaderReader.new(@file, @file_name).read_until_data_chunk
+      native_format, sample_frame_count = HeaderReader.new(@file, @file_name).read_until_data_chunk
       @current_sample_frame = 0
       @total_sample_frames = sample_frame_count
 
       # Make file is in a format we can actually read
-      validate_format_chunk(raw_format_chunk)
+      validate_native_format(native_format)
 
-      native_sample_format = "#{FORMAT_CODES.invert[raw_format_chunk[:audio_format]]}_#{raw_format_chunk[:bits_per_sample]}".to_sym
-      @native_format = Format.new(raw_format_chunk[:channels],
+      native_sample_format = "#{FORMAT_CODES.invert[native_format.audio_format]}_#{native_format.bits_per_sample}".to_sym
+      @native_format = Format.new(native_format.channels,
                                   native_sample_format,
-                                  raw_format_chunk[:sample_rate])
+                                  native_format.sample_rate)
       @pack_code = PACK_CODES[@native_format.sample_format][@native_format.bits_per_sample]
       @format = (format == nil) ? @native_format : format
 
@@ -80,10 +80,10 @@ module WaveFile
     #                           that WaveFile can't read.
     def self.info(file_name)
       file = File.open(file_name, "rb")
-      raw_format_chunk, sample_frame_count = HeaderReader.new(file, file_name).read_until_data_chunk
+      native_format, sample_frame_count = HeaderReader.new(file, file_name).read_until_data_chunk
       file.close
 
-      Info.new(file_name, raw_format_chunk, sample_frame_count)
+      Info.new(file_name, native_format, sample_frame_count)
     end
 
 
@@ -195,27 +195,27 @@ module WaveFile
       @total_sample_frames - @current_sample_frame
     end
 
-    def validate_format_chunk(raw_format_chunk)
+    def validate_native_format(native_format)
       # :byte_rate and :block_align are not checked to make sure that match :channels/:sample_rate/bits_per_sample
       # because this library doesn't use them.
 
-      unless FORMAT_CODES.values.include? raw_format_chunk[:audio_format]
-        raise UnsupportedFormatError, "Audio format is #{raw_format_chunk[:audio_format]}, " +
+      unless FORMAT_CODES.values.include?(native_format.audio_format)
+        raise UnsupportedFormatError, "Audio format is #{native_format.audio_format}, " +
                                       "but only format code 1 (PCM) or 3 (floating point) is supported."
       end
 
-      unless Format::SUPPORTED_BITS_PER_SAMPLE[FORMAT_CODES.invert[raw_format_chunk[:audio_format]]].include?(raw_format_chunk[:bits_per_sample])
-        raise UnsupportedFormatError, "Bits per sample is #{raw_format_chunk[:bits_per_sample]}, " +
+      unless Format::SUPPORTED_BITS_PER_SAMPLE[FORMAT_CODES.invert[native_format.audio_format]].include?(native_format.bits_per_sample)
+        raise UnsupportedFormatError, "Bits per sample is #{native_format.bits_per_sample}, " +
                                       "but only #{Format::SUPPORTED_BITS_PER_SAMPLE[:pcm].inspect} are supported."
       end
 
-      unless raw_format_chunk[:channels] > 0
-        raise UnsupportedFormatError, "Number of channels is #{raw_format_chunk[:channels]}, " +
+      unless native_format.channels > 0
+        raise UnsupportedFormatError, "Number of channels is #{native_format.channels}, " +
                                       "but only #{Format::MIN_CHANNELS}-#{Format::MAX_CHANNELS} are supported."
       end
 
-      unless raw_format_chunk[:sample_rate] > 0
-        raise UnsupportedFormatError, "Sample rate is #{raw_format_chunk[:sample_rate]}, " +
+      unless native_format.sample_rate > 0
+        raise UnsupportedFormatError, "Sample rate is #{native_format.sample_rate}, " +
                                       "but only #{Format::MIN_SAMPLE_RATE}-#{Format::MAX_SAMPLE_RATE} are supported."
       end
     end
@@ -242,7 +242,7 @@ module WaveFile
         chunk_size = @file.sysread(4).unpack(UNSIGNED_INT_32).first
         while chunk_id != CHUNK_IDS[:data]
           if chunk_id == CHUNK_IDS[:format]
-            format_chunk = read_format_chunk(chunk_id, chunk_size)
+            native_format = read_format_chunk(chunk_id, chunk_size)
           else
             # The RIFF specification requires that each chunk be aligned to an even number of bytes,
             # even if the byte count is an odd number.
@@ -263,13 +263,13 @@ module WaveFile
         raise_error InvalidFormatError, "It doesn't have a data chunk."
       end
 
-      if format_chunk == nil
+      if native_format == nil
         raise_error InvalidFormatError, "The format chunk is either missing, or it comes after the data chunk."
       end
 
-      sample_frame_count = chunk_size / format_chunk[:block_align]
+      sample_frame_count = chunk_size / native_format.block_align
 
-      return format_chunk, sample_frame_count
+      return native_format, sample_frame_count
     end
 
   private
@@ -320,7 +320,7 @@ module WaveFile
         # TODO: Parse the extension
       end
 
-      format_chunk
+      UnvalidatedFormat.new(format_chunk)
     end
 
     def read_chunk_body(chunk_id, chunk_size)

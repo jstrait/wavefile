@@ -3,14 +3,14 @@ module WaveFile
   #
   # This class is immutable - once a new Info is constructed, it can't be modified.
   class Info
-    def initialize(file_name, raw_format_chunk, sample_frame_count)    # :nodoc:
+    def initialize(file_name, native_format, sample_frame_count)    # :nodoc:
       @file_name = file_name
-      @audio_format = raw_format_chunk[:audio_format]
-      @channels = raw_format_chunk[:channels]
-      @bits_per_sample = raw_format_chunk[:bits_per_sample]
-      @sample_rate = raw_format_chunk[:sample_rate]
-      @byte_rate = raw_format_chunk[:byte_rate]
-      @block_align = raw_format_chunk[:block_align]
+      @audio_format = native_format.audio_format
+      @channels = native_format.channels
+      @bits_per_sample = native_format.bits_per_sample
+      @sample_rate = native_format.sample_rate
+      @byte_rate = native_format.byte_rate
+      @block_align = native_format.block_align
       @sample_frame_count = sample_frame_count
 
       @duration = Duration.new(@sample_frame_count, @sample_rate)
