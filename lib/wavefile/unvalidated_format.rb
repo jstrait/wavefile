@@ -5,7 +5,7 @@ module WaveFile
   # indicate what format to write samples as.
   #
   # This class is immutable - once a new Format is constructed, it can't be modified.
-  class UnvalidatedFormat
+  class UnvalidatedFormat    # :nodoc:
     # Constructs a new immutable UnvalidatedFormat.
     def initialize(fields)
       @audio_format = fields[:audio_format]
