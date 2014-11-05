@@ -1,4 +1,5 @@
 require 'wavefile/buffer'
+require 'wavefile/chunk_readers'
 require 'wavefile/duration'
 require 'wavefile/format'
 require 'wavefile/info'
@@ -32,4 +33,3 @@ module WaveFile
   UNSIGNED_INT_16 = "v"    # :nodoc:
   UNSIGNED_INT_32 = "V"    # :nodoc:
 end
-
