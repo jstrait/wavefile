@@ -68,8 +68,45 @@ class ReaderTest < Test::Unit::TestCase
     ]
 
     unsupported_fixtures.each do |fixture_name|
-      assert_raise(InvalidFormatError) { Reader.new(fixture(fixture_name)) }
+      reader = Reader.new(fixture(fixture_name))
+      assert_equal(false, reader.readable_format?)
+      assert_raise(UnsupportedFormatError) { reader.read(1024) }
+      assert_raise(UnsupportedFormatError) { reader.each_buffer(1024) {|buffer| buffer } }
     end
+  end
+
+  def test_initialize_unsupported_format
+    file_name = fixture("unsupported/unsupported_bits_per_sample.wav")
+
+    # Unsupported format, no read format given
+    reader = Reader.new(file_name)
+    assert_equal(2, reader.native_format.channels)
+    assert_equal(20, reader.native_format.bits_per_sample)
+    assert_equal(44100, reader.native_format.sample_rate)
+    assert_equal(2, reader.format.channels)
+    assert_equal(20, reader.format.bits_per_sample)
+    assert_equal(44100, reader.format.sample_rate)
+    assert_equal(false, reader.closed?)
+    assert_equal(file_name, reader.file_name)
+    assert_equal(0, reader.current_sample_frame)
+    assert_equal(2240, reader.total_sample_frames)
+    assert_equal(false, reader.readable_format?)
+    reader.close
+
+    # Unsupported format, different read format given
+    reader = Reader.new(file_name, Format.new(:mono, :pcm_16, 22050))
+    assert_equal(2, reader.native_format.channels)
+    assert_equal(20, reader.native_format.bits_per_sample)
+    assert_equal(44100, reader.native_format.sample_rate)
+    assert_equal(1, reader.format.channels)
+    assert_equal(16, reader.format.bits_per_sample)
+    assert_equal(22050, reader.format.sample_rate)
+    assert_equal(false, reader.closed?)
+    assert_equal(file_name, reader.file_name)
+    assert_equal(0, reader.current_sample_frame)
+    assert_equal(2240, reader.total_sample_frames)
+    assert_equal(false, reader.readable_format?)
+    reader.close
   end
 
   def test_initialize
@@ -78,8 +115,11 @@ class ReaderTest < Test::Unit::TestCase
     exhaustively_test do |channels, sample_format|
       file_name = fixture("valid/valid_#{channels}_#{sample_format}_44100.wav")
 
-      # Read native format
+      # Native format
       reader = Reader.new(file_name)
+      assert_equal(CHANNEL_ALIAS[channels], reader.native_format.channels)
+      assert_equal(extract_bits_per_sample(sample_format), reader.native_format.bits_per_sample)
+      assert_equal(44100, reader.native_format.sample_rate)
       assert_equal(CHANNEL_ALIAS[channels], reader.format.channels)
       assert_equal(extract_bits_per_sample(sample_format), reader.format.bits_per_sample)
       assert_equal(44100, reader.format.sample_rate)
@@ -87,10 +127,14 @@ class ReaderTest < Test::Unit::TestCase
       assert_equal(file_name, reader.file_name)
       assert_equal(0, reader.current_sample_frame)
       assert_equal(2240, reader.total_sample_frames)
+      assert_equal(true, reader.readable_format?)
       reader.close
 
-      # Read a non-native format
+      # Non-native format
       reader = Reader.new(file_name, format)
+      assert_equal(CHANNEL_ALIAS[channels], reader.native_format.channels)
+      assert_equal(extract_bits_per_sample(sample_format), reader.native_format.bits_per_sample)
+      assert_equal(44100, reader.native_format.sample_rate)
       assert_equal(2, reader.format.channels)
       assert_equal(16, reader.format.bits_per_sample)
       assert_equal(22050, reader.format.sample_rate)
@@ -98,10 +142,14 @@ class ReaderTest < Test::Unit::TestCase
       assert_equal(file_name, reader.file_name)
       assert_equal(0, reader.current_sample_frame)
       assert_equal(2240, reader.total_sample_frames)
+      assert_equal(true, reader.readable_format?)
       reader.close
 
       # Block is given.
       reader = Reader.new(file_name) {|reader| reader.read(1024) }
+      assert_equal(CHANNEL_ALIAS[channels], reader.native_format.channels)
+      assert_equal(extract_bits_per_sample(sample_format), reader.native_format.bits_per_sample)
+      assert_equal(44100, reader.native_format.sample_rate)
       assert_equal(CHANNEL_ALIAS[channels], reader.format.channels)
       assert_equal(extract_bits_per_sample(sample_format), reader.format.bits_per_sample)
       assert_equal(44100, reader.format.sample_rate)
@@ -109,6 +157,7 @@ class ReaderTest < Test::Unit::TestCase
       assert_equal(file_name, reader.file_name)
       assert_equal(1024, reader.current_sample_frame)
       assert_equal(2240, reader.total_sample_frames)
+      assert_equal(true, reader.readable_format?)
     end
   end
 

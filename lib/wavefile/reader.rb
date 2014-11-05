@@ -1,11 +1,16 @@
 module WaveFile
+  # Error that is raised when a file is not in a format supported by this Gem,
+  # because it's a valid Wave file whose format is not supported by this Gem,
+  # because it's a not a valid Wave file period, etc.
+  class FormatError < StandardError; end
+
   # Error that is raised when trying to read from a file that is either not a wave file, 
   # or that is not valid according to the wave file spec.
-  class InvalidFormatError < StandardError; end
+  class InvalidFormatError < FormatError; end
 
   # Error that is raised when trying to read from a valid wave file that has its sample data 
   # stored in a format that Reader doesn't understand.
-  class UnsupportedFormatError < StandardError; end
+  class UnsupportedFormatError < FormatError; end
 
 
   # Provides the ability to read sample data out of a wave file, as well as query a 
@@ -39,16 +44,24 @@ module WaveFile
       @file_name = file_name
       @file = File.open(file_name, "rb")
 
-      native_format, sample_frame_count = ChunkReaders::HeaderReader.new(@file, @file_name).read_until_data_chunk
+      @raw_native_format, sample_frame_count = ChunkReaders::HeaderReader.new(@file, @file_name).read_until_data_chunk
       @current_sample_frame = 0
       @total_sample_frames = sample_frame_count
 
       native_sample_format = "#{FORMAT_CODES.invert[native_format.audio_format]}_#{native_format.bits_per_sample}".to_sym
-      @native_format = Format.new(native_format.channels,
-                                  native_sample_format,
-                                  native_format.sample_rate)
-      @pack_code = PACK_CODES[@native_format.sample_format][@native_format.bits_per_sample]
-      @format = (format == nil) ? @native_format : format
+
+      @readable_format = true
+      begin
+        @native_format = Format.new(@raw_native_format.channels,
+                                    native_sample_format,
+                                    @raw_native_format.sample_rate)
+        @pack_code = PACK_CODES[@native_format.sample_format][@native_format.bits_per_sample]
+      rescue FormatError
+        @readable_format = false
+        @pack_code = nil
+      end
+
+      @format = (format == nil) ? (@native_format || @raw_native_format) : format
 
       if block_given?
         begin
@@ -116,8 +129,11 @@ module WaveFile
     #                      each channel.
     #
     # Returns a Buffer containing sample_frame_count sample frames
+    # Raises UnsupportedFormatError if file is in a format that can't be read by this gem
     # Raises EOFError if no samples could be read due to reaching the end of the file
     def read(sample_frame_count)
+      raise UnsupportedFormatError unless @readable_format
+
       if @current_sample_frame >= @total_sample_frames
         #FIXME: Do something different here, because the end of the file has not actually necessarily been reached
         raise EOFError
@@ -164,6 +180,14 @@ module WaveFile
     # Returns a Duration instance for the total number of sample frames in the file
     def total_duration
       Duration.new(total_sample_frames, @format.sample_rate)
+    end
+
+    def native_format
+      @raw_native_format
+    end
+
+    def readable_format?
+      @readable_format
     end
 
     # Returns the name of the Wave file that is being read
