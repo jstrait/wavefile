@@ -73,30 +73,6 @@ module WaveFile
     end
 
 
-    # Reads metadata from the specified wave file and returns an Info object with the results. 
-    # Metadata includes things like the number of channels, bits per sample, number of sample 
-    # frames, sample encoding format (i.e. PCM, IEEE float, uLaw etc). See the Info object for 
-    # more detail on exactly what metadata is available.
-    #
-    # file_name - The name of the wave file to read from
-    #
-    # Examples:
-    #
-    #   info = Reader.info("my_docs/my_sounds/my_file.wav")
-    #
-    # Returns an Info object containing metadata about the wave file.
-    # Raises Errno::ENOENT if the specified file can't be found
-    # Raises InvalidFormatError if the specified file isn't a valid wave file, or is in a format
-    #                           that WaveFile can't read.
-    def self.info(file_name)
-      file = File.open(file_name, "rb")
-      native_format, sample_frame_count = ChunkReaders::HeaderReader.new(file, file_name).read_until_data_chunk
-      file.close
-
-      Info.new(file_name, native_format, sample_frame_count)
-    end
-
-
     # Reads sample data of the into successive Buffers of the specified size, until there is no more 
     # sample data to be read. When all sample data has been read, the Reader is automatically closed. 
     # Each Buffer is passed to the given block.

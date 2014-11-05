@@ -12,8 +12,6 @@ class ReaderTest < Test::Unit::TestCase
 
   def test_nonexistent_file
     assert_raise(Errno::ENOENT) { Reader.new(fixture("i_do_not_exist.wav")) }
-
-    assert_raise(Errno::ENOENT) { Reader.info(fixture("i_do_not_exist.wav")) }
   end
 
   def test_invalid_formats
@@ -45,10 +43,8 @@ class ReaderTest < Test::Unit::TestCase
 
     # Reader.new and Reader.info should raise the same errors for invalid files,
     # so run the tests for both methods.
-    [:new, :info].each do |method_name|
-      invalid_fixtures.each do |fixture_name|
-        assert_raise(InvalidFormatError) { Reader.send(method_name, fixture(fixture_name)) }
-      end
+    invalid_fixtures.each do |fixture_name|
+      assert_raise(InvalidFormatError) { Reader.new(fixture(fixture_name)) }
     end
   end
 
@@ -159,24 +155,6 @@ class ReaderTest < Test::Unit::TestCase
       assert_equal(2240, reader.total_sample_frames)
       assert_equal(true, reader.readable_format?)
     end
-  end
-
-  def test_info
-    info = Reader.info(fixture("valid/valid_stereo_pcm_16_44100.wav"))
-    assert_equal(fixture("valid/valid_stereo_pcm_16_44100.wav"), info.file_name)
-    assert_equal(1, info.audio_format)
-    assert_equal(2, info.channels)
-    assert_equal(16, info.bits_per_sample)
-    assert_equal(44100, info.sample_rate)
-    assert_equal(176400, info.byte_rate)
-    assert_equal(4, info.block_align)
-
-    assert_equal(0, info.duration.hours)
-    assert_equal(0, info.duration.minutes)
-    assert_equal(0, info.duration.seconds)
-    assert_equal(50, info.duration.milliseconds)
-    assert_equal(2240, info.duration.sample_frame_count)
-    assert_equal(44100, info.duration.sample_rate)
   end
 
   def test_read_native_format
