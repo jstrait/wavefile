@@ -244,7 +244,7 @@
       <td>2,147,483,647</td>
     </tr>
   </table>
-  <p>Notice that 8-bit samples are unsigned, while other bit depths are signed. Yeah, not weird at all. TODO: Add note about non-multiple-of-8 bit depths</p>
+  <p>Notice that 8-bit samples are unsigned, while other bit depths are signed. Not weird at all. TODO: Add note about non-multiple-of-8 bit depths</p>
   <p>Samples in a multi-channel PCM wave file are interleaved. That is, in a stereo file, one sample for the left channel will be followed by one sample for the right channel, followed by another sample for the left channel, then right channel, and so forth.</p>
   <p>The samples for all channels at a moment in time are called a <em>sample frame</em> (also called a <em>block</em>). That is, a sample frame will contain one sample for each channel. In a monophonic file, a sample frame will consist on 1 sample. In a stereo file, a sample frame has 2 samples (one for the left channel, one for the right channel). In a 5-channel file, a sample frame has 5 samples. The block align field in the format chunk gives the size in bytes of each sample frame. This can be useful when seeking to a particular sample frame in the file.</p>
   <h2>Floating Point Data Chunk</h2>
