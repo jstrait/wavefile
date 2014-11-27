@@ -217,6 +217,10 @@ span.label {
   margin-right: auto;
 }
 
+.section > *:last-child {
+  margin-bottom: 0;
+}
+
 .section h2 {
   margin-top: 0;
 }
