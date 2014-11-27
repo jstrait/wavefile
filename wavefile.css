@@ -1,5 +1,5 @@
 body {
-  margin: 0px;
+  margin: 0;
   font-size: 20px;
   font-weight: 300;
   line-height: 1.5em;
@@ -8,11 +8,11 @@ body {
 }
 
 a {
-  color: #2380C4;
+  color: #2380c4;
 }
 
 a:hover {
-  color: #FF862E;
+  color: #ff862e;
 }
 
 h2 {
@@ -21,7 +21,7 @@ h2 {
   line-height: 1.0em;
   margin-top: 3.0em;
   margin-bottom: 1.0em;
-  color: #2380C4;
+  color: #2380c4;
   max-width: 744px;
   margin-left: auto;
   margin-right: auto;
@@ -42,7 +42,7 @@ h3 {
   font-size: 1.0em;
   line-height: 1.5em;
   margin: 0.0em;
-  color: #2380C4;
+  color: #2380c4;
 }
 
 pre {
@@ -167,14 +167,14 @@ ul#navigation li a {
 }
 
 ul#navigation li a:hover {
-  color: #FF862E;
+  color: #ff862e;
 }
 
 p#tagline {
   text-align: center;
   padding-top: 2.0em;
   padding-bottom: 2.0em;
-  background: #2380C4;
+  background: #2380c4;
   color: #fff;
   font-size: 2.0em;
   margin: 0.0em;
@@ -186,7 +186,7 @@ p#tagline {
 
 div.warning {
   text-align: center;
-  background: #FF4D4D;
+  background: #ff4d4d;
   color: #fff;
   margin: 0.0em;
   padding-top: 2.0em;
