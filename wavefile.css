@@ -187,9 +187,6 @@ ul#feature-list {
 
 ul#feature-list li {
   list-style-type: none;
-  width: 45%;
-  padding-right: 5%;
-  float: left;
   margin-bottom: 1.5em;
 }
 
@@ -252,6 +249,14 @@ span.label {
 }
 
 
+@media (min-width: 744px) {
+  ul#feature-list > li {
+    width: 45%;
+    padding-right: 5%;
+    float: left;
+  }
+}
+
 @media (max-width: 744px) {
   h1 {
     margin: 1.0em 0 0 0;
@@ -277,14 +282,6 @@ span.label {
 
   ul#navigation li.last {
     margin: 0;
-  }
-
-  ul#feature-list li {
-    width: 100%;
-    padding-top: 0;
-    padding-bottom: 0;
-    padding-right: 0;
-    float: none;
   }
 
   ul#feature-list > li:last-child {
