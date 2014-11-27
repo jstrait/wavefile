@@ -40,7 +40,7 @@
   <p>The identifier code (also known as a <a href="http://en.wikipedia.org/wiki/Fourcc">FourCC</a>) is typically a more-or-less human-readable ASCII string, such as &ldquo;<code>wave</code>&rdquo;, &ldquo;<code>fmt </code>&rdquo;, or &ldquo;<code>data</code>&rdquo;. (Note that this identifier is case-sensitive).</p>
   <p>The size field indicates the size of the chunk in bytes. The size does not include the 8-bytes in the header. I.e., if a chunk consists of the header plus 1,000 bytes of data, the size field will indicate 1,000, not 1,008. Chunks can internally contain nested sub-chunks, if the spec for that chunk allows it.</p>
   <p>A Wave file consists of two levels of nested chunks. At the top level, it consists of a single &ldquo;<code>RIFF</code>&rdquo; chunk, which contains all of the data for the wave file. The RIFF chunk includes a format code &ldquo;<code>WAVE</code>&rdquo; which indicates that the sub-chunks are for a Wave file. Internally, the &ldquo;<code>RIFF</code>&rdquo; chunk includes at minimum a format chunk (&ldquo;<code>fmt </code>&rdquo;) and a data chunk (&ldquo;<code>data</code>&rdquo;). As the name suggests, the format chunk describes the, well, format of the wave file. The data chunk contains all of the raw sample data. A wave file might also contain other optional chunks, but it must include a format and data chunk, and the format chunk must come first.</p>
-  <p>Got all that? Visually this is what it looks like:</p>
+  <p>Visually this is what it looks like:</p>
   <div style="border: 2px solid black; padding: 1.5em 1.5em 0.0em 1.5em; width: 15.0em; margin: 0.0em auto; border-radius: 0.5em;">
     RIFF Chunk<br />
     Format: &ldquo;<code>WAVE</code>&rdquo;
@@ -170,7 +170,7 @@
       </table>
       <p>This field can be used to calculate the bytes per sample frame field. Another possible use is for seeking around in a file. For example, if the bytes per sample frame is 32, then to seek forward 10 sample frames you need to seek forward 320 bytes.</p>
       <p>Note that for PCM data, this field is essentially redundant since it can be calculated from the other fields. However, be sure to note the point of rounding bits per sample values to the nearest multiple of 8.</p>
-  <p><span class="label">Bits per sample</span> &ndash; For PCM data, typical values will be 8, 16, or 32. I'm not sure why this is a two-byte field in the spec, since any values over 255 would seem pretty excessive. TODO: Do other non-PCM formats take advantage of it being two bytes?</p>
+  <p><span class="label">Bits per sample</span> &ndash; For PCM data, typical values will be 8, 16, or 32. I'm not sure why this is a two-byte field in the spec, since any values over 255 would seem excessive. TODO: Do other non-PCM formats take advantage of it being two bytes?</p>
 
   <h2>The Format Chunk (More Exact Version)</h2>
   <p>OK, so I simplified some things a bit. That last section described the format chunk when the sample format is PCM, has 1 or two channels, and has 8 or 16 bits per sample. (In other words, a classic old school Wave file). The full format chunk spec actually includes an extension if the format is something else:</p>
