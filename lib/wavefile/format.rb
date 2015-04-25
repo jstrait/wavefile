@@ -6,12 +6,8 @@ module WaveFile
   #
   # This class is immutable - once a new Format is constructed, it can't be modified.
   class Format
-    # Not using ranges because of 1.8.7 performance problems with Range.max
-    MIN_CHANNELS = 1    # :nodoc:
-    MAX_CHANNELS = 65535    # :nodoc:
-
-    MIN_SAMPLE_RATE = 1    # :nodoc:
-    MAX_SAMPLE_RATE = 4_294_967_296    # :nodoc:
+    VALID_CHANNEL_RANGE     = 1..65535  # :nodoc:
+    VALID_SAMPLE_RATE_RANGE = 1..4_294_967_296  # :nodoc:
 
     SUPPORTED_SAMPLE_FORMATS = [:pcm, :float]    # :nodoc:
     SUPPORTED_BITS_PER_SAMPLE = {
@@ -117,8 +113,9 @@ module WaveFile
     end
 
     def validate_channels(candidate_channels)
-      unless (MIN_CHANNELS..MAX_CHANNELS) === candidate_channels
-        raise InvalidFormatError, "Invalid number of channels. Must be between 1 and #{MAX_CHANNELS}."
+      unless VALID_CHANNEL_RANGE === candidate_channels
+        raise InvalidFormatError,
+              "Invalid number of channels. Must be between #{VALID_CHANNEL_RANGE.min} and #{VALID_CHANNEL_RANGE.max}."
       end
     end
 
@@ -131,8 +128,9 @@ module WaveFile
     end
 
     def validate_sample_rate(candidate_sample_rate)
-      unless (MIN_SAMPLE_RATE..MAX_SAMPLE_RATE) === candidate_sample_rate
-        raise InvalidFormatError, "Invalid sample rate. Must be between 1 and #{MAX_SAMPLE_RATE}"
+      unless VALID_SAMPLE_RATE_RANGE === candidate_sample_rate
+        raise InvalidFormatError,
+              "Invalid sample rate. Must be between #{VALID_SAMPLE_RATE_RANGE.min} and #{VALID_SAMPLE_RATE_RANGE.max}"
       end
     end
   end
