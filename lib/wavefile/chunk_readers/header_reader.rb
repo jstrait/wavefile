@@ -31,7 +31,7 @@ module WaveFile
               end
 
               # Other chunk types besides the format chunk are ignored. This may change in the future.
-              @file.sysread(chunk_size)
+              read_chunk_body(chunk_id, chunk_size)
             end
 
             chunk_id = @file.sysread(4)
