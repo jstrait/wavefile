@@ -141,6 +141,8 @@ module WaveFile
 
   private
 
+    FORMAT_CHUNK_BYTE_LENGTH = {:pcm => 16, :float => 18}
+
     # Writes the RIFF chunk header, format chunk, and the header for the data chunk. After this
     # method is called the file will be "queued up" and ready for writing actual sample data.
     def write_header(sample_frame_count)
