@@ -44,9 +44,10 @@ module WaveFile
       @file_name = file_name
       @file = File.open(file_name, "rb")
 
-      @raw_native_format, sample_frame_count = ChunkReaders::HeaderReader.new(@file, @file_name).read_until_data_chunk
+      @riff_reader = ChunkReaders::RiffReader.new(@file, @file_name)
+      @raw_native_format = @riff_reader.native_format
+      @total_sample_frames = @riff_reader.data_chunk_reader.sample_frame_count
       @current_sample_frame = 0
-      @total_sample_frames = sample_frame_count
 
       native_sample_format = "#{FORMAT_CODES.invert[native_format.audio_format]}_#{native_format.bits_per_sample}".to_sym
 

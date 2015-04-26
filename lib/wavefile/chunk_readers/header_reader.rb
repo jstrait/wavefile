@@ -3,11 +3,17 @@ module WaveFile
     # Used to read the RIFF chunks in a wave file up until the data chunk. Thus is can be used
     # to open a wave file and "queue it up" to the start of the actual sample data, as well as
     # extract information out of pre-data chunks, such as the format chunk.
-    class HeaderReader    # :nodoc:
+    class RiffReader    # :nodoc:
       def initialize(file, file_name)
         @file = file
         @file_name = file_name
+
+        read_until_data_chunk
       end
+
+      attr_reader :native_format, :data_chunk_reader
+
+    private
 
       def read_until_data_chunk
         begin
@@ -20,7 +26,7 @@ module WaveFile
           chunk_id = @file.sysread(4)
           while chunk_id != CHUNK_IDS[:data]
             if chunk_id == CHUNK_IDS[:format]
-              native_format = FormatChunkReader.new(@file).read
+              @native_format = FormatChunkReader.new(@file).read
             else
               # Other chunk types besides the format chunk are ignored. This may change in the future.
               GenericChunkReader.new(@file).read              
@@ -32,17 +38,12 @@ module WaveFile
           raise_error InvalidFormatError, "It doesn't have a data chunk."
         end
 
-        if native_format == nil
+        if @native_format == nil
           raise_error InvalidFormatError, "The format chunk is either missing, or it comes after the data chunk."
         end
 
-        data_chunk_size = @file.sysread(4).unpack(UNSIGNED_INT_32).first
-        sample_frame_count = data_chunk_size / native_format.block_align
-
-        return native_format, sample_frame_count
+        @data_chunk_reader = DataChunkReader.new(@file, @native_format)
       end
-
-    private
 
       class BaseChunkReader
         def read_chunk_size
@@ -88,6 +89,18 @@ module WaveFile
             raise_error InvalidFormatError, "Expected RIFF format of '#{WAVEFILE_FORMAT_CODE}', but was '#{riff_format}'"
           end
         end
+      end
+
+      class DataChunkReader < BaseChunkReader
+        def initialize(file, native_format)
+          @file = file
+          @native_format = native_format
+
+          data_chunk_size = @file.sysread(4).unpack(UNSIGNED_INT_32).first
+          @sample_frame_count = data_chunk_size / @native_format.block_align
+        end
+
+        attr_reader :sample_frame_count
       end
 
       class FormatChunkReader < BaseChunkReader
