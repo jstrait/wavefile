@@ -9,7 +9,7 @@ require 'wavefile/writer'
 module WaveFile
   VERSION = "0.6.0"
 
-  WAVEFILE_FORMAT_CODE = "WAVE"    # :nodoc: 
+  WAVEFILE_FORMAT_CODE = "WAVE"    # :nodoc:
   FORMAT_CODES = {:pcm => 1, :float => 3}    # :nodoc:
   CHUNK_IDS = {:riff         => "RIFF",
                :format       => "fmt ",
