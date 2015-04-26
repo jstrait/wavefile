@@ -11,7 +11,7 @@ module WaveFile
 
       def read_until_data_chunk
         begin
-          chunk_id = @file.sysread(4).unpack("a4").first
+          chunk_id = @file.sysread(4)
           unless chunk_id == CHUNK_IDS[:riff]
             raise_error InvalidFormatError, "Expected chunk ID '#{CHUNK_IDS[:riff]}', but was '#{chunk_id}'"
           end
@@ -82,7 +82,7 @@ module WaveFile
 
         def read
           chunk_size = read_chunk_size
-          riff_format = @file.sysread(4).unpack("a4").first
+          riff_format = @file.sysread(4)
 
           unless riff_format == WAVEFILE_FORMAT_CODE
             raise_error InvalidFormatError, "Expected RIFF format of '#{WAVEFILE_FORMAT_CODE}', but was '#{riff_format}'"
