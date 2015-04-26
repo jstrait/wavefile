@@ -1,3 +1,19 @@
+0.7.0
+===============================================================================
+* Minimum Ruby version is now 1.9.3 - earlier versions are no longer supported.
+* Reader.info() removed. Instead, a newly constructed Reader instance will
+  no longer raise an exception if the file is a valid Wave file, but with
+  a format not supported by the Gem. Reader.format() will return a Format
+  instance with the same info that would have been returned by Reader.info().
+* New method: Reader.readable? returns true if the file is a valid format
+  that the gem can read.
+* Reader.read() will now raise an exception if the file is a valid Wave file,
+  but not a format that the gem can read.
+* Similarly, the Info class has been removed.
+* Bug fix: Sample data is always read as little endian, regardless of the
+  native endianness of the platform.
+
+
 0.6.0
 ===============================================================================
 * Support for reading and writing Wave files containing 24-bit PCM sample data,
