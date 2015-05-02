@@ -1,17 +1,17 @@
-require 'test/unit'
+require 'minitest/autorun'
 require 'wavefile.rb'
 require 'wavefile_io_test_helper.rb'
 
 include WaveFile
 
-class ReaderTest < Test::Unit::TestCase
+class ReaderTest < MiniTest::Unit::TestCase
   include WaveFileIOTestHelper
 
   FIXTURE_ROOT_PATH = "test/fixtures"
 
 
   def test_nonexistent_file
-    assert_raise(Errno::ENOENT) { Reader.new(fixture("i_do_not_exist.wav")) }
+    assert_raises(Errno::ENOENT) { Reader.new(fixture("i_do_not_exist.wav")) }
   end
 
   def test_invalid_formats
@@ -44,7 +44,7 @@ class ReaderTest < Test::Unit::TestCase
     # Reader.new and Reader.info should raise the same errors for invalid files,
     # so run the tests for both methods.
     invalid_fixtures.each do |fixture_name|
-      assert_raise(InvalidFormatError) { Reader.new(fixture(fixture_name)) }
+      assert_raises(InvalidFormatError) { Reader.new(fixture(fixture_name)) }
     end
   end
 
@@ -66,8 +66,8 @@ class ReaderTest < Test::Unit::TestCase
     unsupported_fixtures.each do |fixture_name|
       reader = Reader.new(fixture(fixture_name))
       assert_equal(false, reader.readable_format?)
-      assert_raise(UnsupportedFormatError) { reader.read(1024) }
-      assert_raise(UnsupportedFormatError) { reader.each_buffer(1024) {|buffer| buffer } }
+      assert_raises(UnsupportedFormatError) { reader.read(1024) }
+      assert_raises(UnsupportedFormatError) { reader.each_buffer(1024) {|buffer| buffer } }
     end
   end
 
@@ -192,7 +192,7 @@ class ReaderTest < Test::Unit::TestCase
 
   def test_each_buffer_no_block_given
     reader = Reader.new(fixture("valid/valid_mono_pcm_16_44100.wav"))
-    assert_raise(LocalJumpError) { reader.each_buffer(1024) }
+    assert_raises(LocalJumpError) { reader.each_buffer(1024) }
   end
 
   def test_each_buffer_native_format
@@ -276,7 +276,7 @@ class ReaderTest < Test::Unit::TestCase
     reader = Reader.new(fixture("valid/valid_mono_pcm_16_44100.wav"))
     buffer = reader.read(1024)
     reader.close
-    assert_raise(IOError) { reader.read(1024) }
+    assert_raises(IOError) { reader.read(1024) }
   end
 
   def test_sample_counts_manual_reads

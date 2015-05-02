@@ -1,9 +1,9 @@
-require 'test/unit'
+require 'minitest/autorun'
 require 'wavefile.rb'
 
 include WaveFile
 
-class UnvalidatedFormatTest < Test::Unit::TestCase
+class UnvalidatedFormatTest < MiniTest::Unit::TestCase
   def test_initialize
     format = UnvalidatedFormat.new({:audio_format => 1,
                                     :channels => 2,
