@@ -38,7 +38,7 @@ h3 {
 
 pre {
   margin-bottom: 0;
-  overflow: scroll;
+  overflow: auto;
 }
 
 code {
