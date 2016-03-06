@@ -25,6 +25,3 @@ begin
 rescue InvalidFormatError
   puts "  Not a valid Wave file!"
 end
-
-
-
