@@ -61,9 +61,7 @@ This release includes these improvements:
 
 WaveFile has been tested with these Ruby versions, and appears to be compatible with them:
 
-* MRI 2.2, 2.1, 2.0, 1.9.3
-* JRuby 1.7.8
-* Rubinius 1.2.4
+* MRI 2.3, 2.2, 2.1, 2.0, 1.9.3
 
 If you find any compatibility issues, please let me know by opening a GitHub issue.
 
