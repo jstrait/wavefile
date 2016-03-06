@@ -13,4 +13,5 @@ Gem::Specification.new do |s|
   s.files = ["LICENSE", "README.markdown", "Rakefile"] + Dir["lib/**/*.rb"] + Dir["test/**/*"]
   s.require_path = "lib"
   s.required_ruby_version = '>= 1.9.3'
+  s.license = 'MIT'
 end
