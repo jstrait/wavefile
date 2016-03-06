@@ -38,8 +38,6 @@ module WaveFile
     # Returns a Reader object that is ready to start reading the specified file's sample data.
     # Raises Errno::ENOENT if the specified file can't be found
     # Raises InvalidFormatError if the specified file isn't a valid wave file
-    # Raises UnsupportedFormatError if the specified file has its sample data stored in a format
-    #                               that Reader doesn't know how to process.
     def initialize(file_name, format=nil)
       @file_name = file_name
       @file = File.open(file_name, "rb")
