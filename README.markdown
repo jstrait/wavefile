@@ -47,14 +47,17 @@ More examples can be [found on the wiki](https://github.com/jstrait/wavefile/wik
 * Pure Ruby, so no need to compile a separate extension in order to use it.
 
 
-# Current Release: v0.6.0
+# Current Release: v0.7.0
 
-This release includes these improvements:
+Released on March 6, 2016, this version includes these changes:
 
-* Support for reading and writing Wave files containing 24-bit PCM sample data, and the ability to convert buffers containing 24-bit PCM sample data to/from other formats. (Thanks to [Rich Orton](https://github.com/richorton) for suggesting this).
-* Reading files with 2 or more channels is now faster.
-* Converting buffers from one format to another is now faster in certain cases.
-* Bug fix: Files containing certain chunks with an odd size are now read properly. According to the Wave file spec, all chunks should be aligned to an even number of bytes. If the chunk has an odd size, a padding byte should be appended to bring the chunk to an even size. The `Reader` class now properly takes this expected padding byte into account for all chunks when reading files. (Previously it just took this into account for the main `data` chunk). (Thanks to [Andrew Kuklewicz](https://github.com/kookster) for reporting this).
+* The minimum supported Ruby version is now 1.9.3 - earlier versions are no longer supported.
+* `Reader.info()` has been removed. Instead, a newly constructed `Reader` instance will no longer raise an exception if the file is a valid Wave file, but with a format not supported by this gem. `Reader.format()` will return a Format instance with the same info that would have been returned by `Reader.info()`.
+* Similarly, the `Info` class has been removed.
+* New method: `Reader.readable?` returns true if the file is a valid format that the gem can read, false otherwise.
+* `Reader.read()` will now raise an exception if the file is a valid Wave file, but not a format that the gem can read.
+* Some constants have been made private since they are intended for internal use.
+* Bug fix: Files will now be read/written correctly on big-endian platforms. Or in other words, Sample data is always read as little endian, regardless of the native endianness of the platform.
 
 
 # Compatibility
