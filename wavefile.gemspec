@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
   s.homepage = "http://wavefilegem.com/"
   s.platform = Gem::Platform::RUBY
   s.summary = "A pure Ruby library for reading and writing Wave sound files (*.wav)"
-  s.description = "You can use this gem to create Ruby programs that produce audio. Since it is written in pure Ruby (as opposed to wrapping an existing C library), you can use it without having to compile a separate extension."
+  s.description = "You can use this gem to create Ruby programs that work with audio, by reading and writing Wave sound files (*.wav). Since it is written in pure Ruby (as opposed to wrapping an existing C library), you can use it without having to compile a separate extension."
   s.files = ["LICENSE", "README.markdown", "Rakefile"] + Dir["lib/**/*.rb"] + Dir["test/**/*"]
   s.require_path = "lib"
   s.required_ruby_version = '>= 1.9.3'
