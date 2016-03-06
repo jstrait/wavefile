@@ -159,10 +159,16 @@ module WaveFile
       Duration.new(total_sample_frames, @format.sample_rate)
     end
 
+    # Returns a Format object describing the sample format of the Wave file being read.
+    # This is not necessarily the format that the sample data will be read as - to determine
+    # that, use #format.
     def native_format
       @raw_native_format
     end
 
+    # Returns true if this is a valid Wave file and contains sample data that is in a format
+    # that this class can read, and returns false if this is a valid Wave file but does not
+    # contain a sample format supported by this class.
     def readable_format?
       @readable_format
     end
