@@ -75,14 +75,14 @@ module WaveFile
 
   private
 
-    VALID_CHANNEL_RANGE     = 1..65535
-    VALID_SAMPLE_RATE_RANGE = 1..4_294_967_296
+    VALID_CHANNEL_RANGE     = 1..65535    # :nodoc:
+    VALID_SAMPLE_RATE_RANGE = 1..4_294_967_296    # :nodoc:
 
-    SUPPORTED_SAMPLE_FORMATS = [:pcm, :float]
+    SUPPORTED_SAMPLE_FORMATS = [:pcm, :float]    # :nodoc:
     SUPPORTED_BITS_PER_SAMPLE = {
                                   :pcm => [8, 16, 24, 32],
                                   :float => [32, 64],
-                                }
+                                }    # :nodoc:
 
     def normalize_channels(channels)
       if channels == :mono

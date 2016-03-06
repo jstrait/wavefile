@@ -45,7 +45,7 @@ module WaveFile
         @data_chunk_reader = DataChunkReader.new(@file, @native_format)
       end
 
-      class BaseChunkReader
+      class BaseChunkReader    # :nodoc:
         def read_chunk_size
           chunk_size = @file.sysread(4).unpack(UNSIGNED_INT_32).first || 0
 
@@ -65,7 +65,7 @@ module WaveFile
         end
       end
 
-      class GenericChunkReader < BaseChunkReader
+      class GenericChunkReader < BaseChunkReader    # :nodoc:
         def initialize(file)
           @file = file
         end
@@ -76,7 +76,7 @@ module WaveFile
         end
       end
 
-      class RiffChunkReader < BaseChunkReader
+      class RiffChunkReader < BaseChunkReader    # :nodoc:
         def initialize(file)
           @file = file
         end
@@ -91,7 +91,7 @@ module WaveFile
         end
       end
 
-      class DataChunkReader < BaseChunkReader
+      class DataChunkReader < BaseChunkReader    # :nodoc:
         def initialize(file, native_format)
           @file = file
           @native_format = native_format
@@ -103,7 +103,7 @@ module WaveFile
         attr_reader :sample_frame_count
       end
 
-      class FormatChunkReader < BaseChunkReader
+      class FormatChunkReader < BaseChunkReader    # :nodoc:
         def initialize(file)
           @file = file
         end

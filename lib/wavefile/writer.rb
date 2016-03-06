@@ -127,7 +127,7 @@ module WaveFile
     # count is an odd number.
     #
     # See http://www-mmsp.ece.mcgill.ca/Documents/AudioFormats/WAVE/Docs/riffmci.pdf, page 11.
-    EMPTY_BYTE = "\000"
+    EMPTY_BYTE = "\000"    # :nodoc:
 
     # The number of bytes at the beginning of a wave file before the sample data in the data chunk 
     # starts, assuming this canonical format:
@@ -138,9 +138,9 @@ module WaveFile
     # Data Chunk Header (8 bytes)
     #
     # All wave files written by Writer use this canonical format.
-    CANONICAL_HEADER_BYTE_LENGTH = {:pcm => 36, :float => 50}
+    CANONICAL_HEADER_BYTE_LENGTH = {:pcm => 36, :float => 50}    # :nodoc:
 
-    FORMAT_CHUNK_BYTE_LENGTH = {:pcm => 16, :float => 18}
+    FORMAT_CHUNK_BYTE_LENGTH = {:pcm => 16, :float => 18}    # :nodoc:
 
     # Writes the RIFF chunk header, format chunk, and the header for the data chunk. After this
     # method is called the file will be "queued up" and ready for writing actual sample data.
