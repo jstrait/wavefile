@@ -5,11 +5,13 @@
   no longer raise an exception if the file is a valid Wave file, but with
   a format not supported by the Gem. Reader.format() will return a Format
   instance with the same info that would have been returned by Reader.info().
+* Similarly, the Info class has been removed.
 * New method: Reader.readable? returns true if the file is a valid format
-  that the gem can read.
+  that the gem can read, false otherwise.
 * Reader.read() will now raise an exception if the file is a valid Wave file,
   but not a format that the gem can read.
-* Similarly, the Info class has been removed.
+* Some constants have been made private since they are intended for
+  internal use
 * Bug fix: Sample data is always read as little endian, regardless of the
   native endianness of the platform.
 
