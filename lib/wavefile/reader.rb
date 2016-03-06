@@ -44,7 +44,12 @@ module WaveFile
       @file_name = file_name
       @file = File.open(file_name, "rb")
 
-      @riff_reader = ChunkReaders::RiffReader.new(@file, @file_name)
+      begin
+        @riff_reader = ChunkReaders::RiffReader.new(@file, @file_name)
+      rescue InvalidFormatError
+        raise InvalidFormatError, "'#{@file_name}' does not appear to be a valid Wave file"
+      end
+      
       @raw_native_format = @riff_reader.native_format
       @total_sample_frames = @riff_reader.data_chunk_reader.sample_frame_count
       @current_sample_frame = 0
