@@ -52,12 +52,14 @@ More examples can be [found on the wiki](https://github.com/jstrait/wavefile/wik
 Released on March 6, 2016, this version includes these changes:
 
 * The minimum supported Ruby version is now 1.9.3 - earlier versions are no longer supported.
-* `Reader.info()` has been removed. Instead, a newly constructed `Reader` instance will no longer raise an exception if the file is a valid Wave file, but with a format not supported by this gem. `Reader.format()` will return a Format instance with the same info that would have been returned by `Reader.info()`.
-* Similarly, the `Info` class has been removed.
-* New method: `Reader.readable?` returns true if the file is a valid format that the gem can read, false otherwise.
-* `Reader.read()` will now raise an exception if the file is a valid Wave file, but not a format that the gem can read.
+* New method: `Reader.native_format`. Returns a `Format` instance with information about the underlaying format of the Wave file being read, which is not necessarily the same format the sample data is being converted to as it's being read.
+* `Reader.info()` has been removed. Instead, construct a new `Reader` instance and use `Reader.native_format()` - this will return a `Format` instance with the same info that would have been returned by `Reader.info()`.
+* Similarly, the `Info` class has been removed, due to `Reader.info()` being removed.
+* Constructing a `Reader` instance will no longer raise an exception if the file is valid Wave file, but in a format unsupported by this gem. The purpose of this is to allow calling `Reader.native_format()` on this instance, to get format information for files not supported by this gem.
+* New method: `Reader.readable_format?` returns true if the file is a valid format that the gem can read, false otherwise.
+* `Reader.read()` and `Reader.each_buffer()` will now raise an exception if the file is a valid Wave file, but not a format that the gem can read. Or put differently, if `Reader.readable_format?` returns `false`, any subsequent calls to `Reader.read()` or `Reader.each_buffer()` will raise an exception.
 * Some constants have been made private since they are intended for internal use.
-* Bug fix: Files will now be read/written correctly on big-endian platforms. Or in other words, Sample data is always read as little endian, regardless of the native endianness of the platform.
+* Bug fix: Files will now be read/written correctly on big-endian platforms. Or in other words, sample data is always read as little-endian, regardless of the native endianness of the platform.
 
 
 # Compatibility
@@ -65,6 +67,8 @@ Released on March 6, 2016, this version includes these changes:
 WaveFile has been tested with these Ruby versions, and appears to be compatible with them:
 
 * MRI 2.3, 2.2, 2.1, 2.0, 1.9.3
+
+1.9.3 is the minimum supported Ruby version.
 
 If you find any compatibility issues, please let me know by opening a GitHub issue.
 
