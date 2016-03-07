@@ -3,7 +3,7 @@ require 'wavefile.rb'
 
 include WaveFile
 
-class UnvalidatedFormatTest < MiniTest::Unit::TestCase
+class UnvalidatedFormatTest < MiniTest::Test
   def test_initialize
     format = UnvalidatedFormat.new({:audio_format => 1,
                                     :channels => 2,

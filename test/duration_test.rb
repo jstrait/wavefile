@@ -3,7 +3,7 @@ require 'wavefile.rb'
 
 include WaveFile
 
-class DurationTest < MiniTest::Unit::TestCase
+class DurationTest < MiniTest::Test
   SECONDS_IN_MINUTE = 60
   SECONDS_IN_HOUR = SECONDS_IN_MINUTE * 60
 

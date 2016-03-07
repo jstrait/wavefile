@@ -3,7 +3,7 @@ require 'wavefile.rb'
 
 include WaveFile
 
-class FormatTest < MiniTest::Unit::TestCase
+class FormatTest < MiniTest::Test
   def test_valid_channels
     [1, 2, 3, 4, 65535].each do |valid_channels|
       assert_equal(valid_channels, Format.new(valid_channels, :pcm_16, 44100).channels)
