@@ -4,7 +4,7 @@ require 'wavefile_io_test_helper.rb'
 
 include WaveFile
 
-class ReaderTest < MiniTest::Unit::TestCase
+class ReaderTest < MiniTest::Test
   include WaveFileIOTestHelper
 
   FIXTURE_ROOT_PATH = "test/fixtures"
