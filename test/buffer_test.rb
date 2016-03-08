@@ -3,7 +3,7 @@ require 'wavefile.rb'
 
 include WaveFile
 
-class BufferTest < MiniTest::Unit::TestCase
+class BufferTest < Minitest::Test
   def test_convert
     old_format = Format.new(:mono, :pcm_16, 44100)
     new_format = Format.new(:stereo, :pcm_16, 22050)

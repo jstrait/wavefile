@@ -4,7 +4,7 @@ require 'wavefile_io_test_helper.rb'
 
 include WaveFile
 
-class WriterTest < MiniTest::Unit::TestCase
+class WriterTest < Minitest::Test
   include WaveFileIOTestHelper
 
   OUTPUT_FOLDER = "test/fixtures/actual_output"

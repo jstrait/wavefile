@@ -91,6 +91,17 @@ First, install the WaveFile gem from rubygems.org:
 Note that if you're installing the gem into the default Ruby that comes pre-installed on MacOS (as opposed to a Ruby installed via [RVM](http://rvm.io/) or [rbenv](https://github.com/sstephenson/rbenv/)), you should used `sudo gem install wavefile`. Otherwise you might run into a file permission error.
 
 
+# Local Development
+
+First, install the required development/test dependencies:
+
+    bundle install
+
+Then, to run the tests:
+
+    bundle exec rake test
+
+
 # Contributing
 
 1. Fork my repo
