@@ -26,8 +26,13 @@ module WaveFile
     #
     # If no block is given, then sample data can be written until the close method is called.
     def initialize(file_name, format)
-      @file_name = file_name
-      @file = File.open(file_name, "wb")
+      if file_name.respond_to?(:syswrite)
+        @file_name = "stream"
+        @file = file_name
+      else
+        @file_name = file_name
+        @file = File.open(file_name, "wb")
+      end
       @format = format
 
       @total_sample_frames = 0
