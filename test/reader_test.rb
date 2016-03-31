@@ -179,6 +179,25 @@ class ReaderTest < Minitest::Test
     assert_equal(SQUARE_WAVE_CYCLE[:stereo][:pcm_8] * 24,  buffers[2].samples)
   end
 
+  def test_read_from_io_stream
+    reader = Reader.new(File.open(fixture("valid/valid_mono_pcm_16_44100.wav")),  Format.new(:stereo, :pcm_8, 22100))
+    buffers = []
+
+    begin
+      while true do
+        buffers << reader.read(1024)
+      end
+    rescue EOFError
+      reader.close
+    end
+
+    assert_equal(3, buffers.length)
+    assert_equal([1024, 1024, 192], buffers.map {|buffer| buffer.samples.length })
+    assert_equal(SQUARE_WAVE_CYCLE[:stereo][:pcm_8] * 128, buffers[0].samples)
+    assert_equal(SQUARE_WAVE_CYCLE[:stereo][:pcm_8] * 128, buffers[1].samples)
+    assert_equal(SQUARE_WAVE_CYCLE[:stereo][:pcm_8] * 24,  buffers[2].samples)
+  end
+
   def test_read_with_padding_byte
     buffers = read_file("valid/valid_mono_pcm_8_44100_with_padding_byte.wav", 1024)
 

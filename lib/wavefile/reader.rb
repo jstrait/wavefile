@@ -39,8 +39,13 @@ module WaveFile
     # Raises Errno::ENOENT if the specified file can't be found
     # Raises InvalidFormatError if the specified file isn't a valid wave file
     def initialize(file_name, format=nil)
-      @file_name = file_name
-      @file = File.open(file_name, "rb")
+      if file_name.respond_to?(:sysread)
+        @file_name = "stream"
+        @file = file_name
+      else
+        @file_name = file_name
+        @file = File.open(file_name, "rb")
+      end
 
       begin
         @riff_reader = ChunkReaders::RiffReader.new(@file, @file_name)
