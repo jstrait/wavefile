@@ -41,8 +41,6 @@ class ReaderTest < Minitest::Test
       "invalid/no_data_chunk.wav",
     ]
 
-    # Reader.new and Reader.info should raise the same errors for invalid files,
-    # so run the tests for both methods.
     invalid_fixtures.each do |fixture_name|
       assert_raises(InvalidFormatError) { Reader.new(fixture(fixture_name)) }
     end
