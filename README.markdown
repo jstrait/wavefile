@@ -22,7 +22,7 @@ This is a short example that shows how to append three separate Wave files into 
       end
     end
 
-More examples can be [found on the wiki](https://github.com/jstrait/wavefile/wiki).
+More examples can be found at <http://wavefilegem.com/examples>.
 
 
 # Features
