@@ -18,7 +18,24 @@ module WaveFile
       @valid_bits_per_sample = fields[:valid_bits_per_sample]
     end
 
-    # Returns a number indicating the sample format, such as 1 (PCM) or 3 (Float)
     attr_reader :audio_format, :sub_audio_format, :valid_bits_per_sample
+
+    def to_validated_format
+      if @sub_audio_format.nil?
+        audio_format_code = @audio_format
+      else
+        audio_format_code = @sub_audio_format
+      end
+
+      if @valid_bits_per_sample
+        bits_per_sample = @valid_bits_per_sample
+      else
+        bits_per_sample = @bits_per_sample
+      end
+
+      sample_format = "#{FORMAT_CODES.invert[audio_format_code]}_#{bits_per_sample}".to_sym
+
+      Format.new(@channels, sample_format, @sample_rate)
+    end
   end
 end

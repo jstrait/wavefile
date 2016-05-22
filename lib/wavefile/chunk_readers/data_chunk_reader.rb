@@ -10,13 +10,9 @@ module WaveFile
         @total_sample_frames = data_chunk_size / @raw_native_format.block_align
         @current_sample_frame = 0
 
-        native_sample_format = "#{FORMAT_CODES.invert[@raw_native_format.audio_format]}_#{@raw_native_format.bits_per_sample}".to_sym
-
         @readable_format = true
         begin
-          @native_format = Format.new(@raw_native_format.channels,
-                                      native_sample_format,
-                                      @raw_native_format.sample_rate)
+          @native_format = @raw_native_format.to_validated_format
           @pack_code = PACK_CODES[@native_format.sample_format][@native_format.bits_per_sample]
         rescue FormatError
           @readable_format = false
