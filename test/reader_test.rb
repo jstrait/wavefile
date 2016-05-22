@@ -14,7 +14,7 @@ class ReaderTest < Minitest::Test
     assert_raises(Errno::ENOENT) { Reader.new(fixture("i_do_not_exist.wav")) }
   end
 
-  def test_invalid_formats
+  def test_initialize_invalid_formats
     invalid_fixtures = [
       # File contains 0 bytes
       "invalid/empty.wav",
@@ -43,29 +43,6 @@ class ReaderTest < Minitest::Test
 
     invalid_fixtures.each do |fixture_name|
       assert_raises(InvalidFormatError) { Reader.new(fixture(fixture_name)) }
-    end
-  end
-
-  def test_unsupported_formats
-    unsupported_fixtures = [
-      # Audio format is 2, which is not supported
-      "unsupported/unsupported_audio_format.wav",
-
-      # Bits per sample is 20, which is not supported
-      "unsupported/unsupported_bits_per_sample.wav",
-
-      # Channel count is 0
-      "unsupported/bad_channel_count.wav",
-
-      # Sample rate is 0
-      "unsupported/bad_sample_rate.wav",
-    ]
-
-    unsupported_fixtures.each do |fixture_name|
-      reader = Reader.new(fixture(fixture_name))
-      assert_equal(false, reader.readable_format?)
-      assert_raises(UnsupportedFormatError) { reader.read(1024) }
-      assert_raises(UnsupportedFormatError) { reader.each_buffer(1024) {|buffer| buffer } }
     end
   end
 
@@ -101,6 +78,29 @@ class ReaderTest < Minitest::Test
     assert_equal(2240, reader.total_sample_frames)
     assert_equal(false, reader.readable_format?)
     reader.close
+  end
+
+  def test_read_from_unsupported_format
+    unsupported_fixtures = [
+      # Audio format is 2, which is not supported
+      "unsupported/unsupported_audio_format.wav",
+
+      # Bits per sample is 20, which is not supported
+      "unsupported/unsupported_bits_per_sample.wav",
+
+      # Channel count is 0
+      "unsupported/bad_channel_count.wav",
+
+      # Sample rate is 0
+      "unsupported/bad_sample_rate.wav",
+    ]
+
+    unsupported_fixtures.each do |fixture_name|
+      reader = Reader.new(fixture(fixture_name))
+      assert_equal(false, reader.readable_format?)
+      assert_raises(UnsupportedFormatError) { reader.read(1024) }
+      assert_raises(UnsupportedFormatError) { reader.each_buffer(1024) {|buffer| buffer } }
+    end
   end
 
   def test_initialize
