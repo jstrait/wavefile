@@ -83,6 +83,39 @@ class FormatChunkReaderTest < Minitest::Test
     io.close
   end
 
+  def test_wave_format_extensible
+    io = StringIO.new
+    io.syswrite([40].pack(UNSIGNED_INT_32))  # Chunk size
+    io.syswrite([65534].pack(UNSIGNED_INT_16))   # Audio format
+    io.syswrite([2].pack(UNSIGNED_INT_16))   # Channels
+    io.syswrite([44100].pack(UNSIGNED_INT_32))   # Sample rate
+    io.syswrite([264600].pack(UNSIGNED_INT_32))   # Byte rate
+    io.syswrite([6].pack(UNSIGNED_INT_16))   # Block align
+    io.syswrite([24].pack(UNSIGNED_INT_16))   # Bits per sample
+    io.syswrite([22].pack(UNSIGNED_INT_16))   # Extension size
+    io.syswrite([20].pack(UNSIGNED_INT_16))   # Valid bits per sample
+    io.syswrite([0].pack(UNSIGNED_INT_32))   # Channel mask
+    io.syswrite([1].pack(UNSIGNED_INT_16))   # Sub format code
+    io.syswrite("\x00\x00\x00\x00\x10\x00\x80\x00\x00\xAA\x00\x38\x9B\x71")
+    io.syswrite("data")   # Start of the next chunk
+    io.rewind
+
+    format_chunk_reader = FormatChunkReader.new(io)
+    unvalidated_format = format_chunk_reader.read
+
+    assert_equal(65534, unvalidated_format.audio_format)
+    assert_equal(2, unvalidated_format.channels)
+    assert_equal(44100, unvalidated_format.sample_rate)
+    assert_equal(264600, unvalidated_format.byte_rate)
+    assert_equal(6, unvalidated_format.block_align)
+    assert_equal(24, unvalidated_format.bits_per_sample)
+
+    assert_equal(20, unvalidated_format.valid_bits_per_sample)
+    assert_equal(1, unvalidated_format.sub_audio_format)
+
+    io.close
+  end
+
   def test_chunk_size_too_small
     io = StringIO.new
     # The chunk size is testing 14 here instead of 15, due to padding byte for odd sizes
