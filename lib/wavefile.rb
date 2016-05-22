@@ -10,7 +10,7 @@ module WaveFile
   VERSION = "0.7.0"
 
   WAVEFILE_FORMAT_CODE = "WAVE"    # :nodoc:
-  FORMAT_CODES = {:pcm => 1, :float => 3}    # :nodoc:
+  FORMAT_CODES = {:pcm => 1, :float => 3, :extensible => 65534}    # :nodoc:
   CHUNK_IDS = {:riff         => "RIFF",
                :format       => "fmt ",
                :data         => "data",
