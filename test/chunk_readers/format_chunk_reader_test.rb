@@ -1,0 +1,104 @@
+require 'minitest/autorun'
+require 'wavefile.rb'
+
+include WaveFile
+include WaveFile::ChunkReaders
+
+class FormatChunkReaderTest < Minitest::Test
+  def test_basic_pcm_no_extension
+    io = StringIO.new
+    io.syswrite([16].pack(UNSIGNED_INT_32))  # Chunk size
+    io.syswrite([1].pack(UNSIGNED_INT_16))   # Audio format
+    io.syswrite([2].pack(UNSIGNED_INT_16))   # Channels
+    io.syswrite([44100].pack(UNSIGNED_INT_32))   # Sample rate
+    io.syswrite([176400].pack(UNSIGNED_INT_32))   # Byte rate
+    io.syswrite([4].pack(UNSIGNED_INT_16))   # Block align
+    io.syswrite([16].pack(UNSIGNED_INT_16))   # Bits per sample
+    io.syswrite("data")   # Start of the next chunk
+    io.rewind
+
+    format_chunk_reader = FormatChunkReader.new(io)
+    unvalidated_format = format_chunk_reader.read
+
+    assert_equal(1, unvalidated_format.audio_format)
+    assert_equal(2, unvalidated_format.channels)
+    assert_equal(44100, unvalidated_format.sample_rate)
+    assert_equal(176400, unvalidated_format.byte_rate)
+    assert_equal(4, unvalidated_format.block_align)
+    assert_equal(16, unvalidated_format.bits_per_sample)
+
+    io.close
+  end
+
+  # Test that a file with data that isn't valid configuration
+  # is still read properly.
+  def test_gibberish_no_extension
+    io = StringIO.new
+    io.syswrite([16].pack(UNSIGNED_INT_32))  # Chunk size
+    io.syswrite([555].pack(UNSIGNED_INT_16))   # Audio format
+    io.syswrite([111].pack(UNSIGNED_INT_16))   # Channels
+    io.syswrite([12345].pack(UNSIGNED_INT_32))   # Sample rate
+    io.syswrite([9].pack(UNSIGNED_INT_32))   # Byte rate
+    io.syswrite([8000].pack(UNSIGNED_INT_16))   # Block align
+    io.syswrite([23433].pack(UNSIGNED_INT_16))   # Bits per sample
+    io.syswrite("data")   # Start of the next chunk
+    io.rewind
+
+    format_chunk_reader = FormatChunkReader.new(io)
+    unvalidated_format = format_chunk_reader.read
+
+    assert_equal(555, unvalidated_format.audio_format)
+    assert_equal(111, unvalidated_format.channels)
+    assert_equal(12345, unvalidated_format.sample_rate)
+    assert_equal(9, unvalidated_format.byte_rate)
+    assert_equal(8000, unvalidated_format.block_align)
+    assert_equal(23433, unvalidated_format.bits_per_sample)
+
+    io.close
+  end
+
+  def test_basic_float_with_empty_extension
+    io = StringIO.new
+    io.syswrite([18].pack(UNSIGNED_INT_32))  # Chunk size
+    io.syswrite([3].pack(UNSIGNED_INT_16))   # Audio format
+    io.syswrite([2].pack(UNSIGNED_INT_16))   # Channels
+    io.syswrite([44100].pack(UNSIGNED_INT_32))   # Sample rate
+    io.syswrite([352800].pack(UNSIGNED_INT_32))   # Byte rate
+    io.syswrite([8].pack(UNSIGNED_INT_16))   # Block align
+    io.syswrite([32].pack(UNSIGNED_INT_16))   # Bits per sample
+    io.syswrite([0].pack(UNSIGNED_INT_16))   # Extension size
+    io.syswrite("data")   # Start of the next chunk
+    io.rewind
+
+    format_chunk_reader = FormatChunkReader.new(io)
+    unvalidated_format = format_chunk_reader.read
+
+    assert_equal(3, unvalidated_format.audio_format)
+    assert_equal(2, unvalidated_format.channels)
+    assert_equal(44100, unvalidated_format.sample_rate)
+    assert_equal(352800, unvalidated_format.byte_rate)
+    assert_equal(8, unvalidated_format.block_align)
+    assert_equal(32, unvalidated_format.bits_per_sample)
+
+    io.close
+  end
+
+  def test_chunk_size_too_small
+    io = StringIO.new
+    # The chunk size is testing 14 here instead of 15, due to padding byte for odd sizes
+    io.syswrite([14].pack(UNSIGNED_INT_32))  # Chunk size
+    io.syswrite([1].pack(UNSIGNED_INT_16))   # Audio format
+    io.syswrite([2].pack(UNSIGNED_INT_16))   # Channels
+    io.syswrite([44100].pack(UNSIGNED_INT_32))   # Sample rate
+    io.syswrite([176400].pack(UNSIGNED_INT_32))   # Byte rate
+    io.syswrite([4].pack(UNSIGNED_INT_16))   # Block align
+    io.syswrite([16].pack(UNSIGNED_INT_16))   # Bits per sample
+    io.syswrite("data")   # Start of the next chunk
+    io.rewind
+
+    format_chunk_reader = FormatChunkReader.new(io)
+    assert_raises(InvalidFormatError) { format_chunk_reader.read }
+
+    io.close
+  end
+end
