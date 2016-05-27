@@ -1,12 +1,12 @@
 module WaveFile
   module ChunkReaders
     class RiffChunkReader < BaseChunkReader    # :nodoc:
-      def initialize(file)
+      def initialize(file, chunk_size)
         @file = file
+        @chunk_size = chunk_size
       end
 
       def read
-        chunk_size = read_chunk_size
         riff_format = @file.sysread(4)
 
         unless riff_format == WAVEFILE_FORMAT_CODE

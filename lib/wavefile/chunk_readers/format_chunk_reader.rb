@@ -1,18 +1,17 @@
 module WaveFile
   module ChunkReaders
     class FormatChunkReader < BaseChunkReader    # :nodoc:
-      def initialize(file)
+      def initialize(file, chunk_size)
         @file = file
+        @chunk_size = chunk_size
       end
 
       def read
-        chunk_size = read_chunk_size
-
-        if chunk_size < MINIMUM_CHUNK_SIZE
+        if @chunk_size < MINIMUM_CHUNK_SIZE
           raise_error InvalidFormatError, "The format chunk is incomplete."
         end
 
-        raw_bytes = read_chunk_body(CHUNK_IDS[:format], chunk_size)
+        raw_bytes = read_chunk_body(CHUNK_IDS[:format], @chunk_size)
 
         format_chunk = {}
         format_chunk[:audio_format],
@@ -22,7 +21,7 @@ module WaveFile
         format_chunk[:block_align],
         format_chunk[:bits_per_sample] = raw_bytes.slice!(0...MINIMUM_CHUNK_SIZE).unpack("vvVVvv")
 
-        if chunk_size > MINIMUM_CHUNK_SIZE
+        if @chunk_size > MINIMUM_CHUNK_SIZE
           format_chunk[:extension_size] = raw_bytes.slice!(0...2).unpack(UNSIGNED_INT_16).first
 
           if format_chunk[:extension_size] == nil

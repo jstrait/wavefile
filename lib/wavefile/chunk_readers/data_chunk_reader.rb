@@ -1,13 +1,11 @@
 module WaveFile
   module ChunkReaders
     class DataChunkReader < BaseChunkReader    # :nodoc:
-      def initialize(file, raw_native_format, format=nil)
+      def initialize(file, chunk_size, raw_native_format, format=nil)
         @file = file
         @raw_native_format = raw_native_format
 
-        data_chunk_size = @file.sysread(4).unpack(UNSIGNED_INT_32).first
-
-        @total_sample_frames = data_chunk_size / @raw_native_format.block_align
+        @total_sample_frames = chunk_size / @raw_native_format.block_align
         @current_sample_frame = 0
 
         @readable_format = true

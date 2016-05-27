@@ -7,7 +7,6 @@ include WaveFile::ChunkReaders
 class FormatChunkReaderTest < Minitest::Test
   def test_basic_pcm_no_extension
     io = StringIO.new
-    io.syswrite([16].pack(UNSIGNED_INT_32))  # Chunk size
     io.syswrite([1].pack(UNSIGNED_INT_16))   # Audio format
     io.syswrite([2].pack(UNSIGNED_INT_16))   # Channels
     io.syswrite([44100].pack(UNSIGNED_INT_32))   # Sample rate
@@ -17,7 +16,7 @@ class FormatChunkReaderTest < Minitest::Test
     io.syswrite("data")   # Start of the next chunk
     io.rewind
 
-    format_chunk_reader = FormatChunkReader.new(io)
+    format_chunk_reader = FormatChunkReader.new(io, 16)
     unvalidated_format = format_chunk_reader.read
 
     assert_equal(1, unvalidated_format.audio_format)
@@ -34,7 +33,6 @@ class FormatChunkReaderTest < Minitest::Test
   # is still read properly.
   def test_gibberish_no_extension
     io = StringIO.new
-    io.syswrite([16].pack(UNSIGNED_INT_32))  # Chunk size
     io.syswrite([555].pack(UNSIGNED_INT_16))   # Audio format
     io.syswrite([111].pack(UNSIGNED_INT_16))   # Channels
     io.syswrite([12345].pack(UNSIGNED_INT_32))   # Sample rate
@@ -44,7 +42,7 @@ class FormatChunkReaderTest < Minitest::Test
     io.syswrite("data")   # Start of the next chunk
     io.rewind
 
-    format_chunk_reader = FormatChunkReader.new(io)
+    format_chunk_reader = FormatChunkReader.new(io, 16)
     unvalidated_format = format_chunk_reader.read
 
     assert_equal(555, unvalidated_format.audio_format)
@@ -59,7 +57,6 @@ class FormatChunkReaderTest < Minitest::Test
 
   def test_basic_float_with_empty_extension
     io = StringIO.new
-    io.syswrite([18].pack(UNSIGNED_INT_32))  # Chunk size
     io.syswrite([3].pack(UNSIGNED_INT_16))   # Audio format
     io.syswrite([2].pack(UNSIGNED_INT_16))   # Channels
     io.syswrite([44100].pack(UNSIGNED_INT_32))   # Sample rate
@@ -70,7 +67,7 @@ class FormatChunkReaderTest < Minitest::Test
     io.syswrite("data")   # Start of the next chunk
     io.rewind
 
-    format_chunk_reader = FormatChunkReader.new(io)
+    format_chunk_reader = FormatChunkReader.new(io, 18)
     unvalidated_format = format_chunk_reader.read
 
     assert_equal(3, unvalidated_format.audio_format)
@@ -85,7 +82,6 @@ class FormatChunkReaderTest < Minitest::Test
 
   def test_wave_format_extensible
     io = StringIO.new
-    io.syswrite([40].pack(UNSIGNED_INT_32))  # Chunk size
     io.syswrite([65534].pack(UNSIGNED_INT_16))   # Audio format
     io.syswrite([2].pack(UNSIGNED_INT_16))   # Channels
     io.syswrite([44100].pack(UNSIGNED_INT_32))   # Sample rate
@@ -99,7 +95,7 @@ class FormatChunkReaderTest < Minitest::Test
     io.syswrite("data")   # Start of the next chunk
     io.rewind
 
-    format_chunk_reader = FormatChunkReader.new(io)
+    format_chunk_reader = FormatChunkReader.new(io, 40)
     unvalidated_format = format_chunk_reader.read
 
     assert_equal(65534, unvalidated_format.audio_format)
@@ -117,8 +113,6 @@ class FormatChunkReaderTest < Minitest::Test
 
   def test_chunk_size_too_small
     io = StringIO.new
-    # The chunk size is testing 14 here instead of 15, due to padding byte for odd sizes
-    io.syswrite([14].pack(UNSIGNED_INT_32))  # Chunk size
     io.syswrite([1].pack(UNSIGNED_INT_16))   # Audio format
     io.syswrite([2].pack(UNSIGNED_INT_16))   # Channels
     io.syswrite([44100].pack(UNSIGNED_INT_32))   # Sample rate
@@ -128,7 +122,7 @@ class FormatChunkReaderTest < Minitest::Test
     io.syswrite("data")   # Start of the next chunk
     io.rewind
 
-    format_chunk_reader = FormatChunkReader.new(io)
+    format_chunk_reader = FormatChunkReader.new(io, 15)
     assert_raises(InvalidFormatError) { format_chunk_reader.read }
 
     io.close
