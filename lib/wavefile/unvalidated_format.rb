@@ -9,7 +9,7 @@ module WaveFile
     # Constructs a new immutable UnvalidatedFormat.
     def initialize(fields)
       @audio_format = fields[:audio_format]
-      @sub_audio_format = fields[:sub_audio_format]
+      @sub_audio_format_guid = fields[:sub_audio_format_guid]
       @channels = fields[:channels]
       @sample_rate = fields[:sample_rate]
       @byte_rate = fields[:byte_rate]
@@ -18,13 +18,19 @@ module WaveFile
       @valid_bits_per_sample = fields[:valid_bits_per_sample]
     end
 
-    attr_reader :audio_format, :sub_audio_format, :valid_bits_per_sample
+    attr_reader :audio_format, :sub_audio_format_guid, :valid_bits_per_sample
 
     def to_validated_format
-      if @sub_audio_format.nil?
+      if @sub_audio_format_guid.nil?
         audio_format_code = @audio_format
       else
-        audio_format_code = @sub_audio_format
+        if @sub_audio_format_guid == SUB_FORMAT_GUID_PCM
+          audio_format_code = 1
+        elsif @sub_audio_format_guid == SUB_FORMAT_GUID_FLOAT
+          audio_format_code = 3
+        else
+          audio_format_code = nil
+        end
       end
 
       if @valid_bits_per_sample

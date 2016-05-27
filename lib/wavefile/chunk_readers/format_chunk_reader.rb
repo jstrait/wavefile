@@ -36,8 +36,7 @@ module WaveFile
           if format_chunk[:extension_size] == 22
             format_chunk[:valid_bits_per_sample] = raw_bytes.slice!(0...2).unpack(UNSIGNED_INT_16).first
             channel_mapping = raw_bytes.slice!(0...4).unpack(UNSIGNED_INT_32).first
-            format_chunk[:sub_audio_format] = raw_bytes.slice!(0...2).unpack(UNSIGNED_INT_16).first
-            sub_format_rest = raw_bytes
+            format_chunk[:sub_audio_format_guid] = raw_bytes.force_encoding("UTF-8")
           end
         end
 

@@ -6,7 +6,7 @@ include WaveFile
 class UnvalidatedFormatTest < Minitest::Test
   def test_initialize
     format = UnvalidatedFormat.new({:audio_format => 65534,
-                                    :sub_audio_format => 1,
+                                    :sub_audio_format_guid => SUB_FORMAT_GUID_PCM,
                                     :channels => 2,
                                     :sample_rate => 44100,
                                     :byte_rate => 176400,
@@ -15,7 +15,7 @@ class UnvalidatedFormatTest < Minitest::Test
                                     :valid_bits_per_sample => 14})
 
     assert_equal(65534,  format.audio_format)
-    assert_equal(1,      format.sub_audio_format)
+    assert_equal(SUB_FORMAT_GUID_PCM, format.sub_audio_format_guid)
     assert_equal(2,      format.channels)
     assert_equal(false,  format.mono?)
     assert_equal(true,   format.stereo?)
@@ -73,7 +73,7 @@ class UnvalidatedFormatTest < Minitest::Test
 
   def test_to_validated_format_wave_format_extensible_pcm
     unvalidated_format = UnvalidatedFormat.new({:audio_format => 65534,
-                                                :sub_audio_format => 1,
+                                                :sub_audio_format_guid => SUB_FORMAT_GUID_PCM,
                                                 :channels => 2,
                                                 :sample_rate => 44100,
                                                 :byte_rate => 176400,
@@ -92,7 +92,7 @@ class UnvalidatedFormatTest < Minitest::Test
 
   def test_to_validated_format_wave_format_extensible_float
     unvalidated_format = UnvalidatedFormat.new({:audio_format => 65534,
-                                                :sub_audio_format => 3,
+                                                :sub_audio_format_guid => SUB_FORMAT_GUID_FLOAT,
                                                 :channels => 2,
                                                 :sample_rate => 44100,
                                                 :byte_rate => 352800,
@@ -111,7 +111,7 @@ class UnvalidatedFormatTest < Minitest::Test
 
   def test_to_validated_format_wave_format_extensible_unsupported_sub_format
     unvalidated_format = UnvalidatedFormat.new({:audio_format => 65534,
-                                                :sub_audio_format => 2,
+                                                :sub_audio_format_guid => "\x02\x00\x00\x00\x00\x00\x10\x00\x80\x00\x00\xAA\x00\x38\x9B\x71",  # ADPCM
                                                 :channels => 2,
                                                 :sample_rate => 44100,
                                                 :byte_rate => 176400,
@@ -124,7 +124,7 @@ class UnvalidatedFormatTest < Minitest::Test
 
   def test_to_validated_format_wave_format_extensible_unsupported_valid_bits_per_sample
     unvalidated_format = UnvalidatedFormat.new({:audio_format => 65534,
-                                                :sub_audio_format => 1,
+                                                :sub_audio_format_guid => SUB_FORMAT_GUID_PCM,
                                                 :channels => 2,
                                                 :sample_rate => 44100,
                                                 :byte_rate => 176400,

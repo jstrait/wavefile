@@ -95,8 +95,7 @@ class FormatChunkReaderTest < Minitest::Test
     io.syswrite([22].pack(UNSIGNED_INT_16))   # Extension size
     io.syswrite([20].pack(UNSIGNED_INT_16))   # Valid bits per sample
     io.syswrite([0].pack(UNSIGNED_INT_32))   # Channel mask
-    io.syswrite([1].pack(UNSIGNED_INT_16))   # Sub format code
-    io.syswrite("\x00\x00\x00\x00\x10\x00\x80\x00\x00\xAA\x00\x38\x9B\x71")
+    io.syswrite(SUB_FORMAT_GUID_PCM)
     io.syswrite("data")   # Start of the next chunk
     io.rewind
 
@@ -111,7 +110,7 @@ class FormatChunkReaderTest < Minitest::Test
     assert_equal(24, unvalidated_format.bits_per_sample)
 
     assert_equal(20, unvalidated_format.valid_bits_per_sample)
-    assert_equal(1, unvalidated_format.sub_audio_format)
+    assert_equal(SUB_FORMAT_GUID_PCM, unvalidated_format.sub_audio_format_guid)
 
     io.close
   end
