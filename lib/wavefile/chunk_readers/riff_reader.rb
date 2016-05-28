@@ -17,15 +17,13 @@ module WaveFile
 
       def read_until_data_chunk(format)
         begin
-          chunk_id = @file.sysread(4)
-          chunk_size = @file.sysread(4).unpack(UNSIGNED_INT_32).first || 0
+          chunk_id, chunk_size = read_chunk_header
           unless chunk_id == CHUNK_IDS[:riff]
             raise_error InvalidFormatError, "Expected chunk ID '#{CHUNK_IDS[:riff]}', but was '#{chunk_id}'"
           end
           RiffChunkReader.new(@file, chunk_size).read
 
-          chunk_id = @file.sysread(4)
-          chunk_size = @file.sysread(4).unpack(UNSIGNED_INT_32).first || 0
+          chunk_id, chunk_size = read_chunk_header
           while chunk_id != CHUNK_IDS[:data]
             if chunk_id == CHUNK_IDS[:format]
               @native_format = FormatChunkReader.new(@file, chunk_size).read
@@ -42,8 +40,7 @@ module WaveFile
               @file.sysread(1)
             end
 
-            chunk_id = @file.sysread(4)
-            chunk_size = @file.sysread(4).unpack(UNSIGNED_INT_32).first || 0
+            chunk_id, chunk_size = read_chunk_header
           end
         rescue EOFError
           raise_error InvalidFormatError, "It doesn't have a data chunk."
@@ -54,6 +51,13 @@ module WaveFile
         end
 
         @data_chunk_reader = DataChunkReader.new(@file, chunk_size, @native_format, format)
+      end
+
+      def read_chunk_header
+        chunk_id = @file.sysread(4)
+        chunk_size = @file.sysread(4).unpack(UNSIGNED_INT_32).first || 0
+
+        return chunk_id, chunk_size
       end
 
       def raise_error(exception_class, message)
