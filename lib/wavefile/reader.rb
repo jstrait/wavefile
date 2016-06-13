@@ -41,13 +41,13 @@ module WaveFile
     # Raises InvalidFormatError if the specified file isn't a valid wave file
     def initialize(io_or_file_name, format=nil)
       if io_or_file_name.is_a?(String)
-        @file = File.open(io_or_file_name, "rb")
+        @io = File.open(io_or_file_name, "rb")
       else
-        @file = io_or_file_name
+        @io = io_or_file_name
       end
 
       begin
-        riff_reader = ChunkReaders::RiffReader.new(@file, format)
+        riff_reader = ChunkReaders::RiffReader.new(@io, format)
       rescue InvalidFormatError
         raise InvalidFormatError, "Does not appear to be a valid Wave file"
       end
@@ -105,7 +105,7 @@ module WaveFile
 
     # Returns true if the Reader is closed, and false if it is open and available for reading.
     def closed?
-      @file.closed?
+      @io.closed?
     end
 
 
@@ -114,7 +114,7 @@ module WaveFile
     # Returns nothing.
     # Raises IOError if the Reader is already closed.
     def close
-      @file.close
+      @io.close
     end
 
     # Returns a Duration instance for the total number of sample frames in the file
