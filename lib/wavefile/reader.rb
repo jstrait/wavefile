@@ -39,13 +39,12 @@ module WaveFile
     # Raises Errno::ENOENT if the specified file can't be found
     # Raises InvalidFormatError if the specified file isn't a valid wave file
     def initialize(file_name, format=nil)
-      @file_name = file_name
       @file = File.open(file_name, "rb")
 
       begin
-        riff_reader = ChunkReaders::RiffReader.new(@file, @file_name, format)
+        riff_reader = ChunkReaders::RiffReader.new(@file, format)
       rescue InvalidFormatError
-        raise InvalidFormatError, "'#{@file_name}' does not appear to be a valid Wave file"
+        raise InvalidFormatError, "Does not appear to be a valid Wave file"
       end
       
       @data_chunk_reader = riff_reader.data_chunk_reader
@@ -131,9 +130,6 @@ module WaveFile
     def readable_format?
       @data_chunk_reader.readable_format
     end
-
-    # Returns the name of the Wave file that is being read
-    attr_reader :file_name
 
     # Returns a Format object describing how sample data is being read from the Wave file (number of 
     # channels, sample format and bits per sample, etc). Note that this might be different from the 

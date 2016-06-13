@@ -4,9 +4,8 @@ module WaveFile
     # to open a wave file and "queue it up" to the start of the actual sample data, as well as
     # extract information out of pre-data chunks, such as the format chunk.
     class RiffReader    # :nodoc:
-      def initialize(file, file_name, format=nil)
+      def initialize(file, format=nil)
         @file = file
-        @file_name = file_name
 
         read_until_data_chunk(format)
       end
@@ -61,7 +60,7 @@ module WaveFile
       end
 
       def raise_error(exception_class, message)
-        raise exception_class, "File '#{@file_name}' is not a supported wave file. #{message}"
+        raise exception_class, "Not a supported wave file. #{message}"
       end
     end
   end
