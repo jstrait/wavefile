@@ -25,8 +25,12 @@ module WaveFile
     # block terminates, the Writer will be automatically closed (and no more sample data can be written). 
     #
     # If no block is given, then sample data can be written until the close method is called.
-    def initialize(file_name, format)
-      @file = File.open(file_name, "wb")
+    def initialize(io_or_file_name, format)
+      if io_or_file_name.is_a?(String)
+        @file = File.open(io_or_file_name, "wb")
+      else
+        @file = io_or_file_name
+      end
       @format = format
 
       @total_sample_frames = 0
@@ -56,10 +60,10 @@ module WaveFile
 
       if @format.bits_per_sample == 24 && @format.sample_format == :pcm
         samples.flatten.each do |sample|
-          @file.syswrite([sample].pack("l<X"))
+          @file.write([sample].pack("l<X"))
         end
       else
-        @file.syswrite(samples.flatten.pack(@pack_code))
+        @file.write(samples.flatten.pack(@pack_code))
       end
 
       @total_sample_frames += samples.length
@@ -90,13 +94,13 @@ module WaveFile
       # See http://www-mmsp.ece.mcgill.ca/Documents/AudioFormats/WAVE/Docs/riffmci.pdf, page 11.
       bytes_written = @total_sample_frames * @format.block_align
       if bytes_written.odd?
-        @file.syswrite(EMPTY_BYTE)
+        @file.write(EMPTY_BYTE)
       end
 
       # We can't know what chunk sizes to write for the RIFF and data chunks until all
       # samples have been written, so go back to the beginning of the file and re-write
       # those chunk headers with the correct sizes.
-      @file.sysseek(0)
+      @file.seek(0)
       write_header(@total_sample_frames)
 
       @file.close
@@ -172,7 +176,7 @@ module WaveFile
       header += CHUNK_IDS[:data]
       header += [sample_data_byte_count].pack(UNSIGNED_INT_32)
 
-      @file.syswrite(header)
+      @file.write(header)
     end
   end
 end
