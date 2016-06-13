@@ -26,7 +26,6 @@ module WaveFile
     #
     # If no block is given, then sample data can be written until the close method is called.
     def initialize(file_name, format)
-      @file_name = file_name
       @file = File.open(file_name, "wb")
       @format = format
 
@@ -107,9 +106,6 @@ module WaveFile
     def total_duration
       Duration.new(@total_sample_frames, @format.sample_rate)
     end
-
-    # Returns the name of the Wave file that is being written to
-    attr_reader :file_name
 
     # Returns a Format object describing the Wave file being written (number of channels, sample 
     # format and bits per sample, sample rate, etc.)
