@@ -42,7 +42,11 @@ class ReaderTest < Minitest::Test
     ]
 
     invalid_fixtures.each do |fixture_name|
-      assert_raises(InvalidFormatError) { Reader.new(fixture(fixture_name)) }
+      file_name = fixture(fixture_name)
+
+      [file_name, string_io_from_file(file_name)].each do |io_or_file_name|
+        assert_raises(InvalidFormatError) { Reader.new(io_or_file_name) }
+      end
     end
   end
 
@@ -50,32 +54,36 @@ class ReaderTest < Minitest::Test
     file_name = fixture("unsupported/unsupported_bits_per_sample.wav")
 
     # Unsupported format, no read format given
-    reader = Reader.new(file_name)
-    assert_equal(2, reader.native_format.channels)
-    assert_equal(20, reader.native_format.bits_per_sample)
-    assert_equal(44100, reader.native_format.sample_rate)
-    assert_equal(2, reader.format.channels)
-    assert_equal(20, reader.format.bits_per_sample)
-    assert_equal(44100, reader.format.sample_rate)
-    assert_equal(false, reader.closed?)
-    assert_equal(0, reader.current_sample_frame)
-    assert_equal(2240, reader.total_sample_frames)
-    assert_equal(false, reader.readable_format?)
-    reader.close
+    [file_name, string_io_from_file(file_name)].each do |io_or_file_name|
+      reader = Reader.new(io_or_file_name)
+      assert_equal(2, reader.native_format.channels)
+      assert_equal(20, reader.native_format.bits_per_sample)
+      assert_equal(44100, reader.native_format.sample_rate)
+      assert_equal(2, reader.format.channels)
+      assert_equal(20, reader.format.bits_per_sample)
+      assert_equal(44100, reader.format.sample_rate)
+      assert_equal(false, reader.closed?)
+      assert_equal(0, reader.current_sample_frame)
+      assert_equal(2240, reader.total_sample_frames)
+      assert_equal(false, reader.readable_format?)
+      reader.close
+    end
 
     # Unsupported format, different read format given
-    reader = Reader.new(file_name, Format.new(:mono, :pcm_16, 22050))
-    assert_equal(2, reader.native_format.channels)
-    assert_equal(20, reader.native_format.bits_per_sample)
-    assert_equal(44100, reader.native_format.sample_rate)
-    assert_equal(1, reader.format.channels)
-    assert_equal(16, reader.format.bits_per_sample)
-    assert_equal(22050, reader.format.sample_rate)
-    assert_equal(false, reader.closed?)
-    assert_equal(0, reader.current_sample_frame)
-    assert_equal(2240, reader.total_sample_frames)
-    assert_equal(false, reader.readable_format?)
-    reader.close
+    [file_name, string_io_from_file(file_name)].each do |io_or_file_name|
+      reader = Reader.new(io_or_file_name, Format.new(:mono, :pcm_16, 22050))
+      assert_equal(2, reader.native_format.channels)
+      assert_equal(20, reader.native_format.bits_per_sample)
+      assert_equal(44100, reader.native_format.sample_rate)
+      assert_equal(1, reader.format.channels)
+      assert_equal(16, reader.format.bits_per_sample)
+      assert_equal(22050, reader.format.sample_rate)
+      assert_equal(false, reader.closed?)
+      assert_equal(0, reader.current_sample_frame)
+      assert_equal(2240, reader.total_sample_frames)
+      assert_equal(false, reader.readable_format?)
+      reader.close
+    end
   end
 
   def test_read_from_unsupported_format
@@ -94,10 +102,16 @@ class ReaderTest < Minitest::Test
     ]
 
     unsupported_fixtures.each do |fixture_name|
-      reader = Reader.new(fixture(fixture_name))
-      assert_equal(false, reader.readable_format?)
-      assert_raises(UnsupportedFormatError) { reader.read(1024) }
-      assert_raises(UnsupportedFormatError) { reader.each_buffer(1024) {|buffer| buffer } }
+      file_name = fixture(fixture_name)
+
+      [file_name, string_io_from_file(file_name)].each do |io_or_file_name|
+        reader = Reader.new(io_or_file_name)
+        assert_equal(false, reader.readable_format?)
+        assert_raises(UnsupportedFormatError) { reader.read(1024) }
+        assert_raises(UnsupportedFormatError) { reader.each_buffer(1024) {|buffer| buffer } }
+
+        reader.close
+      end
     end
   end
 
@@ -108,45 +122,51 @@ class ReaderTest < Minitest::Test
       file_name = fixture("valid/valid_#{channels}_#{sample_format}_44100.wav")
 
       # Native format
-      reader = Reader.new(file_name)
-      assert_equal(CHANNEL_ALIAS[channels], reader.native_format.channels)
-      assert_equal(extract_bits_per_sample(sample_format), reader.native_format.bits_per_sample)
-      assert_equal(44100, reader.native_format.sample_rate)
-      assert_equal(CHANNEL_ALIAS[channels], reader.format.channels)
-      assert_equal(extract_bits_per_sample(sample_format), reader.format.bits_per_sample)
-      assert_equal(44100, reader.format.sample_rate)
-      assert_equal(false, reader.closed?)
-      assert_equal(0, reader.current_sample_frame)
-      assert_equal(2240, reader.total_sample_frames)
-      assert_equal(true, reader.readable_format?)
-      reader.close
+      [file_name, string_io_from_file(file_name)].each do |io_or_file_name|
+        reader = Reader.new(io_or_file_name)
+        assert_equal(CHANNEL_ALIAS[channels], reader.native_format.channels)
+        assert_equal(extract_bits_per_sample(sample_format), reader.native_format.bits_per_sample)
+        assert_equal(44100, reader.native_format.sample_rate)
+        assert_equal(CHANNEL_ALIAS[channels], reader.format.channels)
+        assert_equal(extract_bits_per_sample(sample_format), reader.format.bits_per_sample)
+        assert_equal(44100, reader.format.sample_rate)
+        assert_equal(false, reader.closed?)
+        assert_equal(0, reader.current_sample_frame)
+        assert_equal(2240, reader.total_sample_frames)
+        assert_equal(true, reader.readable_format?)
+        reader.close
+      end
 
       # Non-native format
-      reader = Reader.new(file_name, format)
-      assert_equal(CHANNEL_ALIAS[channels], reader.native_format.channels)
-      assert_equal(extract_bits_per_sample(sample_format), reader.native_format.bits_per_sample)
-      assert_equal(44100, reader.native_format.sample_rate)
-      assert_equal(2, reader.format.channels)
-      assert_equal(16, reader.format.bits_per_sample)
-      assert_equal(22050, reader.format.sample_rate)
-      assert_equal(false, reader.closed?)
-      assert_equal(0, reader.current_sample_frame)
-      assert_equal(2240, reader.total_sample_frames)
-      assert_equal(true, reader.readable_format?)
-      reader.close
+      [file_name, string_io_from_file(file_name)].each do |io_or_file_name|
+        reader = Reader.new(io_or_file_name, format)
+        assert_equal(CHANNEL_ALIAS[channels], reader.native_format.channels)
+        assert_equal(extract_bits_per_sample(sample_format), reader.native_format.bits_per_sample)
+        assert_equal(44100, reader.native_format.sample_rate)
+        assert_equal(2, reader.format.channels)
+        assert_equal(16, reader.format.bits_per_sample)
+        assert_equal(22050, reader.format.sample_rate)
+        assert_equal(false, reader.closed?)
+        assert_equal(0, reader.current_sample_frame)
+        assert_equal(2240, reader.total_sample_frames)
+        assert_equal(true, reader.readable_format?)
+        reader.close
+      end
 
       # Block is given.
-      reader = Reader.new(file_name) {|reader| reader.read(1024) }
-      assert_equal(CHANNEL_ALIAS[channels], reader.native_format.channels)
-      assert_equal(extract_bits_per_sample(sample_format), reader.native_format.bits_per_sample)
-      assert_equal(44100, reader.native_format.sample_rate)
-      assert_equal(CHANNEL_ALIAS[channels], reader.format.channels)
-      assert_equal(extract_bits_per_sample(sample_format), reader.format.bits_per_sample)
-      assert_equal(44100, reader.format.sample_rate)
-      assert(reader.closed?)
-      assert_equal(1024, reader.current_sample_frame)
-      assert_equal(2240, reader.total_sample_frames)
-      assert_equal(true, reader.readable_format?)
+      [file_name, string_io_from_file(file_name)].each do |io_or_file_name|
+        reader = Reader.new(io_or_file_name) {|reader| reader.read(1024) }
+        assert_equal(CHANNEL_ALIAS[channels], reader.native_format.channels)
+        assert_equal(extract_bits_per_sample(sample_format), reader.native_format.bits_per_sample)
+        assert_equal(44100, reader.native_format.sample_rate)
+        assert_equal(CHANNEL_ALIAS[channels], reader.format.channels)
+        assert_equal(extract_bits_per_sample(sample_format), reader.format.bits_per_sample)
+        assert_equal(44100, reader.format.sample_rate)
+        assert(reader.closed?)
+        assert_equal(1024, reader.current_sample_frame)
+        assert_equal(2240, reader.total_sample_frames)
+        assert_equal(true, reader.readable_format?)
+      end
     end
   end
 
@@ -356,6 +376,16 @@ private
 
   def extract_bits_per_sample(sample_format)
     sample_format.to_s.split("_").last.to_i
+  end
+
+  def string_io_from_file(file_name)
+    file_contents = File.read(file_name)
+
+    str_io = StringIO.new
+    str_io.syswrite(file_contents)
+    str_io.rewind
+
+    str_io
   end
 
   def test_duration(expected_hash, duration)

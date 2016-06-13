@@ -31,15 +31,20 @@ module WaveFile
   class Reader
     # Returns a Reader object that is ready to start reading the specified file's sample data. 
     #
-    # file_name - The name of the wave file to read from.
+    # io_or_file_name - The name of the wave file to read from,
+    #                   or an open IO object to read from.
     # format - The format that read sample data should be returned in 
     #          (default: the wave file's internal format).
     #
     # Returns a Reader object that is ready to start reading the specified file's sample data.
     # Raises Errno::ENOENT if the specified file can't be found
     # Raises InvalidFormatError if the specified file isn't a valid wave file
-    def initialize(file_name, format=nil)
-      @file = File.open(file_name, "rb")
+    def initialize(io_or_file_name, format=nil)
+      if io_or_file_name.is_a?(String)
+        @file = File.open(io_or_file_name, "rb")
+      else
+        @file = io_or_file_name
+      end
 
       begin
         riff_reader = ChunkReaders::RiffReader.new(@file, format)
