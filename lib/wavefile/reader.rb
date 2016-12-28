@@ -78,7 +78,7 @@ module WaveFile
     #                      are not enough remaining.
     #
     # Returns nothing.
-    def each_buffer(sample_frame_count)
+    def each_buffer(sample_frame_count=4096)
       begin
         while true do
           yield(read(sample_frame_count))

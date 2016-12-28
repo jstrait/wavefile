@@ -208,6 +208,22 @@ class ReaderTest < Minitest::Test
     assert_raises(LocalJumpError) { reader.each_buffer(1024) }
   end
 
+  def test_each_buffer_no_buffer_size_given
+    exhaustively_test do |channels, sample_format|
+      reader = Reader.new(fixture("valid/valid_#{channels}_#{sample_format}_44100.wav"))
+
+      buffers = []
+      reader.each_buffer {|buffer| buffers << buffer }
+
+      assert(reader.closed?)
+      assert_equal(1, buffers.length)
+      assert_equal([2240], buffers.map {|buffer| buffer.samples.length })
+      assert_equal(SQUARE_WAVE_CYCLE[channels][sample_format] * 280, buffers[0].samples)
+      assert_equal(2240, reader.current_sample_frame)
+      assert_equal(2240, reader.total_sample_frames)
+    end
+  end
+
   def test_each_buffer_native_format
     exhaustively_test do |channels, sample_format|
       reader = Reader.new(fixture("valid/valid_#{channels}_#{sample_format}_44100.wav"))
