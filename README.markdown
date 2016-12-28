@@ -53,6 +53,7 @@ Released on ____, this version includes these changes:
 * Wave files with the format WAVEFORMATEXTENSIBLE can now be read.
 * `Reader.new()` and `Writer.new()` now can be constructed with an open IO instance. Previously, only a file name (given by a String) could be given. The first argument of each constructor indicates where to read/write: if the argument is an IO instance it will be used for reading/writing, and if the argument is a String, it will be treated as the name of the file to open for reading/writing.
 * `Reader.each_buffer()` no longer requires the user to specify the size of each buffer. A specific size in sample frames can still be given (for example, `Reader.each_buffer(1024)`), but if no buffer size is given a default value will be used.
+* `Duration` now includes an overridden definition of `==`, so that two `Duration` objects will evaluate to equal if they represent the same amount of time.
 
 
 # Compatibility

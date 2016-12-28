@@ -54,6 +54,28 @@ module WaveFile
 
       @milliseconds = (sample_frame_count / sample_frames_per_millisecond).floor
     end
+
+    # Returns true if this Duration represents that same amount of time as
+    # other_duration.
+    #
+    # Two Duration instances will evaluate as == if they correspond
+    # to the same "stopwatch time". This means that two Durations constructed
+    # from a different number of sample frames or different sample rates can be
+    # considered equal if they correspond to the same amount
+    # of time. For example, a Duration from 44,100 sample frames
+    # at 44,100 samples/sec will be considered equal to a Duration
+    # from 22,050 sample frames at 22,050 samples/sec, because
+    # both correspond to 1 second of audio.
+    #
+    # Since the finest resolution of a duration is 1 millisecond,
+    # two Durations that represent different amounts of time but
+    # differ by less than 1 millisecond will be considered equal.
+    def ==(other_duration)
+      @hours == other_duration.hours &&
+      @minutes == other_duration.minutes &&
+      @seconds == other_duration.seconds &&
+      @milliseconds == other_duration.milliseconds
+    end
  
     attr_reader :sample_frame_count
     attr_reader :sample_rate 

@@ -70,4 +70,45 @@ class DurationTest < Minitest::Test
     assert_equal(samples_per_hour * 25, duration.sample_frame_count)
     assert_equal(44100, duration.sample_rate)
   end
+
+  def test_equality_exact_same_values
+    duration_1 = Duration.new(44100, 1234)
+    duration_2 = Duration.new(44100, 1234)
+
+    assert_equal(duration_1, duration_2)
+  end
+
+  def test_equality_different_values_but_same_duration
+    # Durations have different numbers of sample frames and sample rates,
+    # but both correspond to the same amount of time (1 second)
+    duration_1 = Duration.new(22050, 22050)
+    duration_2 = Duration.new(44100, 44100)
+
+    assert_equal(duration_1, duration_2)
+  end
+
+  def test_equality_different_number_of_sample_frames
+    duration_1 = Duration.new(100, 44100)
+    duration_2 = Duration.new(200, 44100)
+
+    assert_equal(false, duration_1 == duration_2)
+  end
+
+  def test_equality_different_sample_rates
+    duration_1 = Duration.new(500, 22050)
+    duration_2 = Duration.new(500, 44100)
+
+    assert_equal(false, duration_1 == duration_2)
+  end
+
+  def test_equality_less_than_millisecond_difference
+    # Although each represents a different amount of time,
+    # the difference is less than 1 millisecond, which is
+    # the maximum resolution of a Duration. Therefore, they
+    # are considered equal.
+    duration_1 = Duration.new(500, 44100)
+    duration_2 = Duration.new(501, 44100)
+
+    assert_equal(duration_1, duration_2)
+  end
 end
