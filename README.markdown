@@ -12,11 +12,10 @@ This is a short example that shows how to append three separate Wave files into 
     include WaveFile
     
     FILES_TO_APPEND = ["file1.wav", "file2.wav", "file3.wav"]
-    SAMPLES_PER_BUFFER = 4096
 
     Writer.new("append.wav", Format.new(:stereo, :pcm_16, 44100)) do |writer|
       FILES_TO_APPEND.each do |file_name|
-        Reader.new(file_name).each_buffer(SAMPLES_PER_BUFFER) do |buffer|
+        Reader.new(file_name).each_buffer do |buffer|
           writer.write(buffer)
         end
       end
@@ -47,19 +46,13 @@ More examples can be found at <http://wavefilegem.com/examples>.
 * Pure Ruby, so no need to compile a separate extension in order to use it.
 
 
-# Current Release: v0.7.0
+# Current Release: v0.8.0
 
-Released on March 6, 2016, this version includes these changes:
+Released on ____, this version includes these changes:
 
-* The minimum supported Ruby version is now 1.9.3 - earlier versions are no longer supported.
-* New method: `Reader.native_format`. Returns a `Format` instance with information about the underlaying format of the Wave file being read, which is not necessarily the same format the sample data is being converted to as it's being read.
-* `Reader.info()` has been removed. Instead, construct a new `Reader` instance and use `Reader.native_format()` - this will return a `Format` instance with the same info that would have been returned by `Reader.info()`.
-* Similarly, the `Info` class has been removed, due to `Reader.info()` being removed.
-* Constructing a `Reader` instance will no longer raise an exception if the file is valid Wave file, but in a format unsupported by this gem. The purpose of this is to allow calling `Reader.native_format()` on this instance, to get format information for files not supported by this gem.
-* New method: `Reader.readable_format?` returns true if the file is a valid format that the gem can read, false otherwise.
-* `Reader.read()` and `Reader.each_buffer()` will now raise an exception if the file is a valid Wave file, but not a format that the gem can read. Or put differently, if `Reader.readable_format?` returns `false`, any subsequent calls to `Reader.read()` or `Reader.each_buffer()` will raise an exception.
-* Some constants have been made private since they are intended for internal use.
-* Bug fix: Files will now be read/written correctly on big-endian platforms. Or in other words, sample data is always read as little-endian, regardless of the native endianness of the platform.
+* Wave files with the format WAVEFORMATEXTENSIBLE can now be read.
+* `Reader.new()` and `Writer.new()` now can be constructed with an open IO instance. Previously, only a file name (given by a String) could be given. The first argument of each constructor indicates where to read/write: if the argument is an IO instance it will be used for reading/writing, and if the argument is a String, it will be treated as the name of the file to open for reading/writing.
+* `Reader.each_buffer()` no longer requires the user to specify the size of each buffer. A specific size in sample frames can still be given (for example, `Reader.each_buffer(1024)`), but if no buffer size is given a default value will be used.
 
 
 # Compatibility
