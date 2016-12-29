@@ -60,7 +60,7 @@ Released on ____, this version includes these changes:
 
 WaveFile has been tested with these Ruby versions, and appears to be compatible with them:
 
-* MRI 2.3, 2.2, 2.1, 2.0, 1.9.3
+* MRI 2.4.0, 2.3.3, 2.2.6, 2.1.10, 2.0, 1.9.3
 
 1.9.3 is the minimum supported Ruby version.
 
