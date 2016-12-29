@@ -14,6 +14,7 @@ module WaveFile
           @pack_code = PACK_CODES[@native_format.sample_format][@native_format.bits_per_sample]
         rescue FormatError
           @readable_format = false
+          @native_format = nil
           @pack_code = nil
         end
 
