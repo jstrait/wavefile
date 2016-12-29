@@ -207,10 +207,10 @@ module WaveFile
 
       if more_than_one_channel
         samples.map! do |sample|
-          sample.map! &converter
+          sample.map!(&converter)
         end
       else
-        samples.map! &converter
+        samples.map!(&converter)
       end
     end
   end
