@@ -72,7 +72,9 @@ If you find any compatibility issues, please let me know by opening a GitHub iss
 
 # Dependencies
 
-WaveFile has no external dependencies. It is written in pure Ruby, and is entirely self-contained.
+WaveFile has no external dependencies when used as a gem. It is written in pure Ruby, and is entirely self-contained.
+
+However, it does have dependencies for local development, in order to run the tests. See below in section "Local Development".
 
 
 # Installation
