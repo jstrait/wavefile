@@ -42,9 +42,9 @@ class WriterTest < Minitest::Test
       file_name = "valid_#{channels}_#{sample_format}_44100.wav"
       format = Format.new(CHANNEL_ALIAS[channels], sample_format, 44100)
 
-      writer = Writer.new("#{OUTPUT_FOLDER}/#{file_name}", format) do |writer|
+      writer = Writer.new("#{OUTPUT_FOLDER}/#{file_name}", format) do |w|
         4.times do
-          writer.write(Buffer.new(SQUARE_WAVE_CYCLE[channels][sample_format] * 70, format))
+          w.write(Buffer.new(SQUARE_WAVE_CYCLE[channels][sample_format] * 70, format))
         end
       end
 

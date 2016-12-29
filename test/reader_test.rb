@@ -155,7 +155,7 @@ class ReaderTest < Minitest::Test
 
       # Block is given.
       [file_name, string_io_from_file(file_name)].each do |io_or_file_name|
-        reader = Reader.new(io_or_file_name) {|reader| reader.read(1024) }
+        reader = Reader.new(io_or_file_name) {|r| r.read(1024) }
         assert_equal(CHANNEL_ALIAS[channels], reader.native_format.channels)
         assert_equal(extract_bits_per_sample(sample_format), reader.native_format.bits_per_sample)
         assert_equal(44100, reader.native_format.sample_rate)
