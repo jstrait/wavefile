@@ -184,7 +184,7 @@ private
 
   def clean_output_folder
     # Make the folder if it doesn't already exist
-    Dir.mkdir(OUTPUT_FOLDER) unless File.exists?(OUTPUT_FOLDER)
+    Dir.mkdir(OUTPUT_FOLDER) unless File.exist?(OUTPUT_FOLDER)
 
     dir = Dir.new(OUTPUT_FOLDER)
     file_names = dir.entries
