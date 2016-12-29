@@ -303,7 +303,7 @@ class ReaderTest < Minitest::Test
 
   def test_read_after_close
     reader = Reader.new(fixture("valid/valid_mono_pcm_16_44100.wav"))
-    buffer = reader.read(1024)
+    reader.read(1024)
     reader.close
     assert_raises(IOError) { reader.read(1024) }
   end
