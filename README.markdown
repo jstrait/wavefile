@@ -26,14 +26,29 @@ More examples can be found at <http://wavefilegem.com/examples>.
 
 # Features
 
-* Ability to read and write Wave files with any number of channels in the following formats:
+This gem lets you read and write audio data! You can use it to create Ruby programs that work with sound.
+
+* Read and write Wave files with any number of channels, in the following formats:
   * PCM (8, 16, 24, and 32 bits per sample)
   * Floating Point (32 and 64 bits per sample)
-* Ability to read sample data from a file in any of the supported formats, regardless of the file's actual sample format
+  * These formats can also be read from both "vanilla" Wave files, and also files using `WAVEFORMATEXTENSIBLE` format.
+* Seamlessly convert between sample formats.
+  * You can read sample data from a file in any format supported by this gem, regardless of how the sample data is stored in the actual file:
 
             # Sample data will be returned as 32-bit floating point samples,
             # regardless of the actual sample format in the file.
             Reader.new("some_file.wav", Format.new(:mono, :float_32, 44100))
+
+  * Or, you can create sample data in one format, but write it to a file in a different format. For example, generate samples as floats between -1.0 and 1.0 for convenience, but write them to disk as 16-bit PCM samples:
+
+            # Generate a buffer of floating point samples between -1.0 and 1.0
+            my_samples = generate_float_samples()  # You would write this method yourself
+            buffer = Buffer.new(my_samples, Format.new(:mono, :float_32, 41000))
+            
+            # Write them to a file as 16-bit PCM samples
+            Writer.new("some_file.wav", Format.new(:mono, :pcm_16, 44100)) do |writer|
+              writer.write(buffer)
+            end
 
 * Automatic file management, similar to how `IO.open` works. That is, you can open a file for reading or writing, and if a block is given, the file will automatically be closed when the block exits.
 
@@ -43,7 +58,7 @@ More examples can be found at <http://wavefilegem.com/examples>.
         # At this point, the writer will automatically be closed, no need to do it manually
 
 * Ability to query metadata about Wave files (sample rate, number of channels, number of sample frames, etc.), including files that are in a format this gem can't read or write.
-* Pure Ruby, so no need to compile a separate extension in order to use it.
+* Written in pure Ruby, so it's easy to include in your program. There's no need to compile a separate extension in order to use it.
 
 
 # Current Release: v0.8.0
