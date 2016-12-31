@@ -1,0 +1,17 @@
+riff_chunk:
+  chunk_id: "RIFF"
+  chunk_size: auto
+  wave_format: "WAVE"
+format_chunk:
+  chunk_id: "fmt "
+  chunk_size: 16
+  audio_format: 1
+  channels: 1
+  sample_rate: 44100
+  byte_rate: 88200
+  block_align: 2
+  bits_per_sample: 16
+  #extension_size: 0
+  #valid_bits_per_sample: 16
+  #speaker_mapping: 1
+  #subformat_guid: "\x01\x00\x00\x00\x00\x00\x10\x00\x80\x00\x00\xAA\x00\x38\x9B\x71"
