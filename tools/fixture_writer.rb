@@ -106,7 +106,7 @@ end
 file_writer.write_or_quit("data", "a4")
 file_writer.write_or_quit((TOTAL_SAMPLE_FRAMES * format_chunk["block_align"]), UNSIGNED_INT_32)
 
-def write_square_wave_samples(file_writer, bits_per_sample)
+def write_square_wave_samples(file_writer, bits_per_sample, channel_format)
   if bits_per_sample == 8
     low_val, high_val, pack_code = 88, 167, UNSIGNED_INT_8
   elsif bits_per_sample == 16
@@ -117,18 +117,30 @@ def write_square_wave_samples(file_writer, bits_per_sample)
     low_val, high_val, pack_code = -1_000_000_000, 1_000_000_000, "l<"
   end
 
+  if channel_format == "mono"
+    channel_count = 1
+  elsif channel_format == "stereo"
+    channel_count = 2
+  else
+    channel_count = 0
+  end
+
   SQUARE_WAVE_CYCLE_REPEATS.times do
-    file_writer.write_or_quit(low_val,  pack_code)
-    file_writer.write_or_quit(low_val,  pack_code)
-    file_writer.write_or_quit(low_val,  pack_code)
-    file_writer.write_or_quit(low_val,  pack_code)
-    file_writer.write_or_quit(high_val, pack_code)
-    file_writer.write_or_quit(high_val, pack_code)
-    file_writer.write_or_quit(high_val, pack_code)
-    file_writer.write_or_quit(high_val, pack_code)
+    channel_count.times do
+      file_writer.write_or_quit(low_val,  pack_code)
+      file_writer.write_or_quit(low_val,  pack_code)
+      file_writer.write_or_quit(low_val,  pack_code)
+      file_writer.write_or_quit(low_val,  pack_code)
+    end
+    channel_count.times do
+      file_writer.write_or_quit(high_val, pack_code)
+      file_writer.write_or_quit(high_val, pack_code)
+      file_writer.write_or_quit(high_val, pack_code)
+      file_writer.write_or_quit(high_val, pack_code)
+    end
   end
 end
 
-write_square_wave_samples(file_writer, format_chunk["bits_per_sample"])
+write_square_wave_samples(file_writer, format_chunk["bits_per_sample"], data_chunk["channel_format"])
 
 file_writer.close
