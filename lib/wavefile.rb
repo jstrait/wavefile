@@ -11,7 +11,7 @@ module WaveFile
 
   WAVEFILE_FORMAT_CODE = "WAVE"    # :nodoc:
   FORMAT_CODES = {:pcm => 1, :float => 3, :extensible => 65534}    # :nodoc:
-  SUB_FORMAT_GUID_PCM = "\x01\x00\x00\x00\x00\x00\x10\x00\x80\x00\x00\xAA\x00\x38\x9B\x71".force_encoding("UTF-8")    # :nodoc
+  SUB_FORMAT_GUID_PCM = "\x01\x00\x00\x00\x00\x00\x10\x00\x80\x00\x00\xAA\x00\x38\x9B\x71".force_encoding("UTF-8")    # :nodoc:
   SUB_FORMAT_GUID_FLOAT = "\x03\x00\x00\x00\x00\x00\x10\x00\x80\x00\x00\xAA\x00\x38\x9B\x71".force_encoding("UTF-8")    # :nodoc:
   CHUNK_IDS = {:riff         => "RIFF",
                :format       => "fmt ",
