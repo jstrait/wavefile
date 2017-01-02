@@ -11,3 +11,5 @@ format_chunk:
   byte_rate: 88200
   block_align: 2
   bits_per_sample: 24
+data_chunk:
+  cycle_repeats: 280

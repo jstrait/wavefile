@@ -16,8 +16,6 @@ CHUNK_HEADER_SIZE_IN_BYTES = 8
 RIFF_CHUNK_HEADER_SIZE = 12  # 8 byte FourCC, plus the "WAVE" format code string
 
 SQUARE_WAVE_CYCLE_SAMPLE_FRAMES = 8
-SQUARE_WAVE_CYCLE_REPEATS = 280
-TOTAL_SAMPLE_FRAMES = SQUARE_WAVE_CYCLE_SAMPLE_FRAMES * SQUARE_WAVE_CYCLE_REPEATS
 
 class FileWriter
   def initialize(output_file_name)
@@ -65,11 +63,15 @@ chunks = YAML::load(File.read(yaml_file_name))
 
 riff_chunk = chunks["riff_chunk"]
 format_chunk = chunks["format_chunk"]
+junk_chunk = chunks["junk_chunk"]
+data_chunk = chunks["data_chunk"]
+SQUARE_WAVE_CYCLE_REPEATS = data_chunk["cycle_repeats"]
+TOTAL_SAMPLE_FRAMES = SQUARE_WAVE_CYCLE_SAMPLE_FRAMES * SQUARE_WAVE_CYCLE_REPEATS
+
 if riff_chunk["chunk_size"] == "auto"
   format_chunk_size = format_chunk["chunk_size"] + CHUNK_HEADER_SIZE_IN_BYTES
   riff_chunk["chunk_size"] = format_chunk_size + RIFF_CHUNK_HEADER_SIZE + (TOTAL_SAMPLE_FRAMES * format_chunk["block_align"])
 end
-junk_chunk = chunks["junk_chunk"]
 
 file_writer = FileWriter.new(output_file_name)
 

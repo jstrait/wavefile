@@ -15,3 +15,5 @@ format_chunk:
   #valid_bits_per_sample: 16
   #speaker_mapping: 1
   #subformat_guid: "\x01\x00\x00\x00\x00\x00\x10\x00\x80\x00\x00\xAA\x00\x38\x9B\x71"
+data_chunk:
+  cycle_repeats: 280
