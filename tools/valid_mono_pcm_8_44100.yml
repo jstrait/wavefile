@@ -8,8 +8,8 @@ format_chunk:
   audio_format: 1
   channels: 1
   sample_rate: 44100
-  byte_rate: 88200
-  block_align: 2
+  byte_rate: 44100
+  block_align: 1
   bits_per_sample: 8
 data_chunk:
   cycle_repeats: 280
