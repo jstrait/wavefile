@@ -121,6 +121,8 @@ def write_square_wave_samples(file_writer, bits_per_sample, channel_format)
     channel_count = 1
   elsif channel_format == "stereo"
     channel_count = 2
+  elsif channel_format == "tri"
+    channel_count = 3
   else
     channel_count = 0
   end
