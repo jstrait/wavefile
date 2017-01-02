@@ -64,8 +64,8 @@ chunks = YAML::load(File.read(yaml_file_name))
 riff_chunk = chunks["riff_chunk"]
 format_chunk = chunks["format_chunk"]
 junk_chunk = chunks["junk_chunk"]
-data_chunk = chunks["data_chunk"]
-SQUARE_WAVE_CYCLE_REPEATS = data_chunk["cycle_repeats"]
+data_chunk = chunks["data_chunk"] || {}
+SQUARE_WAVE_CYCLE_REPEATS = data_chunk["cycle_repeats"] || 0
 TOTAL_SAMPLE_FRAMES = SQUARE_WAVE_CYCLE_SAMPLE_FRAMES * SQUARE_WAVE_CYCLE_REPEATS
 
 if riff_chunk["chunk_size"] == "auto"
