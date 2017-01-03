@@ -94,7 +94,11 @@ if format_chunk
   file_writer.write_or_skip(format_chunk["extension_size"], UNSIGNED_INT_16)
   file_writer.write_or_skip(format_chunk["valid_bits_per_sample"], UNSIGNED_INT_16)
   file_writer.write_or_skip(format_chunk["speaker_mapping"], UNSIGNED_INT_32)
-  file_writer.write_or_skip(format_chunk["subformat_guid"]&.force_encoding("UTF-8"), "a16")
+  if format_chunk["subformat_guid"]
+    format_chunk["subformat_guid"].each do |byte|
+      file_writer.write_or_skip(byte, "C")
+    end
+  end
 end
 
 # Write a Junk chunk
