@@ -17,7 +17,7 @@ end
 
 namespace :test do
   task :create_fixtures do
-    ["valid", "invalid"].each do |subfolder|
+    ["valid", "invalid", "unsupported"].each do |subfolder|
       fixtures = Dir.glob("tools/#{subfolder}/*.yml")
 
       fixtures.each do |fixture|
