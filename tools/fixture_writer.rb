@@ -64,8 +64,8 @@ chunks = YAML::load(File.read(yaml_file_name))
 riff_chunk = chunks["riff_chunk"]
 format_chunk = chunks["format_chunk"]
 junk_chunk = chunks["junk_chunk"]
-data_chunk = chunks["data_chunk"] || {}
-SQUARE_WAVE_CYCLE_REPEATS = data_chunk["cycle_repeats"] || 0
+data_chunk = chunks["data_chunk"]
+SQUARE_WAVE_CYCLE_REPEATS = (data_chunk && data_chunk["cycle_repeats"]) || 0
 TOTAL_SAMPLE_FRAMES = SQUARE_WAVE_CYCLE_SAMPLE_FRAMES * SQUARE_WAVE_CYCLE_REPEATS
 
 if riff_chunk["chunk_size"] == "auto"
@@ -103,46 +103,48 @@ if junk_chunk
 end
 
 # Write the Data chunk
-file_writer.write_or_quit("data", "a4")
-file_writer.write_or_quit((TOTAL_SAMPLE_FRAMES * format_chunk["block_align"]), UNSIGNED_INT_32)
+if (data_chunk)
+  file_writer.write_or_quit("data", "a4")
+  file_writer.write_or_quit((TOTAL_SAMPLE_FRAMES * format_chunk["block_align"]), UNSIGNED_INT_32)
 
-def write_square_wave_samples(file_writer, bits_per_sample, channel_format)
-  if bits_per_sample == 8
-    low_val, high_val, pack_code = 88, 167, UNSIGNED_INT_8
-  elsif bits_per_sample == 16
-    low_val, high_val, pack_code = -10000, 10000, "s<"
-  elsif bits_per_sample == 24
-    low_val, high_val, pack_code = -1_000_000, 1_000_000, "24"
-  elsif bits_per_sample == 32
-    low_val, high_val, pack_code = -1_000_000_000, 1_000_000_000, "l<"
-  end
-
-  if channel_format == "mono"
-    channel_count = 1
-  elsif channel_format == "stereo"
-    channel_count = 2
-  elsif channel_format == "tri"
-    channel_count = 3
-  else
-    channel_count = 0
-  end
-
-  SQUARE_WAVE_CYCLE_REPEATS.times do
-    channel_count.times do
-      file_writer.write_or_quit(low_val,  pack_code)
-      file_writer.write_or_quit(low_val,  pack_code)
-      file_writer.write_or_quit(low_val,  pack_code)
-      file_writer.write_or_quit(low_val,  pack_code)
+  def write_square_wave_samples(file_writer, bits_per_sample, channel_format)
+    if bits_per_sample == 8
+      low_val, high_val, pack_code = 88, 167, UNSIGNED_INT_8
+    elsif bits_per_sample == 16
+      low_val, high_val, pack_code = -10000, 10000, "s<"
+    elsif bits_per_sample == 24
+      low_val, high_val, pack_code = -1_000_000, 1_000_000, "24"
+    elsif bits_per_sample == 32
+      low_val, high_val, pack_code = -1_000_000_000, 1_000_000_000, "l<"
     end
-    channel_count.times do
-      file_writer.write_or_quit(high_val, pack_code)
-      file_writer.write_or_quit(high_val, pack_code)
-      file_writer.write_or_quit(high_val, pack_code)
-      file_writer.write_or_quit(high_val, pack_code)
+
+    if channel_format == "mono"
+      channel_count = 1
+    elsif channel_format == "stereo"
+      channel_count = 2
+    elsif channel_format == "tri"
+      channel_count = 3
+    else
+      channel_count = 0
+    end
+
+    SQUARE_WAVE_CYCLE_REPEATS.times do
+      channel_count.times do
+        file_writer.write_or_quit(low_val,  pack_code)
+        file_writer.write_or_quit(low_val,  pack_code)
+        file_writer.write_or_quit(low_val,  pack_code)
+        file_writer.write_or_quit(low_val,  pack_code)
+      end
+      channel_count.times do
+        file_writer.write_or_quit(high_val, pack_code)
+        file_writer.write_or_quit(high_val, pack_code)
+        file_writer.write_or_quit(high_val, pack_code)
+        file_writer.write_or_quit(high_val, pack_code)
+      end
     end
   end
+
+  write_square_wave_samples(file_writer, format_chunk["bits_per_sample"], data_chunk["channel_format"])
 end
-
-write_square_wave_samples(file_writer, format_chunk["bits_per_sample"], data_chunk["channel_format"])
 
 file_writer.close
