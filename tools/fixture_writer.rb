@@ -82,18 +82,20 @@ file_writer.write_or_quit(riff_chunk["chunk_size"], UNSIGNED_INT_32)
 file_writer.write_or_quit(riff_chunk["wave_format"], "a4")
 
 # Write the Format chunk
-file_writer.write_or_quit(format_chunk["chunk_id"], "a4")
-file_writer.write_or_quit(format_chunk["chunk_size"], UNSIGNED_INT_32)
-file_writer.write_or_quit(format_chunk["audio_format"], UNSIGNED_INT_16)
-file_writer.write_or_quit(format_chunk["channels"], UNSIGNED_INT_16)
-file_writer.write_or_quit(format_chunk["sample_rate"], UNSIGNED_INT_32)
-file_writer.write_or_quit(format_chunk["byte_rate"], UNSIGNED_INT_32)
-file_writer.write_or_quit(format_chunk["block_align"], UNSIGNED_INT_16)
-file_writer.write_or_quit(format_chunk["bits_per_sample"], UNSIGNED_INT_16)
-file_writer.write_or_skip(format_chunk["extension_size"], UNSIGNED_INT_16)
-file_writer.write_or_skip(format_chunk["valid_bits_per_sample"], UNSIGNED_INT_16)
-file_writer.write_or_skip(format_chunk["speaker_mapping"], UNSIGNED_INT_32)
-file_writer.write_or_skip(format_chunk["subformat_guid"]&.force_encoding("UTF-8"), "a16")
+if format_chunk
+  file_writer.write_or_quit(format_chunk["chunk_id"], "a4")
+  file_writer.write_or_quit(format_chunk["chunk_size"], UNSIGNED_INT_32)
+  file_writer.write_or_quit(format_chunk["audio_format"], UNSIGNED_INT_16)
+  file_writer.write_or_quit(format_chunk["channels"], UNSIGNED_INT_16)
+  file_writer.write_or_quit(format_chunk["sample_rate"], UNSIGNED_INT_32)
+  file_writer.write_or_quit(format_chunk["byte_rate"], UNSIGNED_INT_32)
+  file_writer.write_or_quit(format_chunk["block_align"], UNSIGNED_INT_16)
+  file_writer.write_or_quit(format_chunk["bits_per_sample"], UNSIGNED_INT_16)
+  file_writer.write_or_skip(format_chunk["extension_size"], UNSIGNED_INT_16)
+  file_writer.write_or_skip(format_chunk["valid_bits_per_sample"], UNSIGNED_INT_16)
+  file_writer.write_or_skip(format_chunk["speaker_mapping"], UNSIGNED_INT_32)
+  file_writer.write_or_skip(format_chunk["subformat_guid"]&.force_encoding("UTF-8"), "a16")
+end
 
 # Write a Junk chunk
 if junk_chunk
