@@ -75,8 +75,8 @@ def read_format_chunk(chunk_id_data, chunk_size_data)
     extension_size_data = read_bytes(UNSIGNED_INT_16)
     display_line "Extension size", "int_16", extension_size_data
     if extension_size_data[:actual] > 0
-      extension_pack_code = "alpha_#{extension_size_data[:actual]}"
-      display_line "Raw extension", extension_pack_code, read_bytes(extension_pack_code) 
+      extension_pack_code = "a#{extension_size_data[:actual]}"
+      display_line "Raw extension", "alpha_#{extension_size_data[:actual]}", read_bytes(extension_pack_code)
     end
   else
     puts "* NO EXTENSION *"
