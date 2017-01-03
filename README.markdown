@@ -108,6 +108,8 @@ However, it does have dependencies for local development, in order to run the te
 
 # Local Development
 
+## Running the Tests
+
 First, install the required development/test dependencies:
 
     bundle install
@@ -115,6 +117,16 @@ First, install the required development/test dependencies:
 Then, to run the tests:
 
     bundle exec rake test
+
+## Generate test fixtures
+
+This isn't required to the run the tests because the fixture files are checked in the repository, but is needed to change one of the fixture `*.wav` files. These files are generated from `*.yml` config files defined in `/tools`.
+
+    rake test:create_fixtures
+
+## Generating RDoc Documentation
+
+    rake rdoc
 
 
 # Contributing
