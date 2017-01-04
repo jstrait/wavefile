@@ -21,7 +21,7 @@ class WriterTest < Minitest::Test
   end
 
   def test_write_basic_file
-    exhaustively_test do |channels, sample_format|
+    exhaustively_test do |format_chunk_format, channels, sample_format|
       file_name = "valid_#{channels}_#{sample_format}_44100.wav"
       format = Format.new(CHANNEL_ALIAS[channels], sample_format, 44100)
 
@@ -38,7 +38,7 @@ class WriterTest < Minitest::Test
   end
 
   def test_write_basic_file_with_a_block
-    exhaustively_test do |channels, sample_format|
+    exhaustively_test do |format_chunk_format, channels, sample_format|
       file_name = "valid_#{channels}_#{sample_format}_44100.wav"
       format = Format.new(CHANNEL_ALIAS[channels], sample_format, 44100)
 
@@ -99,7 +99,7 @@ class WriterTest < Minitest::Test
   end
 
   def test_total_duration
-    exhaustively_test do |channels, sample_format|
+    exhaustively_test do |format_chunk_format, channels, sample_format|
       format = Format.new(CHANNEL_ALIAS[channels], sample_format, 44100)
 
       writer = Writer.new("#{OUTPUT_FOLDER}/total_duration_#{channels}_#{sample_format}_44100.wav", format)

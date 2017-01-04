@@ -118,8 +118,8 @@ class ReaderTest < Minitest::Test
   def test_initialize
     format = Format.new(:stereo, :pcm_16, 22050)
 
-    exhaustively_test do |channels, sample_format|
-      file_name = fixture("valid/valid_#{channels}_#{sample_format}_44100.wav")
+    exhaustively_test do |format_chunk_format, channels, sample_format|
+      file_name = fixture("valid/valid_#{format_chunk_format}#{channels}_#{sample_format}_44100.wav")
 
       # Native format
       [file_name, string_io_from_file(file_name)].each do |io_or_file_name|
@@ -171,8 +171,8 @@ class ReaderTest < Minitest::Test
   end
 
   def test_read_native_format
-    exhaustively_test do |channels, sample_format|
-      buffers = read_file("valid/valid_#{channels}_#{sample_format}_44100.wav", 1024)
+    exhaustively_test do |format_chunk_format, channels, sample_format|
+      buffers = read_file("valid/valid_#{format_chunk_format}#{channels}_#{sample_format}_44100.wav", 1024)
 
       assert_equal(3, buffers.length)
       assert_equal([1024, 1024, 192], buffers.map {|buffer| buffer.samples.length })
@@ -235,8 +235,8 @@ class ReaderTest < Minitest::Test
   end
 
   def test_each_buffer_no_buffer_size_given
-    exhaustively_test do |channels, sample_format|
-      reader = Reader.new(fixture("valid/valid_#{channels}_#{sample_format}_44100.wav"))
+    exhaustively_test do |format_chunk_format, channels, sample_format|
+      reader = Reader.new(fixture("valid/valid_#{format_chunk_format}#{channels}_#{sample_format}_44100.wav"))
 
       buffers = []
       reader.each_buffer {|buffer| buffers << buffer }
@@ -251,8 +251,8 @@ class ReaderTest < Minitest::Test
   end
 
   def test_each_buffer_native_format
-    exhaustively_test do |channels, sample_format|
-      reader = Reader.new(fixture("valid/valid_#{channels}_#{sample_format}_44100.wav"))
+    exhaustively_test do |format_chunk_format, channels, sample_format|
+      reader = Reader.new(fixture("valid/valid_#{format_chunk_format}#{channels}_#{sample_format}_44100.wav"))
 
       buffers = []
       reader.each_buffer(1024) {|buffer| buffers << buffer }
@@ -335,8 +335,8 @@ class ReaderTest < Minitest::Test
   end
 
   def test_sample_counts_manual_reads
-    exhaustively_test do |channels, sample_format|
-      reader = Reader.new(fixture("valid/valid_#{channels}_#{sample_format}_44100.wav"))
+    exhaustively_test do |format_chunk_format, channels, sample_format|
+      reader = Reader.new(fixture("valid/valid_#{format_chunk_format}#{channels}_#{sample_format}_44100.wav"))
       
       assert_equal(0, reader.current_sample_frame)
       assert_equal(2240, reader.total_sample_frames)
@@ -374,10 +374,10 @@ class ReaderTest < Minitest::Test
   end
 
   def test_sample_counts_each_buffer
-    exhaustively_test do |channels, sample_format|
+    exhaustively_test do |format_chunk_format, channels, sample_format|
       expected_results = [ 1024, 2048, 2240 ]
 
-      file_name = fixture("valid/valid_#{channels}_#{sample_format}_44100.wav")
+      file_name = fixture("valid/valid_#{format_chunk_format}#{channels}_#{sample_format}_44100.wav")
       reader = Reader.new(file_name)
 
       assert_equal(0, reader.current_sample_frame)

@@ -53,10 +53,12 @@ module WaveFileIOTestHelper
 
   # Executes the given block against different combinations of number of channels and sample_format
   def exhaustively_test
-    [:mono, :stereo, :tri].each do |channels|
-      [:pcm, :float].each do |sample_format|
-        Format::SUPPORTED_BITS_PER_SAMPLE[sample_format].each do |bits_per_sample|
-          yield(channels, "#{sample_format}_#{bits_per_sample}".to_sym)
+    ["", "extensible_"].each do |format_chunk_format|
+      [:mono, :stereo, :tri].each do |channels|
+        [:pcm, :float].each do |sample_format|
+          Format::SUPPORTED_BITS_PER_SAMPLE[sample_format].each do |bits_per_sample|
+            yield(format_chunk_format, channels, "#{sample_format}_#{bits_per_sample}".to_sym)
+          end
         end
       end
     end
