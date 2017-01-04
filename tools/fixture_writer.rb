@@ -63,6 +63,7 @@ chunks = YAML::load(File.read(yaml_file_name))
 
 riff_chunk = chunks["riff_chunk"]
 format_chunk = chunks["format_chunk"]
+fact_chunk = chunks["fact_chunk"]
 junk_chunk = chunks["junk_chunk"]
 data_chunk = chunks["data_chunk"]
 SQUARE_WAVE_CYCLE_REPEATS = (data_chunk && data_chunk["cycle_repeats"]) || 0
@@ -70,7 +71,8 @@ TOTAL_SAMPLE_FRAMES = SQUARE_WAVE_CYCLE_SAMPLE_FRAMES * SQUARE_WAVE_CYCLE_REPEAT
 
 if riff_chunk["chunk_size"] == "auto"
   format_chunk_size = format_chunk["chunk_size"] + CHUNK_HEADER_SIZE_IN_BYTES
-  riff_chunk["chunk_size"] = format_chunk_size + RIFF_CHUNK_HEADER_SIZE + (TOTAL_SAMPLE_FRAMES * format_chunk["block_align"])
+  fact_chunk_size = fact_chunk ? fact_chunk["chunk_size"] + CHUNK_HEADER_SIZE_IN_BYTES : 0
+  riff_chunk["chunk_size"] = format_chunk_size + fact_chunk_size + RIFF_CHUNK_HEADER_SIZE + (TOTAL_SAMPLE_FRAMES * format_chunk["block_align"])
 end
 
 file_writer = FileWriter.new(output_file_name)
@@ -101,6 +103,16 @@ if format_chunk
   end
 end
 
+if fact_chunk
+  file_writer.write_or_quit(fact_chunk["chunk_id"], "a4")
+  file_writer.write_or_quit(fact_chunk["chunk_size"], UNSIGNED_INT_32)
+  if fact_chunk["sample_count"] == "auto"
+    file_writer.write_or_quit(TOTAL_SAMPLE_FRAMES, UNSIGNED_INT_32)
+  else
+    file_writer.write_or_quit(fact_chunk["sample_count"], UNSIGNED_INT_32)
+  end
+end
+
 # Write a Junk chunk
 if junk_chunk
   file_writer.write_or_quit("JUNK", "a4")
@@ -113,15 +125,23 @@ if (data_chunk)
   file_writer.write_or_quit("data", "a4")
   file_writer.write_or_quit((TOTAL_SAMPLE_FRAMES * format_chunk["block_align"]), UNSIGNED_INT_32)
 
-  def write_square_wave_samples(file_writer, bits_per_sample, channel_format)
-    if bits_per_sample == 8
-      low_val, high_val, pack_code = 88, 167, UNSIGNED_INT_8
-    elsif bits_per_sample == 16
-      low_val, high_val, pack_code = -10000, 10000, "s<"
-    elsif bits_per_sample == 24
-      low_val, high_val, pack_code = -1_000_000, 1_000_000, "24"
-    elsif bits_per_sample == 32
-      low_val, high_val, pack_code = -1_000_000_000, 1_000_000_000, "l<"
+  def write_square_wave_samples(file_writer, audio_format, bits_per_sample, channel_format)
+    if audio_format == 1
+      if bits_per_sample == 8
+        low_val, high_val, pack_code = 88, 167, UNSIGNED_INT_8
+      elsif bits_per_sample == 16
+        low_val, high_val, pack_code = -10000, 10000, "s<"
+      elsif bits_per_sample == 24
+        low_val, high_val, pack_code = -1_000_000, 1_000_000, "24"
+      elsif bits_per_sample == 32
+        low_val, high_val, pack_code = -1_000_000_000, 1_000_000_000, "l<"
+      end
+    elsif audio_format == 3
+      if bits_per_sample == 32
+        low_val, high_val, pack_code = -0.5, 0.5, "e"
+      elsif bits_per_sample == 64
+        low_val, high_val, pack_code = -0.5, 0.5, "E"
+      end
     end
 
     if channel_format == "mono"
@@ -150,7 +170,7 @@ if (data_chunk)
     end
   end
 
-  write_square_wave_samples(file_writer, format_chunk["bits_per_sample"], data_chunk["channel_format"])
+  write_square_wave_samples(file_writer, format_chunk["audio_format"], format_chunk["bits_per_sample"], data_chunk["channel_format"])
 end
 
 file_writer.close
