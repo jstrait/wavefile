@@ -99,6 +99,10 @@ class ReaderTest < Minitest::Test
 
       # Sample rate is 0
       "unsupported/bad_sample_rate.wav",
+
+      # WAVEFORMATEXTENSIBLE, container size doesn't match sample size
+      # Although this is valid, this is not currently supported by this gem
+      "unsupported/extensible_container_size_bigger_than_sample_size.wav",
     ]
 
     unsupported_fixtures.each do |fixture_name|

@@ -129,9 +129,22 @@ class UnvalidatedFormatTest < Minitest::Test
                                                 :sample_rate => 44100,
                                                 :byte_rate => 176400,
                                                 :block_align => 4,
-                                                :bits_per_sample => 16,
+                                                :bits_per_sample => 14,
                                                 :valid_bits_per_sample => 14})
 
     assert_raises(InvalidFormatError) { unvalidated_format.to_validated_format }
+  end
+
+  def test_to_validated_format_wave_format_extensible_valid_bits_per_sample_differs_from_container_size
+    unvalidated_format = UnvalidatedFormat.new({:audio_format => 65534,
+                                                :sub_audio_format_guid => SUB_FORMAT_GUID_PCM,
+                                                :channels => 2,
+                                                :sample_rate => 44100,
+                                                :byte_rate => 176400,
+                                                :block_align => 4,
+                                                :bits_per_sample => 16,
+                                                :valid_bits_per_sample => 14})
+
+    assert_raises(UnsupportedFormatError) { unvalidated_format.to_validated_format }
   end
 end

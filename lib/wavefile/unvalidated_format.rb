@@ -34,6 +34,12 @@ module WaveFile
       end
 
       if @valid_bits_per_sample
+        if @valid_bits_per_sample != @bits_per_sample
+          raise UnsupportedFormatError,
+                "Sample container size (#{@bits_per_sample}) and valid bits per sample (#{@valid_bits_per_sample}) " +
+                "differ."
+        end
+
         bits_per_sample = @valid_bits_per_sample
       else
         bits_per_sample = @bits_per_sample
