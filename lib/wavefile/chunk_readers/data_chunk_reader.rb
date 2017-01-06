@@ -36,12 +36,12 @@ module WaveFile
 
         if @native_format.bits_per_sample == 24
           # Since the sample data is little endian, the 3 bytes will go from least->most significant
-          samples = samples.each_slice(3).map {|least_significant_byte, middle_byte, most_significant_byte|
+          samples = samples.each_slice(3).map do |least_significant_byte, middle_byte, most_significant_byte|
             # Convert the most significant byte from unsigned to signed, since 24-bit samples are signed
             most_significant_byte = [most_significant_byte].pack("c").unpack("c").first
             
             (most_significant_byte << 16) | (middle_byte << 8) | least_significant_byte
-          }
+          end
         end
 
         if @native_format.channels > 1
