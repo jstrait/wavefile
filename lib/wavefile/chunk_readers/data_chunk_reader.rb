@@ -35,13 +35,7 @@ module WaveFile
         @current_sample_frame += sample_frame_count
 
         if @native_format.bits_per_sample == 24
-          # Since the sample data is little endian, the 3 bytes will go from least->most significant
-          samples = samples.each_slice(3).map do |least_significant_byte, middle_byte, most_significant_byte|
-            # Convert the most significant byte from unsigned to signed, since 24-bit samples are signed
-            most_significant_byte = [most_significant_byte].pack("c").unpack("c").first
-            
-            (most_significant_byte << 16) | (middle_byte << 8) | least_significant_byte
-          end
+          samples = convert_24_bit_samples(samples)
         end
 
         if @native_format.channels > 1
@@ -63,6 +57,19 @@ module WaveFile
       # The number of sample frames in the file after the current sample frame
       def sample_frames_remaining
         @total_sample_frames - @current_sample_frame
+      end
+
+      # Since Ruby doesn't have a way to natively extract 24-bit values using pack/unpack,
+      # unsigned bytes are read instead, and then every 3 is manually combined into a
+      # signed 24-bit integer.
+      # Since the sample data is little endian, the 3 bytes will go from least->most significant
+      def convert_24_bit_samples(samples)
+        samples.each_slice(3).map do |least_significant_byte, middle_byte, most_significant_byte|
+          # Convert the most significant byte from unsigned to signed, since 24-bit samples are signed
+          most_significant_byte = [most_significant_byte].pack("c").unpack("c").first
+
+          (most_significant_byte << 16) | (middle_byte << 8) | least_significant_byte
+        end
       end
     end
   end
