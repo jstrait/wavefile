@@ -44,7 +44,7 @@ module WaveFile
     def initialize(io_or_file_name, format=nil)
       if io_or_file_name.is_a?(String)
         @io = File.open(io_or_file_name, "rb")
-        @io_source = :file
+        @io_source = :file_name
       else
         @io = io_or_file_name
         @io_source = :io
@@ -126,7 +126,7 @@ module WaveFile
     # Returns nothing.
     # Raises IOError if the Reader is already closed.
     def close
-      if @io_source == :file
+      if @io_source == :file_name
         @io.close
       end
 

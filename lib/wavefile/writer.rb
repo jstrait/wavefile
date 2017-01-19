@@ -31,7 +31,7 @@ module WaveFile
     def initialize(io_or_file_name, format)
       if io_or_file_name.is_a?(String)
         @io = File.open(io_or_file_name, "wb")
-        @io_source = :file
+        @io_source = :file_name
       else
         @io = io_or_file_name
         @io_source = :io
@@ -114,7 +114,7 @@ module WaveFile
       @io.seek(0)
       write_header(@total_sample_frames)
 
-      if @io_source == :file
+      if @io_source == :file_name
         @io.close
       end
       @closed = true
