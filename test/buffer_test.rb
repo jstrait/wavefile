@@ -39,51 +39,55 @@ class BufferTest < Minitest::Test
 
   def test_convert_buffer_channels
     Format::SUPPORTED_BITS_PER_SAMPLE[:pcm].each do |bits_per_sample|
+      format_code = "pcm_#{bits_per_sample}".to_sym
+
       [44100, 22050].each do |sample_rate|
         # Assert that not changing the number of channels is a no-op
-        b = Buffer.new([-100, 0, 200], Format.new(:mono, bits_per_sample, sample_rate))
-        b.convert!(Format.new(:mono, bits_per_sample, sample_rate))
+        b = Buffer.new([-100, 0, 200], Format.new(:mono, format_code, sample_rate))
+        b.convert!(Format.new(:mono, format_code, sample_rate))
         assert_equal([-100, 0, 200], b.samples)
 
         # Mono => Stereo
-        b = Buffer.new([-100, 0, 200], Format.new(:mono, bits_per_sample, sample_rate))
-        b.convert!(Format.new(:stereo, bits_per_sample, sample_rate))
+        b = Buffer.new([-100, 0, 200], Format.new(:mono, format_code, sample_rate))
+        b.convert!(Format.new(:stereo, format_code, sample_rate))
         assert_equal([[-100, -100], [0, 0], [200, 200]], b.samples)
 
         # Mono => 3-channel
-        b = Buffer.new([-100, 0, 200], Format.new(:mono, bits_per_sample, sample_rate))
-        b.convert!(Format.new(3, bits_per_sample, sample_rate))
+        b = Buffer.new([-100, 0, 200], Format.new(:mono, format_code, sample_rate))
+        b.convert!(Format.new(3, format_code, sample_rate))
         assert_equal([[-100, -100, -100], [0, 0, 0], [200, 200, 200]], b.samples)
 
         # Stereo => Mono
-        b = Buffer.new([[-100, -100], [0, 0], [200, 50], [8, 1]], Format.new(:stereo, bits_per_sample, sample_rate))
-        b.convert!(Format.new(:mono, bits_per_sample, sample_rate))
+        b = Buffer.new([[-100, -100], [0, 0], [200, 50], [8, 1]], Format.new(:stereo, format_code, sample_rate))
+        b.convert!(Format.new(:mono, format_code, sample_rate))
         assert_equal([-100, 0, 125, 4], b.samples)
 
         # 3-channel => Mono
         b = Buffer.new([[-100, -100, -100], [0, 0, 0], [200, 50, 650], [5, 1, 1], [5, 1, 2]],
-                       Format.new(3, bits_per_sample, sample_rate))
-        b.convert!(Format.new(:mono, bits_per_sample, sample_rate))
+                       Format.new(3, format_code, sample_rate))
+        b.convert!(Format.new(:mono, format_code, sample_rate))
         assert_equal([-100, 0, 300, 2, 2], b.samples)
 
         # 3-channel => Stereo
         b = Buffer.new([[-100, -100, -100], [1, 2, 3], [200, 50, 650]],
-                       Format.new(3, bits_per_sample, sample_rate))
-        b.convert!(Format.new(:stereo, bits_per_sample, sample_rate))
+                       Format.new(3, format_code, sample_rate))
+        b.convert!(Format.new(:stereo, format_code, sample_rate))
         assert_equal([[-100, -100], [1, 2], [200, 50]], b.samples)
 
         # Unsupported conversion (4-channel => 3-channel)
         b = Buffer.new([[-100, 200, -300, 400], [1, 2, 3, 4]],
-                       Format.new(4, bits_per_sample, sample_rate))
-        assert_raises(BufferConversionError) { b.convert!(Format.new(3, bits_per_sample, sample_rate)) }
+                       Format.new(4, format_code, sample_rate))
+        assert_raises(BufferConversionError) { b.convert!(Format.new(3, format_code, sample_rate)) }
       end
     end
   end
 
   def test_convert_buffer_bits_per_sample_no_op
     Format::SUPPORTED_BITS_PER_SAMPLE[:pcm].each do |bits_per_sample|
-      b = Buffer.new([0, 128, 255], Format.new(:mono, bits_per_sample, 44100))
-      b.convert!(Format.new(:mono, bits_per_sample, 44100))
+      format_code = "pcm_#{bits_per_sample}".to_sym
+
+      b = Buffer.new([0, 128, 255], Format.new(:mono, format_code, 44100))
+      b.convert!(Format.new(:mono, format_code, 44100))
 
       # Target format is the same as the original format, so the sample data should not change
       assert_equal([0, 128, 255], b.samples)
