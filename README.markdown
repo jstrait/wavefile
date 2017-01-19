@@ -75,6 +75,8 @@ Released on ____, this version includes these changes:
 * `Duration` now includes an overridden definition of `==`, so that two `Duration` objects will evaluate to equal if they represent the same amount of time. Thanks to [Christopher Smith](https://github.com/chrylis) for suggesting this feature.
 * `Reader.file_name` and `Writer.file_name` have been removed. When a `Reader` or `Writer` instance is constructed from an `IO` instance, this field wouldn't have a sensible value. Since I'm not sure of a specific reason for why this field would be used, removing it.
 * A `ReaderClosedError` is now raised when attempting to read from a closed `Reader` instance, instead of `IOError`.
+* A `WriterClosedError` is now raised when attempting to read from a closed `Writer` instance, instead of `IOError`.
+* The long deprecated ability to provide the sample format for a `Format` instance as an integer (implying PCM format) has been removed. For example, this is no longer valid: `Format.new(:mono, 16, 44100)`. Instead, use `Format.new(:mono, :pcm_16, 44100)`.
 
 
 # Compatibility
