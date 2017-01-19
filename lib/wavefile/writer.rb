@@ -28,6 +28,14 @@ module WaveFile
     # block terminates, the Writer will be automatically closed (and no more sample data can be written). 
     #
     # If no block is given, then sample data can be written until the close method is called.
+    #
+    # io_or_file_name - The name of the wave file to read from, or an open IO object to read from.
+    #                   Only implementations of IO that support seeking are supported, because
+    #                   closing the Writer requires seeking back to the beginning of the file to
+    #                   update information in the file's header.
+    # format - The sample data format that the file should contain
+    #
+    # Returns a Writer object that is ready to start writing the specified file's sample data.
     def initialize(io_or_file_name, format)
       if io_or_file_name.is_a?(String)
         @io = File.open(io_or_file_name, "wb")
