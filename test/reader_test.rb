@@ -329,13 +329,35 @@ class ReaderTest < Minitest::Test
       # No-op
     end
     assert_equal(true, reader.closed?)
+
+    # Constructed from an File IO instance
+    io = File.open(fixture("valid/valid_mono_pcm_16_44100.wav"), "rb")
+    reader = Reader.new(io)
+    assert_equal(false, reader.closed?)
+    reader.close
+    assert(reader.closed?)
+    assert_equal(false, io.closed?)
+
+    # Constructed from an StringIO instance
+    io = StringIO.new(File.read(fixture("valid/valid_mono_pcm_16_44100.wav")))
+    reader = Reader.new(io)
+    assert_equal(false, reader.closed?)
+    reader.close
+    assert(reader.closed?)
+    assert_equal(false, io.closed?)
   end
 
   def test_read_after_close
     reader = Reader.new(fixture("valid/valid_mono_pcm_16_44100.wav"))
     reader.read(1024)
     reader.close
-    assert_raises(IOError) { reader.read(1024) }
+    assert_raises(ReaderClosedError) { reader.read(1024) }
+
+    io = File.open(fixture("valid/valid_mono_pcm_16_44100.wav"), "rb")
+    reader = Reader.new(io)
+    reader.read(1024)
+    reader.close
+    assert_raises(ReaderClosedError) { reader.read(1024) }
   end
 
   def test_sample_counts_manual_reads

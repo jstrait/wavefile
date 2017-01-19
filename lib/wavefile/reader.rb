@@ -12,6 +12,8 @@ module WaveFile
   # stored in a format that Reader doesn't understand.
   class UnsupportedFormatError < FormatError; end
 
+  # Error that is raised when trying to read from a Reader instance that has been closed.
+  class ReaderClosedError < IOError; end
 
   # Provides the ability to read sample data out of a wave file, as well as query a 
   # wave file about its metadata (e.g. number of channels, sample rate, etc).
@@ -42,9 +44,13 @@ module WaveFile
     def initialize(io_or_file_name, format=nil)
       if io_or_file_name.is_a?(String)
         @io = File.open(io_or_file_name, "rb")
+        @io_source = :file
       else
         @io = io_or_file_name
+        @io_source = :io
       end
+
+      @closed = false
 
       begin
         riff_reader = ChunkReaders::RiffReader.new(@io, format)
@@ -99,22 +105,32 @@ module WaveFile
     # Raises UnsupportedFormatError if file is in a format that can't be read by this gem
     # Raises EOFError if no samples could be read due to reaching the end of the file
     def read(sample_frame_count)
+      if @closed
+        raise ReaderClosedError
+      end
+
       @data_chunk_reader.read(sample_frame_count)
     end
 
 
     # Returns true if the Reader is closed, and false if it is open and available for reading.
     def closed?
-      @io.closed?
+      @closed
     end
 
 
     # Closes the Reader. After a Reader is closed, no more sample data can be read from it.
+    # Note: If the Reader is constructed from an open IO instance (as opposed to a file name),
+    # the IO instance will _not_ be closed. You'll have to manually close it yourself.
     #
     # Returns nothing.
     # Raises IOError if the Reader is already closed.
     def close
-      @io.close
+      if @io_source == :file
+        @io.close
+      end
+
+      @closed = true
     end
 
     # Returns a Duration instance for the total number of sample frames in the file

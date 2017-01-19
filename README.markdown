@@ -74,6 +74,7 @@ Released on ____, this version includes these changes:
 * `Reader.each_buffer()` no longer requires the user to specify the size of each buffer. A specific size in sample frames can still be given (for example, `Reader.each_buffer(1024)`), but if no buffer size is given a default value will be used.
 * `Duration` now includes an overridden definition of `==`, so that two `Duration` objects will evaluate to equal if they represent the same amount of time. Thanks to [Christopher Smith](https://github.com/chrylis) for suggesting this feature.
 * `Reader.file_name` and `Writer.file_name` have been removed. When a `Reader` or `Writer` instance is constructed from an `IO` instance, this field wouldn't have a sensible value. Since I'm not sure of a specific reason for why this field would be used, removing it.
+* A `ReaderClosedError` is now raised when attempting to read from a closed `Reader` instance, instead of `IOError`.
 
 
 # Compatibility
