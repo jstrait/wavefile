@@ -103,6 +103,7 @@ module WaveFile
     #
     # Returns a Buffer containing sample_frame_count sample frames
     # Raises UnsupportedFormatError if file is in a format that can't be read by this gem
+    # Raises ReaderClosedError if the Writer has been closed.
     # Raises EOFError if no samples could be read due to reaching the end of the file
     def read(sample_frame_count)
       if @closed
@@ -124,8 +125,12 @@ module WaveFile
     # the IO instance will _not_ be closed. You'll have to manually close it yourself.
     #
     # Returns nothing.
-    # Raises IOError if the Reader is already closed.
+    # Raises ReaderClosedError if the Reader is already closed.
     def close
+      if @closed
+        raise ReaderClosedError
+      end
+
       if @io_source == :file_name
         @io.close
       end

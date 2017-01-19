@@ -69,7 +69,7 @@ module WaveFile
     # Appends the sample data in the given Buffer to the end of the wave file.
     #
     # Returns the number of sample frames that have been written to the file so far.
-    # Raises IOError if the Writer has been closed.
+    # Raises WriterClosedError if the Writer has been closed.
     def write(buffer)
       if @closed
         raise WriterClosedError
@@ -104,8 +104,12 @@ module WaveFile
     # the block exits).
     #
     # Returns nothing.
-    # Raises IOError if the Writer is already closed.
+    # Raises WriterClosedError if the Writer is already closed.
     def close
+      if @closed
+        raise WriterClosedError
+      end
+
       # The RIFF specification requires that each chunk be aligned to an even number of bytes,
       # even if the byte count is an odd number. Therefore if an odd number of bytes has been
       # written, write an empty padding byte.
