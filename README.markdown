@@ -8,7 +8,8 @@ For more info, check out the website: <http://wavefilegem.com/>
 
 This is a short example that shows how to append three separate Wave files into a single file:
 
-```require 'wavefile'
+```ruby
+require 'wavefile'
 include WaveFile
 
 FILES_TO_APPEND = ["file1.wav", "file2.wav", "file3.wav"]
