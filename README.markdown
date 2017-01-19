@@ -8,18 +8,19 @@ For more info, check out the website: <http://wavefilegem.com/>
 
 This is a short example that shows how to append three separate Wave files into a single file:
 
-    require 'wavefile'
-    include WaveFile
-    
-    FILES_TO_APPEND = ["file1.wav", "file2.wav", "file3.wav"]
+```require 'wavefile'
+include WaveFile
 
-    Writer.new("append.wav", Format.new(:stereo, :pcm_16, 44100)) do |writer|
-      FILES_TO_APPEND.each do |file_name|
-        Reader.new(file_name).each_buffer do |buffer|
-          writer.write(buffer)
-        end
-      end
+FILES_TO_APPEND = ["file1.wav", "file2.wav", "file3.wav"]
+
+Writer.new("append.wav", Format.new(:stereo, :pcm_16, 44100)) do |writer|
+  FILES_TO_APPEND.each do |file_name|
+    Reader.new(file_name).each_buffer do |buffer|
+      writer.write(buffer)
     end
+  end
+end
+```
 
 More examples can be found at <http://wavefilegem.com/examples>.
 
