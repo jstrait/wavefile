@@ -95,9 +95,7 @@ module WaveFile
     end
 
     def normalize_format_code(format_code)
-      if SUPPORTED_BITS_PER_SAMPLE[:pcm].include? format_code
-        [:pcm, format_code]
-      elsif format_code == :float
+      if format_code == :float
         [:float, 32]
       else
         sample_format, bits_per_sample = format_code.to_s.split("_")
