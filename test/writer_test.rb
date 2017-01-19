@@ -42,14 +42,16 @@ class WriterTest < Minitest::Test
       file_name = "valid_#{channels}_#{sample_format}_44100.wav"
       format = Format.new(CHANNEL_ALIAS[channels], sample_format, 44100)
 
-      writer = Writer.new("#{OUTPUT_FOLDER}/#{file_name}", format) do |w|
-        4.times do
-          w.write(Buffer.new(SQUARE_WAVE_CYCLE[channels][sample_format] * 70, format))
+      ["#{OUTPUT_FOLDER}/#{file_name}", StringIO.new].each do |io_or_file_name|
+        writer = Writer.new(io_or_file_name, format) do |w|
+          4.times do
+            w.write(Buffer.new(SQUARE_WAVE_CYCLE[channels][sample_format] * 70, format))
+          end
         end
-      end
 
-      assert_equal(read_file(:expected, file_name), read_file(:actual, file_name))
-      assert(writer.closed?)
+        assert_equal(read_file(:expected, file_name), read_file(:actual, file_name))
+        assert(writer.closed?)
+      end
     end
   end
 
@@ -59,93 +61,109 @@ class WriterTest < Minitest::Test
     format_16_bit_mono  = Format.new(:mono,   :pcm_16, 22050)
     format_16bit_stereo = Format.new(:stereo, :pcm_16, 44100)
 
-    writer = Writer.new("#{OUTPUT_FOLDER}/#{file_name}", format_8bit_mono)
-    writer.write(Buffer.new(SQUARE_WAVE_CYCLE[:stereo][:pcm_16] * 128, format_16bit_stereo))
-    writer.write(Buffer.new(SQUARE_WAVE_CYCLE[:mono][:pcm_16] * 128,   format_16_bit_mono))
-    writer.write(Buffer.new(SQUARE_WAVE_CYCLE[:stereo][:pcm_16] * 24,  format_16bit_stereo))
-    writer.close
+    ["#{OUTPUT_FOLDER}/#{file_name}", StringIO.new].each do |io_or_file_name|
+      writer = Writer.new(io_or_file_name, format_8bit_mono)
+      writer.write(Buffer.new(SQUARE_WAVE_CYCLE[:stereo][:pcm_16] * 128, format_16bit_stereo))
+      writer.write(Buffer.new(SQUARE_WAVE_CYCLE[:mono][:pcm_16] * 128,   format_16_bit_mono))
+      writer.write(Buffer.new(SQUARE_WAVE_CYCLE[:stereo][:pcm_16] * 24,  format_16bit_stereo))
+      writer.close
 
-    assert_equal(read_file(:expected, file_name), read_file(:actual, file_name))
+      assert_equal(read_file(:expected, file_name), read_file(:actual, file_name))
+    end
   end
 
   def test_write_file_with_padding_byte
     file_name = "valid_mono_pcm_8_44100_with_padding_byte.wav"
     format = Format.new(:mono, :pcm_8, 44100)
 
-    writer = Writer.new("#{OUTPUT_FOLDER}/#{file_name}", format)
-    writer.write(Buffer.new(SQUARE_WAVE_CYCLE[:mono][:pcm_8] * 128, format))
-    writer.write(Buffer.new(SQUARE_WAVE_CYCLE[:mono][:pcm_8] * 128, format))
-    writer.write(Buffer.new(SQUARE_WAVE_CYCLE[:mono][:pcm_8] * 23 + [88, 88, 88, 88, 167, 167, 167], format))
-    writer.close
+    ["#{OUTPUT_FOLDER}/#{file_name}", StringIO.new].each do |io_or_file_name|
+      writer = Writer.new(io_or_file_name, format)
+      writer.write(Buffer.new(SQUARE_WAVE_CYCLE[:mono][:pcm_8] * 128, format))
+      writer.write(Buffer.new(SQUARE_WAVE_CYCLE[:mono][:pcm_8] * 128, format))
+      writer.write(Buffer.new(SQUARE_WAVE_CYCLE[:mono][:pcm_8] * 23 + [88, 88, 88, 88, 167, 167, 167], format))
+      writer.close
 
-    assert_equal(read_file(:expected, file_name), read_file(:actual, file_name))
+      assert_equal(read_file(:expected, file_name), read_file(:actual, file_name))
+    end
   end
 
   def test_closed?
-    writer = Writer.new("#{OUTPUT_FOLDER}/closed_test.wav", Format.new(:mono, :pcm_16, 44100))
-    assert_equal(false, writer.closed?)
-    writer.close
-    assert(writer.closed?)
+    io = StringIO.new
+    assert_equal(false, io.closed?)
+
+    ["#{OUTPUT_FOLDER}/closed_test.wav", io].each do |io_or_file_name|
+      writer = Writer.new(io_or_file_name, Format.new(:mono, :pcm_16, 44100))
+      assert_equal(false, writer.closed?)
+      writer.close
+      assert(writer.closed?)
+    end
+
+    assert_equal(false, io.closed?)
+    io.close
   end
 
   def test_attempt_to_write_after_close
     format = Format.new(:mono, :pcm_8, 44100)
 
-    writer = Writer.new("#{OUTPUT_FOLDER}/write_after_close.wav", format)
-    writer.write(Buffer.new([1, 2, 3, 4], format))
-    writer.close
+    ["#{OUTPUT_FOLDER}/write_after_close.wav", StringIO.new].each do |io_or_file_name|
+      writer = Writer.new(io_or_file_name, format)
+      writer.write(Buffer.new([1, 2, 3, 4], format))
+      writer.close
 
-    assert_raises(IOError) { writer.write(Buffer.new([5, 6, 7, 8], format)) }
+      assert_raises(WriterClosedError) { writer.write(Buffer.new([5, 6, 7, 8], format)) }
+    end
   end
 
   def test_total_duration
     exhaustively_test do |format_chunk_format, channels, sample_format|
       format = Format.new(CHANNEL_ALIAS[channels], sample_format, 44100)
 
-      writer = Writer.new("#{OUTPUT_FOLDER}/total_duration_#{channels}_#{sample_format}_44100.wav", format)
+      ["#{OUTPUT_FOLDER}/total_duration_#{channels}_#{sample_format}_44100.wav", StringIO.new].each do |io_or_file_name|
+        writer = Writer.new(io_or_file_name, format)
 
-      assert_equal(0, writer.total_sample_frames)
-      duration = writer.total_duration
-      assert_equal(0, duration.sample_frame_count)
-      assert_equal(44100, duration.sample_rate)
-      assert_equal(0, duration.hours)
-      assert_equal(0, duration.minutes)
-      assert_equal(0, duration.seconds)
-      assert_equal(0, duration.milliseconds)
+        assert_equal(0, writer.total_sample_frames)
+        duration = writer.total_duration
+        assert_equal(0, duration.sample_frame_count)
+        assert_equal(44100, duration.sample_rate)
+        assert_equal(0, duration.hours)
+        assert_equal(0, duration.minutes)
+        assert_equal(0, duration.seconds)
+        assert_equal(0, duration.milliseconds)
 
-      writer.write(Buffer.new(SQUARE_WAVE_CYCLE[channels][sample_format] * 2756, format))
+        writer.write(Buffer.new(SQUARE_WAVE_CYCLE[channels][sample_format] * 2756, format))
 
-      assert_equal(8 * 2756, writer.total_sample_frames)
-      duration = writer.total_duration
-      assert_equal(8 * 2756, duration.sample_frame_count)
-      assert_equal(44100, duration.sample_rate)
-      assert_equal(0, duration.hours)
-      assert_equal(0, duration.minutes)
-      assert_equal(0, duration.seconds)
-      assert_equal(499, duration.milliseconds)
+        assert_equal(8 * 2756, writer.total_sample_frames)
+        duration = writer.total_duration
+        assert_equal(8 * 2756, duration.sample_frame_count)
+        assert_equal(44100, duration.sample_rate)
+        assert_equal(0, duration.hours)
+        assert_equal(0, duration.minutes)
+        assert_equal(0, duration.seconds)
+        assert_equal(499, duration.milliseconds)
 
-      writer.write(Buffer.new(SQUARE_WAVE_CYCLE[channels][sample_format] * 2756, format))
-      writer.write(Buffer.new(SQUARE_WAVE_CYCLE[channels][sample_format] * 2756, format))
+        writer.write(Buffer.new(SQUARE_WAVE_CYCLE[channels][sample_format] * 2756, format))
+        writer.write(Buffer.new(SQUARE_WAVE_CYCLE[channels][sample_format] * 2756, format))
 
-      assert_equal(8 * 2756 * 3, writer.total_sample_frames)
-      duration = writer.total_duration
-      assert_equal(8 * 2756 * 3, duration.sample_frame_count)
-      assert_equal(44100, duration.sample_rate)
-      assert_equal(0, duration.hours)
-      assert_equal(0, duration.minutes)
-      assert_equal(1, duration.seconds)
-      assert_equal(499, duration.milliseconds)
+        assert_equal(8 * 2756 * 3, writer.total_sample_frames)
+        duration = writer.total_duration
+        assert_equal(8 * 2756 * 3, duration.sample_frame_count)
+        assert_equal(44100, duration.sample_rate)
+        assert_equal(0, duration.hours)
+        assert_equal(0, duration.minutes)
+        assert_equal(1, duration.seconds)
+        assert_equal(499, duration.milliseconds)
 
-      writer.close
+        writer.close
 
-      assert_equal(8 * 2756 * 3, writer.total_sample_frames)
-      duration = writer.total_duration
-      assert_equal(8 * 2756 * 3, duration.sample_frame_count)
-      assert_equal(44100, duration.sample_rate)
-      assert_equal(0, duration.hours)
-      assert_equal(0, duration.minutes)
-      assert_equal(1, duration.seconds)
-      assert_equal(499, duration.milliseconds)
+        assert_equal(8 * 2756 * 3, writer.total_sample_frames)
+        duration = writer.total_duration
+        assert_equal(8 * 2756 * 3, duration.sample_frame_count)
+        assert_equal(44100, duration.sample_rate)
+        assert_equal(0, duration.hours)
+        assert_equal(0, duration.minutes)
+        assert_equal(1, duration.seconds)
+        assert_equal(499, duration.milliseconds)
+      end
     end
   end
 
@@ -154,17 +172,20 @@ class WriterTest < Minitest::Test
   def test_exception_with_block
     format = Format.new(:mono, :pcm_8, 44100)
     samples = [1, 2, 3, 4, 5, 6]
-    Writer.new("#{OUTPUT_FOLDER}/exception_with_block.wav", format) do |writer|
-      begin
-        writer.write(Buffer.new(samples, format))
-        1 / 0 # cause divide-by-zero exception
-      rescue
-        # catch the exception and ignore, so test passes OK
+
+    ["#{OUTPUT_FOLDER}/exception_with_block.wav", StringIO.new].each do |io_or_file_name|
+      Writer.new(io_or_file_name, format) do |writer|
+        begin
+          writer.write(Buffer.new(samples, format))
+          1 / 0 # cause divide-by-zero exception
+        rescue
+          # catch the exception and ignore, so test passes
+        end
       end
+
+      reader = Reader.new("#{OUTPUT_FOLDER}/exception_with_block.wav")
+      assert_equal(samples.size, reader.total_sample_frames)
     end
-    
-    reader = Reader.new("#{OUTPUT_FOLDER}/exception_with_block.wav")
-    assert_equal(samples.size, reader.total_sample_frames)
   end
 
 private

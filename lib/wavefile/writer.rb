@@ -1,4 +1,7 @@
 module WaveFile
+  # Error that is raised when trying to write to a Writer instance that has been closed.
+  class WriterClosedError < IOError; end
+
   # Provides the ability to write data to a wave file.
   #
   # When a Writer is constructed it can be given a block. All samples should be written inside this 
@@ -28,10 +31,14 @@ module WaveFile
     def initialize(io_or_file_name, format)
       if io_or_file_name.is_a?(String)
         @io = File.open(io_or_file_name, "wb")
+        @io_source = :file
       else
         @io = io_or_file_name
+        @io_source = :io
       end
       @format = format
+
+      @closed = false
 
       @total_sample_frames = 0
       @pack_code = PACK_CODES[format.sample_format][format.bits_per_sample]
@@ -56,6 +63,10 @@ module WaveFile
     # Returns the number of sample frames that have been written to the file so far.
     # Raises IOError if the Writer has been closed.
     def write(buffer)
+      if @closed
+        raise WriterClosedError
+      end
+
       samples = buffer.convert(@format).samples
 
       if @format.bits_per_sample == 24 && @format.sample_format == :pcm
@@ -72,7 +83,7 @@ module WaveFile
 
     # Returns true if the Writer is closed, and false if it is open and available for writing.
     def closed?
-      @io.closed?
+      @closed
     end
 
 
@@ -103,7 +114,10 @@ module WaveFile
       @io.seek(0)
       write_header(@total_sample_frames)
 
-      @io.close
+      if @io_source == :file
+        @io.close
+      end
+      @closed = true
     end
 
     # Returns a Duration instance for the number of sample frames that have been written so far
