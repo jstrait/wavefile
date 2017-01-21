@@ -67,17 +67,19 @@ This gem lets you read and write audio data! You can use it to create Ruby progr
 
 Released on ____, this version includes these changes:
 
-* Wave files with the format WAVEFORMATEXTENSIBLE can now be read. Some notes:
-  * Only WAVEFORMATEXTENSIBLE files with sub format of PCM or IEEE_FLOAT can be read.
-  * The channel mapping fields are not exposed by the gem
-  * It's not possible to write files with WAVEFORMATEXTENSIBLE format
+* Wave files using the WAVEFORMATEXTENSIBLE format can now be read, with these restrictions:
+  * Only WAVEFORMATEXTENSIBLE files with sub format of PCM or IEEE_FLOAT are supported. Put differently, the same sample formats supported in vanilla Wave files are supported in WAVEFORMATEXTENSIBLE files.
+  * The channel speaker mapping field is not exposed.
   * The number of valid bits per sample must match the sample container size. For example, if a file has a container size of 24 bits and each sample is 24 bits, then it can be read. If the container size is 32 bits and each sample is 24 bits, it _can't_ be read.
-* `Reader.new()` and `Writer.new()` now can be constructed with an open IO instance. Previously, only a file name (given by a String) could be given. The first argument of each constructor indicates where to read/write: if the argument is an IO instance it will be used for reading/writing, and if the argument is a String, it will be treated as the name of the file to open for reading/writing. Thanks to [@taf2](https://github.com/taf2) for suggesting this feature and providing a pull request.
+  * It's not possible to write files using WAVEFORMATEXTENSIBLE format in this version.
+* `Reader.new()` and `Writer.new()` can now read/write from an open `IO` instance. Previously, they could only be constructed from a file name (given by a String).
+  * The first argument of each constructor indicates where to read/write: if the argument is an IO instance it will be used for reading/writing, and if the argument is a String, it will be treated as the name of the file to open for reading/writing. Thanks to [@taf2](https://github.com/taf2) for suggesting this feature and providing a pull request.
+  * `Writer` should only be used with an `IO` implementation that supports seeking. When a `Writer` is closed, it needs to sync back to the beginning of the file to write the file's size to the Wave file header. This will cause an error if the `IO` instance doesn't support seeking.
 * `Reader.each_buffer()` no longer requires the user to specify the size of each buffer. A specific size in sample frames can still be given (for example, `Reader.each_buffer(1024)`), but if no buffer size is given a default value will be used.
-* `Duration` now includes an overridden definition of `==`, so that two `Duration` objects will evaluate to equal if they represent the same amount of time. Thanks to [Christopher Smith](https://github.com/chrylis) for suggesting this feature.
-* `Reader.file_name` and `Writer.file_name` have been removed. When a `Reader` or `Writer` instance is constructed from an `IO` instance, this field wouldn't have a sensible value. Since I'm not sure of a specific reason for why this field would be used, removing it.
-* A `ReaderClosedError` is now raised when attempting to read from a closed `Reader` instance, instead of `IOError`.
-* A `WriterClosedError` is now raised when attempting to read from a closed `Writer` instance, instead of `IOError`.
+* Two `Duration` objects will now evaluate to equal if they represent the same amount of time, due to an overridden definition of `==`. Thanks to [Christopher Smith](https://github.com/chrylis) for suggesting this feature.
+* `Reader.file_name` and `Writer.file_name` have been removed. When a `Reader` or `Writer` instance is constructed from an `IO` instance, this field wouldn't necessarily have a sensible value. Since I don't know of an obvious use-case for these fields, going ahead and removing them altogether.
+* A `ReaderClosedError` is now raised (instead of `IOError`) when attempting to read from a closed `Reader` instance. However, `ReaderClosedError` extends `IOError`.
+* A `WriterClosedError` is now raised (instead of `IOError`) when attempting to read from a closed `Writer` instance. However, `ReaderClosedError` extends `IOError`.
 * The long deprecated ability to provide the sample format for a `Format` instance as an integer (implying PCM format) has been removed. For example, this is no longer valid: `Format.new(:mono, 16, 44100)`. Instead, use `Format.new(:mono, :pcm_16, 44100)`.
 
 
