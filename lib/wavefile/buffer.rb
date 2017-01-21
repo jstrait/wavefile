@@ -20,6 +20,16 @@ module WaveFile
     #           each sample frame. For example, [[0.5, 0.2], [0.1, 0.6], [-0.2, 0.4], ...] 
     #           for a stereo file.
     #
+    #           The individual samples should match the given format:
+    #
+    #           :pcm_8    - Integer between 0 and 255
+    #           :pcm_16   - Integer between -32_768 and 32_767
+    #           :pcm_24   - Integer between -8_388_608 and 8_388_607
+    #           :pcm_32   - Integer between 2_147_483_648 and 2_147_483_647
+    #           :float    - Float between -1.0 and 1.0
+    #           :float_32 - Float between -1.0 and 1.0
+    #           :float_64 - Float between -1.0 and 1.0
+    #
     # format - A Format instance which describes the sample format of the sample array. 
     #
     #          Note that the sample array is not compared with the format to make sure 
@@ -28,11 +38,14 @@ module WaveFile
     #
     # Examples
     #
-    #   samples = ([0.5] * 50) + ([-0.5] * 50)   # A 440Hz mono square wave
+    #   samples = ([0.5] * 50) + ([-0.5] * 50)   # A floating point 440Hz mono square wave
     #   buffer = Buffer.new(samples, Format.new(:mono, :float, 44100)
     #
     #   samples = ([0.5, 0.5] * 50) + ([-0.5, -0.5] * 50)   # A 440Hz stereo square wave
     #   buffer = Buffer.new(samples, Format.new(2, :float, 44100)
+    #
+    #   samples = ([16000] * 50) + ([-16000] * 50)   # A 16-bit PCM 440Hz mono square wave
+    #   buffer = Buffer.new(samples, Format.new(1, :pcm_16, 44100)
     #
     # Returns a constructed Buffer.
     def initialize(samples, format)
