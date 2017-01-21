@@ -1,7 +1,7 @@
 module WaveFile
-  # Public: Error that is raised when a file is not in a format supported by this Gem,
-  # because it's a valid Wave file whose format is not supported by this Gem,
-  # because it's a not a valid Wave file period, etc.
+  # Public: Error that is raised when a file is not in a format supported by this Gem.
+  # For example, because it's a valid Wave file whose format is not supported by
+  # this Gem. Or, because it's a not a valid Wave file period.
   class FormatError < StandardError; end
 
   # Public: Error that is raised when trying to read from a file that is either not a wave file,
