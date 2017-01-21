@@ -87,18 +87,28 @@ class WriterTest < Minitest::Test
     end
   end
 
-  def test_closed?
+  def test_close_when_constructed_from_file_name
+    writer = Writer.new("#{OUTPUT_FOLDER}/closed_test.wav", Format.new(:mono, :pcm_16, 44100))
+    assert_equal(false, writer.closed?)
+    writer.close
+    assert(writer.closed?)
+  end
+
+  def test_close_when_constructed_from_io
     io = StringIO.new
     assert_equal(false, io.closed?)
+    assert_equal(0, io.pos)
 
-    ["#{OUTPUT_FOLDER}/closed_test.wav", io].each do |io_or_file_name|
-      writer = Writer.new(io_or_file_name, Format.new(:mono, :pcm_16, 44100))
-      assert_equal(false, writer.closed?)
-      writer.close
-      assert(writer.closed?)
-    end
+    writer = Writer.new(io, Format.new(:mono, :pcm_16, 44100))
+    assert_equal(false, writer.closed?)
+
+    writer.write(Buffer.new(SQUARE_WAVE_CYCLE[:mono][:pcm_16] * 128, Format.new(:mono, :pcm_16, 44100)))
+
+    writer.close
+    assert(writer.closed?)
 
     assert_equal(false, io.closed?)
+    assert_equal(2092, io.pos)    # 44 bytes for header, plus 2 bytes per sample, with 8 * 128 samples 
     io.close
   end
 

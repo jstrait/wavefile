@@ -128,6 +128,12 @@ module WaveFile
 
       if @io_source == :file_name
         @io.close
+      else
+        # If writing to an injected IO instance, seek back to the end of the file, which
+        # seems like a more expected place for the position to be than at the end of the
+        # header. For example, seeking back to the end allows writing consecutive files
+        # to the same IO without overwriting the previous file.
+        @io.seek(0, IO::SEEK_END)
       end
       @closed = true
     end
