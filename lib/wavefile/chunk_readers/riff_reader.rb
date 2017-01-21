@@ -1,8 +1,8 @@
 module WaveFile
   module ChunkReaders
-    # Used to read the RIFF chunks in a wave file up until the data chunk. Thus is can be used
-    # to open a wave file and "queue it up" to the start of the actual sample data, as well as
-    # extract information out of pre-data chunks, such as the format chunk.
+    # Internal: Used to read the RIFF chunks in a wave file up until the data chunk. Thus it
+    # can be used to open a wave file and "queue it up" to the start of the actual sample data,
+    # as well as extract information out of pre-data chunks, such as the format chunk.
     class RiffReader    # :nodoc:
       def initialize(file, format=nil)
         @file = file

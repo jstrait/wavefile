@@ -6,6 +6,7 @@ require 'wavefile/chunk_readers/format_chunk_reader'
 require 'wavefile/chunk_readers/data_chunk_reader'
 
 module WaveFile
+  # Internal
   module ChunkReaders    # :nodoc:
   end
 end

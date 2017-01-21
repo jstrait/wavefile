@@ -1,18 +1,18 @@
 module WaveFile
-  # Error that is raised when an attempt is made to perform an unsupported or undefined 
-  # conversion between two sample data formats. For example, converting a Buffer with 
-  # 3 channels into a Buffer with 2 channels is undefined.
+  # Public: Error that is raised when an attempt is made to perform an unsupported or
+  # undefined conversion between two sample data formats. For example, converting a Buffer
+  # with 3 channels into a Buffer with 2 channels is undefined.
   class BufferConversionError < StandardError; end
 
 
-  # Represents a collection of samples in a certain format (e.g. 16-bit mono). 
-  # Reader returns sample data contained in Buffers, and Writer expects incoming sample 
+  # Public: Represents a collection of samples in a certain format (e.g. 16-bit mono).
+  # Reader returns sample data contained in Buffers, and Writer expects incoming sample
   # data to be contained in a Buffer as well.
   #
   # Contains methods to convert the sample data in the buffer to a different format.
   class Buffer
 
-    # Creates a new Buffer.
+    # Public: Creates a new Buffer.
     #
     # samples - An array of samples. If the Format has 1 channel (i.e. is mono), this 
     #           should be a flat array of samples such as [0.5, 0.4, -0.3, ...]. If the 
@@ -41,8 +41,8 @@ module WaveFile
     end
 
 
-    # Creates a new Buffer containing the sample data of this Buffer, but converted to 
-    # a different format.
+    # Public: Creates a new Buffer containing the sample data of this Buffer, but converted
+    # to a different format.
     #
     # new_format - The format that the sample data should be converted to
     #
@@ -58,8 +58,8 @@ module WaveFile
     end
 
 
-    # Converts the sample data contained in the Buffer to a new format. The sample data 
-    # is converted in place, so the existing Buffer is modified.
+    # Public: Converts the sample data contained in the Buffer to a new format. The sample
+    # data is converted in place, so the existing Buffer is modified.
     #
     # new_format - The format that the sample data should be converted to
     #
@@ -76,26 +76,26 @@ module WaveFile
     end
 
 
-    # Returns the number of channels the buffer's sample data has
+    # Public: Returns the number of channels the buffer's sample data has
     def channels
       @format.channels
     end
 
 
-    # Returns the bits per sample of the buffer's sample data
+    # Public: Returns the bits per sample of the buffer's sample data
     def bits_per_sample
       @format.bits_per_sample
     end
 
 
-    # Returns the sample rate of the buffer's sample data
+    # Public: Returns the sample rate of the buffer's sample data
     def sample_rate
       @format.sample_rate
     end
 
-    # Returns the sample data contained in the Buffer as an Array. If the Format has 
-    # 1 channel, the Array will be a flat list of samples. If the Format has 2 or more 
-    # channels, the Array will include sub arrays for each sample frame, with a sample 
+    # Public: Returns the sample data contained in the Buffer as an Array. If the Format
+    # has 1 channel, the Array will be a flat list of samples. If the Format has 2 or
+    # more channels, the Array will include sub arrays for each sample frame, with a sample
     # for each channel.
     #
     # Examples

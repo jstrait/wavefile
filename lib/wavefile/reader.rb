@@ -1,9 +1,9 @@
 module WaveFile
-  # Error that is raised when trying to read from a Reader instance that has been closed.
+  # Public: Error that is raised when trying to read from a Reader instance that has been closed.
   class ReaderClosedError < IOError; end
 
-  # Provides the ability to read sample data out of a wave file, as well as query a 
-  # wave file about its metadata (e.g. number of channels, sample rate, etc).
+  # Public: Provides the ability to read sample data out of a wave file, as well as query
+  # a wave file about its metadata (e.g. number of channels, sample rate, etc).
   #
   # When constructing a Reader a block can be given. All data should be read inside this 
   # block, and when the block exits the Reader will automatically be closed.
@@ -18,7 +18,8 @@ module WaveFile
   #     # Read sample data here
   #     reader.close
   class Reader
-    # Returns a Reader object that is ready to start reading the specified file's sample data. 
+    # Public: Returns a Reader object that is ready to start reading the specified file's
+    # sample data. 
     #
     # io_or_file_name - The name of the wave file to read from,
     #                   or an open IO object to read from.
@@ -57,9 +58,9 @@ module WaveFile
     end
 
 
-    # Reads sample data of the into successive Buffers of the specified size, until there is no more 
-    # sample data to be read. When all sample data has been read, the Reader is automatically closed. 
-    # Each Buffer is passed to the given block.
+    # Public: Reads sample data of the into successive Buffers of the specified size, until there is
+    # no more sample data to be read. When all sample data has been read, the Reader is automatically
+    # closed. Each Buffer is passed to the given block.
     #
     # Note that sample_frame_count indicates the number of sample frames to read, not number of samples. 
     # A sample frame include one sample for each channel. For example, if sample_frame_count is 1024, then 
@@ -82,8 +83,9 @@ module WaveFile
     end
 
 
-    # Reads the specified number of sample frames from the wave file into a Buffer. Note that the Buffer will have 
-    # at most sample_frame_count sample frames, but could have less if the file doesn't have enough remaining.
+    # Public: Reads the specified number of sample frames from the wave file into a Buffer. Note that the Buffer
+    # will have at most sample_frame_count sample frames, but could have less if the file doesn't have enough
+    # remaining.
     #
     # sample_frame_count - The number of sample frames to read. Note that each sample frame includes a sample for 
     #                      each channel.
@@ -101,13 +103,13 @@ module WaveFile
     end
 
 
-    # Returns true if the Reader is closed, and false if it is open and available for reading.
+    # Public: Returns true if the Reader is closed, and false if it is open and available for reading.
     def closed?
       @closed
     end
 
 
-    # Closes the Reader. After a Reader is closed, no more sample data can be read from it.
+    # Public: Closes the Reader. After a Reader is closed, no more sample data can be read from it.
     # Note: If the Reader is constructed from an open IO instance (as opposed to a file name),
     # the IO instance will _not_ be closed. You'll have to manually close it yourself.
     #
@@ -125,33 +127,33 @@ module WaveFile
       @closed = true
     end
 
-    # Returns a Duration instance for the total number of sample frames in the file
+    # Public: Returns a Duration instance for the total number of sample frames in the file
     def total_duration
       Duration.new(total_sample_frames, @data_chunk_reader.format.sample_rate)
     end
 
-    # Returns a Format object describing the sample format of the Wave file being read.
+    # Public: Returns a Format object describing the sample format of the Wave file being read.
     # This is not necessarily the format that the sample data will be read as - to determine
     # that, use #format.
     def native_format
       @data_chunk_reader.raw_native_format
     end
 
-    # Returns true if this is a valid Wave file and contains sample data that is in a format
+    # Public: Returns true if this is a valid Wave file and contains sample data that is in a format
     # that this class can read, and returns false if this is a valid Wave file but does not
     # contain a sample format supported by this class.
     def readable_format?
       @data_chunk_reader.readable_format
     end
 
-    # Returns a Format object describing how sample data is being read from the Wave file (number of 
+    # Public: Returns a Format object describing how sample data is being read from the Wave file (number of 
     # channels, sample format and bits per sample, etc). Note that this might be different from the 
     # underlying format of the Wave file on disk.
     def format
       @data_chunk_reader.format
     end
 
-    # Returns the index of the sample frame which is "cued up" for reading. I.e., the index 
+    # Public: Returns the index of the sample frame which is "cued up" for reading. I.e., the index 
     # of the next sample frame that will be read. A sample frame contains a single sample 
     # for each channel. So if there are 1,000 sample frames in a stereo file, this means 
     # there are 1,000 left-channel samples and 1,000 right-channel samples.
@@ -159,7 +161,7 @@ module WaveFile
       @data_chunk_reader.current_sample_frame
     end
 
-    # Returns the total number of sample frames in the file. A sample frame contains a single 
+    # Public: Returns the total number of sample frames in the file. A sample frame contains a single 
     # sample for each channel. So if there are 1,000 sample frames in a stereo file, this means 
     # there are 1,000 left-channel samples and 1,000 right-channel samples.
     def total_sample_frames

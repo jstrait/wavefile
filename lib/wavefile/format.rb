@@ -1,18 +1,18 @@
 module WaveFile
-  # Error that is raised when a file is not in a format supported by this Gem,
+  # Public: Error that is raised when a file is not in a format supported by this Gem,
   # because it's a valid Wave file whose format is not supported by this Gem,
   # because it's a not a valid Wave file period, etc.
   class FormatError < StandardError; end
 
-  # Error that is raised when trying to read from a file that is either not a wave file,
+  # Public: Error that is raised when trying to read from a file that is either not a wave file,
   # or that is not valid according to the wave file spec.
   class InvalidFormatError < FormatError; end
 
-  # Error that is raised when trying to read from a valid wave file that has its sample data
+  # Public: Error that is raised when trying to read from a valid wave file that has its sample data
   # stored in a format that Reader doesn't understand.
   class UnsupportedFormatError < FormatError; end
 
-  # Represents information about the data format for a Wave file, such as number of 
+  # Public: Represents information about the data format for a Wave file, such as number of 
   # channels, bits per sample, sample rate, and so forth. A Format instance is used 
   # by Reader to indicate what format to read samples out as, and by Writer to 
   # indicate what format to write samples as.
@@ -20,7 +20,7 @@ module WaveFile
   # This class is immutable - once a new Format is constructed, it can't be modified.
   class Format
 
-    # Constructs a new immutable Format.
+    # Public: Constructs a new immutable Format.
     #
     # channels - The number of channels in the format. Can either be a Fixnum 
     #            (e.g. 1, 2, 3) or the symbols :mono (equivalent to 1) or 
@@ -54,49 +54,54 @@ module WaveFile
       @byte_rate = @block_align * @sample_rate
     end
 
-    # Returns true if the format has 1 channel, false otherwise.
+    # Public: Returns true if the format has 1 channel, false otherwise.
     def mono?
       @channels == 1
     end
 
-    # Returns true if the format has 2 channels, false otherwise.
+    # Public: Returns true if the format has 2 channels, false otherwise.
     def stereo?
       @channels == 2
     end
 
-    # Returns the number of channels, such as 1 or 2. This will always return a 
+    # Public: Returns the number of channels, such as 1 or 2. This will always return a 
     # Fixnum, even if the number of channels is specified with a symbol (e.g. :mono) 
     # in the constructor.
     attr_reader :channels
 
-    # Returns a symbol indicating the sample format, such as :pcm or :float
+    # Public: Returns a symbol indicating the sample format, such as :pcm or :float
     attr_reader :sample_format
 
-    # Returns the number of bits per sample, such as 8, 16, 24, 32, or 64.
+    # Public: Returns the number of bits per sample, such as 8, 16, 24, 32, or 64.
     attr_reader :bits_per_sample
 
-    # Returns the number of samples per second, such as 44100.
+    # Public: Returns the number of samples per second, such as 44100.
     attr_reader :sample_rate
 
-    # Returns the number of bytes in each sample frame. For example, in a 16-bit stereo file, 
+    # Public: Returns the number of bytes in each sample frame. For example, in a 16-bit stereo file, 
     # this will be 4 (2 bytes for each 16-bit sample, times 2 channels).
     attr_reader :block_align
 
-    # Returns the number of bytes contained in 1 second of sample data. 
+    # Public: Returns the number of bytes contained in 1 second of sample data. 
     # Is equivalent to block_align * sample_rate.
     attr_reader :byte_rate
 
   private
 
+    # Internal
     VALID_CHANNEL_RANGE     = 1..65535    # :nodoc:
+    # Internal
     VALID_SAMPLE_RATE_RANGE = 1..4_294_967_296    # :nodoc:
 
+    # Internal
     SUPPORTED_SAMPLE_FORMATS = [:pcm, :float]    # :nodoc:
+    # Internal
     SUPPORTED_BITS_PER_SAMPLE = {
                                   :pcm => [8, 16, 24, 32],
                                   :float => [32, 64],
                                 }    # :nodoc:
 
+    # Internal
     def normalize_channels(channels)
       if channels == :mono
         return 1
@@ -107,6 +112,7 @@ module WaveFile
       end
     end
 
+    # Internal
     def normalize_format_code(format_code)
       if format_code == :float
         [:float, 32]
@@ -116,6 +122,7 @@ module WaveFile
       end
     end
 
+    # Internal
     def validate_sample_format(candidate_sample_format)
       unless SUPPORTED_SAMPLE_FORMATS.include? candidate_sample_format
         raise InvalidFormatError,
@@ -124,6 +131,7 @@ module WaveFile
       end
     end
 
+    # Internal
     def validate_channels(candidate_channels)
       unless VALID_CHANNEL_RANGE === candidate_channels
         raise InvalidFormatError,
@@ -131,6 +139,7 @@ module WaveFile
       end
     end
 
+    # Internal
     def validate_bits_per_sample(candidate_sample_format, candidate_bits_per_sample)
       unless SUPPORTED_BITS_PER_SAMPLE[candidate_sample_format].include? candidate_bits_per_sample
         raise InvalidFormatError,
@@ -139,6 +148,7 @@ module WaveFile
       end
     end
 
+    # Internal
     def validate_sample_rate(candidate_sample_rate)
       unless VALID_SAMPLE_RATE_RANGE === candidate_sample_rate
         raise InvalidFormatError,

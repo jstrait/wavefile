@@ -1,8 +1,8 @@
 module WaveFile
-  # Error that is raised when trying to write to a Writer instance that has been closed.
+  # Public: Error that is raised when trying to write to a Writer instance that has been closed.
   class WriterClosedError < IOError; end
 
-  # Provides the ability to write data to a wave file.
+  # Public: Provides the ability to write data to a wave file.
   #
   # When a Writer is constructed it can be given a block. All samples should be written inside this 
   # block, and when the block exits the file will automatically be closed:
@@ -19,10 +19,10 @@ module WaveFile
   #    writer.close
   class Writer
 
-    # Returns a constructed Writer object which is available for writing sample data to the specified 
-    # file (via the write method). When all sample data has been written, the Writer should be closed. 
-    # Note that the wave file being written to will NOT be valid (and playable in other programs) until 
-    # the Writer has been closed.
+    # Public: Returns a constructed Writer object which is available for writing sample data to the
+    # specified file (via the write method). When all sample data has been written, the Writer should
+    # be closed. Note that the wave file being written to will NOT be valid (and playable in other programs)
+    # until the Writer has been closed.
     #
     # If a block is given to this method, sample data can be written inside the given block. When the 
     # block terminates, the Writer will be automatically closed (and no more sample data can be written). 
@@ -66,7 +66,7 @@ module WaveFile
     end
 
 
-    # Appends the sample data in the given Buffer to the end of the wave file.
+    # Public: Appends the sample data in the given Buffer to the end of the wave file.
     #
     # Returns the number of sample frames that have been written to the file so far.
     # Raises WriterClosedError if the Writer has been closed.
@@ -89,13 +89,15 @@ module WaveFile
     end
 
 
-    # Returns true if the Writer is closed, and false if it is open and available for writing.
+    # Public: Returns true if the Writer is closed, and false if it is open and available
+    # for writing.
     def closed?
       @closed
     end
 
 
-    # Closes the Writer. After a Writer is closed, no more sample data can be written to it.
+    # Public: Closes the Writer. After a Writer is closed, no more sample data can be written
+    # to it.
     #
     # Note that the wave file will NOT be valid until this method is called. The wave file 
     # format requires certain information about the amount of sample data, and this can't be 
@@ -138,30 +140,30 @@ module WaveFile
       @closed = true
     end
 
-    # Returns a Duration instance for the number of sample frames that have been written so far
+    # Public: Returns a Duration instance for the number of sample frames that have been written so far
     def total_duration
       Duration.new(@total_sample_frames, @format.sample_rate)
     end
 
-    # Returns a Format object describing the Wave file being written (number of channels, sample 
+    # Public: Returns a Format object describing the Wave file being written (number of channels, sample 
     # format and bits per sample, sample rate, etc.)
     attr_reader :format
 
-    # Returns the number of samples (per channel) that have been written to the file so far. 
+    # Public: Returns the number of samples (per channel) that have been written to the file so far. 
     # For example, if 1000 "left" samples and 1000 "right" samples have been written to a stereo file, 
     # this will return 1000.
     attr_reader :total_sample_frames
 
   private
 
-    # Padding value written to the end of chunks whose payload is an odd number of bytes. The RIFF 
+    # Internal: Padding value written to the end of chunks whose payload is an odd number of bytes. The RIFF 
     # specification requires that each chunk be aligned to an even number of bytes, even if the byte 
     # count is an odd number.
     #
     # See http://www-mmsp.ece.mcgill.ca/Documents/AudioFormats/WAVE/Docs/riffmci.pdf, page 11.
     EMPTY_BYTE = "\000"    # :nodoc:
 
-    # The number of bytes at the beginning of a wave file before the sample data in the data chunk 
+    # Internal: The number of bytes at the beginning of a wave file before the sample data in the data chunk 
     # starts, assuming this canonical format:
     #
     # RIFF Chunk Header (12 bytes)
@@ -172,9 +174,10 @@ module WaveFile
     # All wave files written by Writer use this canonical format.
     CANONICAL_HEADER_BYTE_LENGTH = {:pcm => 36, :float => 50}    # :nodoc:
 
+    # Internal
     FORMAT_CHUNK_BYTE_LENGTH = {:pcm => 16, :float => 18}    # :nodoc:
 
-    # Writes the RIFF chunk header, format chunk, and the header for the data chunk. After this
+    # Internal: Writes the RIFF chunk header, format chunk, and the header for the data chunk. After this
     # method is called the file will be "queued up" and ready for writing actual sample data.
     def write_header(sample_frame_count)
       sample_data_byte_count = sample_frame_count * @format.block_align

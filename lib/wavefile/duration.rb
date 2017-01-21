@@ -1,6 +1,6 @@
 module WaveFile
-  # Calculates playback time given the number of sample frames and the sample rate. For 
-  # example, you can use this to calculate how long a given Wave file is. 
+  # Public: Calculates playback time given the number of sample frames and the sample rate.
+  # For example, you can use this to calculate how long a given Wave file is. 
   #
   # The hours, minutes, seconds, and milliseconds fields return values like you would 
   # see on a stopwatch, and not the total amount of time in that unit. For example, a 
@@ -10,7 +10,7 @@ module WaveFile
   #
   # This class is immutable - once a new Duration is constructed, it can't be modified.
   class Duration
-    # Constructs a new immutable Duration.
+    # Public: Constructs a new immutable Duration.
     #
     # sample_frame_count - The number of sample frames, i.e. the number 
     #                      samples in each channel.
@@ -55,7 +55,7 @@ module WaveFile
       @milliseconds = (sample_frame_count / sample_frames_per_millisecond).floor
     end
 
-    # Returns true if this Duration represents that same amount of time as
+    # Public: Returns true if this Duration represents that same amount of time as
     # other_duration.
     #
     # Two Duration instances will evaluate as == if they correspond
@@ -77,11 +77,22 @@ module WaveFile
       @milliseconds == other_duration.milliseconds
     end
  
+    # Public
     attr_reader :sample_frame_count
-    attr_reader :sample_rate 
+
+    # Public
+    attr_reader :sample_rate
+
+    # Public
     attr_reader :hours
+
+    # Public
     attr_reader :minutes
+
+    # Public
     attr_reader :seconds
+
+    # Public
     attr_reader :milliseconds
   end
 end

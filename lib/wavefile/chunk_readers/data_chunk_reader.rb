@@ -1,5 +1,6 @@
 module WaveFile
   module ChunkReaders
+    # Internal
     class DataChunkReader < BaseChunkReader    # :nodoc:
       def initialize(file, chunk_size, raw_native_format, format=nil)
         @file = file
