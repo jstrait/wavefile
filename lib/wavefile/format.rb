@@ -1,4 +1,17 @@
 module WaveFile
+  # Error that is raised when a file is not in a format supported by this Gem,
+  # because it's a valid Wave file whose format is not supported by this Gem,
+  # because it's a not a valid Wave file period, etc.
+  class FormatError < StandardError; end
+
+  # Error that is raised when trying to read from a file that is either not a wave file,
+  # or that is not valid according to the wave file spec.
+  class InvalidFormatError < FormatError; end
+
+  # Error that is raised when trying to read from a valid wave file that has its sample data
+  # stored in a format that Reader doesn't understand.
+  class UnsupportedFormatError < FormatError; end
+
   # Represents information about the data format for a Wave file, such as number of 
   # channels, bits per sample, sample rate, and so forth. A Format instance is used 
   # by Reader to indicate what format to read samples out as, and by Writer to 
