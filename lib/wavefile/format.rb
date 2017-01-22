@@ -27,8 +27,8 @@ module WaveFile
     #            :stereo (equivalent to 2).
     # format_code - A symbol indicating the format of each sample. Consists of
     #               two parts: a format code, and the bits per sample. The valid
-    #               values are :pcm_8, :pcm_16, :pcm_32, :float_32, :float_64,
-    #               and :float (equivalent to :float_32)
+    #               values are :pcm_8, :pcm_16, :pcm_24, :pcm_32, :float_32,
+    #               :float_64, and :float (equivalent to :float_32)
     # sample_rate - The number of samples per second, such as 44100
     #
     # Examples
