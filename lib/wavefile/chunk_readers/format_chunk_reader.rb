@@ -2,8 +2,8 @@ module WaveFile
   module ChunkReaders
     # Internal
     class FormatChunkReader < BaseChunkReader    # :nodoc:
-      def initialize(file, chunk_size)
-        @file = file
+      def initialize(io, chunk_size)
+        @io = io
         @chunk_size = chunk_size
       end
 
@@ -49,7 +49,7 @@ module WaveFile
 
       def read_chunk_body(chunk_id, chunk_size)
         begin
-          return @file.sysread(chunk_size)
+          return @io.sysread(chunk_size)
         rescue EOFError
           raise_error InvalidFormatError, "The #{chunk_id} chunk has incomplete data."
         end

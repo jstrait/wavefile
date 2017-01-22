@@ -2,8 +2,8 @@ module WaveFile
   module ChunkReaders
     # Internal
     class DataChunkReader < BaseChunkReader    # :nodoc:
-      def initialize(file, chunk_size, raw_native_format, format=nil)
-        @file = file
+      def initialize(io, chunk_size, raw_native_format, format=nil)
+        @io = io
         @raw_native_format = raw_native_format
 
         @total_sample_frames = chunk_size / @raw_native_format.block_align
@@ -32,7 +32,7 @@ module WaveFile
           sample_frame_count = sample_frames_remaining
         end
 
-        samples = @file.sysread(sample_frame_count * @native_format.block_align).unpack(@pack_code)
+        samples = @io.sysread(sample_frame_count * @native_format.block_align).unpack(@pack_code)
         @current_sample_frame += sample_frame_count
 
         if @native_format.bits_per_sample == 24
