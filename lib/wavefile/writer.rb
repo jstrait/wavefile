@@ -68,8 +68,29 @@ module WaveFile
 
     # Public: Appends the sample data in the given Buffer to the end of the wave file.
     #
+    # buffer - A Buffer instance containing the sample data to be written to the
+    #          file. The format of the Buffer doesn't have to match the format of the
+    #          file being written to by the Writer - if it doesn't match, it will
+    #          automatically be converted to the correct format.
+    #
+    # Examples
+    #
+    #   square_wave_samples = ([0.5] * 100) + ([-0.5] * 100)
+    #   buffer = Buffer.new(square_wave_samples, Format.new(1, :float, 44100))
+    #
+    #   Writer.new("my_file.wav", Format.new(:stereo, :pcm_16, 44100)) do |writer|
+    #     writer.write(buffer)
+    #   end
+    #
+    #   Writer.new("my_file.wav", Format.new(:stereo, :pcm_16, 44100)) do |writer|
+    #     writer.write(buffer)
+    #   end
+    #   # This will raise WriterClosedError because the Writer has already been closed.
+    #   writer.write(buffer)
+    #
     # Returns the number of sample frames that have been written to the file so far.
     # Raises WriterClosedError if the Writer has been closed.
+    # Raises BufferConversionError if the Buffer can't be converted to the Writer's format
     def write(buffer)
       if @closed
         raise WriterClosedError
