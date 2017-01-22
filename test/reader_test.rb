@@ -103,6 +103,10 @@ class ReaderTest < Minitest::Test
       # WAVEFORMATEXTENSIBLE, container size doesn't match sample size
       # Although this is valid, this is not currently supported by this gem
       "unsupported/extensible_container_size_bigger_than_sample_size.wav",
+
+      # WAVEFORMATEXTENSIBLE, the subformat GUID is not a valid format
+      # supported by this gem.
+      "unsupported/extensible_unsupported_subformat_guid.wav",
     ]
 
     unsupported_fixtures.each do |fixture_name|
