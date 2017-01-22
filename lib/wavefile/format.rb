@@ -22,7 +22,7 @@ module WaveFile
 
     # Public: Constructs a new immutable Format.
     #
-    # channels - The number of channels in the format. Can either be a Fixnum
+    # channels - The number of channels in the format. Can either be an Integer
     #            (e.g. 1, 2, 3) or the symbols :mono (equivalent to 1) or
     #            :stereo (equivalent to 2).
     # format_code - A symbol indicating the format of each sample. Consists of
@@ -65,7 +65,7 @@ module WaveFile
     end
 
     # Public: Returns the number of channels, such as 1 or 2. This will always return a
-    # Fixnum, even if the number of channels is specified with a symbol (e.g. :mono)
+    # Integer, even if the number of channels is specified with a symbol (e.g. :mono)
     # in the constructor.
     attr_reader :channels
 
