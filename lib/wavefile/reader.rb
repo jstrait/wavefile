@@ -62,6 +62,10 @@ module WaveFile
     # no more sample data to be read. When all sample data has been read, the Reader is automatically
     # closed. Each Buffer is passed to the given block.
     #
+    # If the Reader is constructed from an open IO, the IO is NOT closed after all sample data is
+    # read. However, the Reader will be closed and any attempt to continue to read from it will
+    # result in an error.
+    #
     # Note that sample_frame_count indicates the number of sample frames to read, not number of samples.
     # A sample frame include one sample for each channel. For example, if sample_frame_count is 1024, then
     # for a stereo file 1024 samples will be read from the left channel, and 1024 samples will be read from
@@ -71,7 +75,27 @@ module WaveFile
     #                      of sample frames read into the final Buffer could be less than this size, if there
     #                      are not enough remaining.
     #
-    # Returns nothing.
+    # Examples
+    #
+    #   # sample_frame_count not given, so default buffer size
+    #   Reader.new("my_file.wav").each_buffer do |buffer|
+    #     puts "#{buffer.samples.length} sample frames read"
+    #   end
+    #
+    #   # Specific sample_frame_count given for each buffer
+    #   Reader.new("my_file.wav").each_buffer(1024) do |buffer|
+    #     puts "#{buffer.samples.length} sample frames read"
+    #   end
+    #
+    #   # Reading each buffer from an externally created IO
+    #   file = File.open("my_file.wav", "rb")
+    #   Reader.new(file).each_buffer do |buffer|
+    #     puts "#{buffer.samples.length} sample frames read"
+    #   end
+    #   # Although Reader is closed, file still needs to be manually closed
+    #   file.close
+    #
+    # Returns nothing. Has side effect of closing the Reader.
     def each_buffer(sample_frame_count=4096)
       begin
         while true do
