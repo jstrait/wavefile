@@ -47,15 +47,16 @@ Released on ____, this version includes these changes:
   * The channel speaker mapping field is not exposed.
   * The number of valid bits per sample must match the sample container size. For example, if a file has a container size of 24 bits and each sample is 24 bits, then it can be read. If the container size is 32 bits and each sample is 24 bits, it _can't_ be read.
   * It's not possible to write files using WAVEFORMATEXTENSIBLE format in this version.
-* `Reader.new()` and `Writer.new()` can now read/write from an open `IO` instance. Previously, they could only be constructed from a file name (given by a String).
-  * The first argument of each constructor indicates where to read/write: if the argument is an IO instance it will be used for reading/writing, and if the argument is a String, it will be treated as the name of the file to open for reading/writing. Thanks to [@taf2](https://github.com/taf2) for suggesting this feature and providing a pull request.
+* `Reader.new()` and `Writer.new()` can now read/write from an open `IO` instance. Previously, they could only be constructed from a file name (given by a String). Thanks to [@taf2](https://github.com/taf2) for suggesting this feature and providing a pull request.
+  * The first argument of each constructor indicates where to read/write: if the argument is an IO instance it will be used for reading/writing, and if the argument is a String, it will be treated as the name of the file to open for reading/writing.
   * `Writer` should only be used with an `IO` implementation that supports seeking. When a `Writer` is closed, it needs to sync back to the beginning of the file to write the file's size to the Wave file header. This will cause an error if the `IO` instance doesn't support seeking.
 * `Reader.each_buffer()` no longer requires the user to specify the size of each buffer. A specific size in sample frames can still be given (for example, `Reader.each_buffer(1024)`), but if no buffer size is given a default value will be used.
 * Two `Duration` objects will now evaluate to equal if they represent the same amount of time, due to an overridden definition of `==`. Thanks to [Christopher Smith](https://github.com/chrylis) for suggesting this feature.
-* `Reader.file_name` and `Writer.file_name` have been removed. When a `Reader` or `Writer` instance is constructed from an `IO` instance, this field wouldn't necessarily have a sensible value. Since I don't know of an obvious use-case for these fields, going ahead and removing them altogether.
-* The long deprecated ability to provide the sample format for a `Format` instance as an integer (implying PCM format) has been removed. For example, this is no longer valid: `Format.new(:mono, 16, 44100)`. Instead, use `Format.new(:mono, :pcm_16, 44100)`.
 * A `ReaderClosedError` is now raised (instead of `IOError`) when attempting to read from a closed `Reader` instance. However, `ReaderClosedError` extends `IOError`.
 * A `WriterClosedError` is now raised (instead of `IOError`) when attempting to read from a closed `Writer` instance. However, `ReaderClosedError` extends `IOError`.
+* **Backwards Incompatible Changes**
+  * `Reader.file_name` and `Writer.file_name` have been removed. When a `Reader` or `Writer` instance is constructed from an `IO` instance, this field wouldn't necessarily have a sensible value. Since I don't know of an obvious use-case for these fields, going ahead and removing them altogether.
+  * The long deprecated ability to provide the sample format for a `Format` instance as an integer (implying PCM format) has been removed. For example, this is no longer valid: `Format.new(:mono, 16, 44100)`. Instead, use `Format.new(:mono, :pcm_16, 44100)`.
 
 
 # Compatibility
