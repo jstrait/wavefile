@@ -8,8 +8,8 @@ Rake::TestTask.new do |t|
 end
 
 RDoc::Task.new do |rdoc|
-  rdoc.rdoc_files.include("README.markdown", "lib")
-  rdoc.main = "README.markdown"
+  rdoc.rdoc_files.include("README.rdoc", "lib")
+  rdoc.main = "README.rdoc"
   rdoc.title = "WaveFile Gem - Read/Write *.wav Files with Ruby"
   rdoc.markup = "tomdoc"
   rdoc.rdoc_dir = "doc"
