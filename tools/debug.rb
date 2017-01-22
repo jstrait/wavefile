@@ -50,22 +50,23 @@ def display_line(label, expected, h)
     formatted_bytes = bytes
   end
 
-  puts "#{(label + ":").ljust(20)} #{expected.ljust(10)} | #{actual.to_s.ljust(10).gsub("\n\n", "")} | #{formatted_bytes}"
+  puts "#{(label + ":").ljust(22)} #{expected.ljust(10)} | #{actual.to_s.ljust(10).gsub("\n\n", "")} | #{formatted_bytes}"
 end
 
 
 def display_chunk_header(heading, expected_chunk_id, actual_chunk_id, chunk_size)
   puts heading
-  puts "================================================================================"
+  puts "=================================================================================="
   display_line "Chunk ID", expected_chunk_id, actual_chunk_id
   display_line "Chunk size", "int_32", chunk_size
-  puts "--------------------------------+------------+----------------------------------"
+  puts "----------------------------------+------------+----------------------------------"
 end
 
 
 def read_format_chunk(chunk_id_data, chunk_size_data)
   display_chunk_header("Format Chunk", "fmt ", chunk_id_data, chunk_size_data)
-  display_line "Audio format",    "int_16", read_bytes(UNSIGNED_INT_16)
+  audio_format_code = read_bytes(UNSIGNED_INT_16)
+  display_line "Audio format",    "int_16", audio_format_code
   display_line "Channels",        "int_16", read_bytes(UNSIGNED_INT_16)
   display_line "Sample rate",     "int_32", read_bytes(UNSIGNED_INT_32)
   display_line "Byte rate",       "int_32", read_bytes(UNSIGNED_INT_32)
@@ -75,8 +76,14 @@ def read_format_chunk(chunk_id_data, chunk_size_data)
     extension_size_data = read_bytes(UNSIGNED_INT_16)
     display_line "Extension size", "int_16", extension_size_data
     if extension_size_data[:actual] > 0
-      extension_pack_code = "a#{extension_size_data[:actual]}"
-      display_line "Raw extension", "alpha_#{extension_size_data[:actual]}", read_bytes(extension_pack_code)
+      if audio_format_code[:actual] == 65534
+        display_line "Valid bits per sample", "int_16", read_bytes(UNSIGNED_INT_16)
+        display_line "Speaker mapping", "int_32", read_bytes(UNSIGNED_INT_32)
+        display_line "Sub format GUID", "a16", read_bytes("a16")
+      else
+        extension_pack_code = "a#{extension_size_data[:actual]}"
+        display_line "Raw extension", "alpha_#{extension_size_data[:actual]}", read_bytes(extension_pack_code)
+      end
     end
   else
     puts "* NO EXTENSION *"
