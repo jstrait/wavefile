@@ -126,7 +126,49 @@ module WaveFile
     # when passing a block to Writer.new, as this method will automatically be called when
     # the block exits).
     #
-    # Returns nothing.
+    # If you initialized the Writer with an externally created IO instance, note that
+    # the IO instance won't be closed when the Writer is closed. You'll need to manually close
+    # the IO yourself. This is on purpose, because the Writer can't know what you may/may not
+    # want to do with the IO after closing the Writer.
+    #
+    # Examples
+    #
+    #   square_wave_samples = ([0.5] * 100) + ([-0.5] * 100)
+    #   buffer = Buffer.new(square_wave_samples, Format.new(1, :float, 44100))
+    #
+    #   # Basic example of closing a Writer
+    #   writer = Writer.new("my_file.wav", Format.new(:mono, :pcm_16, 44100))
+    #   writer.write(buffer)
+    #   writer.close
+    #
+    #   # Closing a Writer writing to an externally opened IO
+    #   file = File.open("my_file.wav", "wb")
+    #   writer = Writer.new(file, Format.new(:mono, :pcm_16, 44100))
+    #   writer.close
+    #   # file is still open at this point, so it should be manually closed
+    #   file.close
+    #
+    #   # Trying to write to a Writer that has already been closed
+    #   writer = Writer.new("my_file.wav", Format.new(:mono, :pcm_16, 44100))
+    #   writer.close
+    #   # This will raise WriterClosedError, since the Writer is already closed
+    #   writer.write(buffer)
+    #
+    #   # close() needs to be called for the Wave file to be valid
+    #   writer = Writer.new("my_file.wav", Format.new(:mono, :pcm_16, 44100))
+    #   writer.write(buffer)
+    #   exit
+    #   # At this point "my_file.wav" won't be a valid Wave file, because close
+    #   # was never called
+    #
+    #   # But, close() doesn't need to be called when constructing the Writer
+    #   # with a block, because it is automatically called when the block exits.
+    #   Writer.new("my_file.wav", Format.new(:mono, :pcm_16, 44100)) do |writer|
+    #     writer.write(buffer)
+    #   end
+    #   # Writer is automatically closed here, because block has exited
+    #
+    # Returns nothing. Has side effect of closing the Writer.
     # Raises WriterClosedError if the Writer is already closed.
     def close
       if @closed
