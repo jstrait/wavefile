@@ -33,7 +33,7 @@ This gem lets you read and write audio data! You can use it to create Ruby progr
 * Read and write Wave files with any number of channels, in the following formats:
   * PCM (8, 16, 24, and 32 bits per sample)
   * Floating Point (32 and 64 bits per sample)
-  * These formats can also be read from both "vanilla" Wave files, and also files using `WAVEFORMATEXTENSIBLE` format.
+  * These formats can be read from both "vanilla" Wave files, and also files using `WAVEFORMATEXTENSIBLE` format.
 * Seamlessly convert between sample formats.
   * You can read sample data from a file in any format supported by this gem, regardless of how the sample data is stored in the actual file:
 
@@ -78,9 +78,9 @@ Released on ____, this version includes these changes:
 * `Reader.each_buffer()` no longer requires the user to specify the size of each buffer. A specific size in sample frames can still be given (for example, `Reader.each_buffer(1024)`), but if no buffer size is given a default value will be used.
 * Two `Duration` objects will now evaluate to equal if they represent the same amount of time, due to an overridden definition of `==`. Thanks to [Christopher Smith](https://github.com/chrylis) for suggesting this feature.
 * `Reader.file_name` and `Writer.file_name` have been removed. When a `Reader` or `Writer` instance is constructed from an `IO` instance, this field wouldn't necessarily have a sensible value. Since I don't know of an obvious use-case for these fields, going ahead and removing them altogether.
+* The long deprecated ability to provide the sample format for a `Format` instance as an integer (implying PCM format) has been removed. For example, this is no longer valid: `Format.new(:mono, 16, 44100)`. Instead, use `Format.new(:mono, :pcm_16, 44100)`.
 * A `ReaderClosedError` is now raised (instead of `IOError`) when attempting to read from a closed `Reader` instance. However, `ReaderClosedError` extends `IOError`.
 * A `WriterClosedError` is now raised (instead of `IOError`) when attempting to read from a closed `Writer` instance. However, `ReaderClosedError` extends `IOError`.
-* The long deprecated ability to provide the sample format for a `Format` instance as an integer (implying PCM format) has been removed. For example, this is no longer valid: `Format.new(:mono, 16, 44100)`. Instead, use `Format.new(:mono, :pcm_16, 44100)`.
 
 
 # Compatibility
@@ -126,9 +126,9 @@ Then, to run the tests:
 
     bundle exec rake test
 
-## Generate test fixtures
+## Generating test fixtures
 
-This isn't required to the run the tests because the fixture files are checked in the repository, but is needed to change one of the fixture `*.wav` files. These files are generated from `*.yml` config files defined in `/tools`.
+This isn't required to the run the tests because the fixture files are checked in the repository, but is needed if you want to change one of the fixture `*.wav` files under `/test/fixtures`. These files are generated from `*.yml` config files defined in `/tools`.
 
     rake test:create_fixtures
 
