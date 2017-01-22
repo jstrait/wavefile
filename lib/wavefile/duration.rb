@@ -1,18 +1,18 @@
 module WaveFile
   # Public: Calculates playback time given the number of sample frames and the sample rate.
-  # For example, you can use this to calculate how long a given Wave file is. 
+  # For example, you can use this to calculate how long a given Wave file is.
   #
-  # The hours, minutes, seconds, and milliseconds fields return values like you would 
-  # see on a stopwatch, and not the total amount of time in that unit. For example, a 
-  # stopwatch running for exactly 2 hours would show something like "2:00:00.000". 
-  # Accordingly, if the given sample frame count and sample rate add up to exactly 
+  # The hours, minutes, seconds, and milliseconds fields return values like you would
+  # see on a stopwatch, and not the total amount of time in that unit. For example, a
+  # stopwatch running for exactly 2 hours would show something like "2:00:00.000".
+  # Accordingly, if the given sample frame count and sample rate add up to exactly
   # 2 hours, then hours will be 2, and minutes, seconds, and milliseconds will all be 0.
   #
   # This class is immutable - once a new Duration is constructed, it can't be modified.
   class Duration
     # Public: Constructs a new immutable Duration.
     #
-    # sample_frame_count - The number of sample frames, i.e. the number 
+    # sample_frame_count - The number of sample frames, i.e. the number
     #                      samples in each channel.
     # sample_rate - The number of samples per second, such as 44100
     #

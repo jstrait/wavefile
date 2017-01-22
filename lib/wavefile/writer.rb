@@ -4,14 +4,14 @@ module WaveFile
 
   # Public: Provides the ability to write data to a wave file.
   #
-  # When a Writer is constructed it can be given a block. All samples should be written inside this 
+  # When a Writer is constructed it can be given a block. All samples should be written inside this
   # block, and when the block exits the file will automatically be closed:
   #
   #    Writer.new("my_file.wav", Format.new(:mono, :pcm_16, 44100)) do |writer|
   #      # Write sample data here
   #    end
   #
-  # If no block is given, you'll need to manually close the Writer when done. The underlaying 
+  # If no block is given, you'll need to manually close the Writer when done. The underlaying
   # file will not be valid or playable until close is called.
   #
   #    writer = Writer.new("my_file.wav", Format.new(:mono, :pcm_16, 44100))
@@ -24,8 +24,8 @@ module WaveFile
     # be closed. Note that the wave file being written to will NOT be valid (and playable in other programs)
     # until the Writer has been closed.
     #
-    # If a block is given to this method, sample data can be written inside the given block. When the 
-    # block terminates, the Writer will be automatically closed (and no more sample data can be written). 
+    # If a block is given to this method, sample data can be written inside the given block. When the
+    # block terminates, the Writer will be automatically closed (and no more sample data can be written).
     #
     # If no block is given, then sample data can be written until the close method is called.
     #
@@ -99,10 +99,10 @@ module WaveFile
     # Public: Closes the Writer. After a Writer is closed, no more sample data can be written
     # to it.
     #
-    # Note that the wave file will NOT be valid until this method is called. The wave file 
-    # format requires certain information about the amount of sample data, and this can't be 
-    # determined until all samples have been written. (This method doesn't need to be called 
-    # when passing a block to Writer.new, as this method will automatically be called when 
+    # Note that the wave file will NOT be valid until this method is called. The wave file
+    # format requires certain information about the amount of sample data, and this can't be
+    # determined until all samples have been written. (This method doesn't need to be called
+    # when passing a block to Writer.new, as this method will automatically be called when
     # the block exits).
     #
     # Returns nothing.
@@ -145,25 +145,25 @@ module WaveFile
       Duration.new(@total_sample_frames, @format.sample_rate)
     end
 
-    # Public: Returns a Format object describing the Wave file being written (number of channels, sample 
+    # Public: Returns a Format object describing the Wave file being written (number of channels, sample
     # format and bits per sample, sample rate, etc.)
     attr_reader :format
 
-    # Public: Returns the number of samples (per channel) that have been written to the file so far. 
-    # For example, if 1000 "left" samples and 1000 "right" samples have been written to a stereo file, 
+    # Public: Returns the number of samples (per channel) that have been written to the file so far.
+    # For example, if 1000 "left" samples and 1000 "right" samples have been written to a stereo file,
     # this will return 1000.
     attr_reader :total_sample_frames
 
   private
 
-    # Internal: Padding value written to the end of chunks whose payload is an odd number of bytes. The RIFF 
-    # specification requires that each chunk be aligned to an even number of bytes, even if the byte 
+    # Internal: Padding value written to the end of chunks whose payload is an odd number of bytes. The RIFF
+    # specification requires that each chunk be aligned to an even number of bytes, even if the byte
     # count is an odd number.
     #
     # See http://www-mmsp.ece.mcgill.ca/Documents/AudioFormats/WAVE/Docs/riffmci.pdf, page 11.
     EMPTY_BYTE = "\000"    # :nodoc:
 
-    # Internal: The number of bytes at the beginning of a wave file before the sample data in the data chunk 
+    # Internal: The number of bytes at the beginning of a wave file before the sample data in the data chunk
     # starts, assuming this canonical format:
     #
     # RIFF Chunk Header (12 bytes)

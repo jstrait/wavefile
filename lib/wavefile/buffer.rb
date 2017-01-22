@@ -14,10 +14,10 @@ module WaveFile
 
     # Public: Creates a new Buffer.
     #
-    # samples - An array of samples. If the Format has 1 channel (i.e. is mono), this 
-    #           should be a flat array of samples such as [0.5, 0.4, -0.3, ...]. If the 
-    #           Format has 2 or more channels the array should include a sub-array for 
-    #           each sample frame. For example, [[0.5, 0.2], [0.1, 0.6], [-0.2, 0.4], ...] 
+    # samples - An array of samples. If the Format has 1 channel (i.e. is mono), this
+    #           should be a flat array of samples such as [0.5, 0.4, -0.3, ...]. If the
+    #           Format has 2 or more channels the array should include a sub-array for
+    #           each sample frame. For example, [[0.5, 0.2], [0.1, 0.6], [-0.2, 0.4], ...]
     #           for a stereo file.
     #
     #           The individual samples should match the given format:
@@ -30,9 +30,9 @@ module WaveFile
     #           :float_32 - Float between -1.0 and 1.0
     #           :float_64 - Float between -1.0 and 1.0
     #
-    # format - A Format instance which describes the sample format of the sample array. 
+    # format - A Format instance which describes the sample format of the sample array.
     #
-    #          Note that the sample array is not compared with the format to make sure 
+    #          Note that the sample array is not compared with the format to make sure
     #          they match - you are on the honor system to make sure they do. If they
     #          don't match, unexpected things will happen.
     #

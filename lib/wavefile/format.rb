@@ -12,9 +12,9 @@ module WaveFile
   # stored in a format that Reader doesn't understand.
   class UnsupportedFormatError < FormatError; end
 
-  # Public: Represents information about the data format for a Wave file, such as number of 
-  # channels, bits per sample, sample rate, and so forth. A Format instance is used 
-  # by Reader to indicate what format to read samples out as, and by Writer to 
+  # Public: Represents information about the data format for a Wave file, such as number of
+  # channels, bits per sample, sample rate, and so forth. A Format instance is used
+  # by Reader to indicate what format to read samples out as, and by Writer to
   # indicate what format to write samples as.
   #
   # This class is immutable - once a new Format is constructed, it can't be modified.
@@ -22,11 +22,11 @@ module WaveFile
 
     # Public: Constructs a new immutable Format.
     #
-    # channels - The number of channels in the format. Can either be a Fixnum 
-    #            (e.g. 1, 2, 3) or the symbols :mono (equivalent to 1) or 
+    # channels - The number of channels in the format. Can either be a Fixnum
+    #            (e.g. 1, 2, 3) or the symbols :mono (equivalent to 1) or
     #            :stereo (equivalent to 2).
-    # format_code - A symbol indicating the format of each sample. Consists of 
-    #               two parts: a format code, and the bits per sample. The valid 
+    # format_code - A symbol indicating the format of each sample. Consists of
+    #               two parts: a format code, and the bits per sample. The valid
     #               values are :pcm_8, :pcm_16, :pcm_32, :float_32, :float_64,
     #               and :float (equivalent to :float_32)
     # sample_rate - The number of samples per second, such as 44100
@@ -64,8 +64,8 @@ module WaveFile
       @channels == 2
     end
 
-    # Public: Returns the number of channels, such as 1 or 2. This will always return a 
-    # Fixnum, even if the number of channels is specified with a symbol (e.g. :mono) 
+    # Public: Returns the number of channels, such as 1 or 2. This will always return a
+    # Fixnum, even if the number of channels is specified with a symbol (e.g. :mono)
     # in the constructor.
     attr_reader :channels
 
@@ -78,11 +78,11 @@ module WaveFile
     # Public: Returns the number of samples per second, such as 44100.
     attr_reader :sample_rate
 
-    # Public: Returns the number of bytes in each sample frame. For example, in a 16-bit stereo file, 
+    # Public: Returns the number of bytes in each sample frame. For example, in a 16-bit stereo file,
     # this will be 4 (2 bytes for each 16-bit sample, times 2 channels).
     attr_reader :block_align
 
-    # Public: Returns the number of bytes contained in 1 second of sample data. 
+    # Public: Returns the number of bytes contained in 1 second of sample data.
     # Is equivalent to block_align * sample_rate.
     attr_reader :byte_rate
 
