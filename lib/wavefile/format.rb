@@ -37,7 +37,7 @@ module WaveFile
     #   format = Format.new(:mono, :pcm_16, 44100)  # Equivalent to above
     #
     #   format = Format.new(:stereo, :float_32, 44100)
-    #   format = Format.new(:stereo, :float, 44100)
+    #   format = Format.new(:stereo, :float, 44100)  # Equivalent to above
     def initialize(channels, format_code, sample_rate)
       channels = normalize_channels(channels)
       sample_format, bits_per_sample = normalize_format_code(format_code)
