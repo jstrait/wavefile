@@ -24,9 +24,11 @@ module WaveFile
     #   duration.seconds       # => 10
     #   duration.milliseconds  # => 294
     #
-    # Note that the hours, minutes, seconds, and milliseconds fields do not return 
-    # the total of the respective unit in the entire duration. For example, if a 
-    # duration is exactly 2 hours, then minutes will be 0, not 120.
+    # The hours, minutes, seconds, and milliseconds fields return values like you would
+    # see on a stopwatch, and not the total amount of time in that unit. For example, a
+    # stopwatch running for exactly 2 hours would show something like "2:00:00.000".
+    # Accordingly, if the given sample frame count and sample rate add up to exactly
+    # 2 hours, then hours will be 2, and minutes, seconds, and milliseconds will all be 0.
     def initialize(sample_frame_count, sample_rate)
       @sample_frame_count = sample_frame_count
       @sample_rate = sample_rate
