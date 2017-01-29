@@ -11,7 +11,7 @@
       For example, if a file has a sample container size of 24 bits and each
       sample is 24 bits, then it can be read. If the container size is 32 bits
       and each sample is 24 bits, it _can't_ be read.
-    * Writing files using WAVEFORMATEXTENSIBLE format is not enabled - all
+    * Writing files using WAVEFORMATEXTENSIBLE format is not supported - all
       files will be written as a "vanilla" file regardless of the number of
       channels or sample format.
 * `Reader` and `Writer` can now be constructed with an open `IO` instance, to
