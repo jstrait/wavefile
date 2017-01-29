@@ -40,7 +40,7 @@ This gem lets you read and write audio data! You can use it to create Ruby progr
 
 # Current Release: v0.8.0
 
-Released on ____, this version includes these changes:
+Released on January 29, 2017, this version includes these changes:
 
 * Wave files using WAVEFORMATEXTENSIBLE format can now be read.
   * Notes/Limitations
