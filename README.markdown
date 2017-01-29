@@ -30,9 +30,9 @@ More examples can be found at <http://wavefilegem.com/examples>.
 
 This gem lets you read and write audio data! You can use it to create Ruby programs that work with sound.
 
-* Read and write Wave files with any number of channels, in PCM (8/16/24/32 bits per sample) or IEEE Floating Point (32/64 bits per sample) format
-* Read files in WAVEFORMATEXTENSIBLE format
-* Seamlessly convert between sample formats. Read sample data from a file in any format supported by this gem, regardless of how the sample data is stored in the actual file. Or, you can create sample data in one format (such as floats between -1.0 and 1.0), but write it to a file in a different format (such as 16-bit PCM).
+* Read and write Wave files with any number of channels, in PCM (8/16/24/32 bits per sample) or IEEE Floating Point (32/64 bits per sample) format.
+* Read files in WAVEFORMATEXTENSIBLE format.
+* Seamlessly convert between sample formats. Read sample data from a file in any format supported by this gem, regardless of how the sample data is stored in the actual file. Or, create sample data in one format (such as floats between -1.0 and 1.0), but write it to a file in a different format (such as 16-bit PCM).
 * Automatic file management, similar to how `IO.open` works. That is, you can open a file for reading or writing, and if a block is given, the file will automatically be closed when the block exits.
 * Query metadata about Wave files (sample rate, number of channels, number of sample frames, etc.), including files that are in a format this gem can't read or write.
 * Written in pure Ruby, so it's easy to include in your program. There's no need to compile a separate extension in order to use it.
@@ -42,16 +42,15 @@ This gem lets you read and write audio data! You can use it to create Ruby progr
 
 Released on ____, this version includes these changes:
 
-* Wave files using the WAVEFORMATEXTENSIBLE format can now be read, with these restrictions:
-  * Only WAVEFORMATEXTENSIBLE files with sub format of PCM or IEEE_FLOAT are supported. Put differently, the same sample formats supported in vanilla Wave files are supported in WAVEFORMATEXTENSIBLE files.
-  * The channel speaker mapping field is not exposed.
-  * The number of valid bits per sample must match the sample container size. For example, if a file has a container size of 24 bits and each sample is 24 bits, then it can be read. If the container size is 32 bits and each sample is 24 bits, it _can't_ be read.
-  * It's not possible to write files using WAVEFORMATEXTENSIBLE format in this version.
-* `Reader.new()` and `Writer.new()` can now read/write from an open `IO` instance. Previously, they could only be constructed from a file name (given by a String). Thanks to [@taf2](https://github.com/taf2) for suggesting this feature and providing a pull request.
-  * The first argument of each constructor indicates where to read/write: if the argument is an IO instance it will be used for reading/writing, and if the argument is a String, it will be treated as the name of the file to open for reading/writing.
-  * `Writer` should only be used with an `IO` implementation that supports seeking. When a `Writer` is closed, it needs to sync back to the beginning of the file to write the file's size to the Wave file header. This will cause an error if the `IO` instance doesn't support seeking.
-* `Reader.each_buffer()` no longer requires the user to specify the size of each buffer. A specific size in sample frames can still be given (for example, `Reader.each_buffer(1024)`), but if no buffer size is given a default value will be used.
-* Two `Duration` objects will now evaluate to equal if they represent the same amount of time, due to an overridden definition of `==`. Thanks to [Christopher Smith](https://github.com/chrylis) for suggesting this feature.
+* Wave files using WAVEFORMATEXTENSIBLE format can now be read.
+  * Notes/Limitations
+    * The same formats supported in "vanilla" Wave files are supported when reading WAVEFORMATEXTENSIBLE files. That is, PCM (8/16/24/32 bits per sample) or IEEE_FLOAT (32/64 bits per sample).
+    * The channel speaker mapping field is not exposed.
+    * The number of valid bits per sample must match the sample container size. For example, if a file has a sample container size of 24 bits and each sample is 24 bits, then it can be read. If the container size is 32 bits and each sample is 24 bits, it _can't_ be read.
+    * Writing files using WAVEFORMATEXTENSIBLE format is not enabled - all files will be written as a "vanilla" file regardless of the number of channels or sample format.
+* `Reader` and `Writer` can now be constructed with an open `IO` instance, to allow reading/writing using an arbitrary `IO`-like object (`File`, `StringIO`, etc). Previously, they could only be constructed from a file name (given by a String). Thanks to [@taf2](https://github.com/taf2) for suggesting this feature and providing an example pull request.
+* The buffer size in `Reader.each_buffer()` is now optional. If not given, a default buffer size will be used.
+* Two `Duration` objects will now evaluate to equal if they represent the same amount of time, due to an overridden definition of `==`. Thanks to [Christopher Smith](https://github.com/chrylis) for suggesting this improvement.
 * A `ReaderClosedError` is now raised (instead of `IOError`) when attempting to read from a closed `Reader` instance. However, `ReaderClosedError` extends `IOError`.
 * A `WriterClosedError` is now raised (instead of `IOError`) when attempting to read from a closed `Writer` instance. However, `ReaderClosedError` extends `IOError`.
 * **Backwards Incompatible Changes**
