@@ -1,6 +1,7 @@
 0.8.0
 ===============================================================================
-* Wave files using WAVEFORMATEXTENSIBLE format can now be read.
+* Wave files using WAVEFORMATEXTENSIBLE format (format code 65534) can now
+  be read.
   * Notes/Limitations
     * The same formats supported in "vanilla" Wave files are supported when
       reading WAVEFORMATEXTENSIBLE files. That is, PCM (8/16/24/32 bits per

@@ -41,7 +41,7 @@ This gem lets you read and write audio data! You can use it to create Ruby progr
 
 Released on January 29, 2017, this version includes these changes:
 
-* Wave files using WAVEFORMATEXTENSIBLE format can now be read.
+* Wave files using WAVEFORMATEXTENSIBLE format (format code 65534) can now be read.
   * Notes/Limitations
     * The same formats supported in "vanilla" Wave files are supported when reading WAVEFORMATEXTENSIBLE files. That is, PCM (8/16/24/32 bits per sample) or IEEE_FLOAT (32/64 bits per sample).
     * The channel speaker mapping field is not exposed.
