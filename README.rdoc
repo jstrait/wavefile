@@ -1,4 +1,4 @@
-The WaveFile gem lets you both read and write wave files.
+The WaveFile gem lets you read and write wave files.
 
 Reading is done using the Reader class, and writing is done using the Writer class.
 
