@@ -14,11 +14,11 @@
     * Writing files using WAVEFORMATEXTENSIBLE format is not supported - all
       files will be written as a "vanilla" file regardless of the number of
       channels or sample format.
-* `Reader` and `Writer` can now be constructed with an open `IO` instance, to
-  allow reading/writing using an arbitrary `IO`-like object (`File`, `StringIO`,
-  etc). Previously, they could only be constructed from a file name (given by a
-  String). Thanks to [@taf2](https://github.com/taf2) for suggesting this feature
-  and providing an example pull request.
+* `Reader` and `Writer` can now be constructed using with an open `IO` instance,
+  to allow reading/writing using an arbitrary `IO`-like object (`File`,
+  `StringIO`, etc). Previously, they could only be constructed from a file name
+  (given by a String). Thanks to [@taf2](https://github.com/taf2) for suggesting
+  this feature and providing an example pull request.
 * The buffer size in `Reader.each_buffer()` is now optional. If not given, a
   default buffer size will be used.
 * Two `Duration` objects will now evaluate to equal if they represent the same
