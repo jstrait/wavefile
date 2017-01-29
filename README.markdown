@@ -102,7 +102,7 @@ Then, to run the tests:
 
 ## Generating test fixtures
 
-This isn't required to the run the tests because the fixture files are checked in the repository, but is needed if you want to change one of the fixture `*.wav` files under `/test/fixtures`. These files are generated from `*.yml` config files defined in `/tools`.
+If you want to change one of the fixture `*.wav` files under `/test/fixtures`, edit the appropriate `*.yml` file defined in `/tools`, and then run this:
 
     rake test:create_fixtures
 
