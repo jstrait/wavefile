@@ -28,9 +28,7 @@
   <pre><code>require 'wavefile'
 include WaveFile 
 
-SAMPLE_FRAMES_PER_BUFFER = 4096
-
-Reader.new("my_file.wav").each_buffer(SAMPLE_FRAMES_PER_BUFFER) do |buffer|
+Reader.new("my_file.wav").each_buffer do |buffer|
   puts "Read #{buffer.samples.length} samples."
 end</code></pre>
 
@@ -68,12 +66,10 @@ end</code></pre>
   <pre><code>require 'wavefile'
 include WaveFile
 
-SAMPLES_PER_BUFFER = 4096
-
 # Samples will be read as monophonic floating point,
 # regardless of the actual sample format on disk
 format = Format.new(:mono, :float, 44100)
-reader = Reader.new("my_file.wav", format).each_buffer(SAMPLES_PER_BUFFER) do |buffer|
+reader = Reader.new("my_file.wav", format).each_buffer do |buffer|
   puts "Read #{buffer.samples.length} samples."
 end</code></pre>
 </div>
@@ -156,10 +152,8 @@ writer.close</code></pre>
   <pre><code>require 'wavefile'
 include WaveFile
 
-SAMPLES_PER_BUFFER = 4096
-
 Writer.new("copy.wav", Format.new(:stereo, :pcm_16, 44100)) do |writer|
-  Reader.new("original.wav").each_buffer(SAMPLES_PER_BUFFER) do |buffer|
+  Reader.new("original.wav").each_buffer do |buffer|
     writer.write(buffer)
   end
 end</code></pre>
@@ -174,11 +168,10 @@ end</code></pre>
 include WaveFile
 
 FILES_TO_APPEND = ["file1.wav", "file2.wav", "file3.wav"]
-SAMPLES_PER_BUFFER = 4096
 
 Writer.new("append.wav", Format.new(:stereo, :pcm_16, 44100)) do |writer|
   FILES_TO_APPEND.each do |file_name|
-    Reader.new(file_name).each_buffer(SAMPLES_PER_BUFFER) do |buffer|
+    Reader.new(file_name).each_buffer do |buffer|
       writer.write(buffer)
     end
   end
