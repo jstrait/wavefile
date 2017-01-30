@@ -100,9 +100,7 @@ end</code></pre>
   <pre><code>require 'wavefile'
 include WaveFile    # So we don't have to prefix all classes with 'WaveFile::'
 
-SAMPLE_FRAMES_PER_BUFFER = 4096
-
-Reader.new("square.wav").each_buffer(SAMPLE_FRAMES_PER_BUFFER) do |buffer|
+Reader.new("square.wav").each_buffer do |buffer|
   puts "Buffer number of channels:   #{buffer.channels}"
   puts "Buffer bits per sample:      #{buffer.bits_per_sample}"
   puts "Number of samples in buffer: #{buffer.samples.length}"
@@ -121,10 +119,8 @@ First 10 samples in buffer:  [9830, 9830, 9830, 9830, 9830, 9830, 9830, 9830, 98
   <pre><code>require 'wavefile'
 include WaveFile    # So we don't have to prefix all classes with 'WaveFile::'
 
-SAMPLE_FRAMES_PER_BUFFER = 4096
-
 reader = Reader.new("square.wav", <span class="highlight">Format.new(:stereo, :float, 44100)</span>)
-reader.each_buffer(SAMPLE_FRAMES_PER_BUFFER) do |buffer|
+reader.each_buffer do |buffer|
   puts "Buffer number of channels:   #{buffer.channels}"
   puts "Buffer bits per sample:      #{buffer.bits_per_sample}"
   puts "Number of samples in buffer: #{buffer.samples.length}"
