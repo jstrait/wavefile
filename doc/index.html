@@ -2,60 +2,69 @@
 
 <html>
 <head>
-<meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
+<meta charset="UTF-8">
 
-<title>WaveFile Gem</title>
-
-<link type="text/css" media="screen" href="./rdoc.css" rel="stylesheet">
+<title>WaveFile Gem - Read/Write *.wav Files with Ruby</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "./";
+  var index_rel_prefix = "./";
 </script>
 
-<script type="text/javascript" charset="utf-8" src="./js/jquery.js"></script>
-<script type="text/javascript" charset="utf-8" src="./js/navigation.js"></script>
-<script type="text/javascript" charset="utf-8" src="./js/search_index.js"></script>
-<script type="text/javascript" charset="utf-8" src="./js/search.js"></script>
-<script type="text/javascript" charset="utf-8" src="./js/searcher.js"></script>
-<script type="text/javascript" charset="utf-8" src="./js/darkfish.js"></script>
+<script src="./js/jquery.js"></script>
+<script src="./js/darkfish.js"></script>
+
+<link href="./css/fonts.css" rel="stylesheet">
+<link href="./css/rdoc.css" rel="stylesheet">
 
 
-<body>
-<nav id="metadata">
-  <nav id="home-section" class="section">
-  <h3 class="section-header">
-    <a href="./index.html">Home</a>
+
+<body id="top" role="document" class="file">
+<nav role="navigation">
+  <div id="project-navigation">
+    <div id="home-section" role="region" title="Quick navigation" class="nav-section">
+  <h2>
+    <a href="./index.html" rel="home">Home</a>
+  </h2>
+
+  <div id="table-of-contents-navigation">
+    <a href="./table_of_contents.html#pages">Pages</a>
     <a href="./table_of_contents.html#classes">Classes</a>
     <a href="./table_of_contents.html#methods">Methods</a>
-  </h3>
-</nav>
+  </div>
+</div>
 
 
-  <nav id="search-section" class="section project-section" class="initially-hidden">
+    <div id="search-section" role="search" class="project-section initially-hidden">
   <form action="#" method="get" accept-charset="utf-8">
-    <h3 class="section-header">
-      <input type="text" name="search" placeholder="Search" id="search-field"
+    <div id="search-field-wrapper">
+      <input id="search-field" role="combobox" aria-label="Search"
+             aria-autocomplete="list" aria-controls="search-results"
+             type="text" name="search" placeholder="Search" spellcheck="false"
              title="Type to search, Up and Down to navigate, Enter to load">
-    </h3>
+    </div>
+
+    <ul id="search-results" aria-label="Search Results"
+        aria-busy="false" aria-expanded="false"
+        aria-atomic="false" class="initially-hidden"></ul>
   </form>
+</div>
 
-  <ul id="search-results" class="initially-hidden"></ul>
-</nav>
-
+  </div>
 
   <div id="project-metadata">
-    <nav id="fileindex-section" class="section project-section">
-  <h3 class="section-header">Pages</h3>
+    <div id="fileindex-section" class="nav-section">
+  <h3>Pages</h3>
 
-  <ul>
+  <ul class="link-list">
   
-    <li class="file"><a href="./README.html">README</a>
+    <li><a href="./README_rdoc.html">README</a>
   
   </ul>
-</nav>
+</div>
 
-    <nav id="classindex-section" class="section project-section">
-  <h3 class="section-header">Class and Module Index</h3>
+    <div id="classindex-section" class="nav-section">
+  <h3>Class and Module Index</h3>
 
   <ul class="link-list">
   
@@ -69,27 +78,34 @@
   
     <li><a href="./WaveFile/Format.html">WaveFile::Format</a>
   
-    <li><a href="./WaveFile/Info.html">WaveFile::Info</a>
+    <li><a href="./WaveFile/FormatError.html">WaveFile::FormatError</a>
   
     <li><a href="./WaveFile/InvalidFormatError.html">WaveFile::InvalidFormatError</a>
   
     <li><a href="./WaveFile/Reader.html">WaveFile::Reader</a>
   
+    <li><a href="./WaveFile/ReaderClosedError.html">WaveFile::ReaderClosedError</a>
+  
     <li><a href="./WaveFile/UnsupportedFormatError.html">WaveFile::UnsupportedFormatError</a>
   
     <li><a href="./WaveFile/Writer.html">WaveFile::Writer</a>
   
+    <li><a href="./WaveFile/WriterClosedError.html">WaveFile::WriterClosedError</a>
+  
   </ul>
-</nav>
+</div>
 
   </div>
 </nav>
 
-<div id="documentation" class="description">
+<main role="main">
 
-<p>The <a href="WaveFile.html">WaveFile</a> gem lets you both read and write
-wave files. Reading is done using the Reader class, and writing is done
-using the Writer class.</p>
+
+<p>The <a href="WaveFile.html">WaveFile</a> gem lets you read and write wave
+files.</p>
+
+<p>Reading is done using the Reader class, and writing is done using the
+Writer class.</p>
 
 <p>The Buffer class represents a collection of samples in a given sample
 format (e.g. stereo 16-bit PCM samples at a 44,100Hz sample rate). When
@@ -123,12 +139,13 @@ do the same with Writer - for example, rather than remember the sample
 range of a PCM format (was it 32,767? or 32,768?) you can just generate
 floating point samples between -1.0 and 1.0, and transparently write them
 out as PCM samples.</p>
-</div>
+</main>
 
 
-<footer id="validator-badges">
-  <p><a href="http://validator.w3.org/check/referer">[Validate]</a>
-  <p>Generated by <a href="https://github.com/rdoc/rdoc">RDoc</a> 4.0.1.
-  <p>Generated with the <a href="http://deveiate.org/projects/Darkfish-Rdoc/">Darkfish Rdoc Generator</a> 3.
+
+<footer id="validator-badges" role="contentinfo">
+  <p><a href="http://validator.w3.org/check/referer">Validate</a>
+  <p>Generated by <a href="https://rdoc.github.io/rdoc">RDoc</a> 5.0.0.
+  <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
 </footer>
 
