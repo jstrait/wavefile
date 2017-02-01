@@ -37,7 +37,11 @@ This gem lets you read and write audio data! You can use it to create Ruby progr
 * Written in pure Ruby, so it's easy to include in your program. There's no need to compile a separate extension in order to use it.
 
 
-# Current Release: v0.8.0
+# Current Release: v0.8.1
+
+Released on January 31, 2017, this version fixes an error when frozen string literals are enabled in Ruby 2.3 or higher. (At the time of this release, that means Ruby 2.3 or 2.4). The gem should now work properly when the `--enable-frozen-string-literal` Ruby option is enabled. Thanks to [@samaaron](https://github.com/samaaron) for finding and fixing this!
+
+# Release v0.8.0
 
 Released on January 29, 2017, this version includes these changes:
 

@@ -1,3 +1,12 @@
+0.8.1
+===============================================================================
+* Fixes an error when frozen string literals are enabled in Ruby 2.3 or higher.
+  (At the time of this release, that means Ruby 2.3 or 2.4). The gem should now
+  work properly when the --enable-frozen-string-literal Ruby option is
+  enabled. Thanks to [@samaaron](https://github.com/samaaron) for finding and
+  fixing this!
+
+
 0.8.0
 ===============================================================================
 * Wave files using WAVEFORMATEXTENSIBLE format (format code 65534) can now
