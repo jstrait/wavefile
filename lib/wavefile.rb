@@ -7,7 +7,7 @@ require 'wavefile/unvalidated_format'
 require 'wavefile/writer'
 
 module WaveFile
-  VERSION = "0.8.0"
+  VERSION = "0.8.1"
 
   WAVEFILE_FORMAT_CODE = "WAVE"    # :nodoc:
   FORMAT_CODES = {:pcm => 1, :float => 3, :extensible => 65534}    # :nodoc:
