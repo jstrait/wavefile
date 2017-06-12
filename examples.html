@@ -23,10 +23,10 @@
 <div class="section">
   <h2>Reading a Wave File With a Block</h2>
 
-  <p>The example below shows the preferred way of reading an entire wave file:</p>
+  <p>This is a simple way to read an entire wave file:</p>
 
   <pre><code>require 'wavefile'
-include WaveFile 
+include WaveFile
 
 Reader.new("my_file.wav").each_buffer do |buffer|
   puts "Read #{buffer.samples.length} samples."
@@ -40,7 +40,7 @@ end</code></pre>
 <div class="section bg-white">
   <h2>Reading a Wave File (Manual File Closing Edition)</h2>
 
-  <p>Alternately, you can manually call <code>read()</code> to control exactly how much of the file to read. When doing this, make sure to close the <code>Reader</code> when you're done.</p>
+  <p>Alternately, you can manually call <code>read()</code> to control exactly how much of the file to read. When doing this, make sure to close the <code>Reader</code> when you&rsquo;re done.</p>
 
   <pre><code>require 'wavefile'
 include WaveFile
@@ -61,7 +61,7 @@ end</code></pre>
 <div class="section">
   <h2>Reading a Wave File Into an Arbitrary Format</h2>
 
-  <p>It's easy to read sample data out of a file in whatever format you need, regardless of what format is used inside the file. For example, suppose that <code>my_file.wav</code> is stereo/16-bit, but you need mono normalized floating point samples. No problem, as shown below.</p>
+  <p>It&rsquo;s easy to read sample data out of a file in whatever format you need, regardless of what format is used inside the file. For example, suppose that <code>my_file.wav</code> is stereo/16-bit, but you need mono normalized floating point samples. No problem, as shown below.</p>
 
   <pre><code>require 'wavefile'
 include WaveFile
@@ -125,7 +125,7 @@ end</code></pre>
 <div class="section bg-white">
   <h2>Writing a Wave File (Manual File Close Edition)</h2>
 
-  <p>Alternately, one can manually control when to close the file, as shown below. Note that a file won't be valid for playback until it is closed. This is because some data required for playback (such as the total number of samples) isn't written to the file until it is closed.</p>
+  <p>Alternately, one can manually control when to close the file, as shown below. Note that a file won&rsquo;t be valid for playback until it is closed. This is because some data required for playback (such as the total number of samples) isn&rsquo;t written to the file until it is closed.</p>
 
   <pre><code>require 'wavefile'
 include WaveFile
@@ -139,6 +139,7 @@ buffer = Buffer.new(cycle, Format.new(:mono, :float, 44100))
   writer.write(buffer)
 end
 
+# The Wave file isn't in a valid state until this is called
 writer.close</code></pre>
 </div>
 
@@ -162,7 +163,7 @@ end</code></pre>
 <div class="section bg-white">
   <h2>Appending Wave Files</h2>
 
-  <p>This example will take 3 Wave files, and write them to a single file containing each input file played one after another. Note that the individual files can be in different formats.</p>
+  <p>This example will take 3 Wave files, and write them to a single file containing each input file played one after another. Note that the individual files can be in different formats. They will all be converted to the output file&rsquo;s format.</p>
 
   <pre><code>require 'wavefile'
 include WaveFile
