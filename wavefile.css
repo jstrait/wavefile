@@ -314,6 +314,10 @@ span.label {
     width: 100%;
   }
 
+  .section > pre {
+    margin-left: -1.5em;
+  }
+
   .footer p {
     padding-left: 1.5em;
     padding-right: 1.5em;
