@@ -1,4 +1,4 @@
 riff_chunk:
   chunk_id: "RIFF"
   chunk_size: 100
-  wave_format: "MP3 "
+  wave_format: "MP3 "    # In a valid Wave file, this should be "WAVE"

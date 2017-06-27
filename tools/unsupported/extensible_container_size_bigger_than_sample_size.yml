@@ -12,7 +12,7 @@ format_chunk:
   block_align: 4
   bits_per_sample: 32    # Container size
   extension_size: 22
-  valid_bits_per_sample: 24    # Sample size
+  valid_bits_per_sample: 24    # Sample size, doesn't match container size, which is unsupported
   speaker_mapping: 0x00000001
   subformat_guid: [1, 0, 0, 0, 0, 0, 16, 0, 128, 0, 0, 170, 0, 56, 155, 113]
 data_chunk:

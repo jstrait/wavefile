@@ -2,7 +2,7 @@ riff_chunk:
   chunk_id: "RIFF"
   chunk_size: 12
   wave_format: "WAVE"
-format_chunk:
+format_chunk:     # This format chunk is missing some required fields (byte rate, block align, bits per sample)
   chunk_id: "fmt "
   chunk_size: 8
   audio_format: 1
