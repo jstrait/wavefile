@@ -3,8 +3,8 @@
 # Wave file.
 #
 # This program intentionally does not try to validate the input, and will
-# happyily create invalid Wave files. The reason is to allow this to
-# create both valid and invalid Wave files for testing.
+# happily create invalid Wave files. This allows one to create both valid
+# and invalid Wave files for testing.
 
 require 'yaml'
 
