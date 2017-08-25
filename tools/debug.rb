@@ -6,7 +6,7 @@ UNSIGNED_INT_32 = "V"
 
 def read_bytes(pack_str)
   bytes = []
-  
+
   if pack_str.start_with?("a")
     if pack_str.length > 1
       size = pack_str[1...(pack_str.length)].to_i
@@ -16,7 +16,7 @@ def read_bytes(pack_str)
 
     size.times { bytes << FILE.sysread(1).unpack("a") }
     full_string = bytes.join()
-    
+
     return {:actual => full_string, :bytes => bytes }
   elsif pack_str == UNSIGNED_INT_32
     4.times { bytes << FILE.sysread(1) }
@@ -178,37 +178,37 @@ puts ""
 count = 0
 chunk_id_data = read_bytes("a4")
 chunk_size_data = read_bytes(UNSIGNED_INT_32)
-while chunk_id_data[:actual] != "data"
-  if chunk_id_data[:actual] == "fmt "
-    read_format_chunk(chunk_id_data, chunk_size_data)
-  elsif chunk_id_data[:actual] == "fact"
-    read_fact_chunk(chunk_id_data, chunk_size_data)
-  elsif chunk_id_data[:actual] == "PEAK"
-    read_peak_chunk(chunk_id_data, chunk_size_data)
-  elsif chunk_id_data[:actual] == "cue "
-    read_cue_chunk(chunk_id_data, chunk_size_data)
-  elsif chunk_id_data[:actual] == "LIST"
-    read_list_chunk(chunk_id_data, chunk_size_data)
-  else
-    chunk_size = chunk_size_data[:actual]
-    if chunk_size.odd?
-      chunk_size += 1
+begin
+  while true
+    if chunk_id_data[:actual] == "fmt "
+      read_format_chunk(chunk_id_data, chunk_size_data)
+    elsif chunk_id_data[:actual] == "fact"
+      read_fact_chunk(chunk_id_data, chunk_size_data)
+    elsif chunk_id_data[:actual] == "PEAK"
+      read_peak_chunk(chunk_id_data, chunk_size_data)
+    elsif chunk_id_data[:actual] == "cue "
+      read_cue_chunk(chunk_id_data, chunk_size_data)
+    elsif chunk_id_data[:actual] == "LIST"
+      read_list_chunk(chunk_id_data, chunk_size_data)
+    elsif chunk_id_data[:actual] == "data"
+      display_chunk_header("Data Chunk", "data", chunk_id_data, chunk_size_data)
+      display_line "Data Start", "alpha_10", read_bytes("a10")
+      FILE.sysread(chunk_size_data[:actual] - 10)
+    else
+      chunk_size = chunk_size_data[:actual]
+      if chunk_size.odd?
+        chunk_size += 1
+      end
+
+      FILE.sysread(chunk_size)
+      puts "#{chunk_id_data[:actual]} chunk of size #{chunk_size_data[:actual]}, skipping."
+      puts ""
+      puts ""
     end
 
-    FILE.sysread(chunk_size)
-    puts "#{chunk_id_data[:actual]} chunk of size #{chunk_size_data[:actual]}, skipping."
-    puts ""
-    puts ""
+    chunk_id_data = read_bytes("a4")
+    chunk_size_data = read_bytes(UNSIGNED_INT_32)
   end
-
-  chunk_id_data = read_bytes("a4")
-  chunk_size_data = read_bytes(UNSIGNED_INT_32)
+rescue EOFError
+  FILE.close()
 end
-
-
-# Data Chunk
-display_chunk_header("Data Chunk", "data", chunk_id_data, chunk_size_data)
-display_line "Data Start", "alpha_10", read_bytes("a10")
-
-
-FILE.close()
