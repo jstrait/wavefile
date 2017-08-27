@@ -108,7 +108,7 @@ class WriterTest < Minitest::Test
     assert(writer.closed?)
 
     assert_equal(false, io.closed?)
-    assert_equal(2092, io.pos)    # 44 bytes for header, plus 2 bytes per sample, with 8 * 128 samples 
+    assert_equal(2092, io.pos)    # 44 bytes for header, plus 2 bytes per sample, with 8 * 128 samples
     io.close
   end
 

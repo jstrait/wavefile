@@ -45,7 +45,7 @@ module WaveFile
       rescue InvalidFormatError
         raise InvalidFormatError, "Does not appear to be a valid Wave file"
       end
-      
+
       @data_chunk_reader = riff_reader.data_chunk_reader
 
       if block_given?

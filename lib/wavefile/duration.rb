@@ -78,7 +78,7 @@ module WaveFile
       @seconds == other_duration.seconds &&
       @milliseconds == other_duration.milliseconds
     end
- 
+
     # Public
     attr_reader :sample_frame_count
 

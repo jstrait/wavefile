@@ -79,7 +79,7 @@ class FormatTest < Minitest::Test
 
       format = Format.new(one_channel, :float_64, 44100)
       assert_equal(352800, format.byte_rate)
-      assert_equal(8, format.block_align) 
+      assert_equal(8, format.block_align)
     end
 
     [2, :stereo].each do |two_channels|

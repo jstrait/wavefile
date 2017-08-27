@@ -367,7 +367,7 @@ class ReaderTest < Minitest::Test
   def test_sample_counts_manual_reads
     exhaustively_test do |format_chunk_format, channels, sample_format|
       reader = Reader.new(fixture("valid/valid_#{format_chunk_format}#{channels}_#{sample_format}_44100.wav"))
-      
+
       assert_equal(0, reader.current_sample_frame)
       assert_equal(2240, reader.total_sample_frames)
       test_duration({:hours => 0, :minutes => 0, :seconds => 0, :milliseconds => 50, :sample_count => 2240},
@@ -393,7 +393,7 @@ class ReaderTest < Minitest::Test
       assert_equal(2240, reader.total_sample_frames)
       test_duration({:hours => 0, :minutes => 0, :seconds => 0, :milliseconds => 50, :sample_count => 2240},
                     reader.total_duration)
- 
+
 
       reader.close
       assert_equal(2240, reader.current_sample_frame)
@@ -419,7 +419,7 @@ class ReaderTest < Minitest::Test
         assert_equal(expected_result, reader.current_sample_frame)
         assert_equal(2240, reader.total_sample_frames)
       end
-      
+
       assert_equal(2240, reader.current_sample_frame)
       assert_equal(2240, reader.total_sample_frames)
     end
