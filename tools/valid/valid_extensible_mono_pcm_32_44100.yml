@@ -5,7 +5,7 @@ riff_chunk:
 format_chunk:
   chunk_id: "fmt "
   chunk_size: 40
-  audio_format: 1
+  audio_format: 65534
   channels: 1
   sample_rate: 44100
   byte_rate: 176400

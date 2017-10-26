@@ -125,8 +125,8 @@ if (data_chunk)
   file_writer.write_or_quit("data", "a4")
   file_writer.write_or_quit((TOTAL_SAMPLE_FRAMES * format_chunk["block_align"]), UNSIGNED_INT_32)
 
-  def write_square_wave_samples(file_writer, audio_format, bits_per_sample, channel_format)
-    if audio_format == 1
+  def write_square_wave_samples(file_writer, sample_format, bits_per_sample, channel_format)
+    if sample_format == :pcm
       if bits_per_sample == 8
         low_val, high_val, pack_code = 88, 167, UNSIGNED_INT_8
       elsif bits_per_sample == 16
@@ -136,7 +136,7 @@ if (data_chunk)
       elsif bits_per_sample == 32
         low_val, high_val, pack_code = -1_000_000_000, 1_000_000_000, "l<"
       end
-    elsif audio_format == 3
+    elsif sample_format == :float
       if bits_per_sample == 32
         low_val, high_val, pack_code = -0.5, 0.5, "e"
       elsif bits_per_sample == 64
@@ -170,7 +170,19 @@ if (data_chunk)
     end
   end
 
-  write_square_wave_samples(file_writer, format_chunk["audio_format"], format_chunk["bits_per_sample"], data_chunk["channel_format"])
+  if format_chunk["audio_format"] == 1
+    sample_format = :pcm
+  elsif format_chunk["audio_format"] == 3
+    sample_format = :float
+  elsif format_chunk["audio_format"] == 65534
+    if format_chunk["subformat_guid"][0] == 1
+      sample_format = :pcm
+    elsif format_chunk["subformat_guid"][0] == 3
+      sample_format = :float
+    end
+  end
+
+  write_square_wave_samples(file_writer, sample_format, format_chunk["bits_per_sample"], data_chunk["channel_format"])
 end
 
 file_writer.close
