@@ -39,6 +39,7 @@
   <p>An IFF file, and therefore a RIFF file, is broken up into several &ldquo;chunks&rdquo; of data. Each chunk has an 8-byte header containing a 4-byte identifier code, and a 4-byte size field.</p>
   <p>The identifier code, called a <a href="http://en.wikipedia.org/wiki/Fourcc">FourCC</a>, is typically a more-or-less human-readable ASCII string. For example, &ldquo;<code>wave</code>&rdquo;, &ldquo;<code>fmt </code>&rdquo;, or &ldquo;<code>data</code>&rdquo;. This identifier is case-sensitive.</p>
   <p>The size field indicates the size of the chunk in bytes. The size does not include the 8-bytes in the header. I.e., if a chunk consists of the header plus 1,000 bytes of data, the size field will indicate 1,000, not 1,008. Chunks can internally contain nested sub-chunks, if the spec for that chunk allows it.</p>
+  <p>If a chunk body is an odd number of bytes, it must be followed by an empty padding byte. In other words, a chunk must always occupy an even number of bytes in the file. The padding byte is <em>not</em> counted in the chunk size field. For example, if a chunk is 17 bytes in size, the size ID field will be set to 17, but the actual chunk body will use 18 bytes (17 bytes of data followed by a padding byte).</p>
   <p>A Wave file consists of two levels of nested chunks. At the top level, it consists of a single &ldquo;<code>RIFF</code>&rdquo; chunk, which contains all of the data for the wave file. The RIFF chunk includes a format code &ldquo;<code>WAVE</code>&rdquo; which indicates that the sub-chunks are for a Wave file. Internally, the &ldquo;<code>RIFF</code>&rdquo; chunk includes at minimum a format chunk (&ldquo;<code>fmt </code>&rdquo;) and a data chunk (&ldquo;<code>data</code>&rdquo;). As the name suggests, the format chunk describes the, well, format of the wave file. The data chunk contains all of the raw sample data. A wave file might also contain other optional chunks, but it must include a format and data chunk, and the format chunk must come first.</p>
   <p>Visually this is what it looks like:</p>
   <div style="border: 2px solid black; padding: 1.5em 1.5em 0.0em 1.5em; width: 15.0em; margin: 0.0em auto; border-radius: 0.5em;">
@@ -48,7 +49,6 @@
     <div style="border: 2px solid black; padding: 1.5em; margin: 1.5em 0.0em 1.5em 0.0em;"><em>other optional chunks*1</em></div>
     <div style="border: 2px solid black; padding: 1.5em; margin: 1.5em 0.0em 1.5em 0.0em;">Data Chunk (&ldquo;<code>data</code>&rdquo;)</div>
   </div>
-
   <h2>The RIFF Chunk</h2>
   <p>Like all chunks, the RIFF chunk starts with an ID code, in this case the ASCII string &ldquo;<code>RIFF</code>&rdquo;. Next is the size field, which is the size of the entire Wave file except for the 8-byte RIFF header.</p>
   <p>The first 4 bytes following the header will identify the type of RIFF chunk. In the case of Wave files, it will be &ldquo;<code>WAVE</code>&rdquo;. Immediately following that will be the inner Wave file chunks.</p>
@@ -254,9 +254,6 @@
   <ul>
     <li>Links go here</li>
   </ul>
-
-  <h2>The More You Know: Even Chunk Sizes</h2>
-  <p>According to the RIFF spec*, chunk sizes must be an even number of bytes. So for example if writing a monophonic file with an odd number of samples, you should append a blank* byte to the end of the data chunk to get it to an even size. TODO: How will this be interpreted as audio?</p>
 
   <h2>References</h2>
   <ul>
