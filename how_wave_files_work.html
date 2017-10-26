@@ -22,7 +22,7 @@
 <div class="warning">This article is a work in progress.</div>
 <div class="container">
   <h2>Getting Started</h2>
-  <p>If you're just getting started with audio programming, you might want to read up on some of the basics of digital audio first. Check out <a href="http://www.joelstrait.com/blog/2009/10/12/a_digital_audio_primer">this blog post</a> for an introduction.</p>
+  <p>If you&rsquo;re just getting started with audio programming, you might want to read up on some of the basics of digital audio first. Check out <a href="http://www.joelstrait.com/blog/2009/10/12/a_digital_audio_primer">this blog post</a> for an introduction.</p>
 
   <h2>Wave Files Store Audio Data</h2>
   <p>Wave files store audio data, encoded using one of several sample formats. Some sample formats contain raw, uncompressed data, while some formats (e.g. &mu;-law) are compressed. The most common sample format is <em>PCM</em>, which stands for <em>pulse code modulation</em>. This is raw, uncompressed sample data where each sample is an integer.</p>
@@ -170,7 +170,7 @@
       </table>
       <p>This field can be used to calculate the bytes per sample frame field. Another possible use is for seeking around in a file. For example, if the bytes per sample frame is 32, then to seek forward 10 sample frames you need to seek forward 320 bytes.</p>
       <p>Note that for PCM data, this field is essentially redundant since it can be calculated from the other fields. However, be sure to note the point of rounding bits per sample values to the nearest multiple of 8.</p>
-  <p><span class="label">Bits per sample</span> &ndash; For PCM data, typical values will be 8, 16, or 32. I'm not sure why this is a two-byte field in the spec, since any values over 255 would seem excessive. TODO: Do other non-PCM formats take advantage of it being two bytes?</p>
+  <p><span class="label">Bits per sample</span> &ndash; For PCM data, typical values will be 8, 16, or 32. I&rsquo;m not sure why this is a two-byte field in the spec, since any values over 255 would seem excessive. TODO: Do other non-PCM formats take advantage of it being two bytes?</p>
 
   <h2>The Format Chunk (More Exact Version)</h2>
   <p>OK, so I simplified some things a bit. That last section described the format chunk when the sample format is PCM, has 1 or two channels, and has 8 or 16 bits per sample. (In other words, a classic old school Wave file). The full format chunk spec actually includes an extension if the format is something else:</p>
@@ -213,7 +213,7 @@
   <p><span class="label">Channel Mask</span> &ndash; TODO</p>
   <p><span class="label">Sub Format</span> &ndash; TODO</p>
   <p>Note that the presence or absense of these fields determines the format chunk size - if both are absent, the chunk size should be 16, if the extension size is present the chunk size should be 18, and if all are present the chunk size should be 40.</p>
-  <p>These variations in the format chunk are a result of adding support for formats that the original wave file spec wasn't capable of specifying.</p>
+  <p>These variations in the format chunk are a result of adding support for formats that the original wave file spec wasn&rsquo;t capable of specifying.</p>
 
 
   <h2>The Data Chunk</h2>
@@ -250,7 +250,7 @@
   <h2>Floating Point Data Chunk</h2>
   <p>Another basic format is to store samples as floating point values (format code 3). This is essentially the same as PCM format, except that samples are in the range -1.0 to 1.0. The bits per sample field for floating point files should be set to 32 or 64. TODO: What about non-32 or 64 bit sizes?</p>
   <h2>Compressed Data Chunk Formats</h2>
-  <p>Sample data can also be stored in a compressed format. Examples include ______. I'm not too familiar with how these algoritms work, and the WaveFile gem doesn't currently support them. But, you can read up on them at Wikipedia if you're interested:</p>
+  <p>Sample data can also be stored in a compressed format. Examples include ______. I&rsquo;m not too familiar with how these algoritms work, and the WaveFile gem doesn't currently support them. But, you can read up on them at Wikipedia if you&rsquo;re interested:</p>
   <ul>
     <li>Links go here</li>
   </ul>
@@ -268,7 +268,7 @@ and Data Specifications 1.0, August 1991</a></li>
     <li><a href="http://en.wikipedia.org/wiki/WAV">Wikipedia article on the *.wav format</a></li>
   </ul>
   <div id="footnotes">
-  <p>*1 - I'm not sure that the spec prevents chunks also coming after the data chunk, but I'm not sure how common that is. It doesn't seem like a good idea to do that.</p>
+  <p>*1 - I&rsquo;m not sure that the spec prevents chunks also coming after the data chunk, but I&rsquo;m not sure how common that is. It doesn&rsquo;t seem like a good idea to do that.</p>
   </div>
 </div>
 <div class="footer">
