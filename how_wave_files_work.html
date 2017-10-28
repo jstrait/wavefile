@@ -83,8 +83,8 @@
     </tr>
   </table>
 
-  <h2>The Format Chunk (Basic Version)</h2>
-  <p>The format chunk describes the format that the samples in the data chunk are encoded in. At minimum, it contains these fields:</p>
+  <h2>The Format Chunk (for PCM Data)</h2>
+  <p>The format chunk describes the format that the samples in the data chunk are encoded in. The exact structure of the format chunk depends on the value of the format code field. If the format code is 1 (PCM), then the format chunk will contain the fields below. If it's something else, the chunk will contain the fields below, followed by one or more extra fields (described below).</p>
   <table>
     <tr>
       <th>Field</th>
@@ -99,7 +99,7 @@
     <tr>
       <td>Chunk Size</td>
       <td>4</td>
-      <td>16, 18, or 40 (why not always 16? see below)</td>
+      <td>It depends</td>
     </tr>
     <tr>
       <td>Format Code</td>
@@ -109,7 +109,7 @@
     <tr>
       <td>Number of Channels</td>
       <td>2</td>
-      <td>1 for mono, 2 for stereo, up to 65535*</td>
+      <td>1 for mono, 2 for stereo, etc.</td>
     </tr>
     <tr>
       <td>Samples per second<br />(a.k.a. sample rate)</td>
@@ -129,14 +129,13 @@
     <tr>
       <td>Bits per sample</td>
       <td>2</td>
-      <td>8, 16, 32, etc.</td>
+      <td>8, 16, 32, etc. 0 if sample format doesn't need this</td>
     </tr>
   </table>
-  <p>While some of these fields have a large range of possible values, in practice there are only a few that will actually be used.</p>
-  <p>Here is more detail on what these fields mean. For some background on what some of this terminology means, check out <a href="http://www.joelstrait.com/blog/2009/10/12/a_digital_audio_primer">this blog post</a>.</p>
-  <p><span class="label">Format Code</span> &ndash; Indicates how the sample data for the wave file is stored. The most common format is PCM, which has a code of 1. Other formats include IEEE floating point (3), ADPCM (2), &mu;-law (7), and WaveFormatExtensable (65534).</p>
-  <p><span class="label">Number of channels</span> &ndash; Typically a file will have 1 channel (mono) or 2 channels (stereo). A surround sound file would have 6* channels. Although this field technically allows you to have up to 65,535 channels, for audio data that would be flat out ridiculous. You would only hear all of the channels if you had 65,535 different speakers, and since a chunk can only hold 4GB of data (due to the 32-bit size field), you would only be able to store about a second and a half** of 8-bit PCM data.</p>
-  <p><span class="label">Sample rate</span> &ndash; The number of sample frames that occur each second. A typical value would be 44,100, which is the same as an audio CD*. Another reasonable value is 22,050. Although this field supports any arbitrary value between 1 and ______, in practice there are only a few values you should use. </p>
+  <p>While some of these fields have a large range of possible values, in practice there are only a few that will actually be used. For some background on what some of this terminology means, check out <a href="http://www.joelstrait.com/blog/2009/10/12/a_digital_audio_primer">this blog post</a>.</p>
+  <p><span class="label">Format Code</span> &ndash; Indicates how the sample data for the wave file is stored. The most common format is PCM, which has a code of 1. Other formats include IEEE floating point (3), ADPCM (2), &mu;-law (7), and WaveFormatExtensible (65534).</p>
+  <p><span class="label">Number of channels</span> &ndash; Typically a file will have 1 channel (mono) or 2 channels (stereo). A surround sound file will have 6* channels. Although this field technically allows you to have up to 65,535 channels, for audio data that would be flat out ridiculous. You would only hear all of the channels if you had 65,535 different speakers, and since a chunk can only hold 4GB of data (due to the 32-bit size field), you would only be able to store about a second and a half** of 8-bit PCM data.</p>
+  <p><span class="label">Sample rate</span> &ndash; The number of sample frames that occur each second. A typical value would be 44,100, which is the same as an audio CD.</p>
   <p><span class="label">Bytes per second (byte rate)</span> &ndash; The spec calls this <em>byte rate</em>, which means the number of bytes required for one second of audio data. This is equal to the bytes per sample frame times the sample rate. So with a bytes per sample frame of 32, and a sample rate of 44,100, this should equal 1,411,200.</p>
   <p><span class="label">Bytes per sample frame</span> &ndash; Called <em>block align</em> by the spec, this is the number of bytes required to store a single sample frame, i.e. a single sample for each channel. (Sometimes a sample frame is also referred to as a <em>block</em>). It should be equal to the number of channels times the bits per sample rounded up to a multiple of 8. For example:
       <table>
@@ -171,11 +170,11 @@
           <td>192</td>
         </tr>
       </table>
-      <p>This field can be used to calculate the bytes per sample frame field. Another possible use is for seeking around in a file. For example, if the bytes per sample frame is 32, then to seek forward 10 sample frames you need to seek forward 320 bytes.</p>
-      <p>Note that for PCM data, this field is essentially redundant since it can be calculated from the other fields. However, be sure to note the point of rounding bits per sample values to the nearest multiple of 8.</p>
-  <p><span class="label">Bits per sample</span> &ndash; For PCM data, typical values will be 8, 16, or 32. I&rsquo;m not sure why this is a two-byte field in the spec, since any values over 255 would seem excessive.</p>
+      <p>This field can be used to calculate the bytes per second field. Another possible use is for seeking around in a file. For example, if the bytes per sample frame is 32, then to seek forward 10 sample frames you need to seek forward 320 bytes.</p>
+      <p>For PCM data, this field is essentially redundant since it can be calculated from the other fields. However, be sure to note the point of rounding bits per sample values to the nearest multiple of 8.</p>
+  <p><span class="label">Bits per sample</span> &ndash; For PCM data, typical values will be 8, 16, or 32. If the sample format doesn't require this field, it should be set to 0.</p>
 
-  <h2>The Format Chunk (More Exact Version)</h2>
+  <h2>The Format Chunk (For Other Sample Formats)</h2>
   <p>OK, so I simplified some things a bit. That last section described the format chunk when the sample format is PCM, has 1 or two channels, and has 8 or 16 bits per sample. (In other words, a classic old school Wave file). The full format chunk spec actually includes an extension if the format is something else:</p>
   <table>
     <tr>
