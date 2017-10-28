@@ -83,8 +83,8 @@
     </tr>
   </table>
 
-  <h2>The Format Chunk (for PCM Data)</h2>
-  <p>The format chunk describes the format that the samples in the data chunk are encoded in. The exact structure of the format chunk depends on the value of the format code field. If the format code is 1 (PCM), then the format chunk will contain the fields below. If it's something else, the chunk will contain the fields below, followed by one or more extra fields (described below).</p>
+  <h2>The Format Chunk</h2>
+  <p>The format chunk describes the format that the samples in the data chunk are encoded in. The exact structure of the format chunk depends on the value of the format code field. If the format code is 1 (PCM), then the format chunk will only contain the fields above the dashed line. If it's something else, the chunk will also contain the fields after the dashed line. The reason for these differences is that the Wave format is a container for many different kinds of sample formats, and because the Wave format has evolved over time to support new formats.</p>
   <table>
     <tr>
       <th>Field</th>
@@ -126,10 +126,20 @@
       <td>2</td>
       <td></td>
     </tr>
-    <tr>
+    <tr style="border-bottom: 2px #ddd dashed;">
       <td>Bits per sample</td>
       <td>2</td>
       <td>8, 16, 32, etc. 0 if sample format doesn't need this</td>
+    </tr>
+    <tr>
+      <td>Extension Size</td>
+      <td>2</td>
+      <td>Size of extension in bytes. Field is not present if format code is 1!</td>
+    </tr>
+    <tr>
+      <td>Extra fields</td>
+      <td>?</td>
+      <td>Only present if format code is not 1, and extension size is greater than 0. The fields present depends on the format code.</td>
     </tr>
   </table>
   <p>While some of these fields have a large range of possible values, in practice there are only a few that will actually be used. For some background on what some of this terminology means, check out <a href="http://www.joelstrait.com/blog/2009/10/12/a_digital_audio_primer">this blog post</a>.</p>
@@ -174,8 +184,8 @@
       <p>For PCM data, this field is essentially redundant since it can be calculated from the other fields. However, be sure to note the point of rounding bits per sample values to the nearest multiple of 8.</p>
   <p><span class="label">Bits per sample</span> &ndash; For PCM data, typical values will be 8, 16, or 32. If the sample format doesn't require this field, it should be set to 0.</p>
 
-  <h2>The Format Chunk (For Other Sample Formats)</h2>
-  <p>OK, so I simplified some things a bit. That last section described the format chunk when the sample format is PCM, has 1 or two channels, and has 8 or 16 bits per sample. (In other words, a classic old school Wave file). The full format chunk spec actually includes an extension if the format is something else:</p>
+  <h2>Extra Format Fields for WAVE_FORMAT_EXTENSIBLE</h2>
+  <p>If the format code is 65534, then the format is called &ldquo;WAVE_FORMAT_EXTENSIBLE***&rdquo;. This comes from the name of a data structure given to this format in the Windows API. The extensible format is essentially a container format inside another container format. The reason it exists is to work around some ambiguities in the original Wave file format without having to modify existing files.</p>
   <table>
     <tr>
       <th>Field</th>
@@ -185,7 +195,7 @@
     <tr>
       <td>Extension Size</td>
       <td>2</td>
-      <td>0 or 22</td>
+      <td>22</td>
     </tr>
     <tr>
       <td>Valid Bits Per Sample</td>
@@ -209,13 +219,10 @@
     <li>Number of channels is 1 or 2</li>
     <li>Bits per sample is 8 or 16</li>
   </ul>
-  <p>For all formats except WaveFormatExtensible (i.e. 65534), the extension size should be 0 (i.e, two blank bytes), and that should be the end of the format chunk.</p>
   <p>When the format is WaveFormatExtensible, the extension size should be 22, and the remaining three fields should be included:</p>
   <p><span class="label">Valid Bits Per Sample</span> &ndash; TODO</p>
-  <p><span class="label">Channel Mask</span> &ndash; TODO</p>
-  <p><span class="label">Sub Format</span> &ndash; TODO</p>
-  <p>Note that the presence or absense of these fields determines the format chunk size - if both are absent, the chunk size should be 16, if the extension size is present the chunk size should be 18, and if all are present the chunk size should be 40.</p>
-  <p>These variations in the format chunk are a result of adding support for formats that the original wave file spec wasn&rsquo;t capable of specifying.</p>
+  <p><span class="label">Channel Mask</span> &ndash; Indicates which audio channels map to which speakers.</p>
+  <p><span class="label">Sub Format</span> &ndash; Identifies the format of the sample data in the data chunk. This is a replacement for the original format code field, since it will have a format code of 65534.</p>
 
 
   <h2>The Data Chunk</h2>
