@@ -59,7 +59,7 @@
   <table>
     <tr>
       <th>Field</th>
-      <th>Size</th>
+      <th>Size in Bytes</th>
       <th>Description</th>
     </tr>
     <tr>
@@ -70,7 +70,7 @@
     <tr>
       <td>Chunk Size</td>
       <td>4</td>
-      <td>Size of entire file, except for 8-byte RIFF chunk header</td>
+      <td>32-bit unsigned integer</td>
     </tr>
     <tr>
       <td>RIFF Format Code</td>
@@ -79,8 +79,8 @@
     </tr>
     <tr>
       <td>Sub Chunks</td>
-      <td>?</td>
-      <td>The Wave format sub chunks (format, data, etc.)</td>
+      <td>Variable</td>
+      <td>Variable</td>
     </tr>
   </table>
 
@@ -89,58 +89,58 @@
   <table>
     <tr>
       <th>Field</th>
-      <th>Size</th>
+      <th>Size in Bytes</th>
       <th>Description</th>
     </tr>
     <tr>
       <td>Chunk ID</td>
       <td>4</td>
-      <td>"fmt " (note the space after 't')</td>
+      <td>ASCII string "fmt " (note the space after 't')</td>
     </tr>
     <tr>
       <td>Chunk Size</td>
       <td>4</td>
-      <td>It depends</td>
+      <td>32-bit unsigned integer</td>
     </tr>
     <tr>
       <td>Format Code</td>
       <td>2</td>
-      <td>Indicates PCM, floating point, &mu;-law, etc.</td>
+      <td>16-bit unsigned integer</td>
     </tr>
     <tr>
       <td>Number of Channels</td>
       <td>2</td>
-      <td>1 for mono, 2 for stereo, etc.</td>
+      <td>16-bit unsigned integer</td>
     </tr>
     <tr>
-      <td>Samples per second<br />(a.k.a. sample rate)</td>
+      <td>Samples per second</td>
       <td>4</td>
-      <td>44100 for CD quality</td>
+      <td>32-bit unsigned integer</td>
     </tr>
     <tr>
       <td>Bytes per Second</td>
       <td>4</td>
-      <td>Bytes per sample frame &times; samples per second</td>
+      <td>32-bit unsigned integer</td>
     </tr>
     <tr>
       <td>Bytes per Sample Frame<br />(a.k.a block align)</td>
       <td>2</td>
-      <td></td>
+      <td>16-bit unsigned integer</td>
     </tr>
     <tr style="border-bottom: 2px #ddd dashed;">
       <td>Bits per sample</td>
       <td>2</td>
-      <td>8, 16, 32, etc. 0 if sample format doesn't need this</td>
+      <td>16-bit unsigned integer</td>
     </tr>
     <tr>
       <td>Extension Size</td>
       <td>2</td>
-      <td>Size of extension in bytes. Field is not present if format code is 1!</td>
+      <td>16-bit unsigned integer</td>
     </tr>
     <tr>
       <td>Extra fields</td>
-      <td>?</td>
-      <td>Only present if format code is not 1, and extension size is greater than 0. The fields present depends on the format code.</td>
+      <td>Variable</td>
+      <td>It depends</td>
     </tr>
   </table>
   <p>While some of these fields have a large range of possible values, in practice there are only a few that will actually be used. For some background on what some of this terminology means, check out <a href="http://www.joelstrait.com/blog/2009/10/12/a_digital_audio_primer">this blog post</a>.</p>
@@ -190,28 +190,23 @@
   <table>
     <tr>
       <th>Field</th>
-      <th>Size</th>
+      <th>Size in Bytes</th>
       <th>Description</th>
-    </tr>
-    <tr>
-      <td>Extension Size</td>
-      <td>2</td>
-      <td>22</td>
     </tr>
     <tr>
       <td>Valid Bits Per Sample</td>
       <td>2</td>
-      <td>TODO</td>
+      <td>16-bit unsigned integer</td>
     </tr>
     <tr>
       <td>Channel Mask</td>
       <td>4</td>
-      <td>TODO</td>
+      <td>32-bit unsigned integer</td>
     </tr>
     <tr>
       <td>Sub Format</td>
       <td>16</td>
-      <td>TODO</td>
+      <td>16-byte GUID</td>
     </tr>
   </table>
   <p>If format does not meet the criteria below, then the extension size field should be present:</p>
