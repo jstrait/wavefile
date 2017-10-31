@@ -191,6 +191,9 @@
   <p><span class="label">Extension Size</span> &ndash; This field should only be present if the format code is not 1. This indicates the size of the extra fields in bytes. It does not include the bytes in this field itself. If the given sample format has no extra fields, then this field should be set to 0.</p>
   <p><span class="label">Extra Fields</span> &ndash; It depends on the format code! The next sections describe the extra fields for a few audio formats.</p>
 
+  <h2>Extra Format Fields for Floating Point</h2>
+  <p>If the format code is 3, then the sample data is stored as floating point numbers. There are no extra fields for this format, so the extension size field should be set to 0.</p>
+
   <h2>Extra Format Fields for WAVE_FORMAT_EXTENSIBLE</h2>
   <p>If the format code is 65534, then the format is called &ldquo;WAVE_FORMAT_EXTENSIBLE***&rdquo;. This comes from the name of a data structure given to this format in the Windows API. The extensible format is essentially a container format inside another container format. The reason it exists is to work around some ambiguities in the original Wave file format without having to modify existing files.</p>
   <table>
