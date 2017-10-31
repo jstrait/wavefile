@@ -229,6 +229,30 @@
   <p><span class="label">Channel Mask</span> &ndash; Indicates which audio channels map to which speakers.</p>
   <p><span class="label">Sub Format</span> &ndash; Identifies the format of the sample data in the data chunk. This is a replacement for the original format code field, since it will have a format code of 65534.</p>
 
+  <h2>The Fact Chunk</h2>
+  <table>
+    <tr>
+      <th>Field</th>
+      <th>Size in Bytes</th>
+      <th>Description</th>
+    </tr>
+    <tr>
+      <td>Chunk ID</td>
+      <td>4</td>
+      <td>ASCII string &ldquo;<code>fact</code>&rdquo;</td>
+    </tr>
+    <tr>
+      <td>Chunk Size</td>
+      <td>4</td>
+      <td>32-bit unsigned integer</td>
+    </tr>
+    <tr>
+      <td>Number of sample frames</td>
+      <td>4</td>
+      <td>32-bit unsigned integer</td>
+    </tr>
+  </table>
+  <p>The fact chunk indicates how many sample frames are in the file. It&rsquo;s required if the format code in the format chunk is not 1. If the format code is 1, it&rsquo;s optional. The reason for this chunk is that with some sample formats the number of sample frames can&rsquo;t be determined by obvious means (e.g. because they store data in a compressed format). This gives a way of determining e.g. the playing time for the file, without having to decode the entire data chunk.</p>
 
   <h2>The Data Chunk</h2>
   <p>The layout for the data chunk is simpler than the format chunk: the normal 8-byte chunk header, followed by nothing but sweet, raw, unfiltered sample data. The sample data can be stored in a number of formats, which will be indicated by the format chunk.</p>
