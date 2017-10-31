@@ -1,8 +1,11 @@
+html {
+  font-size: 20px;
+}
+
 body {
   margin: 0;
-  font-size: 20px;
   font-weight: 300;
-  line-height: 1.5em;
+  line-height: 1.5rem;
   font-family: "Lato", "Helvetica Neue", Helvetica, arial, sans-serif;
   background: #fafafa;
 }
@@ -17,10 +20,10 @@ a:hover {
 
 h2 {
   font-weight: 400;
-  font-size: 1.5em;
+  font-size: 1.5rem;
   line-height: 1.0em;
-  margin-top: 3.0em;
-  margin-bottom: 1.0em;
+  margin-top: 3.0rem;
+  margin-bottom: 1.0rem;
   color: #2380c4;
 }
 
@@ -30,7 +33,7 @@ h2 a {
 
 h3 {
   font-weight: 400;
-  font-size: 1.0em;
+  font-size: 1.0rem;
   line-height: 1.5em;
   margin: 0;
   color: #2380c4;
@@ -40,18 +43,18 @@ pre {
   margin-bottom: 0;
   overflow: auto;
   background: #efefef;
-  padding: 1.5em;
+  padding: 1.5rem;
 }
 
 code {
-  font-size: 0.75em;
+  font-size: 0.75rem;
   line-height: 2.0em;
   font-family: "PT Mono", menlo, courier, monospace;
 }
 
 audio {
   max-width: 744px;
-  margin: 3.0em auto;
+  margin: 3.0rem auto;
   display: block;
 }
 
@@ -109,19 +112,19 @@ div#header-inner {
 
 .container {
   margin-top: 0;
-  margin-bottom: 6.0em;
+  margin-bottom: 6.0rem;
   margin-left: auto;
   margin-right: auto;
   max-width: 744px;
 }
 
 h1 {
-  font-size: 2.0em;
+  font-size: 2.0rem;
   font-variant: small-caps;
   line-height: 1.0em;
   font-weight: 400;
   float: left;
-  margin: 1.0em 0 1.0em 0;
+  margin: 1.0em 0;
   padding: 0;
 }
 
@@ -131,7 +134,7 @@ h1 a {
 }
 
 ul#navigation {
-  margin: 2.0em auto 0 auto;
+  margin: 2.0rem auto 0 auto;
   padding: 0;
   overflow: auto;
   float: right;
@@ -140,7 +143,7 @@ ul#navigation {
 ul#navigation li {
   list-style-type: none;
   float: left;
-  margin-left: 1.5em;
+  margin-left: 1.5rem;
 }
 
 ul#navigation li a {
@@ -150,7 +153,7 @@ ul#navigation li a {
   text-decoration: none;
   width: 100%;
   display: inline-block;
-  line-height: 2.0em;
+  line-height: 2.0rem;
 }
 
 ul#navigation li a:hover {
@@ -159,11 +162,11 @@ ul#navigation li a:hover {
 
 p#tagline {
   text-align: center;
-  padding-top: 2.0em;
-  padding-bottom: 2.0em;
+  padding-top: 2.0rem;
+  padding-bottom: 2.0rem;
   background: #2380c4;
   color: #fff;
-  font-size: 2.0em;
+  font-size: 2.0rem;
   margin: 0;
   font-family: 'Playfair Display', serif;
   font-style: italic;
@@ -176,8 +179,8 @@ div.warning {
   background: #ff4d4d;
   color: #fff;
   margin: 0;
-  padding-top: 2.0em;
-  padding-bottom: 2.0em;
+  padding-top: 2.0rem;
+  padding-bottom: 2.0rem;
 }
 
 ul#feature-list {
@@ -189,12 +192,12 @@ ul#feature-list {
 
 ul#feature-list li {
   list-style-type: none;
-  margin-bottom: 1.5em;
+  margin-bottom: 1.5rem;
 }
 
 ul#format-list {
   margin: 0;
-  padding-left: 1.0em;
+  padding-left: 1.0rem;
 }
 
 ul#format-list li {
@@ -210,7 +213,7 @@ span.label {
 
 .section {
   width: 100%;
-  padding: 4.5em 0;
+  padding: 4.5rem 0;
 }
 
 .section > * {
@@ -239,14 +242,14 @@ span.label {
 
 .doc-list li {
   list-style-type: none;
-  margin-bottom: 1.5em;
+  margin-bottom: 1.5rem;
 }
 
 .footer {
   background: #000;
   color: #fff;
-  padding-top: 1.5em;
-  padding-bottom: 1.5em;
+  padding-top: 1.5rem;
+  padding-bottom: 1.5rem;
 }
 
 .footer p {
@@ -265,25 +268,25 @@ span.label {
 
 @media (max-width: 744px) {
   h1 {
-    margin: 1.0em 0 0 0;
+    margin: 1.0rem 0 0 0;
     text-align: center;
     width: 100%;
     float: none;
   }
 
   p#tagline {
-    padding: 0.75em;
+    padding: 0.75rem;
   }
 
   ul#navigation {
-    margin: 0 auto 1.5em auto;
+    margin: 0 auto 1.5rem auto;
     float: none;
     display: inline-block;
   }
 
   ul#navigation li {
     float: left;
-    margin: 0 1.5em 0 0;
+    margin: 0 1.5rem 0 0;
   }
 
   ul#navigation li.last {
@@ -299,14 +302,14 @@ span.label {
   }
 
   .container {
-    padding-left: 1.5em;
-    padding-right: 1.5em;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
     width: 100%;
     box-sizing: border-box;
   }
 
   .section {
-    padding: 3.0em 1.5em;
+    padding: 3.0rem 1.5rem;
     box-sizing: border-box;
   }
 
@@ -315,11 +318,11 @@ span.label {
   }
 
   .section > pre {
-    margin-left: -1.5em;
+    margin-left: -1.5rem;
   }
 
   .footer p {
-    padding-left: 1.5em;
-    padding-right: 1.5em;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
   }
 }
