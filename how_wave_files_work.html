@@ -255,6 +255,28 @@
   <p>The fact chunk indicates how many sample frames are in the file. It&rsquo;s required if the format code in the format chunk is not 1. If the format code is 1, it&rsquo;s optional. The reason for this chunk is that with some sample formats the number of sample frames can&rsquo;t be determined by obvious means (e.g. because they store data in a compressed format). This gives a way of determining e.g. the playing time for the file, without having to decode the entire data chunk.</p>
 
   <h2>The Data Chunk</h2>
+  <table>
+    <tr>
+      <th>Field</th>
+      <th>Size in Bytes</th>
+      <th>Description</th>
+    </tr>
+    <tr>
+      <td>Chunk ID</td>
+      <td>4</td>
+      <td>ASCII string &ldquo;<code>data</code>&rdquo;</td>
+    </tr>
+    <tr>
+      <td>Chunk Size</td>
+      <td>4</td>
+      <td>32-bit unsigned integer</td>
+    </tr>
+    <tr>
+      <td>Sample Data</td>
+      <td>Various</td>
+      <td>It depends on the format code</td>
+    </tr>
+  </table>
   <p>The layout for the data chunk is simpler than the format chunk: the normal 8-byte chunk header, followed by nothing but sweet, raw, unfiltered sample data. The sample data can be stored in a number of formats, which will be indicated by the format chunk.</p>
   <p>The next several sections describe various formats that data in the data chunk can be stored as.</p>
 
