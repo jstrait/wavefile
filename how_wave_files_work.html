@@ -38,7 +38,7 @@
   <p>As mentioned above, all data in a RIFF file is stored as <a href="http://en.wikipedia.org/wiki/Endianness">little-endian</a>, owing to its Wintel heritage.</p>
   <h2>RIFF Files Contain &ldquo;Chunks&rdquo;</h2>
   <p>An IFF file, and therefore a RIFF file, is broken up into several &ldquo;chunks&rdquo; of data. Each chunk has an 8-byte header containing a 4-byte identifier code, and a 4-byte size field.</p>
-  <p>The identifier code, called a <a href="http://en.wikipedia.org/wiki/Fourcc">FourCC</a>, is typically a more-or-less human-readable ASCII string. For example, &ldquo;<code>wave</code>&rdquo;, &ldquo;<code>fmt </code>&rdquo;, or &ldquo;<code>data</code>&rdquo;. This identifier is case-sensitive.</p>
+  <p>The identifier code, called a <a href="http://en.wikipedia.org/wiki/Fourcc">FourCC</a>, is typically a more-or-less human-readable ASCII string. For example, &ldquo;<code>wave</code>&rdquo;, &ldquo;<code>fmt&nbsp;</code>&rdquo;, or &ldquo;<code>data</code>&rdquo;. This identifier is case-sensitive.</p>
   <p>The size field indicates the size of the chunk in bytes. The size does not include the 8-bytes in the header. I.e., if a chunk consists of the header plus 1,000 bytes of data, the size field will indicate 1,000, not 1,008. Chunks can internally contain nested sub-chunks, if the spec for that chunk allows it.</p>
   <p>If a chunk body is an odd number of bytes, it must be followed by an empty padding byte. In other words, a chunk must always occupy an even number of bytes in the file. The padding byte is <em>not</em> counted in the chunk size field. For example, if a chunk body is 17 bytes in size, the size ID field will be set to 17, but the actual chunk body will occupy 18 bytes (17 bytes of data followed by a padding byte).</p>
   <h2>High Level Wave File Structure</h2>
@@ -47,7 +47,7 @@
   <div style="border: 2px solid black; padding: 1.5em 1.5em 0.0em 1.5em; width: 15.0em; margin: 0.0em auto; border-radius: 0.5em;">
     RIFF Chunk<br />
     Format: &ldquo;<code>WAVE</code>&rdquo;
-    <div style="border: 2px solid black; padding: 1.5em; margin: 0.75em 0.0em; border-radius: 0.5em;">Format Chunk (&ldquo;<code>fmt </code>&rdquo;)</div>
+    <div style="border: 2px solid black; padding: 1.5em; margin: 0.75em 0.0em; border-radius: 0.5em;">Format Chunk (&ldquo;<code>fmt&nbsp;</code>&rdquo;)</div>
     <div style="border: 2px solid black; padding: 1.5em; margin: 0.75em 0.0em; border-radius: 0.5em;"><em>other optional chunk</em></div>
     <div style="border: 2px solid black; padding: 1.5em; margin: 0.75em 0.0em; border-radius: 0.5em;"><em>other optional chunk</em></div>
     <div style="border: 2px solid black; padding: 1.5em; margin: 0.75em 0.0em 1.5em 0.0em; border-radius: 0.5em;">Data Chunk (&ldquo;<code>data</code>&rdquo;)</div>
@@ -96,7 +96,7 @@
     <tr>
       <td>Chunk ID</td>
       <td>4</td>
-      <td>ASCII string &ldquo;<code>fmt </code>&rdquo; (note the space after &lsquo;t&rsquo;)</td>
+      <td>ASCII string &ldquo;<code>fmt&nbsp;</code>&rdquo; (note the space after &lsquo;t&rsquo;)</td>
     </tr>
     <tr>
       <td>Chunk Size</td>
