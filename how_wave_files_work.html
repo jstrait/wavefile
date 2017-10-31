@@ -265,11 +265,6 @@
   <p>Another basic format is to store samples as floating point values (format code 3). This is essentially the same as PCM format, except that samples are in the range -1.0 to 1.0. The bits per sample field for floating point files should be set to 32 or 64.</p>
   <h2>WAVE_FORMAT_EXTENSIBLE Data Chunk</h2>
   <p>Since WAVE_FORMAT_EXTENSIBLE is a container format, the format code of 65534 doesn't imply any particular sample format. The sample format is instead determined by the sub format GUID in the format chunk. For example, if the sub format GUID is the GUID for PCM, then the samples are in the same format as if the format code was 1.</p>
-  <h2>Compressed Data Chunk Formats</h2>
-  <p>Sample data can also be stored in a compressed format. Examples include ______. I&rsquo;m not too familiar with how these algoritms work, and the WaveFile gem doesn't currently support them. But, you can read up on them at Wikipedia if you&rsquo;re interested:</p>
-  <ul>
-    <li>Links go here</li>
-  </ul>
 
   <h2>References</h2>
   <ul>
