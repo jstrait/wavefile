@@ -85,7 +85,8 @@
   </table>
 
   <h2>The Format Chunk</h2>
-  <p>The format chunk describes the format that the samples in the data chunk are encoded in. The exact structure of the format chunk depends on the value of the format code field. If the format code is 1 (PCM), then the format chunk will only contain the fields above the dashed line. If it's something else, the chunk will also contain the fields after the dashed line. The reason for these differences is that the Wave format is a container for many different kinds of sample formats, and because the Wave format has evolved over time to support new formats.</p>
+  <p>The format chunk describes the format that the samples in the data chunk are encoded in. The exact structure of the format chunk depends on the value of the format code field. If the format code is 1 (PCM), then the format chunk will only contain the fields above the dashed line in the diagram below. If it's not 1, the chunk will also contain the fields after the dashed line.</p>
+  <p>The reason for these differences is that the Wave format is a container for many different kinds of sample formats, and because the Wave format has evolved over time to support new formats. Extra fields that are needed for one sample format might not be needed for another sample format. This also allows new fields to be added without having to change pre-existing Wave files.</p>
   <table>
     <tr>
       <th>Field</th>
@@ -133,6 +134,9 @@
       <td>16-bit unsigned integer</td>
     </tr>
     <tr>
+      <td colspan="3"><em>These fields are only present if format code is not 1:</em></td>
+    </tr>
+    <tr>
       <td>Extension Size</td>
       <td>2</td>
       <td>16-bit unsigned integer</td>
@@ -140,7 +144,7 @@
     <tr>
       <td>Extra fields</td>
       <td>Variable</td>
-      <td>It depends</td>
+      <td>It depends on the format code</td>
     </tr>
   </table>
   <p>While some of these fields have a large range of possible values, in practice there are only a few that will actually be used. For some background on what some of this terminology means, check out <a href="http://www.joelstrait.com/blog/2009/10/12/a_digital_audio_primer">this blog post</a>.</p>
