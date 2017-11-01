@@ -8,9 +8,12 @@
 
 require 'yaml'
 
+FOUR_CC = "a4"
 UNSIGNED_INT_8  = "C"
-UNSIGNED_INT_16 = "v"
-UNSIGNED_INT_32 = "V"
+UNSIGNED_INT_16_LITTLE_ENDIAN = "v"
+UNSIGNED_INT_32_LITTLE_ENDIAN = "V"
+FLOAT_32_LITTLE_ENDIAN = "e"
+FLOAT_64_LITTLE_ENDIAN = "E"
 
 CHUNK_HEADER_SIZE_IN_BYTES = 8
 RIFF_CHUNK_HEADER_SIZE = 12  # 8 byte FourCC, plus the "WAVE" format code string
@@ -79,51 +82,51 @@ file_writer = FileWriter.new(output_file_name)
 
 
 # Write the RIFF chunk
-file_writer.write_or_quit(riff_chunk["chunk_id"], "a4")
-file_writer.write_or_quit(riff_chunk["chunk_size"], UNSIGNED_INT_32)
-file_writer.write_or_quit(riff_chunk["wave_format"], "a4")
+file_writer.write_or_quit(riff_chunk["chunk_id"], FOUR_CC)
+file_writer.write_or_quit(riff_chunk["chunk_size"], UNSIGNED_INT_32_LITTLE_ENDIAN)
+file_writer.write_or_quit(riff_chunk["wave_format"], FOUR_CC)
 
 # Write the Format chunk
 if format_chunk
-  file_writer.write_or_quit(format_chunk["chunk_id"], "a4")
-  file_writer.write_or_quit(format_chunk["chunk_size"], UNSIGNED_INT_32)
-  file_writer.write_or_quit(format_chunk["audio_format"], UNSIGNED_INT_16)
-  file_writer.write_or_quit(format_chunk["channels"], UNSIGNED_INT_16)
-  file_writer.write_or_quit(format_chunk["sample_rate"], UNSIGNED_INT_32)
-  file_writer.write_or_quit(format_chunk["byte_rate"], UNSIGNED_INT_32)
-  file_writer.write_or_quit(format_chunk["block_align"], UNSIGNED_INT_16)
-  file_writer.write_or_quit(format_chunk["bits_per_sample"], UNSIGNED_INT_16)
-  file_writer.write_or_skip(format_chunk["extension_size"], UNSIGNED_INT_16)
-  file_writer.write_or_skip(format_chunk["valid_bits_per_sample"], UNSIGNED_INT_16)
-  file_writer.write_or_skip(format_chunk["speaker_mapping"], UNSIGNED_INT_32)
+  file_writer.write_or_quit(format_chunk["chunk_id"], FOUR_CC)
+  file_writer.write_or_quit(format_chunk["chunk_size"], UNSIGNED_INT_32_LITTLE_ENDIAN)
+  file_writer.write_or_quit(format_chunk["audio_format"], UNSIGNED_INT_16_LITTLE_ENDIAN)
+  file_writer.write_or_quit(format_chunk["channels"], UNSIGNED_INT_16_LITTLE_ENDIAN)
+  file_writer.write_or_quit(format_chunk["sample_rate"], UNSIGNED_INT_32_LITTLE_ENDIAN)
+  file_writer.write_or_quit(format_chunk["byte_rate"], UNSIGNED_INT_32_LITTLE_ENDIAN)
+  file_writer.write_or_quit(format_chunk["block_align"], UNSIGNED_INT_16_LITTLE_ENDIAN)
+  file_writer.write_or_quit(format_chunk["bits_per_sample"], UNSIGNED_INT_16_LITTLE_ENDIAN)
+  file_writer.write_or_skip(format_chunk["extension_size"], UNSIGNED_INT_16_LITTLE_ENDIAN)
+  file_writer.write_or_skip(format_chunk["valid_bits_per_sample"], UNSIGNED_INT_16_LITTLE_ENDIAN)
+  file_writer.write_or_skip(format_chunk["speaker_mapping"], UNSIGNED_INT_32_LITTLE_ENDIAN)
   if format_chunk["subformat_guid"]
     format_chunk["subformat_guid"].each do |byte|
-      file_writer.write_or_skip(byte, "C")
+      file_writer.write_or_skip(byte, UNSIGNED_INT_8)
     end
   end
 end
 
 if fact_chunk
-  file_writer.write_or_quit(fact_chunk["chunk_id"], "a4")
-  file_writer.write_or_quit(fact_chunk["chunk_size"], UNSIGNED_INT_32)
+  file_writer.write_or_quit(fact_chunk["chunk_id"], FOUR_CC)
+  file_writer.write_or_quit(fact_chunk["chunk_size"], UNSIGNED_INT_32_LITTLE_ENDIAN)
   if fact_chunk["sample_count"] == "auto"
-    file_writer.write_or_quit(TOTAL_SAMPLE_FRAMES, UNSIGNED_INT_32)
+    file_writer.write_or_quit(TOTAL_SAMPLE_FRAMES, UNSIGNED_INT_32_LITTLE_ENDIAN)
   else
-    file_writer.write_or_quit(fact_chunk["sample_count"], UNSIGNED_INT_32)
+    file_writer.write_or_quit(fact_chunk["sample_count"], UNSIGNED_INT_32_LITTLE_ENDIAN)
   end
 end
 
 # Write a Junk chunk
 if junk_chunk
-  file_writer.write_or_quit("JUNK", "a4")
-  file_writer.write_or_quit(9, UNSIGNED_INT_32)
+  file_writer.write_or_quit("JUNK", FOUR_CC)
+  file_writer.write_or_quit(9, UNSIGNED_INT_32_LITTLE_ENDIAN)
   file_writer.write_or_quit("123456789\000", "a10")
 end
 
 # Write the Data chunk
 if (data_chunk)
-  file_writer.write_or_quit("data", "a4")
-  file_writer.write_or_quit((TOTAL_SAMPLE_FRAMES * format_chunk["block_align"]), UNSIGNED_INT_32)
+  file_writer.write_or_quit("data", FOUR_CC)
+  file_writer.write_or_quit((TOTAL_SAMPLE_FRAMES * format_chunk["block_align"]), UNSIGNED_INT_32_LITTLE_ENDIAN)
 
   def write_square_wave_samples(file_writer, sample_format, bits_per_sample, channel_format)
     if sample_format == :pcm
@@ -138,9 +141,9 @@ if (data_chunk)
       end
     elsif sample_format == :float
       if bits_per_sample == 32
-        low_val, high_val, pack_code = -0.5, 0.5, "e"
+        low_val, high_val, pack_code = -0.5, 0.5, FLOAT_32_LITTLE_ENDIAN
       elsif bits_per_sample == 64
-        low_val, high_val, pack_code = -0.5, 0.5, "E"
+        low_val, high_val, pack_code = -0.5, 0.5, FLOAT_64_LITTLE_ENDIAN
       end
     end
 
