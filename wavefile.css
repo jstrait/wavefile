@@ -43,7 +43,7 @@ pre {
   margin-bottom: 0;
   overflow: auto;
   background: #efefef;
-  padding: 1.5rem;
+  padding: 0.75rem;
 }
 
 code {
@@ -276,6 +276,10 @@ span.label {
     padding-right: 5%;
     float: left;
   }
+
+  pre {
+    padding: 1.5rem;
+  }
 }
 
 @media (max-width: 744px) {
@@ -314,14 +318,14 @@ span.label {
   }
 
   .container {
-    padding-left: 1.5rem;
-    padding-right: 1.5rem;
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
     width: 100%;
     box-sizing: border-box;
   }
 
   .section {
-    padding: 3.0rem 1.5rem;
+    padding: 3.0rem 0.75rem;
     box-sizing: border-box;
   }
 
@@ -330,11 +334,11 @@ span.label {
   }
 
   .section > pre {
-    margin-left: -1.5rem;
+    margin-left: -0.75rem;
   }
 
   .footer p {
-    padding-left: 1.5rem;
-    padding-right: 1.5rem;
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
   }
 }
