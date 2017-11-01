@@ -1,0 +1,1 @@
+Most of the files in this folder are created using `/tools/fixture_writer.rb`, via one of the corresponding YAML files under `/test/fixtures/yaml`. To re-generate these files, run `rake test:create_fixtures`. (A few files have been created manually and don't have corresponding YAML config files).

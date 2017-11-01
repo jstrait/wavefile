@@ -1,0 +1,1 @@
+The files in this folder are used to create fixture *.wav files. By running `rake test:create_fixtures`, each of these YAML files will be used to create a *.wav file, using `/tools/fixture_writer.rb`.
