@@ -185,15 +185,6 @@ p#tagline {
   line-height: 1.5em;
 }
 
-div.warning {
-  text-align: center;
-  background: #ff4d4d;
-  color: #fff;
-  margin: 0;
-  padding-top: 2.0rem;
-  padding-bottom: 2.0rem;
-}
-
 ul#feature-list {
   overflow: auto;
   margin-top: 0;
