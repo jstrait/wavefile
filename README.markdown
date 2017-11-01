@@ -1,4 +1,4 @@
-A pure Ruby gem for reading and writing sound files in Wave format (*.wav).
+A Ruby gem for reading and writing sound files in Wave format (*.wav).
 
 You can use this gem to create Ruby programs that work with audio, such as a [command-line drum machine](http://beatsdrummachine.com). Since it is written in pure Ruby (as opposed to wrapping an existing C library), you can use it without having to compile a separate extension.
 
@@ -87,7 +87,7 @@ Note that if you're installing the gem into the default Ruby that comes pre-inst
 
 # Dependencies
 
-WaveFile has no external dependencies when used as a gem. It is written in pure Ruby, and is entirely self-contained.
+WaveFile has no external dependencies when used as a gem.
 
 However, it does have dependencies for local development, in order to run the tests. See below in section "Local Development".
 
