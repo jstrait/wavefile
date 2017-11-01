@@ -109,6 +109,16 @@ span.highlight {
   background: yellow;
 }
 
+.tag-important {
+  display: inline-block;
+  background: #ff4d4d;
+  color: #fff;
+  margin-right: 0.5rem;
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
+  border-radius: 0.25rem;
+}
+
 div#header {
   background: #fff;
 }

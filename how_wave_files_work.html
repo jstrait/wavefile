@@ -51,7 +51,7 @@
     <div style="border: 2px solid black; padding: 1.5em; margin: 0.75em 0.0em; border-radius: 0.5em;"><em>other optional chunk</em></div>
     <div style="border: 2px solid black; padding: 1.5em; margin: 0.75em 0.0em 1.5em 0.0em; border-radius: 0.5em;">Data Chunk (&ldquo;<code>data</code>&rdquo;)</div>
   </div>
-  <p><span style="display: inline-block; background: #ff4d4d; color: white; margin-right: 0.5rem; padding-left: 0.75rem; padding-right: 0.75rem; border-radius: 0.25rem;">Important!</span>Other than the format chunk coming before the data chunk, there isn&rsquo;t any requirement that the chunks come in any particular order. You shouldn&rsquo;t assume that the data chunk is the last chunk. (Although in practice, it usually is).</p>
+  <p><span class="tag-important">Important!</span>Other than the format chunk coming before the data chunk, there isn&rsquo;t any requirement that the chunks come in any particular order. You shouldn&rsquo;t assume that the data chunk is the last chunk. (Although in practice, it usually is).</p>
   <h2>The RIFF Chunk</h2>
   <p>Like all chunks, the RIFF chunk starts with an ID code, in this case the ASCII string &ldquo;<code>RIFF</code>&rdquo;. Next is the size field, which is the size of the entire Wave file except for the 8-byte RIFF header.</p>
   <p>The first 4 bytes following the header will identify the type of RIFF chunk. In the case of Wave files, it will be &ldquo;<code>WAVE</code>&rdquo;. Immediately following that will be the inner Wave file chunks.</p>
