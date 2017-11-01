@@ -47,7 +47,7 @@ one_square_cycle = ([AMPLITUDE] * 50) + ([-AMPLITUDE] * 50)</code></pre>
   <p>Next, let&rsquo;s wrap the samples in a <code>Buffer</code>:</p>
   <pre><code>buffer = Buffer.new(one_square_cycle, Format.new(:mono, :float, 44100))</code></pre>
   <p>Notice that we used the <code>Format</code> class to identify the sample format. The <code>Format</code> constructor takes 3 arguments: the number of channels, the format of each sample, and the sample rate. You&rsquo;re on the honor system to use the correct format here, weird stuff could happen if you use the wrong format.</p>
-  <p>Now let&rsquo;s write the buffer to a file called "<code>square.wav</code>" in the current working directory:</p>
+  <p>Now let&rsquo;s write the buffer to a file called <code>"square.wav"</code> in the current working directory:</p>
   <pre><code>Writer.new("square.wav", Format.new(:mono, :pcm_16, 44100)) do |writer|
   writer.write(buffer)
 end</code></pre>
@@ -65,7 +65,7 @@ buffer = Buffer.new(one_square_cycle, Format.new(:mono, :float, 44100))
 Writer.new("square.wav", Format.new(:mono, :pcm_16, 44100)) do |writer|
   writer.write(buffer)
 end</code></pre>
-  <p>When you run this program it should create a file called "<code>square.wav</code>" in the current working directory. If you play this file (for example on a Mac using <code>afplay square.wav</code> from the command line) it should sound like this:</p>
+  <p>When you run this program it should create a file called <code>"square.wav"</code> in the current working directory. If you play this file (for example on a Mac using <code>afplay square.wav</code> from the command line) it should sound like this:</p>
   <audio controls>
     <source src="square_too_short.wav" type="audio/wav">
   </audio>
@@ -75,7 +75,7 @@ end</code></pre>
 Writer.new("square.wav", Format.new(:mono, :pcm_16, 44100)) do |writer|
   CYCLE_COUNT.times { writer.write(buffer) }
 end</code></pre>
-  <p>Now when you re-run the program and play "<code>square.wav</code>" it should sound like this.</p>
+  <p>Now when you re-run the program and play <code>"square.wav"</code> it should sound like this.</p>
   <audio controls>
     <source src="square.wav" type="audio/wav">
   </audio>
