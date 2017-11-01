@@ -45,12 +45,12 @@ Released on January 31, 2017, this version fixes an error when frozen string lit
 
 Released on January 29, 2017, this version includes these changes:
 
-* Wave files using WAVEFORMATEXTENSIBLE format (format code 65534) can now be read.
+* Wave files using WAVE_FORMAT_EXTENSIBLE format (format code 65534) can now be read.
   * Notes/Limitations
-    * The same formats supported in "vanilla" Wave files are supported when reading WAVEFORMATEXTENSIBLE files. That is, PCM (8/16/24/32 bits per sample) or IEEE_FLOAT (32/64 bits per sample).
+    * The same formats supported in "vanilla" Wave files are supported when reading WAVE_FORMAT_EXTENSIBLE files. That is, PCM (8/16/24/32 bits per sample) or IEEE_FLOAT (32/64 bits per sample).
     * The channel speaker mapping field is not exposed.
     * The number of valid bits per sample must match the sample container size. For example, if a file has a sample container size of 24 bits and each sample is 24 bits, then it can be read. If the container size is 32 bits and each sample is 24 bits, it _can't_ be read.
-    * Writing files using WAVEFORMATEXTENSIBLE format is not supported - all files will be written as a "vanilla" file regardless of the number of channels or sample format.
+    * Writing files using WAVE_FORMAT_EXTENSIBLE format is not supported - all files will be written as a "vanilla" file regardless of the number of channels or sample format.
 * `Reader` and `Writer` can now be constructed using an open `IO` instance, to allow reading/writing using an arbitrary `IO`-like object (`File`, `StringIO`, etc). Previously, they could only be constructed from a file name (given by a String). Thanks to [@taf2](https://github.com/taf2) for suggesting this feature and providing an example pull request.
 * The buffer size in `Reader.each_buffer()` is now optional. If not given, a default buffer size will be used.
 * Two `Duration` objects will now evaluate to equal if they represent the same amount of time, due to an overridden definition of `==`. Thanks to [Christopher Smith](https://github.com/chrylis) for suggesting this improvement.
