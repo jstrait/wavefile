@@ -106,7 +106,7 @@ Then, to run the tests:
 
 ## Generating test fixtures
 
-If you want to change one of the fixture `*.wav` files under `/test/fixtures`, edit the appropriate `*.yml` file defined in `/tools`, and then run this:
+If you want to change one of the fixture `*.wav` files under `/test/fixtures`, edit the appropriate `*.yml` file defined in `/test/fixtures/yaml`, and then run this:
 
     rake test:create_fixtures
 
