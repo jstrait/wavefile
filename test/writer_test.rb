@@ -202,7 +202,7 @@ private
 
   def read_file(type, file_name)
     if type == :expected
-      fixture_folder = 'valid'
+      fixture_folder = 'wave/valid'
     elsif type == :actual
       fixture_folder = 'actual_output'
     else

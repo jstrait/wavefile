@@ -7,7 +7,7 @@ include WaveFile
 class ReaderTest < Minitest::Test
   include WaveFileIOTestHelper
 
-  FIXTURE_ROOT_PATH = "test/fixtures"
+  FIXTURE_ROOT_PATH = "test/fixtures/wave"
 
 
   def test_nonexistent_file
