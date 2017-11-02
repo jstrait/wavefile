@@ -194,7 +194,7 @@
   <p>If the format code is 3, then the sample data is stored as floating point numbers. There are no extra fields for this format, so the extension size field should be set to 0.</p>
 
   <h2>Extra Format Fields for EXTENSIBLE format</h2>
-  <p>If the format code is 65534, then the format is called &ldquo;WAVE_FORMAT_EXTENSIBLE***&rdquo;. This comes from the name of a data structure given to this format in the Windows API. The extensible format is essentially a container format inside another container format. The reason it exists is to work around some ambiguities in the original Wave file format without having to modify existing files.</p>
+  <p>If the format code is 65534, then the format is called &ldquo;WAVE_FORMAT_EXTENSIBLE&rdquo;. This comes from the name of a data structure given to this format in the Windows API. The extensible format is a container format. It exists to work around some ambiguities in the original Wave file format without having to modify existing files.</p>
   <table>
     <tr>
       <th>Field</th>
