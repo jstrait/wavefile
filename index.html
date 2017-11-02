@@ -67,8 +67,8 @@
       </audio>
     </li>
   </ul>
-  <pre><code>require 'wavefile'
-include WaveFile    # To avoid prefixing classes with 'WaveFile::'
+  <pre><code>require "wavefile"
+include WaveFile    # To avoid prefixing classes with "WaveFile::"
 
 FILES_TO_APPEND = ["one.wav", "two.wav", "three.wav"]
 OUTPUT_FORMAT = Format.new(:stereo, :pcm_16, 44100)
@@ -91,11 +91,11 @@ end</pre></code>
 
     <p>...and include it in your Ruby program:</p>
 
-    <pre><code>require 'wavefile'</code></pre>
+    <pre><code>require "wavefile"</code></pre>
 
     <p>...or Gemfile:</p>
 
-    <pre><code>gem 'wavefile'</code></pre>
+    <pre><code>gem "wavefile"</code></pre>
 
     <p>Note: It&rsquo;s recommended that you use a Ruby version manager such as <a href="http://rvm.io/">rvm</a> or <a href="https://github.com/sstephenson/rbenv/">rbenv</a>. But if using the system Ruby that comes pre-installed on MacOS, you should used <code>sudo gem install wavefile</code>. Otherwise you might run into a file permission error.</p>
 </div>
