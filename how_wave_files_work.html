@@ -43,13 +43,13 @@
   <h2>High Level Wave File Structure</h2>
   <p>At top level, a Wave file consists of a single <code>"RIFF"</code> chunk, which contains all of the data for the wave file. The RIFF chunk body starts with a format code <code>"WAVE"</code> which indicates that the sub-chunks are for a Wave file. (As opposed to a rich text file, bitmap, etc). This is followed by the sub chunks. A Wave file is required to contain at minimum a format chunk and a data chunk (described below), and the format chunk must come before the data chunk. If the format code in the format chunk is not 1 (see below), then it must also contain a <code>"fact"</code> chunk. It can also contain other optional chunks.</p>
   <p>Visually this is what it looks like:</p>
-  <div style="border: 2px solid black; padding: 1.5em 1.5em 0.0em 1.5em; width: 15.0em; margin: 0.0em auto; border-radius: 0.5em;">
+  <div style="border: 2px solid black; padding: 0.75em 0.75em 0.0em 0.75em; max-width: 15.0rem; margin: 0.0em auto; border-radius: 0.75rem;">
     RIFF Chunk<br />
     Format: <code>"WAVE"</code>
-    <div style="border: 2px solid black; padding: 1.5em; margin: 0.75em 0.0em; border-radius: 0.5em;">Format Chunk (<code>"fmt&nbsp;"</code>)</div>
-    <div style="border: 2px solid black; padding: 1.5em; margin: 0.75em 0.0em; border-radius: 0.5em;"><em>other optional chunk</em></div>
-    <div style="border: 2px solid black; padding: 1.5em; margin: 0.75em 0.0em; border-radius: 0.5em;"><em>other optional chunk</em></div>
-    <div style="border: 2px solid black; padding: 1.5em; margin: 0.75em 0.0em 1.5em 0.0em; border-radius: 0.5em;">Data Chunk (<code>"data"</code>)</div>
+    <div style="border: 2px solid black; padding: 0.75em; margin: 0.75em 0.0em; border-radius: 0.75rem;">Format Chunk (<code>"fmt&nbsp;"</code>)</div>
+    <div style="border: 2px solid black; padding: 0.75em; margin: 0.75em 0.0em; border-radius: 0.75rem;"><em>other optional chunk</em></div>
+    <div style="border: 2px solid black; padding: 0.75em; margin: 0.75em 0.0em; border-radius: 0.75rem;"><em>other optional chunk</em></div>
+    <div style="border: 2px solid black; padding: 0.75em; margin: 0.75em 0.0em 0.75em 0.0em; border-radius: 0.75rem;">Data Chunk (<code>"data"</code>)</div>
   </div>
   <p><span class="tag-important">Important!</span>Other than the format chunk coming before the data chunk, there isn&rsquo;t any requirement that the chunks come in any particular order. You shouldn&rsquo;t assume that the data chunk is the last chunk. (Although in practice, it usually is).</p>
   <h2>The RIFF Chunk</h2>
