@@ -15,6 +15,7 @@ module WaveFile
       @byte_rate = fields[:byte_rate]
       @block_align = fields[:block_align]
       @bits_per_sample = fields[:bits_per_sample]
+      @speaker_mapping = parse_speaker_mapping(fields[:speaker_mapping])
       @valid_bits_per_sample = fields[:valid_bits_per_sample]
     end
 
@@ -47,7 +48,50 @@ module WaveFile
 
       sample_format = "#{FORMAT_CODES.invert[audio_format_code]}_#{bits_per_sample}".to_sym
 
-      Format.new(@channels, sample_format, @sample_rate)
+      Format.new(@channels, sample_format, @sample_rate, speaker_mapping: @speaker_mapping)
     end
+
+  private
+
+    # Internal
+    def parse_speaker_mapping(bit_field)
+      return nil if bit_field.nil?
+
+      mapping = []
+      speaker_index = 0
+
+      while (mapping.length < @channels) && (speaker_index < SPEAKER_POSITIONS.length)
+        if bit_field & (2 ** speaker_index) != 0
+          mapping << SPEAKER_POSITIONS[speaker_index]
+        end
+
+        speaker_index += 1
+      end
+
+      mapping.fill(:undefined, mapping.length, @channels - mapping.length)
+      mapping.freeze
+    end
+
+    # Internal
+    SPEAKER_POSITIONS = [
+      :front_left,
+      :front_right,
+      :front_center,
+      :low_frequency,
+      :back_left,
+      :back_right,
+      :front_left_of_center,
+      :front_right_of_center,
+      :back_center,
+      :side_left,
+      :side_right,
+      :top_center,
+      :top_front_left,
+      :top_front_center,
+      :top_front_right,
+      :top_back_left,
+      :top_back_center,
+      :top_back_right,
+    ]
   end
 end

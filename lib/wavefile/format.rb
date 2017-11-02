@@ -38,7 +38,7 @@ module WaveFile
     #
     #   format = Format.new(:stereo, :float_32, 44100)
     #   format = Format.new(:stereo, :float, 44100)  # Equivalent to above
-    def initialize(channels, format_code, sample_rate)
+    def initialize(channels, format_code, sample_rate, speaker_mapping: nil)
       channels = normalize_channels(channels)
       sample_format, bits_per_sample = normalize_format_code(format_code)
       validate_channels(channels)
@@ -52,6 +52,7 @@ module WaveFile
       @sample_rate = sample_rate
       @block_align = (@bits_per_sample / 8) * @channels
       @byte_rate = @block_align * @sample_rate
+      @speaker_mapping = speaker_mapping
     end
 
     # Public: Returns true if the format has 1 channel, false otherwise.
@@ -85,6 +86,10 @@ module WaveFile
     # Public: Returns the number of bytes contained in 1 second of sample data.
     # Is equivalent to block_align * sample_rate.
     attr_reader :byte_rate
+
+    # Public: Returns the mapping of each channel to a speaker. If this value is nil,
+    # then the channels are not mapped to any specific speaker.
+    attr_reader :speaker_mapping
 
   private
 

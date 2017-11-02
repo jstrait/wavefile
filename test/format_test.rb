@@ -57,6 +57,14 @@ class FormatTest < Minitest::Test
     end
   end
 
+  def test_no_speaker_mapping_set_in_constructor
+    assert_nil(nil, Format.new(:mono, :pcm_8, 44100).speaker_mapping)
+  end
+
+  def test_defined_speaker_mapping_in_constructor
+    assert_equal([:front_left, :front_right], Format.new(:mono, :pcm_8, 44100, speaker_mapping: [:front_left, :front_right]).speaker_mapping)
+  end
+
   def test_byte_and_block_align
     [1, :mono].each do |one_channel|
       format = Format.new(one_channel, :pcm_8, 44100)
