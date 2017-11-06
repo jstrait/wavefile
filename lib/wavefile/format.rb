@@ -45,6 +45,7 @@ module WaveFile
       validate_sample_format(sample_format)
       validate_bits_per_sample(sample_format, bits_per_sample)
       validate_sample_rate(sample_rate)
+      validate_speaker_mapping(speaker_mapping)
 
       @channels = channels
       @sample_format = sample_format
@@ -158,6 +159,17 @@ module WaveFile
       unless VALID_SAMPLE_RATE_RANGE === candidate_sample_rate
         raise InvalidFormatError,
               "Invalid sample rate. Must be between #{VALID_SAMPLE_RATE_RANGE.min} and #{VALID_SAMPLE_RATE_RANGE.max}"
+      end
+    end
+
+    # Internal
+    def validate_speaker_mapping(candidate_speaker_mapping)
+      return if candidate_speaker_mapping.nil?
+
+      unless candidate_speaker_mapping.is_a?(Array) &&
+             (candidate_speaker_mapping - UnvalidatedFormat::SPEAKER_POSITIONS) == []
+        raise InvalidFormatError,
+              "Invalid speaker_mapping. Must be an array containing these known speakers: #{UnvalidatedFormat::SPEAKER_POSITIONS.inspect}"
       end
     end
   end
