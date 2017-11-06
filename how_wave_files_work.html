@@ -55,135 +55,141 @@
   <h2>The RIFF Chunk</h2>
   <p>Like all chunks, the RIFF chunk starts with an ID code, in this case the ASCII string <code>"RIFF"</code>. Next is the size field, which is the size of the entire Wave file except for the 8-byte RIFF header.</p>
   <p>The first 4 bytes following the header will identify the type of RIFF chunk. In the case of Wave files, it will be <code>"WAVE"</code>. Immediately following that will be the inner Wave file chunks.</p>
-  <table>
-    <tr>
-      <th>Field</th>
-      <th>Size in Bytes</th>
-      <th>Description</th>
-    </tr>
-    <tr>
-      <td>Chunk ID</td>
-      <td>4</td>
-      <td>ASCII string <code>"RIFF"</code></td>
-    </tr>
-    <tr>
-      <td>Chunk Size</td>
-      <td>4</td>
-      <td>32-bit unsigned integer</td>
-    </tr>
-    <tr>
-      <td>RIFF Format Code</td>
-      <td>4</td>
-      <td>ASCII string <code>"WAVE"</code></td>
-    </tr>
-    <tr>
-      <td>Sub Chunks</td>
-      <td>Variable</td>
-      <td>Variable</td>
-    </tr>
-  </table>
+  <div class="scroll-x">
+    <table>
+      <tr>
+        <th>Field</th>
+        <th>Size in Bytes</th>
+        <th>Description</th>
+      </tr>
+      <tr>
+        <td>Chunk ID</td>
+        <td>4</td>
+        <td>ASCII string <code>"RIFF"</code></td>
+      </tr>
+      <tr>
+        <td>Chunk Size</td>
+        <td>4</td>
+        <td>32-bit unsigned integer</td>
+      </tr>
+      <tr>
+        <td>RIFF Format Code</td>
+        <td>4</td>
+        <td>ASCII string <code>"WAVE"</code></td>
+      </tr>
+      <tr>
+        <td>Sub Chunks</td>
+        <td>Variable</td>
+        <td>Variable</td>
+      </tr>
+    </table>
+  </div>
 
   <h2>The Format Chunk</h2>
   <p>The format chunk describes the format that the samples in the data chunk are encoded in. The exact structure of the format chunk depends on the value of the format code field. If the format code is 1 (PCM), then the format chunk will only contain the fields above the dashed line in the diagram below. If it's not 1, the chunk will also contain the fields after the dashed line.</p>
   <p>The reason for these differences is that the Wave format is a container for many different kinds of sample formats, and because the Wave format has evolved over time to support new formats. Extra fields that are needed for one sample format might not be needed for another sample format. This also allows new fields to be added without having to change pre-existing Wave files.</p>
-  <table>
-    <tr>
-      <th>Field</th>
-      <th>Size in Bytes</th>
-      <th>Description</th>
-    </tr>
-    <tr>
-      <td>Chunk ID</td>
-      <td>4</td>
-      <td>ASCII string <code>"fmt&nbsp;"</code> (note the space after &lsquo;t&rsquo;)</td>
-    </tr>
-    <tr>
-      <td>Chunk Size</td>
-      <td>4</td>
-      <td>32-bit unsigned integer</td>
-    </tr>
-    <tr>
-      <td>Format Code</td>
-      <td>2</td>
-      <td>16-bit unsigned integer</td>
-    </tr>
-    <tr>
-      <td>Number of Channels</td>
-      <td>2</td>
-      <td>16-bit unsigned integer</td>
-    </tr>
-    <tr>
-      <td>Samples per second</td>
-      <td>4</td>
-      <td>32-bit unsigned integer</td>
-    </tr>
-    <tr>
-      <td>Bytes per Second</td>
-      <td>4</td>
-      <td>32-bit unsigned integer</td>
-    </tr>
-    <tr>
-      <td>Bytes per Sample Frame<br />(a.k.a block align)</td>
-      <td>2</td>
-      <td>16-bit unsigned integer</td>
-    </tr>
-    <tr style="border-bottom: 2px #ddd dashed;">
-      <td>Bits per sample</td>
-      <td>2</td>
-      <td>16-bit unsigned integer</td>
-    </tr>
-    <tr>
-      <td colspan="3"><em>These fields are only present if format code is not 1:</em></td>
-    </tr>
-    <tr>
-      <td>Extension Size</td>
-      <td>2</td>
-      <td>16-bit unsigned integer</td>
-    </tr>
-    <tr>
-      <td>Extra fields</td>
-      <td>Variable</td>
-      <td>It depends on the format code</td>
-    </tr>
-  </table>
+  <div class="scroll-x">
+    <table>
+      <tr>
+        <th>Field</th>
+        <th>Size in Bytes</th>
+        <th>Description</th>
+      </tr>
+      <tr>
+        <td>Chunk ID</td>
+        <td>4</td>
+        <td>ASCII string <code>"fmt&nbsp;"</code> (note the space after &lsquo;t&rsquo;)</td>
+      </tr>
+      <tr>
+        <td>Chunk Size</td>
+        <td>4</td>
+        <td>32-bit unsigned integer</td>
+      </tr>
+      <tr>
+        <td>Format Code</td>
+        <td>2</td>
+        <td>16-bit unsigned integer</td>
+      </tr>
+      <tr>
+        <td>Number of Channels</td>
+        <td>2</td>
+        <td>16-bit unsigned integer</td>
+      </tr>
+      <tr>
+        <td>Samples per second</td>
+        <td>4</td>
+        <td>32-bit unsigned integer</td>
+      </tr>
+      <tr>
+        <td>Bytes per Second</td>
+        <td>4</td>
+        <td>32-bit unsigned integer</td>
+      </tr>
+      <tr>
+        <td>Bytes per Sample Frame<br />(a.k.a block align)</td>
+        <td>2</td>
+        <td>16-bit unsigned integer</td>
+      </tr>
+      <tr style="border-bottom: 2px #ddd dashed;">
+        <td>Bits per sample</td>
+        <td>2</td>
+        <td>16-bit unsigned integer</td>
+      </tr>
+      <tr>
+        <td colspan="3"><em>These fields are only present if format code is not 1:</em></td>
+      </tr>
+      <tr>
+        <td>Extension Size</td>
+        <td>2</td>
+        <td>16-bit unsigned integer</td>
+      </tr>
+      <tr>
+        <td>Extra fields</td>
+        <td>Variable</td>
+        <td>It depends on the format code</td>
+      </tr>
+    </table>
+  </div>
   <p>While some of these fields have a large range of possible values, in practice there are only a few that will actually be used. For some background on what some of this terminology means, check out <a href="http://www.joelstrait.com/blog/2009/10/12/a_digital_audio_primer">this blog post</a>.</p>
   <p><span class="label">Format Code</span> &ndash; Indicates how the sample data for the wave file is stored. The most common format is PCM, which has a code of 1. Other formats include IEEE floating point (3), ADPCM (2), &mu;-law (7), and WaveFormatExtensible (65534).</p>
   <p><span class="label">Number of channels</span> &ndash; Typically a file will have 1 channel (mono) or 2 channels (stereo). A surround sound file will have 6* channels. Although this field technically allows you to have up to 65,535 channels, for audio data that would be flat out ridiculous. You would only hear all of the channels if you had 65,535 different speakers, and since a chunk can only hold 4GB of data (due to the 32-bit size field), you would only be able to store about a second and a half** of 8-bit PCM data.</p>
   <p><span class="label">Sample rate</span> &ndash; The number of sample frames that occur each second. A typical value would be 44,100, which is the same as an audio CD.</p>
   <p><span class="label">Bytes per second (byte rate)</span> &ndash; The spec calls this <em>byte rate</em>, which means the number of bytes required for one second of audio data. This is equal to the bytes per sample frame times the sample rate. So with a bytes per sample frame of 32, and a sample rate of 44,100, this should equal 1,411,200.</p>
   <p><span class="label">Bytes per sample frame</span> &ndash; Called <em>block align</em> by the spec, this is the number of bytes required to store a single sample frame, i.e. a single sample for each channel. (Sometimes a sample frame is also referred to as a <em>block</em>). It should be equal to the number of channels times the bits per sample rounded up to a multiple of 8. For example:
-      <table>
-        <tr>
-          <th>Channels</th>
-          <th>Bits Per Sample</th>
-          <th>Bytes per sample frame</th>
-        </tr>
-        <tr>
-          <td>1</td>
-          <td>8</td>
-          <td>8</td>
-        </tr>
-        <tr>
-          <td>2</td>
-          <td>8</td>
-          <td>16</td>
-        </tr>
-        <tr>
-          <td>1</td>
-          <td>16</td>
-          <td>16</td>
-        </tr>
-        <tr>
-          <td>2</td>
-          <td>16</td>
-          <td>32</td>
-        </tr>
-        <tr>
-          <td>6</td>
-          <td>32</td>
-          <td>192</td>
-        </tr>
-      </table>
+  <div class="scroll-x">
+    <table>
+      <tr>
+        <th>Channels</th>
+        <th>Bits Per Sample</th>
+        <th>Bytes per sample frame</th>
+      </tr>
+      <tr>
+        <td>1</td>
+        <td>8</td>
+        <td>8</td>
+      </tr>
+      <tr>
+        <td>2</td>
+        <td>8</td>
+        <td>16</td>
+      </tr>
+      <tr>
+        <td>1</td>
+        <td>16</td>
+        <td>16</td>
+      </tr>
+      <tr>
+        <td>2</td>
+        <td>16</td>
+        <td>32</td>
+      </tr>
+      <tr>
+        <td>6</td>
+        <td>32</td>
+        <td>192</td>
+      </tr>
+    </table>
+  </div>
   <p>This field can be used to calculate the bytes per second field. Another possible use is for seeking around in a file. For example, if the bytes per sample frame is 32, then to seek forward 10 sample frames you need to seek forward 320 bytes.</p>
   <p>For PCM data, this field is essentially redundant since it can be calculated from the other fields. However, be sure to note the point of rounding bits per sample values to the nearest multiple of 8.</p>
   <p><span class="label">Bits per sample</span> &ndash; For PCM data, typical values will be 8, 16, or 32. If the sample format doesn't require this field, it should be set to 0.</p>
@@ -195,28 +201,30 @@
 
   <h2>Extra Format Fields for EXTENSIBLE format</h2>
   <p>If the format code is 65534, then the format is called &ldquo;WAVE_FORMAT_EXTENSIBLE&rdquo;. This comes from the name of a data structure given to this format in the Windows API. The extensible format is a container format. It exists to work around some ambiguities in the original Wave file format without having to modify existing files.</p>
-  <table>
-    <tr>
-      <th>Field</th>
-      <th>Size in Bytes</th>
-      <th>Description</th>
-    </tr>
-    <tr>
-      <td>Valid Bits Per Sample</td>
-      <td>2</td>
-      <td>16-bit unsigned integer</td>
-    </tr>
-    <tr>
-      <td>Channel Mask</td>
-      <td>4</td>
-      <td>32-bit unsigned integer</td>
-    </tr>
-    <tr>
-      <td>Sub Format</td>
-      <td>16</td>
-      <td>16-byte GUID</td>
-    </tr>
-  </table>
+  <div class="scroll-x">
+    <table>
+      <tr>
+        <th>Field</th>
+        <th>Size in Bytes</th>
+        <th>Description</th>
+      </tr>
+      <tr>
+        <td>Valid Bits Per Sample</td>
+        <td>2</td>
+        <td>16-bit unsigned integer</td>
+      </tr>
+      <tr>
+        <td>Channel Mask</td>
+        <td>4</td>
+        <td>32-bit unsigned integer</td>
+      </tr>
+      <tr>
+        <td>Sub Format</td>
+        <td>16</td>
+        <td>16-byte GUID</td>
+      </tr>
+    </table>
+  </div>
   <p>If format does not meet the criteria below, then the extension size field should be present:</p>
   <ul>
     <li>Sample format is PCM (i.e. 1)</li>
@@ -229,85 +237,91 @@
   <p><span class="label">Sub Format</span> &ndash; Identifies the format of the sample data in the data chunk. This is a replacement for the original format code field, since it will have a format code of 65534.</p>
 
   <h2>The Fact Chunk</h2>
-  <table>
-    <tr>
-      <th>Field</th>
-      <th>Size in Bytes</th>
-      <th>Description</th>
-    </tr>
-    <tr>
-      <td>Chunk ID</td>
-      <td>4</td>
-      <td>ASCII string <code>"fact"</code></td>
-    </tr>
-    <tr>
-      <td>Chunk Size</td>
-      <td>4</td>
-      <td>32-bit unsigned integer</td>
-    </tr>
-    <tr>
-      <td>Number of sample frames</td>
-      <td>4</td>
-      <td>32-bit unsigned integer</td>
-    </tr>
-  </table>
+  <div class="scroll-x">
+    <table>
+      <tr>
+        <th>Field</th>
+        <th>Size in Bytes</th>
+        <th>Description</th>
+      </tr>
+      <tr>
+        <td>Chunk ID</td>
+        <td>4</td>
+        <td>ASCII string <code>"fact"</code></td>
+      </tr>
+      <tr>
+        <td>Chunk Size</td>
+        <td>4</td>
+        <td>32-bit unsigned integer</td>
+      </tr>
+      <tr>
+        <td>Number of sample frames</td>
+        <td>4</td>
+        <td>32-bit unsigned integer</td>
+      </tr>
+    </table>
+  </div>
   <p>The fact chunk indicates how many sample frames are in the file. It&rsquo;s required if the format code in the format chunk is not 1. If the format code is 1, it&rsquo;s optional. The reason for this chunk is that with some sample formats the number of sample frames can&rsquo;t be determined by obvious means (e.g. because they store data in a compressed format). This gives a way of determining e.g. the playing time for the file, without having to decode the entire data chunk.</p>
 
   <h2>The Data Chunk</h2>
-  <table>
-    <tr>
-      <th>Field</th>
-      <th>Size in Bytes</th>
-      <th>Description</th>
-    </tr>
-    <tr>
-      <td>Chunk ID</td>
-      <td>4</td>
-      <td>ASCII string <code>"data"</code></td>
-    </tr>
-    <tr>
-      <td>Chunk Size</td>
-      <td>4</td>
-      <td>32-bit unsigned integer</td>
-    </tr>
-    <tr>
-      <td>Sample Data</td>
-      <td>Various</td>
-      <td>It depends on the format code</td>
-    </tr>
-  </table>
+  <div class="scroll-x">
+    <table>
+      <tr>
+        <th>Field</th>
+        <th>Size in Bytes</th>
+        <th>Description</th>
+      </tr>
+      <tr>
+        <td>Chunk ID</td>
+        <td>4</td>
+        <td>ASCII string <code>"data"</code></td>
+      </tr>
+      <tr>
+        <td>Chunk Size</td>
+        <td>4</td>
+        <td>32-bit unsigned integer</td>
+      </tr>
+      <tr>
+        <td>Sample Data</td>
+        <td>Various</td>
+        <td>It depends on the format code</td>
+      </tr>
+    </table>
+  </div>
   <p>The layout for the data chunk is simpler than the format chunk: the normal 8-byte chunk header, followed by nothing but sweet, raw, unfiltered sample data. The sample data can be stored in a number of formats, which will be indicated by the format chunk.</p>
   <p>The next several sections describe various formats that data in the data chunk can be stored as.</p>
 
   <h2>PCM Data Chunk</h2>
   <p>The simplest, and most common, is to store PCM samples (format code 1). This is just raw sample data stored as integers. The bits per sample field will indicate the range of the sample data:</p>
-  <table>
-    <tr>
-      <th>Bits per sample</th>
-      <th>Minimum Sample</th>
-      <th>Maximum Sample</th>
-    </tr>
-    <tr>
-      <td>8</td>
-      <td>0</td>
-      <td>255</td>
-    </tr>
-    <tr>
-      <td>16</td>
-      <td>-32,768</td>
-      <td>32,767</td>
-    </tr>
-    <tr>
-      <td>24</td>
-      <td>-8,388,608</td>
-      <td>8,388,607</td>
-    </tr>
-    <tr>
-      <td>32</td>
-      <td>-2,147,483,648</td>
-      <td>2,147,483,647</td>
-    </tr>
-  </table>
+  <div class="scroll-x">
+    <table>
+      <tr>
+        <th>Bits per sample</th>
+        <th>Minimum Sample</th>
+        <th>Maximum Sample</th>
+      </tr>
+      <tr>
+        <td>8</td>
+        <td>0</td>
+        <td>255</td>
+      </tr>
+      <tr>
+        <td>16</td>
+        <td>-32,768</td>
+        <td>32,767</td>
+      </tr>
+      <tr>
+        <td>24</td>
+        <td>-8,388,608</td>
+        <td>8,388,607</td>
+      </tr>
+      <tr>
+        <td>32</td>
+        <td>-2,147,483,648</td>
+        <td>2,147,483,647</td>
+      </tr>
+    </table>
+  </div>
   <p><span class="tag-important">Important!</span>Notice that 8-bit samples are unsigned, while larger bit depths are signed.</p>
   <p>Samples in a multi-channel PCM wave file are interleaved. That is, in a stereo file, one sample for the left channel will be followed by one sample for the right channel, followed by another sample for the left channel, then right channel, and so forth.</p>
   <p>The samples for all channels at a moment in time are called a <em>sample frame</em> (also called a <em>block</em>). That is, a sample frame will contain one sample for each channel. In a monophonic file, a sample frame will consist on 1 sample. In a stereo file, a sample frame has 2 samples (one for the left channel, one for the right channel). In a 5-channel file, a sample frame has 5 samples. The block align field in the format chunk gives the size in bytes of each sample frame. This can be useful when seeking to a particular sample frame in the file.</p>

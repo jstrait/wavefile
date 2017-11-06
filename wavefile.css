@@ -93,7 +93,7 @@ ul.audio-list li label {
 
 table {
   border-collapse: collapse;
-  width: 100%;
+  min-width: 744px;
 }
 
 th {
@@ -222,6 +222,8 @@ ul#format-list li {
 span.label {
   font-weight: bold;
 }
+
+.scroll-x { overflow-x: scroll; }
 
 .section {
   width: 100%;
