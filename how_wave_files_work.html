@@ -21,7 +21,7 @@
 </div>
 <div class="container">
   <h2>Getting Started</h2>
-  <p>If you&rsquo;re just getting started with audio programming, you might want to read up on some of the basics of digital audio first. Check out <a href="http://www.joelstrait.com/blog/2009/10/12/a_digital_audio_primer">this blog post</a> for an introduction.</p>
+  <p>If you&rsquo;re just getting started with audio programming, you might want to read up on some of the basics of digital audio first. Check out <a href="https://www.joelstrait.com/digital_audio_primer/">this blog post</a> for an introduction.</p>
 
   <h2>Wave Files Store Audio Data</h2>
   <p>Wave files store audio data, encoded using one of several sample formats. Some sample formats contain raw, uncompressed data, while some formats use some sort of compression. The most common sample format is <em>PCM</em>, which stands for <em>pulse code modulation</em>. This is raw, uncompressed sample data where each sample is an integer.</p>
@@ -150,7 +150,7 @@
       </tr>
     </table>
   </div>
-  <p>While some of these fields have a large range of possible values, in practice there are only a few that will actually be used. For some background on what some of this terminology means, check out <a href="http://www.joelstrait.com/blog/2009/10/12/a_digital_audio_primer">this blog post</a>.</p>
+  <p>While some of these fields have a large range of possible values, in practice there are only a few that will actually be used. For some background on what some of this terminology means, check out <a href="https://www.joelstrait.com/digital_audio_primer/">this blog post</a>.</p>
   <p><span class="label">Format Code</span> &ndash; Indicates how the sample data for the wave file is stored. The most common format is PCM, which has a code of 1. Other formats include IEEE floating point (3), ADPCM (2), &mu;-law (7), and WaveFormatExtensible (65534).</p>
   <p><span class="label">Number of channels</span> &ndash; Typically a file will have 1 channel (mono) or 2 channels (stereo). A surround sound file will have 6* channels. Although this field technically allows you to have up to 65,535 channels, for audio data that would be flat out ridiculous. You would only hear all of the channels if you had 65,535 different speakers, and since a chunk can only hold 4GB of data (due to the 32-bit size field), you would only be able to store about a second and a half** of 8-bit PCM data.</p>
   <p><span class="label">Sample rate</span> &ndash; The number of sample frames that occur each second. A typical value would be 44,100, which is the same as an audio CD.</p>
