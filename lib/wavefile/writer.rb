@@ -230,15 +230,15 @@ module WaveFile
     # starts, assuming this canonical format:
     #
     # RIFF Chunk Header (12 bytes)
-    # Format Chunk (16 bytes for PCM, 18 bytes for floating point)
-    # FACT Chunk (0 bytes for PCM, 12 bytes for floating point)
+    # Format Chunk (16 bytes for PCM, 18 bytes for floating point, 40 bytes for WAVE_FORMAT_EXTENSIBLE)
+    # FACT Chunk (0 bytes for PCM, 12 bytes for any other format)
     # Data Chunk Header (8 bytes)
     #
     # All wave files written by Writer use this canonical format.
-    CANONICAL_HEADER_BYTE_LENGTH = {:pcm => 36, :float => 50, :extensible => 60}    # :nodoc:
+    CANONICAL_HEADER_BYTE_LENGTH = {:pcm => 36, :float => 50, :extensible => 72}    # :nodoc:
 
     # Internal
-    FORMAT_CHUNK_BYTE_LENGTH = {:pcm => 16, :float => 18}    # :nodoc:
+    FORMAT_CHUNK_BYTE_LENGTH = {:pcm => 16, :float => 18, :extensible => 40}    # :nodoc:
 
     # Internal: Writes the RIFF chunk header, format chunk, and the header for the data chunk. After this
     # method is called the file will be "queued up" and ready for writing actual sample data.
@@ -256,7 +256,7 @@ module WaveFile
 
       # Write the format chunk
       header += CHUNK_IDS[:format]
-      header += extensible ? [40].pack(UNSIGNED_INT_32) : [FORMAT_CHUNK_BYTE_LENGTH[@format.sample_format]].pack(UNSIGNED_INT_32)
+      header += [FORMAT_CHUNK_BYTE_LENGTH[format_code]].pack(UNSIGNED_INT_32)
       header += [FORMAT_CODES[format_code]].pack(UNSIGNED_INT_16)
       header += [@format.channels].pack(UNSIGNED_INT_16)
       header += [@format.sample_rate].pack(UNSIGNED_INT_32)
@@ -275,7 +275,7 @@ module WaveFile
       end
 
       # Write the FACT chunk, if necessary
-      unless @format.sample_format == :pcm
+      unless format_code == :pcm
         header += CHUNK_IDS[:fact]
         header += [4].pack(UNSIGNED_INT_32)
         header += [sample_frame_count].pack(UNSIGNED_INT_32)
