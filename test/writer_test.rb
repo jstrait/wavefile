@@ -33,7 +33,9 @@ class WriterTest < Minitest::Test
           writer.write(Buffer.new(SQUARE_WAVE_CYCLE[channels][sample_format] * 24, format))
           writer.close
 
-          assert_equal(read_file(:expected, file_name), read_file(:actual, file_name))
+          assert_equal(read_file(:expected, file_name),
+                       read_file(:actual, file_name),
+                       "Written file doesn't match expected output: #{file_name}")
         end
       end
     end
@@ -52,7 +54,9 @@ class WriterTest < Minitest::Test
           writer.write(Buffer.new(SQUARE_WAVE_CYCLE[channels][sample_format] * 24, format))
           writer.close
 
-          assert_equal(read_file(:expected, file_name), read_file(:actual, file_name))
+          assert_equal(read_file(:expected, file_name),
+                       read_file(:actual, file_name),
+                       "Written file doesn't match expected output: #{file_name}")
         end
       end
     end
@@ -69,7 +73,9 @@ class WriterTest < Minitest::Test
           writer.write(Buffer.new(SQUARE_WAVE_CYCLE[channels][sample_format] * 24, format))
           writer.close
 
-          assert_equal(read_file(:expected, file_name), read_file(:actual, file_name))
+          assert_equal(read_file(:expected, file_name),
+                       read_file(:actual, file_name),
+                       "Written file doesn't match expected output: #{file_name}")
         end
       end
     end
@@ -88,7 +94,9 @@ class WriterTest < Minitest::Test
             end
           end
 
-          assert_equal(read_file(:expected, file_name), read_file(:actual, file_name))
+          assert_equal(read_file(:expected, file_name),
+                        read_file(:actual, file_name),
+                        "Written file doesn't match expected output: #{file_name}")
           assert(writer.closed?)
         end
       end
@@ -108,7 +116,9 @@ class WriterTest < Minitest::Test
             end
           end
 
-          assert_equal(read_file(:expected, file_name), read_file(:actual, file_name))
+          assert_equal(read_file(:expected, file_name),
+                       read_file(:actual, file_name),
+                       "Written file doesn't match expected output: #{file_name}")
           assert(writer.closed?)
         end
       end
@@ -126,7 +136,9 @@ class WriterTest < Minitest::Test
             end
           end
 
-          assert_equal(read_file(:expected, file_name), read_file(:actual, file_name))
+          assert_equal(read_file(:expected, file_name),
+                       read_file(:actual, file_name),
+                       "Written file doesn't match expected output: #{file_name}")
           assert(writer.closed?)
         end
       end
