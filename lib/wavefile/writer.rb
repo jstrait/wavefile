@@ -243,7 +243,7 @@ module WaveFile
     # Internal: Writes the RIFF chunk header, format chunk, and the header for the data chunk. After this
     # method is called the file will be "queued up" and ready for writing actual sample data.
     def write_header(sample_frame_count)
-      extensible = (@format.sample_format == :pcm && @format.channels > 2) ||
+      extensible = @format.channels > 2 ||
                    (@format.sample_format == :pcm && @format.bits_per_sample != 8 && @format.bits_per_sample != 16)
       format_code = extensible ? :extensible : @format.sample_format
 
@@ -263,7 +263,7 @@ module WaveFile
       header += [@format.byte_rate].pack(UNSIGNED_INT_32)
       header += [@format.block_align].pack(UNSIGNED_INT_16)
       header += [@format.bits_per_sample].pack(UNSIGNED_INT_16)
-      if @format.sample_format == :float
+      if format_code == :float
         header += [0].pack(UNSIGNED_INT_16)
       end
 
@@ -271,7 +271,14 @@ module WaveFile
         header += [22].pack(UNSIGNED_INT_16)
         header += [@format.bits_per_sample].pack(UNSIGNED_INT_16)
         header += [(2 ** @format.channels) - 1].pack(UNSIGNED_INT_32)   # TODO: Write an actual value here
-        header += WaveFile::SUB_FORMAT_GUID_PCM
+
+        if @format.sample_format == :pcm
+          format_guid = WaveFile::SUB_FORMAT_GUID_PCM
+        elsif @format.sample_format == :float
+          format_guid = WaveFile::SUB_FORMAT_GUID_FLOAT
+        end
+
+        header += format_guid
       end
 
       # Write the FACT chunk, if necessary
