@@ -21,36 +21,149 @@ class WriterTest < Minitest::Test
   end
 
   def test_write_basic_file
-    exhaustively_test do |format_chunk_format, channels, sample_format|
-      file_name = "valid_#{channels}_#{sample_format}_44100.wav"
-      format = Format.new(CHANNEL_ALIAS[channels], sample_format, 44100)
+    [:mono, :stereo].each do |channels|
+      [:pcm_8, :pcm_16, :float_32, :float_64].each do |sample_format|
+        file_name = "valid_#{channels}_#{sample_format}_44100.wav"
+        format = Format.new(CHANNEL_ALIAS[channels], sample_format, 44100)
 
-      ["#{OUTPUT_FOLDER}/#{file_name}", StringIO.new].each do |io_or_file_name|
-        writer = Writer.new(io_or_file_name, format)
-        writer.write(Buffer.new(SQUARE_WAVE_CYCLE[channels][sample_format] * 128, format))
-        writer.write(Buffer.new(SQUARE_WAVE_CYCLE[channels][sample_format] * 128, format))
-        writer.write(Buffer.new(SQUARE_WAVE_CYCLE[channels][sample_format] * 24, format))
-        writer.close
+        ["#{OUTPUT_FOLDER}/#{file_name}", StringIO.new].each do |io_or_file_name|
+          writer = Writer.new(io_or_file_name, format)
+          writer.write(Buffer.new(SQUARE_WAVE_CYCLE[channels][sample_format] * 128, format))
+          writer.write(Buffer.new(SQUARE_WAVE_CYCLE[channels][sample_format] * 128, format))
+          writer.write(Buffer.new(SQUARE_WAVE_CYCLE[channels][sample_format] * 24, format))
+          writer.close
 
-        assert_equal(read_file(:expected, file_name), read_file(:actual, file_name))
+          assert_equal(read_file(:expected, file_name), read_file(:actual, file_name))
+        end
+      end
+    end
+
+    [:tri].each do |channels|
+      [:float_32, :float_64].each do |sample_format|
+        file_name = "valid_#{channels}_#{sample_format}_44100.wav"
+        format = Format.new(CHANNEL_ALIAS[channels], sample_format, 44100)
+
+        ["#{OUTPUT_FOLDER}/#{file_name}", StringIO.new].each do |io_or_file_name|
+          writer = Writer.new(io_or_file_name, format)
+          writer.write(Buffer.new(SQUARE_WAVE_CYCLE[channels][sample_format] * 128, format))
+          writer.write(Buffer.new(SQUARE_WAVE_CYCLE[channels][sample_format] * 128, format))
+          writer.write(Buffer.new(SQUARE_WAVE_CYCLE[channels][sample_format] * 24, format))
+          writer.close
+
+          assert_equal(read_file(:expected, file_name), read_file(:actual, file_name))
+        end
+      end
+    end
+  end
+
+  def test_write_extensible_file
+    [:mono, :stereo].each do |channels|
+      [:pcm_24, :pcm_32].each do |sample_format|
+        file_name = "valid_extensible_#{channels}_#{sample_format}_44100.wav"
+        format = Format.new(CHANNEL_ALIAS[channels], sample_format, 44100)
+
+        ["#{OUTPUT_FOLDER}/#{file_name}", StringIO.new].each do |io_or_file_name|
+          writer = Writer.new(io_or_file_name, format)
+          writer.write(Buffer.new(SQUARE_WAVE_CYCLE[channels][sample_format] * 128, format))
+          writer.write(Buffer.new(SQUARE_WAVE_CYCLE[channels][sample_format] * 128, format))
+          writer.write(Buffer.new(SQUARE_WAVE_CYCLE[channels][sample_format] * 24, format))
+          writer.close
+
+          assert_equal(read_file(:expected, file_name), read_file(:actual, file_name))
+        end
+      end
+    end
+
+    [:tri].each do |channels|
+      [:pcm_8, :pcm_16, :pcm_24, :pcm_32].each do |sample_format|
+        file_name = "valid_extensible_#{channels}_#{sample_format}_44100.wav"
+        format = Format.new(CHANNEL_ALIAS[channels], sample_format, 44100)
+
+        ["#{OUTPUT_FOLDER}/#{file_name}", StringIO.new].each do |io_or_file_name|
+          writer = Writer.new(io_or_file_name, format)
+          writer.write(Buffer.new(SQUARE_WAVE_CYCLE[channels][sample_format] * 128, format))
+          writer.write(Buffer.new(SQUARE_WAVE_CYCLE[channels][sample_format] * 128, format))
+          writer.write(Buffer.new(SQUARE_WAVE_CYCLE[channels][sample_format] * 24, format))
+          writer.close
+
+          assert_equal(read_file(:expected, file_name), read_file(:actual, file_name))
+        end
       end
     end
   end
 
   def test_write_basic_file_with_a_block
-    exhaustively_test do |format_chunk_format, channels, sample_format|
-      file_name = "valid_#{channels}_#{sample_format}_44100.wav"
-      format = Format.new(CHANNEL_ALIAS[channels], sample_format, 44100)
+    [:mono, :stereo].each do |channels|
+      [:pcm_8, :pcm_16, :float_32, :float_64].each do |sample_format|
+        file_name = "valid_#{channels}_#{sample_format}_44100.wav"
+        format = Format.new(CHANNEL_ALIAS[channels], sample_format, 44100)
 
-      ["#{OUTPUT_FOLDER}/#{file_name}", StringIO.new].each do |io_or_file_name|
-        writer = Writer.new(io_or_file_name, format) do |w|
-          4.times do
-            w.write(Buffer.new(SQUARE_WAVE_CYCLE[channels][sample_format] * 70, format))
+        ["#{OUTPUT_FOLDER}/#{file_name}", StringIO.new].each do |io_or_file_name|
+          writer = Writer.new(io_or_file_name, format) do |w|
+            4.times do
+              w.write(Buffer.new(SQUARE_WAVE_CYCLE[channels][sample_format] * 70, format))
+            end
           end
-        end
 
-        assert_equal(read_file(:expected, file_name), read_file(:actual, file_name))
-        assert(writer.closed?)
+          assert_equal(read_file(:expected, file_name), read_file(:actual, file_name))
+          assert(writer.closed?)
+        end
+      end
+    end
+
+    [:tri].each do |channels|
+      [:float_32, :float_64].each do |sample_format|
+        file_name = "valid_#{channels}_#{sample_format}_44100.wav"
+        format = Format.new(CHANNEL_ALIAS[channels], sample_format, 44100)
+
+        ["#{OUTPUT_FOLDER}/#{file_name}", StringIO.new].each do |io_or_file_name|
+          writer = Writer.new(io_or_file_name, format) do |w|
+            4.times do
+              w.write(Buffer.new(SQUARE_WAVE_CYCLE[channels][sample_format] * 70, format))
+            end
+          end
+
+          assert_equal(read_file(:expected, file_name), read_file(:actual, file_name))
+          assert(writer.closed?)
+        end
+      end
+    end
+  end
+
+  def test_write_extensible_file_with_a_block
+    [:mono, :stereo].each do |channels|
+      [:pcm_24, :pcm_32].each do |sample_format|
+        file_name = "valid_extensible_#{channels}_#{sample_format}_44100.wav"
+        format = Format.new(CHANNEL_ALIAS[channels], sample_format, 44100)
+
+        ["#{OUTPUT_FOLDER}/#{file_name}", StringIO.new].each do |io_or_file_name|
+          writer = Writer.new(io_or_file_name, format) do |w|
+            4.times do
+              w.write(Buffer.new(SQUARE_WAVE_CYCLE[channels][sample_format] * 70, format))
+            end
+          end
+
+          assert_equal(read_file(:expected, file_name), read_file(:actual, file_name))
+          assert(writer.closed?)
+        end
+      end
+    end
+
+    [:tri].each do |channels|
+      [:pcm_8, :pcm_16, :pcm_24, :pcm_32].each do |sample_format|
+        file_name = "valid_extensible_#{channels}_#{sample_format}_44100.wav"
+        format = Format.new(CHANNEL_ALIAS[channels], sample_format, 44100)
+
+        ["#{OUTPUT_FOLDER}/#{file_name}", StringIO.new].each do |io_or_file_name|
+          writer = Writer.new(io_or_file_name, format) do |w|
+            4.times do
+              w.write(Buffer.new(SQUARE_WAVE_CYCLE[channels][sample_format] * 70, format))
+            end
+          end
+
+          assert_equal(read_file(:expected, file_name), read_file(:actual, file_name))
+          assert(writer.closed?)
+        end
       end
     end
   end

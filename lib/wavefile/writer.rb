@@ -235,7 +235,7 @@ module WaveFile
     # Data Chunk Header (8 bytes)
     #
     # All wave files written by Writer use this canonical format.
-    CANONICAL_HEADER_BYTE_LENGTH = {:pcm => 36, :float => 50}    # :nodoc:
+    CANONICAL_HEADER_BYTE_LENGTH = {:pcm => 36, :float => 50, :extensible => 60}    # :nodoc:
 
     # Internal
     FORMAT_CHUNK_BYTE_LENGTH = {:pcm => 16, :float => 18}    # :nodoc:
@@ -243,17 +243,21 @@ module WaveFile
     # Internal: Writes the RIFF chunk header, format chunk, and the header for the data chunk. After this
     # method is called the file will be "queued up" and ready for writing actual sample data.
     def write_header(sample_frame_count)
+      extensible = (@format.sample_format == :pcm && @format.channels > 2) ||
+                   (@format.sample_format == :pcm && @format.bits_per_sample != 8 && @format.bits_per_sample != 16)
+      format_code = extensible ? :extensible : @format.sample_format
+
       sample_data_byte_count = sample_frame_count * @format.block_align
 
       # Write the header for the RIFF chunk
       header = CHUNK_IDS[:riff]
-      header += [CANONICAL_HEADER_BYTE_LENGTH[@format.sample_format] + sample_data_byte_count].pack(UNSIGNED_INT_32)
+      header += [CANONICAL_HEADER_BYTE_LENGTH[format_code] + sample_data_byte_count].pack(UNSIGNED_INT_32)
       header += WAVEFILE_FORMAT_CODE
 
       # Write the format chunk
       header += CHUNK_IDS[:format]
-      header += [FORMAT_CHUNK_BYTE_LENGTH[@format.sample_format]].pack(UNSIGNED_INT_32)
-      header += [FORMAT_CODES[@format.sample_format]].pack(UNSIGNED_INT_16)
+      header += extensible ? [40].pack(UNSIGNED_INT_32) : [FORMAT_CHUNK_BYTE_LENGTH[@format.sample_format]].pack(UNSIGNED_INT_32)
+      header += [FORMAT_CODES[format_code]].pack(UNSIGNED_INT_16)
       header += [@format.channels].pack(UNSIGNED_INT_16)
       header += [@format.sample_rate].pack(UNSIGNED_INT_32)
       header += [@format.byte_rate].pack(UNSIGNED_INT_32)
@@ -261,6 +265,13 @@ module WaveFile
       header += [@format.bits_per_sample].pack(UNSIGNED_INT_16)
       if @format.sample_format == :float
         header += [0].pack(UNSIGNED_INT_16)
+      end
+
+      if extensible
+        header += [22].pack(UNSIGNED_INT_16)
+        header += [@format.bits_per_sample].pack(UNSIGNED_INT_16)
+        header += [(2 ** @format.channels) - 1].pack(UNSIGNED_INT_32)   # TODO: Write an actual value here
+        header += WaveFile::SUB_FORMAT_GUID_PCM
       end
 
       # Write the FACT chunk, if necessary
