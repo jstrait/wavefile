@@ -22,7 +22,7 @@ namespace :test do
 
       fixtures.each do |fixture|
         basename = File.basename(fixture, ".yml")
-        `ruby tools/fixture_writer.rb #{fixture} test/fixtures/#{subfolder}/#{basename}.wav`
+        `ruby tools/fixture_writer.rb #{fixture} test/fixtures/wave/#{subfolder}/#{basename}.wav`
       end
     end
   end
