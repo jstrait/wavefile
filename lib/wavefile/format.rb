@@ -167,7 +167,7 @@ module WaveFile
       return if candidate_speaker_mapping.nil?
 
       unless candidate_speaker_mapping.is_a?(Array) &&
-             (candidate_speaker_mapping - UnvalidatedFormat::SPEAKER_POSITIONS) == []
+             (UnvalidatedFormat::SPEAKER_POSITIONS & candidate_speaker_mapping) == (candidate_speaker_mapping - [:undefined])
         raise InvalidFormatError,
               "Invalid speaker_mapping. Must be an array containing these known speakers: #{UnvalidatedFormat::SPEAKER_POSITIONS.inspect}"
       end

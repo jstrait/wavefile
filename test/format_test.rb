@@ -65,10 +65,20 @@ class FormatTest < Minitest::Test
     assert_equal([:front_left, :front_right], Format.new(:mono, :pcm_8, 44100, speaker_mapping: [:front_left, :front_right]).speaker_mapping)
   end
 
+  def test_defined_speaker_mapping_with_explicitly_undefined_channels_in_constructor
+    assert_equal([:front_left, :undefined, :undefined], Format.new(3, :pcm_8, 44100, speaker_mapping: [:front_left, :undefined, :undefined]).speaker_mapping)
+  end
+
+  def test_defined_speaker_mapping_with_implicitly_undefined_channels_in_constructor
+    assert_equal([:front_left], Format.new(3, :pcm_8, 44100, speaker_mapping: [:front_left]).speaker_mapping)
+  end
+
   def test_invalid_speaker_mapping
     mapping_with_invalid_speaker = [:front_left, :bad_speaker]
+    mapping_with_duplicate_speaker = [:front_left, :front_right, :front_left]
+    mapping_with_out_of_order_speakers = [:front_center, :front_left, :front_right]
 
-    ["dsfsfsdf", :foo, 5, mapping_with_invalid_speaker].each do |invalid_speaker_mapping|
+    ["dsfsfsdf", :foo, 5, mapping_with_invalid_speaker, mapping_with_duplicate_speaker, mapping_with_out_of_order_speakers].each do |invalid_speaker_mapping|
       assert_raises(InvalidFormatError) { Format.new(:mono, :pcm_16, 44100, speaker_mapping: invalid_speaker_mapping) }
     end
   end
