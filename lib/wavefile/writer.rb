@@ -240,6 +240,37 @@ module WaveFile
     # Internal
     FORMAT_CHUNK_BYTE_LENGTH = {:pcm => 16, :float => 18, :extensible => 40}    # :nodoc:
 
+    # Internal
+    SPEAKER_MAPPING_BIT_VALUES = {
+      front_left: 1,
+      front_right: 2,
+      front_center: 4,
+      low_frequency: 8,
+      back_left: 16,
+      back_right: 32,
+      front_left_of_center: 64,
+      front_right_of_center: 128,
+      back_center: 256,
+      side_left: 512,
+      side_right: 1024,
+      top_center: 2048,
+      top_front_left: 4096,
+      top_front_center: 8192,
+      top_front_right: 16384,
+      top_back_left: 32768,
+      top_back_center: 65536,
+      top_back_right: 131072,
+    }.freeze
+
+    # Internal
+    def pack_speaker_mapping(speaker_mapping)
+      return 0 if speaker_mapping.nil?
+
+      speaker_mapping.inject(0) do |result, speaker|
+        result |= SPEAKER_MAPPING_BIT_VALUES[speaker]
+      end
+    end
+
     # Internal: Writes the RIFF chunk header, format chunk, and the header for the data chunk. After this
     # method is called the file will be "queued up" and ready for writing actual sample data.
     def write_header(sample_frame_count)
@@ -270,7 +301,7 @@ module WaveFile
       if extensible
         header += [22].pack(UNSIGNED_INT_16)
         header += [@format.bits_per_sample].pack(UNSIGNED_INT_16)
-        header += [(2 ** @format.channels) - 1].pack(UNSIGNED_INT_32)   # TODO: Write an actual value here
+        header += [pack_speaker_mapping(@format.speaker_mapping)].pack(UNSIGNED_INT_32)
 
         if @format.sample_format == :pcm
           format_guid = WaveFile::SUB_FORMAT_GUID_PCM
