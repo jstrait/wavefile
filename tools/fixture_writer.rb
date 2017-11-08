@@ -153,6 +153,8 @@ if (data_chunk)
       channel_count = 2
     elsif channel_format == "tri"
       channel_count = 3
+    elsif channel_format.is_a? Integer
+      channel_count = channel_format
     else
       channel_count = 0
     end
