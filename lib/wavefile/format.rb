@@ -53,7 +53,7 @@ module WaveFile
       @sample_rate = sample_rate
       @block_align = (@bits_per_sample / 8) * @channels
       @byte_rate = @block_align * @sample_rate
-      @speaker_mapping = speaker_mapping
+      @speaker_mapping = speaker_mapping.dup.freeze
     end
 
     # Public: Returns true if the format has 1 channel, false otherwise.

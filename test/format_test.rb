@@ -73,6 +73,20 @@ class FormatTest < Minitest::Test
     assert_equal([:front_left], Format.new(3, :pcm_8, 44100, speaker_mapping: [:front_left]).speaker_mapping)
   end
 
+  def test_speaker_mapping_is_frozen_copy
+    original_speaker_mapping = [:front_left, :front_right]
+
+    format = Format.new(:stereo, :pcm_16, 44100, speaker_mapping: original_speaker_mapping)
+
+    # Changing the original input array after constructing the `Format` doesn't change the `Format` speaker mapping
+    assert_equal([:front_left, :front_right], format.speaker_mapping)
+    original_speaker_mapping.push(:front_center)
+    assert_equal([:front_left, :front_right], format.speaker_mapping)
+
+    # Changing the underlaying Array should raise an error, since the Array should be frozen
+    assert_raises(RuntimeError) { format.speaker_mapping.push(:front_center) }
+  end
+
   def test_invalid_speaker_mapping
     mapping_with_invalid_speaker = [:front_left, :bad_speaker]
     mapping_with_duplicate_speaker = [:front_left, :front_right, :front_left]
