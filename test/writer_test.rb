@@ -194,6 +194,23 @@ class WriterTest < Minitest::Test
     end
   end
 
+  def test_write_incomplete_speaker_mapping
+    file_name = "valid_extensible_stereo_pcm_24_44100_incomplete_speaker_mapping.wav"
+    format  = Format.new(:stereo, :pcm_24, 44100, speaker_mapping: [:front_center])
+
+    ["#{OUTPUT_FOLDER}/#{file_name}", StringIO.new].each do |io_or_file_name|
+      writer = Writer.new(io_or_file_name, format)
+      writer.write(Buffer.new(SQUARE_WAVE_CYCLE[:stereo][:pcm_24] * 128, format))
+      writer.write(Buffer.new(SQUARE_WAVE_CYCLE[:stereo][:pcm_24] * 128, format))
+      writer.write(Buffer.new(SQUARE_WAVE_CYCLE[:stereo][:pcm_24] * 24,  format))
+      writer.close
+
+      assert_equal(read_file(:expected, file_name),
+                   read_file(:actual, file_name),
+                   "Written file doesn't match expected output: #{file_name}")
+    end
+  end
+
   def test_write_custom_speaker_mapping
     file_name = "valid_extensible_tri_pcm_16_44100_custom_speaker_mapping.wav"
     format  = Format.new(3, :pcm_16, 44100, speaker_mapping: [:back_left, :side_right, :top_back_left])
