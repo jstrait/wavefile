@@ -22,8 +22,8 @@ class WriterTest < Minitest::Test
 
   def test_write_basic_file
     [:mono, :stereo].each do |channels|
-      [:pcm_8, :pcm_16, :float_32, :float_64].each do |sample_format|
-        file_name = "valid_#{channels}_#{sample_format}_44100.wav"
+      [:pcm_8, :pcm_16, :float, :float_32, :float_64].each do |sample_format|
+        file_name = "valid_#{channels}_#{sample_format === :float ? :float_32 : sample_format}_44100.wav"
         format = Format.new(CHANNEL_ALIAS[channels], sample_format, 44100, speaker_mapping: UnvalidatedFormat::SPEAKER_POSITIONS[0...CHANNEL_ALIAS[channels]])
 
         ["#{OUTPUT_FOLDER}/#{file_name}", StringIO.new].each do |io_or_file_name|
@@ -62,8 +62,8 @@ class WriterTest < Minitest::Test
     end
 
     [:tri].each do |channels|
-      [:pcm_8, :pcm_16, :pcm_24, :pcm_32, :float_32, :float_64].each do |sample_format|
-        file_name = "valid_extensible_#{channels}_#{sample_format}_44100.wav"
+      [:pcm_8, :pcm_16, :pcm_24, :pcm_32, :float, :float_32, :float_64].each do |sample_format|
+        file_name = "valid_extensible_#{channels}_#{sample_format === :float ? :float_32 : sample_format}_44100.wav"
         format = Format.new(CHANNEL_ALIAS[channels], sample_format, 44100, speaker_mapping: UnvalidatedFormat::SPEAKER_POSITIONS[0...CHANNEL_ALIAS[channels]])
 
         ["#{OUTPUT_FOLDER}/#{file_name}", StringIO.new].each do |io_or_file_name|
@@ -83,8 +83,8 @@ class WriterTest < Minitest::Test
 
   def test_write_basic_file_with_a_block
     [:mono, :stereo].each do |channels|
-      [:pcm_8, :pcm_16, :float_32, :float_64].each do |sample_format|
-        file_name = "valid_#{channels}_#{sample_format}_44100.wav"
+      [:pcm_8, :pcm_16, :float, :float_32, :float_64].each do |sample_format|
+        file_name = "valid_#{channels}_#{sample_format === :float ? :float_32 : sample_format}_44100.wav"
         format = Format.new(CHANNEL_ALIAS[channels], sample_format, 44100, speaker_mapping: UnvalidatedFormat::SPEAKER_POSITIONS[0...CHANNEL_ALIAS[channels]])
 
         ["#{OUTPUT_FOLDER}/#{file_name}", StringIO.new].each do |io_or_file_name|
@@ -125,8 +125,8 @@ class WriterTest < Minitest::Test
     end
 
     [:tri].each do |channels|
-      [:pcm_8, :pcm_16, :pcm_24, :pcm_32, :float_32, :float_64].each do |sample_format|
-        file_name = "valid_extensible_#{channels}_#{sample_format}_44100.wav"
+      [:pcm_8, :pcm_16, :pcm_24, :pcm_32, :float, :float_32, :float_64].each do |sample_format|
+        file_name = "valid_extensible_#{channels}_#{sample_format === :float ? :float_32 : sample_format}_44100.wav"
         format = Format.new(CHANNEL_ALIAS[channels], sample_format, 44100, speaker_mapping: UnvalidatedFormat::SPEAKER_POSITIONS[0...CHANNEL_ALIAS[channels]])
 
         ["#{OUTPUT_FOLDER}/#{file_name}", StringIO.new].each do |io_or_file_name|
