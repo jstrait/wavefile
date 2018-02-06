@@ -33,7 +33,8 @@ and Data Specifications 1.0, August 1991</a></li>
   <p>If you&rsquo;re just getting started with audio programming, you might want to read up on some of the basics of digital audio first. Check out <a href="https://www.joelstrait.com/digital_audio_primer/">this blog post</a> for an introduction.</p>
 
   <h2>Wave Files Store Audio Data</h2>
-  <p>Wave files store audio data, encoded using one of several sample formats. Some sample formats contain raw, uncompressed data, while some formats use some sort of compression. The most common sample format is <em>PCM</em>, which stands for <em>pulse code modulation</em>. This is raw, uncompressed sample data where each sample is an integer.</p>
+  <p>Wave files are a container format that allows storing audio data in many formats. The most common sample format is <em>PCM</em>, which stands for <em>pulse code modulation</em>. This is raw, uncompressed sample data where each sample is an integer. Similarly, PCM data can be defined using a floating point value for each sample, although this is techincally considered a different audio format.</p>
+  <p>There are many other audio formats officially defined. Many are seemingly obsolete and unlikely to be encounted in the wild.</p>
   <p>Currently, the WaveFile gem supports these sample formats:</p>
   <ul>
     <li>PCM at 8, 16, 24, and 32 bits per sample</li>
