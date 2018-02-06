@@ -271,7 +271,10 @@ and Data Specifications 1.0, August 1991</a></li>
       </tr>
     </table>
   </div>
-  <p>The fact chunk indicates how many sample frames are in the file. It&rsquo;s required if the format code in the format chunk is not 1. If the format code is 1, it&rsquo;s optional. The reason for this chunk is that with some sample formats the number of sample frames can&rsquo;t be determined by obvious means (e.g. because they store data in a compressed format). This gives a way of determining e.g. the playing time for the file, without having to decode the entire data chunk.</p>
+  <p>The fact chunk indicates how many sample frames are in the file. It&rsquo;s required if the format code in the format chunk is not 1. If the format code is 1, it&rsquo;s optional.</p>
+  <p>The reason for this chunk is that with some sample formats the number of sample frames can&rsquo;t be determined by obvious means (e.g. because they store data in a compressed format). This gives a way of determining e.g. the playing time for the file, without having to decode the entire data chunk.</p>
+  <p>The number of samples frame is per channel. For example, if a stereo file contains 1,000 samples for both channels, the value of this field should be 1,000, not 2,000.</p>
+  <p>It&rsquo;s not needed for integer PCM data (format code 1), because the total number of sample frames can be derived by dividing the bytes-per-sample-frame field from the format chunk by the total bytes in the data chunk body. For example, if the data chunk body is 1,411,200 bytes, and bytes-per-sample-frame is 32 (e.g. two 16-bit channels), then the total number of sample frames is 1,411,200 &div; 32 = 44,100.</p>
 
   <h2>The Data Chunk</h2>
   <div class="scroll-x">
