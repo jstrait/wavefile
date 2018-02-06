@@ -210,7 +210,8 @@ and Data Specifications 1.0, August 1991</a></li>
   <p>If the format code is 3, then the sample data is stored as floating point numbers. There are no extra fields for this format, so the extension size field should be set to 0.</p>
 
   <h2>Extra Format Fields for EXTENSIBLE format</h2>
-  <p>If the format code is 65534, then the format is called &ldquo;WAVE_FORMAT_EXTENSIBLE&rdquo;. This comes from the name of a data structure given to this format in the Windows API. The extensible format is a container format. It exists to work around some ambiguities in the original Wave file format without having to modify existing files.</p>
+  <p>If the format code is 65534, then the format is called &ldquo;WAVE_FORMAT_EXTENSIBLE&rdquo;. This comes from the name of a data structure given to this format in the Windows API. The extensible format is a container format (within *.wav, which is itself a container format). It exists to work around some ambiguities in the original Wave file format without having to break compatibility with pre-existing files.</p>
+  <p>When the format is WAVE_FORMAT_EXTENSIBLE, the extension size in the format chunk should be 22, and the following three fields should be included:</p>
   <div class="scroll-x">
     <table>
       <tr>
@@ -235,14 +236,7 @@ and Data Specifications 1.0, August 1991</a></li>
       </tr>
     </table>
   </div>
-  <p>If format does not meet the criteria below, then the extension size field should be present:</p>
-  <ul>
-    <li>Sample format is PCM (i.e. 1)</li>
-    <li>Number of channels is 1 or 2</li>
-    <li>Bits per sample is 8 or 16</li>
-  </ul>
-  <p>When the format is WaveFormatExtensible, the extension size should be 22, and the remaining three fields should be included:</p>
-  <p><span class="label">Valid Bits Per Sample</span> &ndash; TODO</p>
+  <p><span class="label">Valid Bits Per Sample</span> &ndash; Allows storing samples with bit-depths that are not a byte multiple in size. For example, to store 12-bit samples, this value can be set to 12, and the bits-per-sample field in the format chunk set to 16. Each sample will still take up 16 bytes on disk, but the reader can be informed that only the lower 12 bits should be used.</p>
   <p><span class="label">Channel Mask</span> &ndash; Indicates which audio channels map to which speakers.</p>
   <p><span class="label">Sub Format</span> &ndash; Identifies the format of the sample data in the data chunk. This is a replacement for the original format code field, since it will have a format code of 65534.</p>
 
