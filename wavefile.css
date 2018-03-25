@@ -119,6 +119,8 @@ span.highlight {
   border-radius: 0.25rem;
 }
 
+.center { text-align: center; }
+
 div#header {
   background: #fff;
 }

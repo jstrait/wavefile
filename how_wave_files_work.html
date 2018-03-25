@@ -207,7 +207,24 @@ and Data Specifications 1.0, August 1991</a></li>
   <p><span class="label">Extra Fields</span> &ndash; It depends on the format code! The next sections describe the extra fields for a few audio formats.</p>
 
   <h2>Extra Format Fields for Floating Point</h2>
-  <p>If the format code is 3, then the sample data is stored as floating point numbers. There are no extra fields for this format, so the extension size field should be set to 0.</p>
+  <p>If the format code is 3, then the sample data is stored as PCM using floating point numbers. There are no extra fields for this format, so the extension size field should be set to 0.</p>
+  <div class="scroll-x">
+    <table>
+      <tr>
+        <th>Field</th>
+        <th>Size in Bytes</th>
+        <th>Description</th>
+      </tr>
+      <tr class="center" style="border-bottom: 2px #ddd dashed;">
+        <td colspan="3"><em>&uarr;<br />Other fields in format chunk</em></td>
+      </tr>
+      <tr>
+        <td>Extension Size</td>
+        <td>2</td>
+        <td>16-bit unsigned integer (value 0)</td>
+      </tr>
+    </table>
+  </div>
 
   <h2>Extra Format Fields for EXTENSIBLE format</h2>
   <p>If the format code is 65534, then the format is called &ldquo;WAVE_FORMAT_EXTENSIBLE&rdquo;. This comes from the name of a data structure given to this format in the Windows API. The extensible format is a container format (within *.wav, which is itself a container format). It exists to work around some ambiguities in the original Wave file format without having to break compatibility with pre-existing files.</p>
@@ -218,6 +235,14 @@ and Data Specifications 1.0, August 1991</a></li>
         <th>Field</th>
         <th>Size in Bytes</th>
         <th>Description</th>
+      </tr>
+      <tr class="center" style="border-bottom: 2px #ddd dashed;">
+        <td colspan="3"><em>&uarr;<br />Other fields in format chunk</em></td>
+      </tr>
+      <tr>
+        <td>Extension Size</td>
+        <td>2</td>
+        <td>16-bit unsigned integer (value 22)</td>
       </tr>
       <tr>
         <td>Valid Bits Per Sample</td>
