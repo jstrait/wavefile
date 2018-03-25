@@ -293,7 +293,8 @@ span.label {
   }
 
   p#tagline {
-    padding: 0.75rem;
+    font-size: 1.5rem;
+    padding: 1.0rem;
   }
 
   ul#navigation {
