@@ -37,9 +37,9 @@ and Data Specifications 1.0, August 1991</a></li>
   <p>There are many other audio formats officially defined. Many are seemingly obsolete and unlikely to be encounted in the wild.</p>
   <p>Currently, the WaveFile gem supports these sample formats:</p>
   <ul>
-    <li>PCM at 8, 16, 24, and 32 bits per sample</li>
-    <li>IEEE floating point at 32 or 64 bits per sample</li>
-    <li>The formats above inside a WAVE_FORMAT_EXTENSIBLE container</li>
+    <li>PCM Integer at 8, 16, 24, and 32 bits per sample (format code 1)</li>
+    <li>PCM Floating point at 32 or 64 bits per sample (format code 3)</li>
+    <li>The formats above inside a WAVE_FORMAT_EXTENSIBLE container (format code 65534)</li>
   </ul>
 
   <h2>Wave Files are RIFF Files</h2>
