@@ -79,7 +79,7 @@ class ReaderTest < Minitest::Test
       assert_equal(1, reader.format.channels)
       assert_equal(16, reader.format.bits_per_sample)
       assert_equal(22050, reader.format.sample_rate)
-      assert_nil(reader.format.speaker_mapping)
+      assert_equal([:front_center], reader.format.speaker_mapping)
       assert_equal(false, reader.closed?)
       assert_equal(0, reader.current_sample_frame)
       assert_equal(2240, reader.total_sample_frames)

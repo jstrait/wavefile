@@ -179,7 +179,7 @@ class WriterTest < Minitest::Test
 
   def test_write_no_speaker_mapping
     file_name = "valid_extensible_stereo_pcm_24_44100_no_speaker_mapping.wav"
-    format  = Format.new(:stereo, :pcm_24, 44100)
+    format  = Format.new(:stereo, :pcm_24, 44100, speaker_mapping: [:undefined, :undefined])
 
     ["#{OUTPUT_FOLDER}/#{file_name}", StringIO.new].each do |io_or_file_name|
       writer = Writer.new(io_or_file_name, format)

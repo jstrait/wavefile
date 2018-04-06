@@ -53,7 +53,12 @@ module WaveFile
       @sample_rate = sample_rate
       @block_align = (@bits_per_sample / 8) * @channels
       @byte_rate = @block_align * @sample_rate
-      @speaker_mapping = speaker_mapping.dup.freeze
+
+      if speaker_mapping.nil?
+        @speaker_mapping = default_speaker_mapping(channels)
+      else
+        @speaker_mapping = speaker_mapping.dup.freeze
+      end
     end
 
     # Public: Returns true if the format has 1 channel, false otherwise.
@@ -170,6 +175,19 @@ module WaveFile
              (UnvalidatedFormat::SPEAKER_POSITIONS & candidate_speaker_mapping) == (candidate_speaker_mapping - [:undefined])
         raise InvalidFormatError,
               "Invalid speaker_mapping. Must be an array containing these known speakers: #{UnvalidatedFormat::SPEAKER_POSITIONS.inspect}"
+      end
+    end
+
+    def default_speaker_mapping(channels)
+      if channels == 1
+        # See https://docs.microsoft.com/en-us/windows-hardware/drivers/audio/extensible-wave-format-descriptors
+        # This article says to use the `front_center` speaker for mono files when using WAVE_FORMAT_EXTENSIBLE
+        @speaker_mapping = [:front_center]
+      elsif channels <= UnvalidatedFormat::SPEAKER_POSITIONS.length
+        @speaker_mapping = UnvalidatedFormat::SPEAKER_POSITIONS[0...channels]
+      else
+        @speaker_mapping = UnvalidatedFormat::SPEAKER_POSITIONS +
+                           ([:undefined] * (channels - UnvalidatedFormat::SPEAKER_POSITIONS.length))
       end
     end
   end

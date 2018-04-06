@@ -242,6 +242,7 @@ module WaveFile
 
     # Internal
     SPEAKER_MAPPING_BIT_VALUES = {
+      undefined: 0,
       front_left: 1,
       front_right: 2,
       front_center: 4,
@@ -264,8 +265,6 @@ module WaveFile
 
     # Internal
     def pack_speaker_mapping(speaker_mapping)
-      return 0 if speaker_mapping.nil?
-
       speaker_mapping.inject(0) do |result, speaker|
         result |= SPEAKER_MAPPING_BIT_VALUES[speaker]
       end

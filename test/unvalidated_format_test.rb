@@ -43,7 +43,7 @@ class UnvalidatedFormatTest < Minitest::Test
     assert_equal(44100, validated_format.sample_rate)
     assert_equal(176400, validated_format.byte_rate)
     assert_equal(4, validated_format.block_align)
-    assert_nil(validated_format.speaker_mapping)
+    assert_equal([:front_left, :front_right], validated_format.speaker_mapping)
   end
 
   def test_to_validated_format_float
@@ -61,7 +61,7 @@ class UnvalidatedFormatTest < Minitest::Test
     assert_equal(44100, validated_format.sample_rate)
     assert_equal(352800, validated_format.byte_rate)
     assert_equal(8, validated_format.block_align)
-    assert_nil(validated_format.speaker_mapping)
+    assert_equal([:front_left, :front_right], validated_format.speaker_mapping)
   end
 
   def test_to_validated_format_unsupported
