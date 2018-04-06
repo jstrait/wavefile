@@ -92,6 +92,6 @@ module WaveFile
       :top_back_left,
       :top_back_center,
       :top_back_right,
-    ]
+    ].freeze
   end
 end
