@@ -130,7 +130,7 @@ class FormatTest < Minitest::Test
   end
 
   def test_defined_speaker_mapping_with_implicitly_undefined_channels_in_constructor
-    assert_equal([:front_left], Format.new(3, :pcm_8, 44100, speaker_mapping: [:front_left]).speaker_mapping)
+    assert_equal([:front_left, :undefined, :undefined], Format.new(3, :pcm_8, 44100, speaker_mapping: [:front_left]).speaker_mapping)
   end
 
   def test_speaker_mapping_is_frozen_copy
