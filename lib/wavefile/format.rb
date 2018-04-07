@@ -40,11 +40,12 @@ module WaveFile
     #   format = Format.new(:stereo, :float, 44100)  # Equivalent to above
     def initialize(channels, format_code, sample_rate, speaker_mapping: nil)
       channels = normalize_channels(channels)
-      sample_format, bits_per_sample = normalize_format_code(format_code)
+
       validate_channels(channels)
-      validate_sample_format(sample_format)
-      validate_bits_per_sample(sample_format, bits_per_sample)
+      validate_format_code(format_code)
       validate_sample_rate(sample_rate)
+
+      sample_format, bits_per_sample = normalize_format_code(format_code)
 
       speaker_mapping = normalize_speaker_mapping(channels, speaker_mapping)
       validate_speaker_mapping(channels, speaker_mapping)
@@ -102,7 +103,8 @@ module WaveFile
     VALID_SAMPLE_RATE_RANGE = 1..4_294_967_296    # :nodoc:
 
     # Internal
-    SUPPORTED_SAMPLE_FORMATS = [:pcm, :float]    # :nodoc:
+    SUPPORTED_FORMAT_CODES = [:pcm_8, :pcm_16, :pcm_24, :pcm_32, :float, :float_32, :float_64].freeze    # :nodoc:
+
     # Internal
     SUPPORTED_BITS_PER_SAMPLE = {
                                   :pcm => [8, 16, 24, 32],
@@ -163,15 +165,6 @@ module WaveFile
     end
 
     # Internal
-    def validate_sample_format(candidate_sample_format)
-      unless SUPPORTED_SAMPLE_FORMATS.include? candidate_sample_format
-        raise InvalidFormatError,
-              "Sample format of #{candidate_sample_format} is unsupported. " +
-              "Only #{SUPPORTED_SAMPLE_FORMATS.inspect} are supported."
-      end
-    end
-
-    # Internal
     def validate_channels(candidate_channels)
       unless candidate_channels.is_a?(Integer) && VALID_CHANNEL_RANGE === candidate_channels
         raise InvalidFormatError,
@@ -180,11 +173,10 @@ module WaveFile
     end
 
     # Internal
-    def validate_bits_per_sample(candidate_sample_format, candidate_bits_per_sample)
-      unless SUPPORTED_BITS_PER_SAMPLE[candidate_sample_format].include? candidate_bits_per_sample
+    def validate_format_code(candidate_format_code)
+      unless SUPPORTED_FORMAT_CODES.include? candidate_format_code
         raise InvalidFormatError,
-              "Bits per sample of #{candidate_bits_per_sample} is unsupported for " +
-              "sample format #{candidate_sample_format}."
+              "Invalid sample format: `#{candidate_format_code}`. Must be one of: #{SUPPORTED_FORMAT_CODES.inspect}"
       end
     end
 
