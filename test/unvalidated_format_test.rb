@@ -201,7 +201,7 @@ class UnvalidatedFormatTest < Minitest::Test
                                               :block_align => 6,
                                               :bits_per_sample => 16,
                                               :valid_bits_per_sample => 16,
-                                              :speaker_mapping => 2 })  # Bit field '11010110'
+                                              :speaker_mapping => 2 })  # Bit field '10'
 
     assert_equal(3, unvalided_format.channels)
     assert_equal([:front_right, :undefined, :undefined], unvalided_format.speaker_mapping)
