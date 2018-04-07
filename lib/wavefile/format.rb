@@ -47,7 +47,7 @@ module WaveFile
       validate_sample_rate(sample_rate)
 
       speaker_mapping = normalize_speaker_mapping(channels, speaker_mapping)
-      validate_speaker_mapping(speaker_mapping)
+      validate_speaker_mapping(channels, speaker_mapping)
 
       @channels = channels
       @sample_format = sample_format
@@ -195,12 +195,20 @@ module WaveFile
     end
 
     # Internal
-    def validate_speaker_mapping(candidate_speaker_mapping)
-      unless candidate_speaker_mapping.is_a?(Array) &&
-             (UnvalidatedFormat::SPEAKER_POSITIONS & candidate_speaker_mapping) == (candidate_speaker_mapping - [:undefined])
-        raise InvalidFormatError,
-              "Invalid speaker_mapping. Must be an array containing these known speakers: #{UnvalidatedFormat::SPEAKER_POSITIONS.inspect}"
+    def validate_speaker_mapping(channels, candidate_speaker_mapping)
+      if candidate_speaker_mapping.is_a?(Array)
+        speaker_mapping_without_invalid_speakers = UnvalidatedFormat::SPEAKER_POSITIONS & candidate_speaker_mapping
+        if speaker_mapping_without_invalid_speakers.length < channels
+          speaker_mapping_without_invalid_speakers += [:undefined] * (channels - speaker_mapping_without_invalid_speakers.length)
+        end
+
+        if speaker_mapping_without_invalid_speakers == candidate_speaker_mapping
+          return
+        end
       end
+
+      raise InvalidFormatError,
+            "Invalid speaker_mapping. Must be an array containing these known speakers: #{UnvalidatedFormat::SPEAKER_POSITIONS.inspect}"
     end
   end
 end
