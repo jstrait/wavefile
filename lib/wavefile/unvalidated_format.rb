@@ -60,7 +60,7 @@ module WaveFile
       mapping = []
       speaker_index = 0
 
-      while (mapping.length < @channels) && (speaker_index < SPEAKER_POSITIONS.length)
+      while speaker_index < SPEAKER_POSITIONS.length
         if bit_field & (2 ** speaker_index) != 0
           mapping << SPEAKER_POSITIONS[speaker_index]
         end
