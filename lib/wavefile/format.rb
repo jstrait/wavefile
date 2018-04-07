@@ -196,8 +196,6 @@ module WaveFile
 
     # Internal
     def validate_speaker_mapping(candidate_speaker_mapping)
-      return if candidate_speaker_mapping.nil?
-
       unless candidate_speaker_mapping.is_a?(Array) &&
              (UnvalidatedFormat::SPEAKER_POSITIONS & candidate_speaker_mapping) == (candidate_speaker_mapping - [:undefined])
         raise InvalidFormatError,
