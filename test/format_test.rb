@@ -122,7 +122,7 @@ class FormatTest < Minitest::Test
   end
 
   def test_defined_speaker_mapping_in_constructor
-    assert_equal([:front_left, :front_right], Format.new(:mono, :pcm_8, 44100, speaker_mapping: [:front_left, :front_right]).speaker_mapping)
+    assert_equal([:front_left, :front_right], Format.new(:stereo, :pcm_8, 44100, speaker_mapping: [:front_left, :front_right]).speaker_mapping)
   end
 
   def test_defined_speaker_mapping_with_explicitly_undefined_channels_in_constructor
@@ -131,6 +131,27 @@ class FormatTest < Minitest::Test
 
   def test_defined_speaker_mapping_with_implicitly_undefined_channels_in_constructor
     assert_equal([:front_left, :undefined, :undefined], Format.new(3, :pcm_8, 44100, speaker_mapping: [:front_left]).speaker_mapping)
+  end
+
+  def test_extra_valid_speaker_mapping_fields_in_constructor
+    assert_equal([:front_left, :front_right], Format.new(2, :pcm_8, 44100, speaker_mapping: [:front_left,
+                                                                                             :front_right,
+                                                                                             :front_center,
+                                                                                             :low_frequency]).speaker_mapping)
+  end
+
+  def test_extra_undefined_speaker_mapping_fields_in_constructor
+    assert_equal([:front_left, :front_right], Format.new(2, :pcm_8, 44100, speaker_mapping: [:front_left,
+                                                                                             :front_right,
+                                                                                             :undefined,
+                                                                                             :undefined]).speaker_mapping)
+  end
+
+  def test_extra_invalid_speaker_mapping_fields_in_constructor
+    assert_equal([:front_left, :front_right], Format.new(2, :pcm_8, 44100, speaker_mapping: [:front_left,
+                                                                                             :front_right,
+                                                                                             :gibberish,
+                                                                                             :what_is_this]).speaker_mapping)
   end
 
   def test_speaker_mapping_is_frozen_copy

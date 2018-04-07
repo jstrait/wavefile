@@ -142,6 +142,8 @@ module WaveFile
 
       if speaker_mapping.length < channels
         speaker_mapping += [:undefined] * (channels - speaker_mapping.length)
+      elsif speaker_mapping.length > channels
+        speaker_mapping = speaker_mapping[0...channels]
       end
 
       speaker_mapping.freeze
