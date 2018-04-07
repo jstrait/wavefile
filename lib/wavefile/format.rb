@@ -210,7 +210,7 @@ module WaveFile
       end
 
       raise InvalidFormatError,
-            "Invalid speaker_mapping: `#{candidate_speaker_mapping.inspect}`. Must be an array containing these known speakers: #{UnvalidatedFormat::SPEAKER_POSITIONS.inspect}"
+            "Invalid speaker_mapping: `#{candidate_speaker_mapping.inspect}`. Must be an array containing these known speakers in the following order: #{UnvalidatedFormat::SPEAKER_POSITIONS.inspect}"
     end
   end
 end
