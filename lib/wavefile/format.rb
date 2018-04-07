@@ -173,9 +173,9 @@ module WaveFile
 
     # Internal
     def validate_channels(candidate_channels)
-      unless VALID_CHANNEL_RANGE === candidate_channels
+      unless candidate_channels.is_a?(Integer) && VALID_CHANNEL_RANGE === candidate_channels
         raise InvalidFormatError,
-              "Invalid number of channels: `#{candidate_channels}`. Must be between #{VALID_CHANNEL_RANGE.min} and #{VALID_CHANNEL_RANGE.max}."
+              "Invalid number of channels: `#{candidate_channels}`. Must be an Integer between #{VALID_CHANNEL_RANGE.min} and #{VALID_CHANNEL_RANGE.max}."
       end
     end
 
@@ -190,9 +190,9 @@ module WaveFile
 
     # Internal
     def validate_sample_rate(candidate_sample_rate)
-      unless VALID_SAMPLE_RATE_RANGE === candidate_sample_rate
+      unless candidate_sample_rate.is_a?(Integer) && VALID_SAMPLE_RATE_RANGE === candidate_sample_rate
         raise InvalidFormatError,
-              "Invalid sample rate: `#{candidate_sample_rate}`. Must be between #{VALID_SAMPLE_RATE_RANGE.min} and #{VALID_SAMPLE_RATE_RANGE.max}"
+              "Invalid sample rate: `#{candidate_sample_rate}`. Must be an Integer between #{VALID_SAMPLE_RATE_RANGE.min} and #{VALID_SAMPLE_RATE_RANGE.max}"
       end
     end
 
