@@ -152,7 +152,11 @@ class FormatTest < Minitest::Test
     mapping_with_duplicate_speaker = [:front_left, :front_right, :front_left]
     mapping_with_out_of_order_speakers = [:front_center, :front_left, :front_right]
 
-    ["dsfsfsdf", :foo, 5, mapping_with_invalid_speaker, mapping_with_duplicate_speaker, mapping_with_out_of_order_speakers].each do |invalid_speaker_mapping|
+    assert_raises(InvalidFormatError) { Format.new(:stereo, :pcm_16, 44100, speaker_mapping: mapping_with_invalid_speaker) }
+    assert_raises(InvalidFormatError) { Format.new(3, :pcm_16, 44100, speaker_mapping: mapping_with_duplicate_speaker) }
+    assert_raises(InvalidFormatError) { Format.new(3, :pcm_16, 44100, speaker_mapping: mapping_with_out_of_order_speakers) }
+
+    ["dsfsfsdf", :foo, 5].each do |invalid_speaker_mapping|
       assert_raises(InvalidFormatError) { Format.new(:mono, :pcm_16, 44100, speaker_mapping: invalid_speaker_mapping) }
     end
   end
