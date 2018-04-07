@@ -37,15 +37,23 @@ This gem lets you read and write audio data! You can use it to create Ruby progr
 * Written in pure Ruby, so it's easy to include in your program. There's no need to compile a separate extension in order to use it.
 
 
-# Current Release: v1.0.0
+# Future Release: v1.0.0
 
 Release on <TBD>, this version has these changes:
 
-* For better compatibility and to more closely match the WaveFile spec, files written using the gem are now written in WAVE_FORMAT_EXTENSIBLE format in any of the following cases:
-  * They have more than 2 channels
-  * They are integer PCM and the bits per sample is not 8 or 16
-  * A specific speaker channel mapping is specified
-* The speaker channel mapping field can now be read from files using WAVE_FORMAT_EXTENSIBLE format.
+* Better compatibilty with the spec, due to writing files using WAVE_FORMAT_EXTENSIBLE format where appropriate. This is a behind-the-scenes improvement - for most use cases it won't affect how you use the gem.
+  * Details for the curious:
+    * A file will automatically be written using WAVE_FORMAT_EXTENSIBLE format if any of the following are true:
+      * It has more than 2 channels
+      * It uses integer PCM sample format and the bits per sample is not 8 or 16
+      * A specific speaker->channel mapping is specified, and it differs from the default speaker->channel mapping for a non-WAVE_FORMAT_EXTENSIBLE format. That is, 1-channel file that doesn't have a mapping of `[:front_center]`, or a 2-channel file that doesn't have a mapping of `[:front_left, :front_right]`.
+* The speaker->channel mapping field can now be read from files that have it defined. For example, if a file indicates that the first sound channel should be mapped to the back right speaker, the second channel to the top center speaker, etc., this can be read using the `Reader.format.speaker_mapping` field.
+  * Example:
+    * ~~~
+      reader = Reader.new("4_channel_file.wav")
+      puts reader.format.speaker_mapping  # [:front_left, :front_right, :front_center, :back_center]
+      ~~~
+  * The speaker->channel mapping field isn't present in all Wave files. (Specifically, it's only present if the file uses WAVE_FORMAT_EXTENSIBLE format). If a speaker->channel mapping isn't defined, then each `Format` instance will still have a value for this field, using the default values implied by the Wave file spec.
 
 # Release: v0.8.1
 
