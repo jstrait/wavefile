@@ -175,7 +175,7 @@ module WaveFile
     def validate_channels(candidate_channels)
       unless VALID_CHANNEL_RANGE === candidate_channels
         raise InvalidFormatError,
-              "Invalid number of channels. Must be between #{VALID_CHANNEL_RANGE.min} and #{VALID_CHANNEL_RANGE.max}."
+              "Invalid number of channels: `#{candidate_channels}`. Must be between #{VALID_CHANNEL_RANGE.min} and #{VALID_CHANNEL_RANGE.max}."
       end
     end
 
@@ -192,7 +192,7 @@ module WaveFile
     def validate_sample_rate(candidate_sample_rate)
       unless VALID_SAMPLE_RATE_RANGE === candidate_sample_rate
         raise InvalidFormatError,
-              "Invalid sample rate. Must be between #{VALID_SAMPLE_RATE_RANGE.min} and #{VALID_SAMPLE_RATE_RANGE.max}"
+              "Invalid sample rate: `#{candidate_sample_rate}`. Must be between #{VALID_SAMPLE_RATE_RANGE.min} and #{VALID_SAMPLE_RATE_RANGE.max}"
       end
     end
 
@@ -210,7 +210,7 @@ module WaveFile
       end
 
       raise InvalidFormatError,
-            "Invalid speaker_mapping. Must be an array containing these known speakers: #{UnvalidatedFormat::SPEAKER_POSITIONS.inspect}"
+            "Invalid speaker_mapping: `#{candidate_speaker_mapping.inspect}`. Must be an array containing these known speakers: #{UnvalidatedFormat::SPEAKER_POSITIONS.inspect}"
     end
   end
 end
