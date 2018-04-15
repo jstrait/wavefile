@@ -153,10 +153,32 @@ module WaveFile
 
     # Internal
     def default_speaker_mapping(channels)
-      if channels == 1
-        # See https://docs.microsoft.com/en-us/windows-hardware/drivers/audio/extensible-wave-format-descriptors
-        # This article says to use the `front_center` speaker for mono files when using WAVE_FORMAT_EXTENSIBLE
+      # These default mappings determined from these sources:
+      #
+      # See https://docs.microsoft.com/en-us/windows-hardware/drivers/audio/extensible-wave-format-descriptors
+      # This article says to use the `front_center` speaker for mono files when using WAVE_FORMAT_EXTENSIBLE
+      #
+      # https://msdn.microsoft.com/en-us/library/windows/desktop/dd390971(v=vs.85).aspx
+      #
+      # https://xiph.org/flac/format.html#frame_header
+      if channels == 1  # Mono
+        #
+        #
         [:front_center]
+      elsif channels == 2  # Stereo
+        [:front_left, :front_right]
+      elsif channels == 3
+        [:front_left, :front_right, :front_center]
+      elsif channels == 4  # Quad
+        [:front_left, :front_right, :back_left, :back_right]
+      elsif channels == 5
+        [:front_left, :front_right, :front_center, :back_left, :back_right]
+      elsif channels == 6  # 5.1
+        [:front_left, :front_right, :front_center, :low_frequency, :back_left, :back_right]
+      elsif channels == 7
+        [:front_left, :front_right, :front_center, :low_frequency, :back_center, :side_left, :side_right]
+      elsif channels == 8  # 7.1
+        [:front_left, :front_right, :front_center, :low_frequency, :back_left, :back_right, :front_left_of_center, :front_right_of_center]
       elsif channels <= UnvalidatedFormat::SPEAKER_POSITIONS.length
         UnvalidatedFormat::SPEAKER_POSITIONS[0...channels]
       else

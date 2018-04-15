@@ -69,6 +69,66 @@ class FormatTest < Minitest::Test
     assert_equal([:front_left, :front_right, :front_center], Format.new(3, :pcm_8, 44100).speaker_mapping)
   end
 
+  def test_no_speaker_mapping_set_in_constructor_4_channel
+    assert_equal([:front_left, :front_right, :back_left, :back_right], Format.new(4, :pcm_8, 44100).speaker_mapping)
+  end
+
+  def test_no_speaker_mapping_set_in_constructor_5_channel
+    expected_speaker_mapping = [:front_left, :front_right, :front_center, :back_left, :back_right]
+
+    assert_equal(expected_speaker_mapping, Format.new(5, :pcm_8, 44100).speaker_mapping)
+  end
+
+  def test_no_speaker_mapping_set_in_constructor_6_channel
+    expected_speaker_mapping = [:front_left,
+                                :front_right,
+                                :front_center,
+                                :low_frequency,
+                                :back_left,
+                                :back_right]
+
+    assert_equal(expected_speaker_mapping, Format.new(6, :pcm_8, 44100).speaker_mapping)
+  end
+
+  def test_no_speaker_mapping_set_in_constructor_7_channel
+    expected_speaker_mapping = [:front_left,
+                                :front_right,
+                                :front_center,
+                                :low_frequency,
+                                :back_center,
+                                :side_left,
+                                :side_right]
+
+    assert_equal(expected_speaker_mapping, Format.new(7, :pcm_8, 44100).speaker_mapping)
+  end
+
+  def test_no_speaker_mapping_set_in_constructor_8_channel
+    expected_speaker_mapping = [:front_left,
+                                :front_right,
+                                :front_center,
+                                :low_frequency,
+                                :back_left,
+                                :back_right,
+                                :front_left_of_center,
+                                :front_right_of_center]
+
+    assert_equal(expected_speaker_mapping, Format.new(8, :pcm_8, 44100).speaker_mapping)
+  end
+
+  def test_no_speaker_mapping_set_in_constructor_9_channel
+    expected_speaker_mapping = [:front_left,
+                                :front_right,
+                                :front_center,
+                                :low_frequency,
+                                :back_left,
+                                :back_right,
+                                :front_left_of_center,
+                                :front_right_of_center,
+                                :back_center]
+
+    assert_equal(expected_speaker_mapping, Format.new(9, :pcm_8, 44100).speaker_mapping)
+  end
+
   def test_no_speaker_mapping_set_in_constructor_18_channel
     expected_speaker_mapping = [
       :front_left,
