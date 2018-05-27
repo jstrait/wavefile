@@ -4,6 +4,7 @@ require 'wavefile/chunk_readers/generic_chunk_reader'
 require 'wavefile/chunk_readers/riff_chunk_reader'
 require 'wavefile/chunk_readers/format_chunk_reader'
 require 'wavefile/chunk_readers/data_chunk_reader'
+require 'wavefile/chunk_readers/smpl_chunk_reader'
 
 module WaveFile
   # Internal

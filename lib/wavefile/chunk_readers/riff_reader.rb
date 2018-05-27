@@ -10,7 +10,7 @@ module WaveFile
         read_until_data_chunk(format)
       end
 
-      attr_reader :native_format, :data_chunk_reader
+      attr_reader :native_format, :data_chunk_reader, :smpl_chunk_reader
 
     private
 
@@ -24,8 +24,11 @@ module WaveFile
 
           chunk_id, chunk_size = read_chunk_header
           while chunk_id != CHUNK_IDS[:data]
-            if chunk_id == CHUNK_IDS[:format]
+            case chunk_id
+            when CHUNK_IDS[:format]
               @native_format = FormatChunkReader.new(@io, chunk_size).read
+            when CHUNK_IDS[:sample]
+              @smpl_chunk_reader = SmplChunkReader.new(@io, chunk_size).read
             else
               # Other chunk types besides the format chunk are ignored. This may change in the future.
               GenericChunkReader.new(@io, chunk_size).read

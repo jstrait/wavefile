@@ -16,6 +16,13 @@ begin
   puts "  Block align:           #{reader.native_format.block_align}"
   puts "  Sample frame count:    #{reader.total_sample_frames}"
 
+  unless reader.sample_info.nil?
+    puts "  #{reader.sample_info.loop_count} Loops:"
+    reader.sample_info.loops.each do |loop|
+      puts "    ID: #{loop.id}: #{loop.type} from #{loop.start} to #{loop.end}"
+    end
+  end
+
   duration = reader.total_duration
   formatted_duration = duration.hours.to_s.rjust(2, "0") << ":" <<
                        duration.minutes.to_s.rjust(2, "0") << ":" <<

@@ -47,6 +47,7 @@ module WaveFile
       end
 
       @data_chunk_reader = riff_reader.data_chunk_reader
+      @smpl_chunk_reader = riff_reader.smpl_chunk_reader
 
       if block_given?
         begin
@@ -190,6 +191,10 @@ module WaveFile
     # there are 1,000 left-channel samples and 1,000 right-channel samples.
     def total_sample_frames
       @data_chunk_reader.total_sample_frames
+    end
+
+    def sample_info
+      @smpl_chunk_reader
     end
   end
 end
