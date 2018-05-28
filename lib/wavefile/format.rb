@@ -91,8 +91,7 @@ module WaveFile
     # Is equivalent to block_align * sample_rate.
     attr_reader :byte_rate
 
-    # Public: Returns the mapping of each channel to a speaker. If this value is nil,
-    # then the channels are not mapped to any specific speaker.
+    # Public: Returns the mapping of each channel to a speaker.
     attr_reader :speaker_mapping
 
   private
