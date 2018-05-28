@@ -24,7 +24,7 @@ class WriterTest < Minitest::Test
     [:mono, :stereo].each do |channels|
       [:pcm_8, :pcm_16, :float, :float_32, :float_64].each do |sample_format|
         file_name = "valid_#{channels}_#{sample_format === :float ? :float_32 : sample_format}_44100.wav"
-        format = Format.new(CHANNEL_ALIAS[channels], sample_format, 44100, speaker_mapping: UnvalidatedFormat::SPEAKER_POSITIONS[0...CHANNEL_ALIAS[channels]])
+        format = Format.new(CHANNEL_ALIAS[channels], sample_format, 44100)
 
         ["#{OUTPUT_FOLDER}/#{file_name}", StringIO.new].each do |io_or_file_name|
           writer = Writer.new(io_or_file_name, format)
@@ -42,6 +42,40 @@ class WriterTest < Minitest::Test
   end
 
   def test_write_extensible_file
+    # Otherwise non-extensible, but speaker mapping is not the default for 1 channel
+    file_name = "valid_extensible_#{:mono}_#{:pcm_16}_44100.wav"
+    format = Format.new(:mono, :pcm_16, 44100, speaker_mapping: [:front_left])
+
+    ["#{OUTPUT_FOLDER}/#{file_name}", StringIO.new].each do |io_or_file_name|
+      writer = Writer.new(io_or_file_name, format)
+      writer.write(Buffer.new(SQUARE_WAVE_CYCLE[:mono][:pcm_16] * 128, format))
+      writer.write(Buffer.new(SQUARE_WAVE_CYCLE[:mono][:pcm_16] * 128, format))
+      writer.write(Buffer.new(SQUARE_WAVE_CYCLE[:mono][:pcm_16] * 24, format))
+      writer.close
+
+      assert_equal(read_file(:expected, file_name),
+                   read_file(:actual, file_name),
+                   "Written file doesn't match expected output: #{file_name}")
+    end
+
+
+    # Otherwise non-extensible, but speaker mapping is not the default for 2 channels
+    file_name = "valid_extensible_stereo_pcm_16_44100_center_right_speakers.wav"
+    format = Format.new(:stereo, :pcm_16, 44100, speaker_mapping: [:front_right, :front_center])
+
+    ["#{OUTPUT_FOLDER}/#{file_name}", StringIO.new].each do |io_or_file_name|
+      writer = Writer.new(io_or_file_name, format)
+      writer.write(Buffer.new(SQUARE_WAVE_CYCLE[:stereo][:pcm_16] * 128, format))
+      writer.write(Buffer.new(SQUARE_WAVE_CYCLE[:stereo][:pcm_16] * 128, format))
+      writer.write(Buffer.new(SQUARE_WAVE_CYCLE[:stereo][:pcm_16] * 24, format))
+      writer.close
+
+      assert_equal(read_file(:expected, file_name),
+                   read_file(:actual, file_name),
+                   "Written file doesn't match expected output: #{file_name}")
+    end
+
+
     [:mono, :stereo].each do |channels|
       [:pcm_24, :pcm_32].each do |sample_format|
         file_name = "valid_extensible_#{channels}_#{sample_format}_44100.wav"
@@ -85,7 +119,7 @@ class WriterTest < Minitest::Test
     [:mono, :stereo].each do |channels|
       [:pcm_8, :pcm_16, :float, :float_32, :float_64].each do |sample_format|
         file_name = "valid_#{channels}_#{sample_format === :float ? :float_32 : sample_format}_44100.wav"
-        format = Format.new(CHANNEL_ALIAS[channels], sample_format, 44100, speaker_mapping: UnvalidatedFormat::SPEAKER_POSITIONS[0...CHANNEL_ALIAS[channels]])
+        format = Format.new(CHANNEL_ALIAS[channels], sample_format, 44100)
 
         ["#{OUTPUT_FOLDER}/#{file_name}", StringIO.new].each do |io_or_file_name|
           writer = Writer.new(io_or_file_name, format) do |w|

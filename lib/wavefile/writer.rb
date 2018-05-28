@@ -274,7 +274,9 @@ module WaveFile
     # method is called the file will be "queued up" and ready for writing actual sample data.
     def write_header(sample_frame_count)
       extensible = @format.channels > 2 ||
-                   (@format.sample_format == :pcm && @format.bits_per_sample != 8 && @format.bits_per_sample != 16)
+                   (@format.sample_format == :pcm && @format.bits_per_sample != 8 && @format.bits_per_sample != 16) ||
+                   (@format.channels == 1 && @format.speaker_mapping != [:front_center]) ||
+                   (@format.channels == 2 && @format.speaker_mapping != [:front_left, :front_right])
       format_code = extensible ? :extensible : @format.sample_format
 
       sample_data_byte_count = sample_frame_count * @format.block_align
