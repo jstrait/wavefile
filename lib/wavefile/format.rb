@@ -30,6 +30,11 @@ module WaveFile
     #               values are :pcm_8, :pcm_16, :pcm_24, :pcm_32, :float_32,
     #               :float_64, and :float (equivalent to :float_32)
     # sample_rate - The number of samples per second, such as 44100
+    # speaker_mapping - Indicates which speaker each channel should be mapped to.
+    #                   This is optional - if not given, this will be set to a
+    #                   default value for the given number of channels. For example,
+    #                   if there are 2 channels, this will be set to [:front_left,
+    #                   :front_right].
     #
     # Examples
     #
