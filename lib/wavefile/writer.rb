@@ -278,6 +278,7 @@ module WaveFile
                    (@format.channels == 1 && @format.speaker_mapping != [:front_center]) ||
                    (@format.channels == 2 && @format.speaker_mapping != [:front_left, :front_right])
       format_code = extensible ? :extensible : @format.sample_format
+      requires_fact_chunk = (format_code != :pcm)
 
       sample_data_byte_count = sample_frame_count * @format.block_align
 
@@ -314,7 +315,7 @@ module WaveFile
       end
 
       # Write the FACT chunk, if necessary
-      unless format_code == :pcm
+      if requires_fact_chunk
         header += CHUNK_IDS[:fact]
         header += [4].pack(UNSIGNED_INT_32)
         header += [sample_frame_count].pack(UNSIGNED_INT_32)
