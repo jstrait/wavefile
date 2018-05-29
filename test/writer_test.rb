@@ -27,15 +27,7 @@ class WriterTest < Minitest::Test
         format = Format.new(CHANNEL_ALIAS[channels], sample_format, 44100)
 
         ["#{OUTPUT_FOLDER}/#{file_name}", StringIO.new].each do |io_or_file_name|
-          writer = Writer.new(io_or_file_name, format)
-          writer.write(Buffer.new(SQUARE_WAVE_CYCLE[channels][sample_format] * 128, format))
-          writer.write(Buffer.new(SQUARE_WAVE_CYCLE[channels][sample_format] * 128, format))
-          writer.write(Buffer.new(SQUARE_WAVE_CYCLE[channels][sample_format] * 24, format))
-          writer.close
-
-          assert_equal(read_file(:expected, file_name),
-                       read_file(:actual, file_name),
-                       "Written file doesn't match expected output: #{file_name}")
+          write_file(io_or_file_name, file_name, format)
         end
       end
     end
@@ -47,15 +39,7 @@ class WriterTest < Minitest::Test
     format = Format.new(:mono, :pcm_16, 44100, speaker_mapping: [:front_left])
 
     ["#{OUTPUT_FOLDER}/#{file_name}", StringIO.new].each do |io_or_file_name|
-      writer = Writer.new(io_or_file_name, format)
-      writer.write(Buffer.new(SQUARE_WAVE_CYCLE[:mono][:pcm_16] * 128, format))
-      writer.write(Buffer.new(SQUARE_WAVE_CYCLE[:mono][:pcm_16] * 128, format))
-      writer.write(Buffer.new(SQUARE_WAVE_CYCLE[:mono][:pcm_16] * 24, format))
-      writer.close
-
-      assert_equal(read_file(:expected, file_name),
-                   read_file(:actual, file_name),
-                   "Written file doesn't match expected output: #{file_name}")
+      write_file(io_or_file_name, file_name, format)
     end
 
 
@@ -64,15 +48,7 @@ class WriterTest < Minitest::Test
     format = Format.new(:stereo, :pcm_16, 44100, speaker_mapping: [:front_right, :front_center])
 
     ["#{OUTPUT_FOLDER}/#{file_name}", StringIO.new].each do |io_or_file_name|
-      writer = Writer.new(io_or_file_name, format)
-      writer.write(Buffer.new(SQUARE_WAVE_CYCLE[:stereo][:pcm_16] * 128, format))
-      writer.write(Buffer.new(SQUARE_WAVE_CYCLE[:stereo][:pcm_16] * 128, format))
-      writer.write(Buffer.new(SQUARE_WAVE_CYCLE[:stereo][:pcm_16] * 24, format))
-      writer.close
-
-      assert_equal(read_file(:expected, file_name),
-                   read_file(:actual, file_name),
-                   "Written file doesn't match expected output: #{file_name}")
+      write_file(io_or_file_name, file_name, format)
     end
 
 
@@ -82,15 +58,7 @@ class WriterTest < Minitest::Test
         format = Format.new(CHANNEL_ALIAS[channels], sample_format, 44100, speaker_mapping: [:front_center])
 
         ["#{OUTPUT_FOLDER}/#{file_name}", StringIO.new].each do |io_or_file_name|
-          writer = Writer.new(io_or_file_name, format)
-          writer.write(Buffer.new(SQUARE_WAVE_CYCLE[channels][sample_format] * 128, format))
-          writer.write(Buffer.new(SQUARE_WAVE_CYCLE[channels][sample_format] * 128, format))
-          writer.write(Buffer.new(SQUARE_WAVE_CYCLE[channels][sample_format] * 24, format))
-          writer.close
-
-          assert_equal(read_file(:expected, file_name),
-                       read_file(:actual, file_name),
-                       "Written file doesn't match expected output: #{file_name}")
+          write_file(io_or_file_name, file_name, format)
         end
       end
     end
@@ -101,15 +69,7 @@ class WriterTest < Minitest::Test
         format = Format.new(CHANNEL_ALIAS[channels], sample_format, 44100, speaker_mapping: [:front_left, :front_right])
 
         ["#{OUTPUT_FOLDER}/#{file_name}", StringIO.new].each do |io_or_file_name|
-          writer = Writer.new(io_or_file_name, format)
-          writer.write(Buffer.new(SQUARE_WAVE_CYCLE[channels][sample_format] * 128, format))
-          writer.write(Buffer.new(SQUARE_WAVE_CYCLE[channels][sample_format] * 128, format))
-          writer.write(Buffer.new(SQUARE_WAVE_CYCLE[channels][sample_format] * 24, format))
-          writer.close
-
-          assert_equal(read_file(:expected, file_name),
-                       read_file(:actual, file_name),
-                       "Written file doesn't match expected output: #{file_name}")
+          write_file(io_or_file_name, file_name, format)
         end
       end
     end
@@ -120,15 +80,7 @@ class WriterTest < Minitest::Test
         format = Format.new(CHANNEL_ALIAS[channels], sample_format, 44100, speaker_mapping: [:front_left, :front_right, :front_center])
 
         ["#{OUTPUT_FOLDER}/#{file_name}", StringIO.new].each do |io_or_file_name|
-          writer = Writer.new(io_or_file_name, format)
-          writer.write(Buffer.new(SQUARE_WAVE_CYCLE[channels][sample_format] * 128, format))
-          writer.write(Buffer.new(SQUARE_WAVE_CYCLE[channels][sample_format] * 128, format))
-          writer.write(Buffer.new(SQUARE_WAVE_CYCLE[channels][sample_format] * 24, format))
-          writer.close
-
-          assert_equal(read_file(:expected, file_name),
-                       read_file(:actual, file_name),
-                       "Written file doesn't match expected output: #{file_name}")
+          write_file(io_or_file_name, file_name, format)
         end
       end
     end
@@ -141,16 +93,7 @@ class WriterTest < Minitest::Test
         format = Format.new(CHANNEL_ALIAS[channels], sample_format, 44100)
 
         ["#{OUTPUT_FOLDER}/#{file_name}", StringIO.new].each do |io_or_file_name|
-          writer = Writer.new(io_or_file_name, format) do |w|
-            4.times do
-              w.write(Buffer.new(SQUARE_WAVE_CYCLE[channels][sample_format] * 70, format))
-            end
-          end
-
-          assert_equal(read_file(:expected, file_name),
-                        read_file(:actual, file_name),
-                        "Written file doesn't match expected output: #{file_name}")
-          assert(writer.closed?)
+          write_file_with_a_block(io_or_file_name, file_name, format)
         end
       end
     end
@@ -163,16 +106,7 @@ class WriterTest < Minitest::Test
         format = Format.new(CHANNEL_ALIAS[channels], sample_format, 44100, speaker_mapping: [:front_center])
 
         ["#{OUTPUT_FOLDER}/#{file_name}", StringIO.new].each do |io_or_file_name|
-          writer = Writer.new(io_or_file_name, format) do |w|
-            4.times do
-              w.write(Buffer.new(SQUARE_WAVE_CYCLE[channels][sample_format] * 70, format))
-            end
-          end
-
-          assert_equal(read_file(:expected, file_name),
-                       read_file(:actual, file_name),
-                       "Written file doesn't match expected output: #{file_name}")
-          assert(writer.closed?)
+          write_file_with_a_block(io_or_file_name, file_name, format)
         end
       end
     end
@@ -183,16 +117,7 @@ class WriterTest < Minitest::Test
         format = Format.new(CHANNEL_ALIAS[channels], sample_format, 44100, speaker_mapping: [:front_left, :front_right])
 
         ["#{OUTPUT_FOLDER}/#{file_name}", StringIO.new].each do |io_or_file_name|
-          writer = Writer.new(io_or_file_name, format) do |w|
-            4.times do
-              w.write(Buffer.new(SQUARE_WAVE_CYCLE[channels][sample_format] * 70, format))
-            end
-          end
-
-          assert_equal(read_file(:expected, file_name),
-                       read_file(:actual, file_name),
-                       "Written file doesn't match expected output: #{file_name}")
-          assert(writer.closed?)
+          write_file_with_a_block(io_or_file_name, file_name, format)
         end
       end
     end
@@ -203,16 +128,7 @@ class WriterTest < Minitest::Test
         format = Format.new(CHANNEL_ALIAS[channels], sample_format, 44100, speaker_mapping: [:front_left, :front_right, :front_center])
 
         ["#{OUTPUT_FOLDER}/#{file_name}", StringIO.new].each do |io_or_file_name|
-          writer = Writer.new(io_or_file_name, format) do |w|
-            4.times do
-              w.write(Buffer.new(SQUARE_WAVE_CYCLE[channels][sample_format] * 70, format))
-            end
-          end
-
-          assert_equal(read_file(:expected, file_name),
-                       read_file(:actual, file_name),
-                       "Written file doesn't match expected output: #{file_name}")
-          assert(writer.closed?)
+          write_file_with_a_block(io_or_file_name, file_name, format)
         end
       end
     end
@@ -255,15 +171,7 @@ class WriterTest < Minitest::Test
     format  = Format.new(:stereo, :pcm_24, 44100, speaker_mapping: [:undefined, :undefined])
 
     ["#{OUTPUT_FOLDER}/#{file_name}", StringIO.new].each do |io_or_file_name|
-      writer = Writer.new(io_or_file_name, format)
-      writer.write(Buffer.new(SQUARE_WAVE_CYCLE[:stereo][:pcm_24] * 128, format))
-      writer.write(Buffer.new(SQUARE_WAVE_CYCLE[:stereo][:pcm_24] * 128, format))
-      writer.write(Buffer.new(SQUARE_WAVE_CYCLE[:stereo][:pcm_24] * 24,  format))
-      writer.close
-
-      assert_equal(read_file(:expected, file_name),
-                   read_file(:actual, file_name),
-                   "Written file doesn't match expected output: #{file_name}")
+      write_file(io_or_file_name, file_name, format)
     end
   end
 
@@ -272,15 +180,7 @@ class WriterTest < Minitest::Test
     format  = Format.new(:stereo, :pcm_24, 44100, speaker_mapping: [:front_center])
 
     ["#{OUTPUT_FOLDER}/#{file_name}", StringIO.new].each do |io_or_file_name|
-      writer = Writer.new(io_or_file_name, format)
-      writer.write(Buffer.new(SQUARE_WAVE_CYCLE[:stereo][:pcm_24] * 128, format))
-      writer.write(Buffer.new(SQUARE_WAVE_CYCLE[:stereo][:pcm_24] * 128, format))
-      writer.write(Buffer.new(SQUARE_WAVE_CYCLE[:stereo][:pcm_24] * 24,  format))
-      writer.close
-
-      assert_equal(read_file(:expected, file_name),
-                   read_file(:actual, file_name),
-                   "Written file doesn't match expected output: #{file_name}")
+      write_file(io_or_file_name, file_name, format)
     end
   end
 
@@ -331,15 +231,7 @@ class WriterTest < Minitest::Test
     format  = Format.new(3, :pcm_16, 44100, speaker_mapping: [:back_left, :side_right, :top_back_left])
 
     ["#{OUTPUT_FOLDER}/#{file_name}", StringIO.new].each do |io_or_file_name|
-      writer = Writer.new(io_or_file_name, format)
-      writer.write(Buffer.new(SQUARE_WAVE_CYCLE[:tri][:pcm_16] * 128, format))
-      writer.write(Buffer.new(SQUARE_WAVE_CYCLE[:tri][:pcm_16] * 128, format))
-      writer.write(Buffer.new(SQUARE_WAVE_CYCLE[:tri][:pcm_16] * 24,  format))
-      writer.close
-
-      assert_equal(read_file(:expected, file_name),
-                   read_file(:actual, file_name),
-                   "Written file doesn't match expected output: #{file_name}")
+      write_file(io_or_file_name, file_name, format)
     end
   end
 
@@ -480,5 +372,48 @@ private
         File.delete("#{OUTPUT_FOLDER}/#{file_name}")
       end
     end
+  end
+
+  def write_file(io_or_file_name, file_name, format)
+    if format.channels == 1
+      channel_label = :mono
+    elsif format.channels == 2
+      channel_label = :stereo
+    elsif format.channels == 3
+      channel_label = :tri
+    end
+    sample_format = "#{format.sample_format}_#{format.bits_per_sample}".to_sym
+
+    writer = Writer.new(io_or_file_name, format)
+    writer.write(Buffer.new(SQUARE_WAVE_CYCLE[channel_label][sample_format] * 128, format))
+    writer.write(Buffer.new(SQUARE_WAVE_CYCLE[channel_label][sample_format] * 128, format))
+    writer.write(Buffer.new(SQUARE_WAVE_CYCLE[channel_label][sample_format] * 24, format))
+    writer.close
+
+    assert_equal(read_file(:expected, file_name),
+                 read_file(:actual, file_name),
+                 "Written file doesn't match expected output: #{file_name}")
+  end
+
+  def write_file_with_a_block(io_or_file_name, file_name, format)
+    if format.channels == 1
+      channel_label = :mono
+    elsif format.channels == 2
+      channel_label = :stereo
+    elsif format.channels == 3
+      channel_label = :tri
+    end
+    sample_format = "#{format.sample_format}_#{format.bits_per_sample}".to_sym
+
+    writer = Writer.new(io_or_file_name, format) do |w|
+      4.times do
+        w.write(Buffer.new(SQUARE_WAVE_CYCLE[channel_label][sample_format] * 70, format))
+      end
+    end
+
+    assert_equal(read_file(:expected, file_name),
+                 read_file(:actual, file_name),
+                 "Written file doesn't match expected output: #{file_name}")
+    assert(writer.closed?)
   end
 end
