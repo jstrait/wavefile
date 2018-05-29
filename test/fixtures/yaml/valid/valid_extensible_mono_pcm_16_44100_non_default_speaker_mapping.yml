@@ -8,12 +8,12 @@ format_chunk:
   audio_format: 65534
   channels: 1
   sample_rate: 44100
-  byte_rate: 132300
-  block_align: 3
-  bits_per_sample: 24
+  byte_rate: 88200
+  block_align: 2
+  bits_per_sample: 16
   extension_size: 22
-  valid_bits_per_sample: 24
-  speaker_mapping: 0x00000004
+  valid_bits_per_sample: 16
+  speaker_mapping: 0x00000001
   subformat_guid: [1, 0, 0, 0, 0, 0, 16, 0, 128, 0, 0, 170, 0, 56, 155, 113]
 fact_chunk:
   chunk_id: "fact"
