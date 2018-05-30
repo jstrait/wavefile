@@ -1,7 +1,7 @@
 $:.push File.expand_path("../lib", __FILE__)
 require 'wavefile'
 
-Gem::Specification.new do |s| 
+Gem::Specification.new do |s|
   s.name = "wavefile"
   s.version = WaveFile::VERSION
   s.author = "Joel Strait"
