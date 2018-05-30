@@ -390,8 +390,16 @@ private
     writer.write(Buffer.new(SQUARE_WAVE_CYCLE[channel_label][sample_format] * 24, format))
     writer.close
 
-    assert_equal(read_file(:expected, file_name),
-                 read_file(:actual, file_name),
+    if io_or_file_name.is_a?(StringIO)
+      io_or_file_name.rewind
+      actual_file = io_or_file_name.read.force_encoding("ASCII-8BIT")
+    else
+      actual_file = read_file(:actual, file_name)
+    end
+    expected_file = read_file(:expected, file_name)
+
+    assert_equal(expected_file,
+                 actual_file,
                  "Written file doesn't match expected output: #{file_name}")
   end
 
@@ -411,8 +419,16 @@ private
       end
     end
 
-    assert_equal(read_file(:expected, file_name),
-                 read_file(:actual, file_name),
+    if io_or_file_name.is_a?(StringIO)
+      io_or_file_name.rewind
+      actual_file = io_or_file_name.read.force_encoding("ASCII-8BIT")
+    else
+      actual_file = read_file(:actual, file_name)
+    end
+    expected_file = read_file(:expected, file_name)
+
+    assert_equal(actual_file,
+                 expected_file,
                  "Written file doesn't match expected output: #{file_name}")
     assert(writer.closed?)
   end
