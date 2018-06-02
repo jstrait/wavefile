@@ -19,7 +19,7 @@ begin
   puts "  Bytes per second:      #{reader.native_format.byte_rate}"
   puts "  Block align:           #{reader.native_format.block_align}"
   puts "  Sample frame count:    #{reader.total_sample_frames}"
-  puts "  Speaker mapping:       #{reader.native_format.speaker_mapping.nil? ? 'None' : reader.native_format.speaker_mapping.inspect}"
+  puts "  Speaker mapping:       #{reader.native_format.speaker_mapping.nil? ? 'Not defined' : reader.native_format.speaker_mapping.inspect}"
 
   duration = reader.total_duration
   formatted_duration = duration.hours.to_s.rjust(2, "0") << ":" <<
