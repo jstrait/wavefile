@@ -10,7 +10,11 @@ begin
   puts "  Readable by this gem?  #{reader.readable_format? ? 'Yes' : 'No'}"
   puts "  Audio Format:          #{reader.native_format.audio_format}"
   puts "  Channels:              #{reader.native_format.channels}"
-  puts "  Bits per sample:       #{reader.native_format.bits_per_sample}"
+  if reader.native_format.valid_bits_per_sample.nil?
+    puts "  Bits per sample:       #{reader.native_format.bits_per_sample}"
+  else
+    puts "  Bits per sample:       #{reader.native_format.valid_bits_per_sample} (in a #{reader.native_format.bits_per_sample}-bit sample container)"
+  end
   puts "  Samples per second:    #{reader.native_format.sample_rate}"
   puts "  Bytes per second:      #{reader.native_format.byte_rate}"
   puts "  Block align:           #{reader.native_format.block_align}"
