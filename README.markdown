@@ -39,13 +39,13 @@ This gem lets you read and write audio data! You can use it to create Ruby progr
 
 # Future Release: v1.0.0
 
-Release on __TBD__, this version has these changes:
+Released on __TBD__, this version has these changes:
 
-* Better compatibilty with the spec, due to writing files using WAVE_FORMAT_EXTENSIBLE format where appropriate. This is a behind-the-scenes improvement - for most use cases it won't affect how you use the gem, but will theoretically result in better compatibility with other programs.
+* `Writer` will now write files using a format called WAVE_FORMAT_EXTENSIBLE where appropriate. This is a behind-the-scenes improvement - for most use cases it won't affect how you use the gem, but will theoretically result in better compatibility with other programs.
   * A file will automatically be written using WAVE_FORMAT_EXTENSIBLE format if any of the following are true:
     * It has more than 2 channels
     * It uses integer PCM sample format and the bits per sample is not 8 or 16 (in other words, if the sample format is `:pcm_24` or `:pcm_32`).
-    * A specific channel->speaker mapping is specified (see below), and it differs from the default speaker->channel mapping for a non-WAVE_FORMAT_EXTENSIBLE format (also see below).
+    * A specific channel->speaker mapping is specified (see below), and it differs from the default channel->speaker mapping for a non-WAVE_FORMAT_EXTENSIBLE format (also see below).
 * The channel->speaker mapping field can now be read from WAVE_FORMAT_EXTENSIBLE files that have it defined. For example, if a file indicates that the first sound channel should be mapped to the back right speaker, the second channel to the top center speaker, etc., this can be read using the `Reader.format.speaker_mapping` field.
   * Example:
     * ~~~
@@ -100,7 +100,7 @@ Release on __TBD__, this version has these changes:
     * `:top_back_center`
     * `:top_back_right`
   * If you want to indicate that a channel is explicitly _not_ mapped to any speaker, you can use `:undefined`.
-* Improved error messages that provide more detail.
+* Finally, some error messages are improved to provide more detail.
 
 # Release: v0.8.1
 
