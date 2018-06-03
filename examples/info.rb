@@ -7,8 +7,19 @@ puts "Metadata for #{file_name}:"
 begin
   reader = Reader.new(file_name)
 
+  audio_format = reader.native_format.audio_format
+  if !reader.native_format.sub_audio_format_guid.nil?
+    if reader.native_format.sub_audio_format_guid == SUB_FORMAT_GUID_PCM
+      sub_format = " (PCM sub format)"
+    elsif reader.native_format.sub_audio_format_guid == SUB_FORMAT_GUID_FLOAT
+      sub_format = " (Float sub format)"
+    else
+      sub_format = " (0x#{reader.native_format.sub_audio_format_guid.unpack("h*")[0]} sub format)"
+    end
+  end
+
   puts "  Readable by this gem?  #{reader.readable_format? ? 'Yes' : 'No'}"
-  puts "  Audio Format:          #{reader.native_format.audio_format}"
+  puts "  Audio Format:          #{audio_format}#{sub_format}"
   puts "  Channels:              #{reader.native_format.channels}"
   if reader.native_format.valid_bits_per_sample.nil?
     puts "  Bits per sample:       #{reader.native_format.bits_per_sample}"
