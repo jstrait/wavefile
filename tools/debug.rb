@@ -22,16 +22,10 @@ def read_bytes(pack_str)
     4.times { bytes << FILE.sysread(1) }
     val = bytes.join().unpack(UNSIGNED_INT_32).first
 
-    # Although the bytes are stored little-endian, I think it's easier to read them big-endian
-    bytes.reverse!
-
     return {:actual => val, :bytes => bytes }
   elsif pack_str == UNSIGNED_INT_16
     2.times { bytes << FILE.sysread(1) }
     val = bytes.join().unpack(UNSIGNED_INT_16).first
-
-    # Although the bytes are stored little-endian, I think it's easier to read them big-endian
-    bytes.reverse!
 
     return {:actual => val, :bytes => bytes }
   elsif pack_str.start_with?("B")
