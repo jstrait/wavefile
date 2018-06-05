@@ -12,6 +12,6 @@ Gem::Specification.new do |s|
   s.description = "You can use this gem to create Ruby programs that work with audio, by reading and writing Wave sound files (*.wav). Since it is written in pure Ruby (as opposed to wrapping an existing C library), you can use it without having to compile a separate extension."
   s.files = ["LICENSE", "README.markdown", "Rakefile"] + Dir["lib/**/*.rb"] + Dir["test/**/*.rb"] + Dir["test/**/*.wav"]
   s.require_path = "lib"
-  s.required_ruby_version = '>= 2.0'
-  s.license = 'MIT'
+  s.required_ruby_version = ">= 2.0"
+  s.license = "MIT"
 end
