@@ -140,9 +140,7 @@ module WaveFile
     # Returns nothing.
     # Raises ReaderClosedError if the Reader is already closed.
     def close
-      if @closed
-        raise ReaderClosedError
-      end
+      return if @closed
 
       if @io_source == :file_name
         @io.close

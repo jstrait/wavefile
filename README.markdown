@@ -100,6 +100,7 @@ Released on __TBD__, this version has these changes:
     * `:top_back_center`
     * `:top_back_right`
   * If you want to indicate that a channel is explicitly _not_ mapped to any speaker, you can use `:undefined`.
+* Calling `Reader.close` on a `Reader` instance that is already closed no longer raises `ReaderClosedError`. Instead, it does nothing. Thanks to [@kylekyle](https://github.com/kylekyle) for raising this as an issue.
 * Finally, some error messages are improved to provide more detail.
 
 # Release: v0.8.1

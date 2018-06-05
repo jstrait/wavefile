@@ -353,6 +353,9 @@ class ReaderTest < Minitest::Test
     assert_equal(false, reader.closed?)
     reader.close
     assert(reader.closed?)
+    # Closing an already closed Reader should be a no-op
+    reader.close
+    assert(reader.closed?)
 
     # For Reader.each_buffer
     reader = Reader.new(fixture("valid/valid_mono_pcm_16_44100.wav"))
