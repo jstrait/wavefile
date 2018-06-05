@@ -14,4 +14,5 @@ Gem::Specification.new do |s|
   s.require_path = "lib"
   s.required_ruby_version = ">= 2.0"
   s.license = "MIT"
+  s.post_install_message = "Thanks for installing the WaveFile gem! For documentation and examples, visit http://wavefilegem.com"
 end
