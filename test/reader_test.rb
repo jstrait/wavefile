@@ -318,6 +318,32 @@ class ReaderTest < Minitest::Test
     assert_equal(SQUARE_WAVE_CYCLE[:stereo][:pcm_16] * 24,  buffers[2].samples)
   end
 
+  def test_read_extensible_only_undefined_high_bit_speakers
+    reader = Reader.new(fixture("valid/valid_extensible_stereo_pcm_16_44100_only_undefined_high_bit_speakers.wav"))
+
+    assert_equal(2, reader.native_format.channels)
+    assert_equal(16, reader.native_format.bits_per_sample)
+    assert_equal(44100, reader.native_format.sample_rate)
+    assert_equal([:undefined, :undefined], reader.native_format.speaker_mapping)
+    assert_equal(2, reader.format.channels)
+    assert_equal(16, reader.format.bits_per_sample)
+    assert_equal(44100, reader.format.sample_rate)
+    assert_equal([:undefined, :undefined], reader.format.speaker_mapping)
+    assert_equal(false, reader.closed?)
+    assert_equal(0, reader.current_sample_frame)
+    assert_equal(2240, reader.total_sample_frames)
+    assert_equal(true, reader.readable_format?)
+    reader.close
+
+    buffers = read_file("valid/valid_extensible_stereo_pcm_16_44100_only_undefined_high_bit_speakers.wav", 1024)
+
+    assert_equal(3, buffers.length)
+    assert_equal([1024, 1024, 192], buffers.map {|buffer| buffer.samples.length })
+    assert_equal(SQUARE_WAVE_CYCLE[:stereo][:pcm_16] * 128, buffers[0].samples)
+    assert_equal(SQUARE_WAVE_CYCLE[:stereo][:pcm_16] * 128, buffers[1].samples)
+    assert_equal(SQUARE_WAVE_CYCLE[:stereo][:pcm_16] * 24,  buffers[2].samples)
+  end
+
   def test_read_non_extensible_that_has_extension
     reader = Reader.new(fixture("valid/valid_mono_pcm_16_44100_with_extension.wav"))
 
