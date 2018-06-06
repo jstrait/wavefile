@@ -238,7 +238,7 @@ module WaveFile
       end
 
       raise InvalidFormatError,
-            "Invalid speaker_mapping: `#{candidate_speaker_mapping.inspect}`. Must be an array containing these known speakers in the following order: #{UnvalidatedFormat::SPEAKER_POSITIONS.inspect}"
+            "Invalid speaker_mapping: `#{candidate_speaker_mapping.inspect}`. Should be an array the same size as the number of channels, containing either :undefined or these known speakers: #{UnvalidatedFormat::SPEAKER_POSITIONS.inspect}. Each defined speaker must come before any of the ones after it in the master list, and all :undefined speakers must come after the last defined speaker."
     end
   end
 end
