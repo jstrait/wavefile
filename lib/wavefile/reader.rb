@@ -133,12 +133,13 @@ module WaveFile
     end
 
 
-    # Public: Closes the Reader. After a Reader is closed, no more sample data can be read from it.
-    # Note: If the Reader is constructed from an open IO instance (as opposed to a file name),
-    # the IO instance will _not_ be closed. You'll have to manually close it yourself.
+    # Public: Closes the Reader. If the Reader is already closed, does nothing. After a Reader
+    # is closed, no more sample data can be read from it. Note: If the Reader is constructed
+    # from an open IO instance (as opposed to a file name), the IO instance will _not_ be closed.
+    # You'll have to manually close it yourself. This is intentional, because Reader can't know
+    # what you may/may not want to do with the IO instance in the future.
     #
     # Returns nothing.
-    # Raises ReaderClosedError if the Reader is already closed.
     def close
       return if @closed
 
