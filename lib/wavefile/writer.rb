@@ -235,10 +235,10 @@ module WaveFile
     # Data Chunk Header (8 bytes)
     #
     # All wave files written by Writer use this canonical format.
-    CANONICAL_HEADER_BYTE_LENGTH = {:pcm => 36, :float => 50, :extensible => 72}    # :nodoc:
+    CANONICAL_HEADER_BYTE_LENGTH = {:pcm => 36, :float => 50, :extensible => 72}.freeze    # :nodoc:
 
     # Internal
-    FORMAT_CHUNK_BYTE_LENGTH = {:pcm => 16, :float => 18, :extensible => 40}    # :nodoc:
+    FORMAT_CHUNK_BYTE_LENGTH = {:pcm => 16, :float => 18, :extensible => 40}.freeze    # :nodoc:
 
     # Internal
     SPEAKER_MAPPING_BIT_VALUES = {

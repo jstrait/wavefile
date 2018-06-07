@@ -136,9 +136,9 @@ module WaveFile
 
     # Internal
     SUPPORTED_BITS_PER_SAMPLE = {
-                                  :pcm => [8, 16, 24, 32],
-                                  :float => [32, 64],
-                                }    # :nodoc:
+                                  :pcm => [8, 16, 24, 32].freeze,
+                                  :float => [32, 64].freeze,
+                                }.freeze    # :nodoc:
 
     # Internal
     def normalize_channels(channels)
