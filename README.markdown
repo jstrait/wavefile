@@ -108,9 +108,9 @@ Released on __TBD__, this version has these changes:
 
 WaveFile has been tested with these Ruby versions, and appears to be compatible with them:
 
-* MRI 2.4.0, 2.3.3, 2.2.6, 2.1.10, 2.0, 1.9.3
+* MRI 2.5.1, 2.4.4, 2.3.7, 2.2.10, 2.1.10, 2.0
 
-1.9.3 is the minimum supported Ruby version.
+2.0 is the minimum supported Ruby version.
 
 If you find any compatibility issues, please let me know by opening a GitHub issue.
 
