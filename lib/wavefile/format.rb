@@ -53,6 +53,21 @@ module WaveFile
     #   format = Format.new(:stereo, :float, 44100)  # Equivalent to above
     #
     #   format = Format.new(2, :pcm_16, 44100, speaker_mapping: [:front_right, :front_center])
+    #
+    #   # Channels should explicitly not be mapped to particular speakers
+    #   # (otherwise, if no speaker_mapping set, it will be set to a default
+    #   # value for the number of channels).
+    #   format = Format.new(2, :pcm_16, 44100, speaker_mapping: [:undefined, :undefined])
+    #
+    #   # Will result in UnsupportedFormatError, because speakers are defined in
+    #   # invalid order
+    #   format = Format.new(2, :pcm_16, 44100, speaker_mapping: [:front_right, :front_left])
+    #
+    #   # speaker_mapping will be set to [:front_left, :undefined, :undefined],
+    #   # because channels without a speaker mapping will be mapped to :undefined
+    #   format = Format.new(3, :pcm_16, 44100, speaker_mapping: [:front_left])
+    #
+    # Raises InvalidFormatError if the given arguments are invalid.
     def initialize(channels, format_code, sample_rate, speaker_mapping: nil)
       channels = normalize_channels(channels)
 
