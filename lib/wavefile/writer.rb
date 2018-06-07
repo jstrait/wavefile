@@ -82,9 +82,9 @@ module WaveFile
     #     writer.write(buffer)
     #   end
     #
-    #   Writer.new("my_file.wav", Format.new(:stereo, :pcm_16, 44100)) do |writer|
-    #     writer.write(buffer)
-    #   end
+    #   writer = Writer.new("my_file.wav", Format.new(:stereo, :pcm_16, 44100))
+    #   writer.write(buffer)
+    #   writer.close
     #   # This will raise WriterClosedError because the Writer has already been closed.
     #   writer.write(buffer)
     #
