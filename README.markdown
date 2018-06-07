@@ -103,29 +103,6 @@ Released on __TBD__, this version has these changes:
 * Calling `Reader.close` on a `Reader` instance that is already closed no longer raises `ReaderClosedError`. Instead, it does nothing. Thanks to [@kylekyle](https://github.com/kylekyle) for raising this as an issue.
 * Finally, some error messages are improved to provide more detail.
 
-# Release: v0.8.1
-
-Released on January 31, 2017, this version fixes an error when frozen string literals are enabled in Ruby 2.3 or higher. (At the time of this release, that means Ruby 2.3 or 2.4). The gem should now work properly when the `--enable-frozen-string-literal` Ruby option is enabled. Thanks to [@samaaron](https://github.com/samaaron) for finding and fixing this!
-
-# Release v0.8.0
-
-Released on January 29, 2017, this version includes these changes:
-
-* Wave files using WAVE_FORMAT_EXTENSIBLE format (format code 65534) can now be read.
-  * Notes/Limitations
-    * The same formats supported in "vanilla" Wave files are supported when reading WAVE_FORMAT_EXTENSIBLE files. That is, PCM (8/16/24/32 bits per sample) or IEEE_FLOAT (32/64 bits per sample).
-    * The channel speaker mapping field is not exposed.
-    * The number of valid bits per sample must match the sample container size. For example, if a file has a sample container size of 24 bits and each sample is 24 bits, then it can be read. If the container size is 32 bits and each sample is 24 bits, it _can't_ be read.
-    * Writing files using WAVE_FORMAT_EXTENSIBLE format is not supported - all files will be written as a "vanilla" file regardless of the number of channels or sample format.
-* `Reader` and `Writer` can now be constructed using an open `IO` instance, to allow reading/writing using an arbitrary `IO`-like object (`File`, `StringIO`, etc). Previously, they could only be constructed from a file name (given by a String). Thanks to [@taf2](https://github.com/taf2) for suggesting this feature and providing an example pull request.
-* The buffer size in `Reader.each_buffer()` is now optional. If not given, a default buffer size will be used.
-* Two `Duration` objects will now evaluate to equal if they represent the same amount of time, due to an overridden definition of `==`. Thanks to [Christopher Smith](https://github.com/chrylis) for suggesting this improvement.
-* A `ReaderClosedError` is now raised (instead of `IOError`) when attempting to read from a closed `Reader` instance. However, `ReaderClosedError` extends `IOError`.
-* A `WriterClosedError` is now raised (instead of `IOError`) when attempting to read from a closed `Writer` instance. However, `WriterClosedError` extends `IOError`.
-* **Backwards Incompatible Changes**
-  * `Reader.file_name` and `Writer.file_name` have been removed. When a `Reader` or `Writer` instance is constructed from an `IO` instance, this field wouldn't necessarily have a sensible value. Since I don't know of an obvious use-case for these fields, going ahead and removing them altogether.
-  * The long deprecated ability to provide the sample format for a `Format` instance as an integer (implying PCM format) has been removed. For example, this is no longer valid: `Format.new(:mono, 16, 44100)`. Instead, use `Format.new(:mono, :pcm_16, 44100)`.
-
 
 # Compatibility
 
