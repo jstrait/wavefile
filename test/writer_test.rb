@@ -279,8 +279,8 @@ class WriterTest < Minitest::Test
       writer = Writer.new(io_or_file_name, format)
       writer.write(Buffer.new([1, 2, 3, 4], format))
       writer.close
-
-      assert_raises(WriterClosedError) { writer.close }
+      # The test is that this doesn't raise an error
+      writer.close
     end
   end
 

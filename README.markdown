@@ -57,7 +57,7 @@ Released on __TBD__, this version has these changes:
   * Example:
     * `Format.new(4, :pcm_16, 44100, speaker_mapping: [:front_left, :front_right, :front_center, :low_frequency])`
 * **Errors raised by `Format.new` are improved to provide more detail.**
-* **Backwards incompatible change:** Calling `Reader.close` on a `Reader` instance that is already closed no longer raises `ReaderClosedError`. Instead, it does nothing. Thanks to [@kylekyle](https://github.com/kylekyle) for raising this as an issue.
+* **Backwards incompatible change:** Calling `Reader.close` on a `Reader` instance that is already closed no longer raises `ReaderClosedError`. Instead, it does nothing. Similarly, calling `Writer.close` on a `Writer` instance that is already closed no longer raises `WriterClosedError`. Thanks to [@kylekyle](https://github.com/kylekyle) for raising this as an issue.
 * **Ruby 2.0 or greater is now required** - the gem no longer works in Ruby 1.9.3.
 
 

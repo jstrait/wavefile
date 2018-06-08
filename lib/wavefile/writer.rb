@@ -140,6 +140,7 @@ module WaveFile
     #   writer = Writer.new("my_file.wav", Format.new(:mono, :pcm_16, 44100))
     #   writer.write(buffer)
     #   writer.close
+    #   writer.close # Does nothing, since Writer is already closed
     #
     #   # Closing a Writer writing to an externally opened IO
     #   file = File.open("my_file.wav", "wb")
@@ -168,12 +169,10 @@ module WaveFile
     #   end
     #   # Writer is automatically closed here, because block has exited
     #
-    # Returns nothing. Has side effect of closing the Writer.
-    # Raises WriterClosedError if the Writer is already closed.
+    # Returns nothing. Has side effect of closing the Writer. If the Writer is already
+    # closed, does nothing.
     def close
-      if @closed
-        raise WriterClosedError
-      end
+      return if @closed
 
       # The RIFF specification requires that each chunk be aligned to an even number of bytes,
       # even if the byte count is an odd number. Therefore if an odd number of bytes has been
