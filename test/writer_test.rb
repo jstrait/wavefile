@@ -272,6 +272,18 @@ class WriterTest < Minitest::Test
     end
   end
 
+  def test_double_close
+    format = Format.new(:mono, :pcm_8, 44100)
+
+    ["#{OUTPUT_FOLDER}/double_close.wav", StringIO.new].each do |io_or_file_name|
+      writer = Writer.new(io_or_file_name, format)
+      writer.write(Buffer.new([1, 2, 3, 4], format))
+      writer.close
+
+      assert_raises(WriterClosedError) { writer.close }
+    end
+  end
+
   def test_total_duration
     exhaustively_test do |format_chunk_format, channels, sample_format|
       format = Format.new(CHANNEL_ALIAS[channels], sample_format, 44100)
