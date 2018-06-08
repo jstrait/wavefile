@@ -173,8 +173,6 @@ module WaveFile
 
       if speaker_mapping.length < channels
         speaker_mapping += [:undefined] * (channels - speaker_mapping.length)
-      elsif speaker_mapping.length > channels
-        speaker_mapping = speaker_mapping[0...channels]
       end
 
       speaker_mapping.freeze
@@ -241,7 +239,7 @@ module WaveFile
 
     # Internal
     def validate_speaker_mapping(channels, candidate_speaker_mapping)
-      if candidate_speaker_mapping.is_a?(Array)
+      if candidate_speaker_mapping.is_a?(Array) && candidate_speaker_mapping.length == channels
         speaker_mapping_without_invalid_speakers = UnvalidatedFormat::SPEAKER_POSITIONS & candidate_speaker_mapping
         if speaker_mapping_without_invalid_speakers.length < channels
           speaker_mapping_without_invalid_speakers += [:undefined] * (channels - speaker_mapping_without_invalid_speakers.length)

@@ -48,7 +48,12 @@ module WaveFile
 
       sample_format = "#{FORMAT_CODES.invert[audio_format_code]}_#{bits_per_sample}".to_sym
 
-      Format.new(@channels, sample_format, @sample_rate, speaker_mapping: @speaker_mapping)
+      speaker_mapping = @speaker_mapping
+      if !speaker_mapping.nil?
+        speaker_mapping = speaker_mapping[0...channels]
+      end
+
+      Format.new(@channels, sample_format, @sample_rate, speaker_mapping: speaker_mapping)
     end
 
   private
