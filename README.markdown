@@ -54,7 +54,7 @@ Released on __TBD__, this version has these changes:
       reader = Reader.new("4_channel_file.wav")
       puts reader.format.speaker_mapping.inspect  # [:front_left, :front_right, :front_center, :back_center]
       ~~~
-  * The channel->speaker mapping field isn't present in all Wave files. (Specifically, it's only present if the file uses WAVE_FORMAT_EXTENSIBLE format). For a non-WAVE_FORMAT_EXTENSIBLE file, `Reader.native_format.speaker_mapping` will be `nil`, to reflect that the channel->speaker mapping is undefined.  `Reader.format.speaker_mapping` will use a "sensible" default value for the given number of channels.
+  * The channel->speaker mapping field isn't present in all Wave files. (Specifically, it's only present if the file uses WAVE_FORMAT_EXTENSIBLE format). For a non-WAVE_FORMAT_EXTENSIBLE file, `Reader.native_format.speaker_mapping` will be `nil`, to reflect that the channel->speaker mapping is undefined. `Reader.format.speaker_mapping` will use a "sensible" default value for the given number of channels.
 * **A channel->speaker mapping array can optionally be given when constructing a `Format` instance.** If not given, a default value will be set for the given number of channels.
   * Example:
     * `Format.new(4, :pcm_16, 44100, speaker_mapping: [:front_left, :front_right, :front_center, :low_frequency])`
