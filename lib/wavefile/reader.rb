@@ -155,9 +155,9 @@ module WaveFile
       Duration.new(total_sample_frames, @data_chunk_reader.format.sample_rate)
     end
 
-    # Public: Returns a Format object describing the sample format of the Wave file being read.
-    # This is not necessarily the format that the sample data will be read as - to determine
-    # that, use #format.
+    # Public: Returns an object describing the sample format of the Wave file being read.
+    # This returns the data contained in the "fmt " chunk of the Wave file. It will not
+    # necessarily match the format that the samples are read out as (for that, see #format).
     def native_format
       @data_chunk_reader.raw_native_format
     end
@@ -169,9 +169,12 @@ module WaveFile
       @data_chunk_reader.readable_format
     end
 
-    # Public: Returns a Format object describing how sample data is being read from the Wave file (number of
-    # channels, sample format and bits per sample, etc). Note that this might be different from the
-    # underlying format of the Wave file on disk.
+    # Public: Returns an object describing how sample data is being read from the Wave file.
+    # I.e., number of channels, bits per sample, sample format, etc. If #readable_format? is
+    # true, then this will be a Format object. The format the samples are read out as might
+    # be different from how the samples are actually stored in the file. Therefore, #format
+    # might not match #native_format. If #readable_format? is false, then this will return the
+    # same value as #native_format.
     def format
       @data_chunk_reader.format
     end
