@@ -9,7 +9,7 @@ class WriterTest < Minitest::Test
 
   OUTPUT_FOLDER = "test/fixtures/actual_output"
 
-  def setup
+  def teardown
     clean_output_folder
   end
 
