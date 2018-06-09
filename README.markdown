@@ -41,6 +41,8 @@ This gem lets you read and write audio data! You can use it to create Ruby progr
 
 Released on __TBD__, this version has these changes:
 
+* **Ruby 2.0 or greater is now required** - the gem no longer works in Ruby 1.9.3.
+* **Backwards incompatible change:** Calling `Reader.close` on a `Reader` instance that is already closed no longer raises `ReaderClosedError`. Instead, it does nothing. Similarly, calling `Writer.close` on a `Writer` instance that is already closed no longer raises `WriterClosedError`. Thanks to [@kylekyle](https://github.com/kylekyle) for raising this as an issue.
 * **Better compatibility when writing Wave files.** `Writer` will now write files using a format called WAVE_FORMAT_EXTENSIBLE where appropriate. This is a behind-the-scenes improvement - for most use cases it won't affect how you use the gem, but can result in better compatibility with other programs.
   * A file will automatically be written using WAVE_FORMAT_EXTENSIBLE format if any of the following are true:
     * It has more than 2 channels
@@ -57,8 +59,6 @@ Released on __TBD__, this version has these changes:
   * Example:
     * `Format.new(4, :pcm_16, 44100, speaker_mapping: [:front_left, :front_right, :front_center, :low_frequency])`
 * **Errors raised by `Format.new` are improved to provide more detail.**
-* **Backwards incompatible change:** Calling `Reader.close` on a `Reader` instance that is already closed no longer raises `ReaderClosedError`. Instead, it does nothing. Similarly, calling `Writer.close` on a `Writer` instance that is already closed no longer raises `WriterClosedError`. Thanks to [@kylekyle](https://github.com/kylekyle) for raising this as an issue.
-* **Ruby 2.0 or greater is now required** - the gem no longer works in Ruby 1.9.3.
 
 
 # Compatibility
