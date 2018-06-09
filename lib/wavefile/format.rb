@@ -23,20 +23,20 @@ module WaveFile
     # Public: Constructs a new immutable Format.
     #
     # channels - The number of channels in the format. Can either be an Integer
-    #            (e.g. 1, 2, 3) or the symbols :mono (equivalent to 1) or
-    #            :stereo (equivalent to 2).
+    #            (e.g. 1, 2, 3) or the symbols +:mono+ (equivalent to 1) or
+    #            +:stereo+ (equivalent to 2).
     # format_code - A symbol indicating the format of each sample. Consists of
     #               two parts: a format code, and the bits per sample. The valid
-    #               values are :pcm_8, :pcm_16, :pcm_24, :pcm_32, :float_32,
-    #               :float_64, and :float (equivalent to :float_32)
+    #               values are +:pcm_8+, +:pcm_16+, +:pcm_24+, +:pcm_32+, +:float_32+,
+    #               +:float_64+, and +:float+ (equivalent to +:float_32+)
     # sample_rate - The number of samples per second, such as 44100
     # speaker_mapping - An optional array which indicates which speaker each channel should be
     #                   mapped to. Each value in the array should be one of these values:
-    #                   :front_left, :front_right, :front_center, :low_frequency, :back_left,
-    #                   :back_right, :front_left_of_center, :front_right_of_center,
-    #                   :back_center, :side_left, :side_right, :top_center, :top_front_left,
-    #                   :top_front_center, :top_front_right, :top_back_left, :top_back_center,
-    #                   :top_back_right. Each value should only appear once, and the channels
+    #                   +:front_left+, +:front_right+, +:front_center+, +:low_frequency+, +:back_left+,
+    #                   +:back_right+, +:front_left_of_center+, +:front_right_of_center+,
+    #                   +:back_center+, +:side_left+, +:side_right+, +:top_center+, +:top_front_left+,
+    #                   +:top_front_center+, +:top_front_right+, +:top_back_left+, +:top_back_center+,
+    #                   +:top_back_right+. Each value should only appear once, and the channels
     #                   must follow the ordering above. For example, [:front_center, :back_left]
     #                   is a valid speaker mapping, but [:back_left, :front_center] is not.
     #                   If a given channel should not be mapped to a specific speaker, the
