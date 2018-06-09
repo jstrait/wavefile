@@ -12,7 +12,7 @@ module WaveFile
   #    end
   #
   # If no block is given, you'll need to manually close the Writer when done. The underlaying
-  # file will not be valid or playable until close is called.
+  # file will not be valid or playable until #close is called.
   #
   #    writer = Writer.new("my_file.wav", Format.new(:mono, :pcm_16, 44100))
   #    # Write sample data here
