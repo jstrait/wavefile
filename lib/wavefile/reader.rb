@@ -164,7 +164,7 @@ module WaveFile
 
     # Public: Returns true if this is a valid Wave file and contains sample data that is in a format
     # that this class can read, and returns false if this is a valid Wave file but does not
-    # contain a sample format supported by this class.
+    # contain a sample format that this gem knows how to read.
     def readable_format?
       @data_chunk_reader.readable_format
     end
