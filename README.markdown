@@ -106,9 +106,14 @@ Then, to run the tests:
 
 ## Generating test fixtures
 
-If you want to change one of the fixture `*.wav` files under `/test/fixtures/wave`, edit the appropriate `*.yml` file defined in `/test/fixtures/yaml`, and then run this:
+The `*.wav` fixtures in `test/fixtures/wave` are generated from `*.yml` files defined in `/test/fixtures/yaml`. To change one of the `*.wav` fixtures, edit the corresponding `*.yml` file, and then run:
 
     rake test:create_fixtures
+
+Similarly, if you want to add a new `*.wav` fixture, add a new `*.yml` file that describes it in `/test/fixtures/yaml`, and then run the rake command above.
+
+Behind the scenes, `rake test:create_fixtures` runs `tools/fixture_writer.rb`, which is what actually generates each `*.wav` file.
+
 
 ## Generating RDoc Documentation
 
