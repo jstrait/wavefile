@@ -218,14 +218,16 @@ module WaveFile
 
   private
 
-    # Internal: Padding value written to the end of chunks whose payload is an odd number of bytes. The RIFF
+    # Internal
+    # Padding value written to the end of chunks whose payload is an odd number of bytes. The RIFF
     # specification requires that each chunk be aligned to an even number of bytes, even if the byte
     # count is an odd number.
     #
     # See http://www-mmsp.ece.mcgill.ca/Documents/AudioFormats/WAVE/Docs/riffmci.pdf, page 11.
     EMPTY_BYTE = "\000"    # :nodoc:
 
-    # Internal: The number of bytes at the beginning of a wave file before the sample data in the data chunk
+    # Internal
+    # The number of bytes at the beginning of a wave file before the sample data in the data chunk
     # starts, assuming this canonical format:
     #
     # RIFF Chunk Header (12 bytes)
@@ -269,7 +271,8 @@ module WaveFile
       end
     end
 
-    # Internal: Writes the RIFF chunk header, format chunk, and the header for the data chunk. After this
+    # Internal
+    # Writes the RIFF chunk header, format chunk, and the header for the data chunk. After this
     # method is called the file will be "queued up" and ready for writing actual sample data.
     def write_header(sample_frame_count)
       extensible = @format.channels > 2 ||
