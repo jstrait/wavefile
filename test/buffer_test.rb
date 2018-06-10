@@ -1,9 +1,12 @@
 require 'minitest/autorun'
 require 'wavefile.rb'
+require 'wavefile_io_test_helper.rb'
 
 include WaveFile
 
 class BufferTest < Minitest::Test
+  include WaveFileIOTestHelper
+
   def test_convert
     old_format = Format.new(:mono, :pcm_16, 44100)
     new_format = Format.new(:stereo, :pcm_16, 22050)
@@ -38,7 +41,7 @@ class BufferTest < Minitest::Test
 
 
   def test_convert_buffer_channels
-    Format::SUPPORTED_BITS_PER_SAMPLE[:pcm].each do |bits_per_sample|
+    SUPPORTED_BITS_PER_SAMPLE[:pcm].each do |bits_per_sample|
       format_code = "pcm_#{bits_per_sample}".to_sym
 
       [44100, 22050].each do |sample_rate|
@@ -83,7 +86,7 @@ class BufferTest < Minitest::Test
   end
 
   def test_convert_buffer_bits_per_sample_no_op
-    Format::SUPPORTED_BITS_PER_SAMPLE[:pcm].each do |bits_per_sample|
+    SUPPORTED_BITS_PER_SAMPLE[:pcm].each do |bits_per_sample|
       format_code = "pcm_#{bits_per_sample}".to_sym
 
       b = Buffer.new([0, 128, 255], Format.new(:mono, format_code, 44100))
@@ -143,7 +146,7 @@ class BufferTest < Minitest::Test
   end
 
   def test_convert_buffer_bits_per_sample_8_to_float
-    Format::SUPPORTED_BITS_PER_SAMPLE[:float].each do |bits_per_sample|
+    SUPPORTED_BITS_PER_SAMPLE[:float].each do |bits_per_sample|
       float_format = "float_#{bits_per_sample}".to_sym
 
       # Mono
@@ -211,7 +214,7 @@ class BufferTest < Minitest::Test
   end
 
   def test_convert_buffer_bits_per_sample_16_to_float
-    Format::SUPPORTED_BITS_PER_SAMPLE[:float].each do |bits_per_sample|
+    SUPPORTED_BITS_PER_SAMPLE[:float].each do |bits_per_sample|
       float_format = "float_#{bits_per_sample}".to_sym
 
       # Mono
@@ -282,7 +285,7 @@ class BufferTest < Minitest::Test
   end
 
   def test_convert_buffer_bits_per_sample_24_to_float
-    Format::SUPPORTED_BITS_PER_SAMPLE[:float].each do |bits_per_sample|
+    SUPPORTED_BITS_PER_SAMPLE[:float].each do |bits_per_sample|
       float_format = "float_#{bits_per_sample}".to_sym
 
       # Mono
@@ -354,7 +357,7 @@ class BufferTest < Minitest::Test
   end
 
   def test_convert_buffer_bits_per_sample_32_to_float
-    Format::SUPPORTED_BITS_PER_SAMPLE[:float].each do |bits_per_sample|
+    SUPPORTED_BITS_PER_SAMPLE[:float].each do |bits_per_sample|
       float_format = "float_#{bits_per_sample}".to_sym
 
       # Mono
@@ -375,7 +378,7 @@ class BufferTest < Minitest::Test
   end
 
   def test_convert_buffer_bits_per_sample_float_to_8
-    Format::SUPPORTED_BITS_PER_SAMPLE[:float].each do |bits_per_sample|
+    SUPPORTED_BITS_PER_SAMPLE[:float].each do |bits_per_sample|
       float_format = "float_#{bits_per_sample}".to_sym
 
       # Mono
@@ -395,7 +398,7 @@ class BufferTest < Minitest::Test
   end
 
   def test_convert_buffer_bits_per_sample_float_to_16
-    Format::SUPPORTED_BITS_PER_SAMPLE[:float].each do |bits_per_sample|
+    SUPPORTED_BITS_PER_SAMPLE[:float].each do |bits_per_sample|
       float_format = "float_#{bits_per_sample}".to_sym
 
       # Mono
@@ -415,7 +418,7 @@ class BufferTest < Minitest::Test
   end
 
   def test_convert_buffer_bits_per_sample_float_to_24
-    Format::SUPPORTED_BITS_PER_SAMPLE[:float].each do |bits_per_sample|
+    SUPPORTED_BITS_PER_SAMPLE[:float].each do |bits_per_sample|
       float_format = "float_#{bits_per_sample}".to_sym
 
       # Mono
@@ -435,7 +438,7 @@ class BufferTest < Minitest::Test
   end
 
   def test_convert_buffer_bits_per_sample_float_to_32
-    Format::SUPPORTED_BITS_PER_SAMPLE[:float].each do |bits_per_sample|
+    SUPPORTED_BITS_PER_SAMPLE[:float].each do |bits_per_sample|
       float_format = "float_#{bits_per_sample}".to_sym
 
       # Mono

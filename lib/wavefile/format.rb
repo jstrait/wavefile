@@ -135,12 +135,6 @@ module WaveFile
     SUPPORTED_FORMAT_CODES = [:pcm_8, :pcm_16, :pcm_24, :pcm_32, :float, :float_32, :float_64].freeze    # :nodoc:
 
     # Internal
-    SUPPORTED_BITS_PER_SAMPLE = {
-                                  :pcm => [8, 16, 24, 32].freeze,
-                                  :float => [32, 64].freeze,
-                                }.freeze    # :nodoc:
-
-    # Internal
     def normalize_channels(channels)
       if channels == :mono
         return 1

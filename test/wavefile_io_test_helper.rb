@@ -1,6 +1,11 @@
 module WaveFileIOTestHelper
   CHANNEL_ALIAS = { :mono => 1, :stereo => 2, :tri => 3}
 
+  SUPPORTED_BITS_PER_SAMPLE = {
+                                :pcm => [8, 16, 24, 32].freeze,
+                                :float => [32, 64].freeze,
+                              }.freeze
+
   SQUARE_WAVE_CYCLE = {}
   SQUARE_WAVE_CYCLE[:mono] = {}
 
@@ -61,7 +66,7 @@ module WaveFileIOTestHelper
     ["", "extensible_"].each do |format_chunk_format|
       [:mono, :stereo, :tri].each do |channels|
         [:pcm, :float].each do |sample_format|
-          Format::SUPPORTED_BITS_PER_SAMPLE[sample_format].each do |bits_per_sample|
+          SUPPORTED_BITS_PER_SAMPLE[sample_format].each do |bits_per_sample|
             yield(format_chunk_format, channels, "#{sample_format}_#{bits_per_sample}".to_sym)
           end
         end
