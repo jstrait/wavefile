@@ -4,8 +4,9 @@ module WaveFile
   # this Gem. Or, because it's a not a valid Wave file period.
   class FormatError < StandardError; end
 
-  # Public: Error that is raised when trying to read from a file that is either not a wave file,
-  # or that is not valid according to the wave file spec.
+  # Public: Error that is raised when constructing a Format instance that is not valid,
+  # trying to read from a file that is not a wave file, or trying to read from a file
+  # that is not valid according to the wave file spec.
   class InvalidFormatError < FormatError; end
 
   # Public: Error that is raised when trying to read from a valid wave file that has its sample data
