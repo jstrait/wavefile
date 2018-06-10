@@ -156,7 +156,7 @@ module WaveFile
     end
 
     # Public: Returns an object describing the sample format of the Wave file being read.
-    # This returns the data contained in the +"fmt "+ chunk of the Wave file. It will not
+    # This returns the data contained in the "fmt " chunk of the Wave file. It will not
     # necessarily match the format that the samples are read out as (for that, see #format).
     def native_format
       @data_chunk_reader.raw_native_format
