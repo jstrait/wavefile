@@ -59,7 +59,7 @@ module WaveFile
     #   # value for the number of channels).
     #   format = Format.new(2, :pcm_16, 44100, speaker_mapping: [:undefined, :undefined])
     #
-    #   # Will result in UnsupportedFormatError, because speakers are defined in
+    #   # Will result in InvalidFormatError, because speakers are defined in
     #   # invalid order
     #   format = Format.new(2, :pcm_16, 44100, speaker_mapping: [:front_right, :front_left])
     #
