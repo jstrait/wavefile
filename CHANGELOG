@@ -33,11 +33,14 @@
     `Reader.native_format.speaker_mapping` will be `nil`, to reflect that the
     channel->speaker mapping is undefined. `Reader.format.speaker_mapping`
     will use a "sensible" default value for the given number of channels.
-* A channel->speaker mapping array can optionally be given when constructing a
-  `Format` instance. If not given, a default value will be set for the given
-  number of channels.
+* A channel->speaker mapping array can optionally be given when constructing
+  a `Format` instance. If not given, a default value will be set for the
+  given number of channels.
   * Example:
-    * `Format.new(4, :pcm_16, 44100, speaker_mapping: [:front_left, :front_right, :front_center, :low_frequency])`
+    * `Format.new(4, :pcm_16, 44100, speaker_mapping: [:front_left,
+                                                       :front_right,
+                                                       :front_center,
+                                                       :low_frequency])`
 * Errors raised by `Format.new` are improved to provide more detail.
 
 
