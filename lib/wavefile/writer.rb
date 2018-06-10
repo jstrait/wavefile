@@ -260,7 +260,7 @@ module WaveFile
       top_back_left: 32768,
       top_back_center: 65536,
       top_back_right: 131072,
-    }.freeze
+    }.freeze    # :nodoc:
 
     # Internal
     def pack_speaker_mapping(speaker_mapping)
