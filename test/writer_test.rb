@@ -9,6 +9,11 @@ class WriterTest < Minitest::Test
 
   OUTPUT_FOLDER = "test/fixtures/actual_output"
 
+  def setup
+    # Make the output folder if it doesn't already exist
+    Dir.mkdir(OUTPUT_FOLDER) unless File.exist?(OUTPUT_FOLDER)
+  end
+
   def teardown
     clean_output_folder
   end
@@ -374,9 +379,6 @@ private
   end
 
   def clean_output_folder
-    # Make the folder if it doesn't already exist
-    Dir.mkdir(OUTPUT_FOLDER) unless File.exist?(OUTPUT_FOLDER)
-
     dir = Dir.new(OUTPUT_FOLDER)
     file_names = dir.entries
     file_names.each do |file_name|
