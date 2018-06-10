@@ -184,8 +184,6 @@ module WaveFile
       #
       # https://xiph.org/flac/format.html#frame_header
       if channels == 1  # Mono
-        #
-        #
         [:front_center]
       elsif channels == 2  # Stereo
         [:front_left, :front_right]
