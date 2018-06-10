@@ -141,8 +141,6 @@ when finished reading.</p>
   </section>
 
   
-  
-  
   <section id="5Buntitled-5D" class="documentation-section">
     
 
@@ -155,8 +153,6 @@ when finished reading.</p>
     
   </section>
 
-  
-  
   <section id="Public" class="documentation-section">
     
     <header class="documentation-section-title">
@@ -209,17 +205,17 @@ file&#39;s internal format).</p>
 </dd></dl>
 
 <p>Returns a <a href="Reader.html">Reader</a> object that is ready to start
-reading the specified file&#39;s sample data. Raises Errno::ENOENT if the
-specified file can&#39;t be found Raises <a
-href="InvalidFormatError.html">InvalidFormatError</a> if the specified file
-isn&#39;t a valid wave file</p>
+reading the specified file&#39;s sample data. Raises
+<code>Errno::ENOENT</code> if the specified file can&#39;t be found Raises
+<a href="InvalidFormatError.html">InvalidFormatError</a> if the specified
+file isn&#39;t a valid wave file</p>
           
           
 
           
           <div class="method-source-code" id="new-source">
             <pre><span class="ruby-comment"># File lib/wavefile/reader.rb, line 32</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">io_or_file_name</span>, <span class="ruby-identifier">format</span>=<span class="ruby-keyword">nil</span>)
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">initialize</span>(<span class="ruby-identifier">io_or_file_name</span>, <span class="ruby-identifier">format</span>=<span class="ruby-keyword">nil</span>)
   <span class="ruby-keyword">if</span> <span class="ruby-identifier">io_or_file_name</span>.<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">String</span>)
     <span class="ruby-ivar">@io</span> = <span class="ruby-constant">File</span>.<span class="ruby-identifier">open</span>(<span class="ruby-identifier">io_or_file_name</span>, <span class="ruby-string">&quot;rb&quot;</span>)
     <span class="ruby-ivar">@io_source</span> = <span class="ruby-value">:file_name</span>
@@ -235,7 +231,7 @@ isn&#39;t a valid wave file</p>
   <span class="ruby-keyword">rescue</span> <span class="ruby-constant">InvalidFormatError</span>
     <span class="ruby-identifier">raise</span> <span class="ruby-constant">InvalidFormatError</span>, <span class="ruby-string">&quot;Does not appear to be a valid Wave file&quot;</span>
   <span class="ruby-keyword">end</span>
-  
+
   <span class="ruby-ivar">@data_chunk_reader</span> = <span class="ruby-identifier">riff_reader</span>.<span class="ruby-identifier">data_chunk_reader</span>
 
   <span class="ruby-keyword">if</span> <span class="ruby-identifier">block_given?</span>
@@ -277,27 +273,26 @@ isn&#39;t a valid wave file</p>
 
         <div class="method-description">
           
-          <p>Closes the <a href="Reader.html">Reader</a>. After a <a
+          <p>Closes the <a href="Reader.html">Reader</a>. If the <a
+href="Reader.html">Reader</a> is already closed, does nothing. After a <a
 href="Reader.html">Reader</a> is closed, no more sample data can be read
 from it. Note: If the <a href="Reader.html">Reader</a> is constructed from
 an open IO instance (as opposed to a file name), the IO instance will
-<em>not</em> be closed. You&#39;ll have to manually close it yourself.</p>
+<em>not</em> be closed. You&#39;ll have to manually close it yourself. This
+is intentional, because <a href="Reader.html">Reader</a> can&#39;t know
+what you may/may not want to do with the IO instance in the future.</p>
 
 <h3 id="method-i-close-label-Returns">Returns<span><a href="#method-i-close-label-Returns">&para;</a> <a href="#top">&uarr;</a></span></h3>
 
-<p>Returns nothing. Raises <a
-href="ReaderClosedError.html">ReaderClosedError</a> if the <a
-href="Reader.html">Reader</a> is already closed.</p>
+<p>Returns nothing.</p>
           
           
 
           
           <div class="method-source-code" id="close-source">
-            <pre><span class="ruby-comment"># File lib/wavefile/reader.rb, line 142</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">close</span>
-  <span class="ruby-keyword">if</span> <span class="ruby-ivar">@closed</span>
-    <span class="ruby-identifier">raise</span> <span class="ruby-constant">ReaderClosedError</span>
-  <span class="ruby-keyword">end</span>
+            <pre><span class="ruby-comment"># File lib/wavefile/reader.rb, line 143</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">close</span>
+  <span class="ruby-keyword">return</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@closed</span>
 
   <span class="ruby-keyword">if</span> <span class="ruby-ivar">@io_source</span> <span class="ruby-operator">==</span> <span class="ruby-value">:file_name</span>
     <span class="ruby-ivar">@io</span>.<span class="ruby-identifier">close</span>
@@ -338,7 +333,7 @@ if it is open and available for reading.</p>
           
           <div class="method-source-code" id="closed-3F-source">
             <pre><span class="ruby-comment"># File lib/wavefile/reader.rb, line 131</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">closed?</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">closed?</span>
   <span class="ruby-ivar">@closed</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -376,8 +371,8 @@ and 1,000 right-channel samples.</p>
 
           
           <div class="method-source-code" id="current_sample_frame-source">
-            <pre><span class="ruby-comment"># File lib/wavefile/reader.rb, line 184</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">current_sample_frame</span>
+            <pre><span class="ruby-comment"># File lib/wavefile/reader.rb, line 186</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">current_sample_frame</span>
   <span class="ruby-ivar">@data_chunk_reader</span>.<span class="ruby-identifier">current_sample_frame</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -457,7 +452,7 @@ href="Reader.html">Reader</a>.</p>
           
           <div class="method-source-code" id="each_buffer-source">
             <pre><span class="ruby-comment"># File lib/wavefile/reader.rb, line 99</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">each_buffer</span>(<span class="ruby-identifier">sample_frame_count</span>=<span class="ruby-value">4096</span>)
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">each_buffer</span>(<span class="ruby-identifier">sample_frame_count</span>=<span class="ruby-value">4096</span>)
   <span class="ruby-keyword">begin</span>
     <span class="ruby-keyword">while</span> <span class="ruby-keyword">true</span> <span class="ruby-keyword">do</span>
       <span class="ruby-keyword">yield</span>(<span class="ruby-identifier">read</span>(<span class="ruby-identifier">sample_frame_count</span>))
@@ -491,17 +486,24 @@ href="Reader.html">Reader</a>.</p>
           
           <h3 id="method-i-format-label-Returns">Returns<span><a href="#method-i-format-label-Returns">&para;</a> <a href="#top">&uarr;</a></span></h3>
 
-<p>Returns a <a href="Format.html">Format</a> object describing how sample
-data is being read from the Wave file (number of channels, sample format
-and bits per sample, etc). Note that this might be different from the
-underlying format of the Wave file on disk.</p>
+<p>Returns an object describing how sample data is being read from the Wave
+file. I.e., number of channels, bits per sample, sample format, etc. If <a
+href="Reader.html#method-i-readable_format-3F">readable_format?</a> is
+true, then this will be a <a href="Format.html">Format</a> object. The
+format the samples are read out as might be different from how the samples
+are actually stored in the file. Therefore, <a
+href="Reader.html#method-i-format">format</a> might not match <a
+href="Reader.html#method-i-native_format">native_format</a>. If <a
+href="Reader.html#method-i-readable_format-3F">readable_format?</a> is
+false, then this will return the same value as <a
+href="Reader.html#method-i-native_format">native_format</a>.</p>
           
           
 
           
           <div class="method-source-code" id="format-source">
-            <pre><span class="ruby-comment"># File lib/wavefile/reader.rb, line 176</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">format</span>
+            <pre><span class="ruby-comment"># File lib/wavefile/reader.rb, line 178</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">format</span>
   <span class="ruby-ivar">@data_chunk_reader</span>.<span class="ruby-identifier">format</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -529,17 +531,17 @@ underlying format of the Wave file on disk.</p>
           
           <h3 id="method-i-native_format-label-Returns">Returns<span><a href="#method-i-native_format-label-Returns">&para;</a> <a href="#top">&uarr;</a></span></h3>
 
-<p>Returns a <a href="Format.html">Format</a> object describing the sample
-format of the Wave file being read. This is not necessarily the format that
-the sample data will be read as - to determine that, use <a
-href="Reader.html#method-i-format">format</a>.</p>
+<p>Returns an object describing the sample format of the Wave file being read.
+This returns the data contained in the “fmt ” chunk of the Wave file. It
+will not necessarily match the format that the samples are read out as (for
+that, see <a href="Reader.html#method-i-format">format</a>).</p>
           
           
 
           
           <div class="method-source-code" id="native_format-source">
-            <pre><span class="ruby-comment"># File lib/wavefile/reader.rb, line 162</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">native_format</span>
+            <pre><span class="ruby-comment"># File lib/wavefile/reader.rb, line 161</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">native_format</span>
   <span class="ruby-ivar">@data_chunk_reader</span>.<span class="ruby-identifier">raw_native_format</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -590,7 +592,7 @@ samples could be read due to reaching the end of the file</p>
           
           <div class="method-source-code" id="read-source">
             <pre><span class="ruby-comment"># File lib/wavefile/reader.rb, line 121</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">read</span>(<span class="ruby-identifier">sample_frame_count</span>)
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">read</span>(<span class="ruby-identifier">sample_frame_count</span>)
   <span class="ruby-keyword">if</span> <span class="ruby-ivar">@closed</span>
     <span class="ruby-identifier">raise</span> <span class="ruby-constant">ReaderClosedError</span>
   <span class="ruby-keyword">end</span>
@@ -624,14 +626,15 @@ samples could be read due to reaching the end of the file</p>
 
 <p>Returns true if this is a valid Wave file and contains sample data that is
 in a format that this class can read, and returns false if this is a valid
-Wave file but does not contain a sample format supported by this class.</p>
+Wave file but does not contain a sample format that this gem knows how to
+read.</p>
           
           
 
           
           <div class="method-source-code" id="readable_format-3F-source">
-            <pre><span class="ruby-comment"># File lib/wavefile/reader.rb, line 169</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">readable_format?</span>
+            <pre><span class="ruby-comment"># File lib/wavefile/reader.rb, line 168</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">readable_format?</span>
   <span class="ruby-ivar">@data_chunk_reader</span>.<span class="ruby-identifier">readable_format</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -666,8 +669,8 @@ number of sample frames in the file</p>
 
           
           <div class="method-source-code" id="total_duration-source">
-            <pre><span class="ruby-comment"># File lib/wavefile/reader.rb, line 155</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">total_duration</span>
+            <pre><span class="ruby-comment"># File lib/wavefile/reader.rb, line 154</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">total_duration</span>
   <span class="ruby-constant">Duration</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">total_sample_frames</span>, <span class="ruby-ivar">@data_chunk_reader</span>.<span class="ruby-identifier">format</span>.<span class="ruby-identifier">sample_rate</span>)
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -704,8 +707,8 @@ and 1,000 right-channel samples.</p>
 
           
           <div class="method-source-code" id="total_sample_frames-source">
-            <pre><span class="ruby-comment"># File lib/wavefile/reader.rb, line 191</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">total_sample_frames</span>
+            <pre><span class="ruby-comment"># File lib/wavefile/reader.rb, line 193</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">total_sample_frames</span>
   <span class="ruby-ivar">@data_chunk_reader</span>.<span class="ruby-identifier">total_sample_frames</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -725,8 +728,8 @@ and 1,000 right-channel samples.</p>
 
 
 <footer id="validator-badges" role="contentinfo">
-  <p><a href="http://validator.w3.org/check/referer">Validate</a>
-  <p>Generated by <a href="https://rdoc.github.io/rdoc">RDoc</a> 5.0.0.
+  <p><a href="https://validator.w3.org/check/referer">Validate</a>
+  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.0.1.
   <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
 </footer>
 

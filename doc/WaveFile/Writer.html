@@ -63,8 +63,6 @@
     
       <li><a href="#Public">Public</a></li>
     
-      <li><a href="#Internal">Internal</a></li>
-    
   </ul>
 </div>
 
@@ -113,24 +111,23 @@
 block. All samples should be written inside this block, and when the block
 exits the file will automatically be closed:</p>
 
-<pre class="ruby"><span class="ruby-constant">Writer</span>.<span class="ruby-identifier">new</span>(<span class="ruby-string">&quot;my_file.wav&quot;</span>, <span class="ruby-constant">Format</span>.<span class="ruby-identifier">new</span>(:<span class="ruby-identifier">mono</span>, :<span class="ruby-identifier">pcm_16</span>, <span class="ruby-value">44100</span>)) <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">writer</span><span class="ruby-operator">|</span>
+<pre class="ruby"><span class="ruby-constant">Writer</span>.<span class="ruby-identifier">new</span>(<span class="ruby-string">&quot;my_file.wav&quot;</span>, <span class="ruby-constant">Format</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">:mono</span>, <span class="ruby-value">:pcm_16</span>, <span class="ruby-value">44100</span>)) <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">writer</span><span class="ruby-operator">|</span>
   <span class="ruby-comment"># Write sample data here</span>
 <span class="ruby-keyword">end</span>
 </pre>
 
 <p>If no block is given, you&#39;ll need to manually close the <a
 href="Writer.html">Writer</a> when done. The underlaying file will not be
-valid or playable until close is called.</p>
+valid or playable until <a href="Writer.html#method-i-close">close</a> is
+called.</p>
 
-<pre class="ruby"><span class="ruby-identifier">writer</span> = <span class="ruby-constant">Writer</span>.<span class="ruby-identifier">new</span>(<span class="ruby-string">&quot;my_file.wav&quot;</span>, <span class="ruby-constant">Format</span>.<span class="ruby-identifier">new</span>(:<span class="ruby-identifier">mono</span>, :<span class="ruby-identifier">pcm_16</span>, <span class="ruby-value">44100</span>))
+<pre class="ruby"><span class="ruby-identifier">writer</span> = <span class="ruby-constant">Writer</span>.<span class="ruby-identifier">new</span>(<span class="ruby-string">&quot;my_file.wav&quot;</span>, <span class="ruby-constant">Format</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">:mono</span>, <span class="ruby-value">:pcm_16</span>, <span class="ruby-value">44100</span>))
 <span class="ruby-comment"># Write sample data here</span>
 <span class="ruby-identifier">writer</span>.<span class="ruby-identifier">close</span>
 </pre>
 
   </section>
 
-  
-  
   
   <section id="5Buntitled-5D" class="documentation-section">
     
@@ -144,8 +141,6 @@ valid or playable until close is called.</p>
     
   </section>
 
-  
-  
   <section id="Public" class="documentation-section">
     
     <header class="documentation-section-title">
@@ -261,7 +256,7 @@ writing the specified file&#39;s sample data.</p>
           
           <div class="method-source-code" id="new-source">
             <pre><span class="ruby-comment"># File lib/wavefile/writer.rb, line 39</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">io_or_file_name</span>, <span class="ruby-identifier">format</span>)
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">initialize</span>(<span class="ruby-identifier">io_or_file_name</span>, <span class="ruby-identifier">format</span>)
   <span class="ruby-keyword">if</span> <span class="ruby-identifier">io_or_file_name</span>.<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">String</span>)
     <span class="ruby-ivar">@io</span> = <span class="ruby-constant">File</span>.<span class="ruby-identifier">open</span>(<span class="ruby-identifier">io_or_file_name</span>, <span class="ruby-string">&quot;wb&quot;</span>)
     <span class="ruby-ivar">@io_source</span> = <span class="ruby-value">:file_name</span>
@@ -341,28 +336,29 @@ do with the IO after closing the <a href="Writer.html">Writer</a>.</p>
 <h3 id="method-i-close-label-Examples">Examples<span><a href="#method-i-close-label-Examples">&para;</a> <a href="#top">&uarr;</a></span></h3>
 
 <pre class="ruby"><span class="ruby-identifier">square_wave_samples</span> = ([<span class="ruby-value">0.5</span>] <span class="ruby-operator">*</span> <span class="ruby-value">100</span>) <span class="ruby-operator">+</span> ([<span class="ruby-value">-0.5</span>] <span class="ruby-operator">*</span> <span class="ruby-value">100</span>)
-<span class="ruby-identifier">buffer</span> = <span class="ruby-constant">Buffer</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">square_wave_samples</span>, <span class="ruby-constant">Format</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">1</span>, :<span class="ruby-identifier">float</span>, <span class="ruby-value">44100</span>))
+<span class="ruby-identifier">buffer</span> = <span class="ruby-constant">Buffer</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">square_wave_samples</span>, <span class="ruby-constant">Format</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">1</span>, <span class="ruby-value">:float</span>, <span class="ruby-value">44100</span>))
 
 <span class="ruby-comment"># Basic example of closing a Writer</span>
-<span class="ruby-identifier">writer</span> = <span class="ruby-constant">Writer</span>.<span class="ruby-identifier">new</span>(<span class="ruby-string">&quot;my_file.wav&quot;</span>, <span class="ruby-constant">Format</span>.<span class="ruby-identifier">new</span>(:<span class="ruby-identifier">mono</span>, :<span class="ruby-identifier">pcm_16</span>, <span class="ruby-value">44100</span>))
+<span class="ruby-identifier">writer</span> = <span class="ruby-constant">Writer</span>.<span class="ruby-identifier">new</span>(<span class="ruby-string">&quot;my_file.wav&quot;</span>, <span class="ruby-constant">Format</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">:mono</span>, <span class="ruby-value">:pcm_16</span>, <span class="ruby-value">44100</span>))
 <span class="ruby-identifier">writer</span>.<span class="ruby-identifier">write</span>(<span class="ruby-identifier">buffer</span>)
 <span class="ruby-identifier">writer</span>.<span class="ruby-identifier">close</span>
+<span class="ruby-identifier">writer</span>.<span class="ruby-identifier">close</span> <span class="ruby-comment"># Does nothing, since Writer is already closed</span>
 
 <span class="ruby-comment"># Closing a Writer writing to an externally opened IO</span>
 <span class="ruby-identifier">file</span> = <span class="ruby-constant">File</span>.<span class="ruby-identifier">open</span>(<span class="ruby-string">&quot;my_file.wav&quot;</span>, <span class="ruby-string">&quot;wb&quot;</span>)
-<span class="ruby-identifier">writer</span> = <span class="ruby-constant">Writer</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">file</span>, <span class="ruby-constant">Format</span>.<span class="ruby-identifier">new</span>(:<span class="ruby-identifier">mono</span>, :<span class="ruby-identifier">pcm_16</span>, <span class="ruby-value">44100</span>))
+<span class="ruby-identifier">writer</span> = <span class="ruby-constant">Writer</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">file</span>, <span class="ruby-constant">Format</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">:mono</span>, <span class="ruby-value">:pcm_16</span>, <span class="ruby-value">44100</span>))
 <span class="ruby-identifier">writer</span>.<span class="ruby-identifier">close</span>
 <span class="ruby-comment"># file is still open at this point, so it should be manually closed</span>
 <span class="ruby-identifier">file</span>.<span class="ruby-identifier">close</span>
 
 <span class="ruby-comment"># Trying to write to a Writer that has already been closed</span>
-<span class="ruby-identifier">writer</span> = <span class="ruby-constant">Writer</span>.<span class="ruby-identifier">new</span>(<span class="ruby-string">&quot;my_file.wav&quot;</span>, <span class="ruby-constant">Format</span>.<span class="ruby-identifier">new</span>(:<span class="ruby-identifier">mono</span>, :<span class="ruby-identifier">pcm_16</span>, <span class="ruby-value">44100</span>))
+<span class="ruby-identifier">writer</span> = <span class="ruby-constant">Writer</span>.<span class="ruby-identifier">new</span>(<span class="ruby-string">&quot;my_file.wav&quot;</span>, <span class="ruby-constant">Format</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">:mono</span>, <span class="ruby-value">:pcm_16</span>, <span class="ruby-value">44100</span>))
 <span class="ruby-identifier">writer</span>.<span class="ruby-identifier">close</span>
 <span class="ruby-comment"># This will raise WriterClosedError, since the Writer is already closed</span>
 <span class="ruby-identifier">writer</span>.<span class="ruby-identifier">write</span>(<span class="ruby-identifier">buffer</span>)
 
 <span class="ruby-comment"># close() needs to be called for the Wave file to be valid</span>
-<span class="ruby-identifier">writer</span> = <span class="ruby-constant">Writer</span>.<span class="ruby-identifier">new</span>(<span class="ruby-string">&quot;my_file.wav&quot;</span>, <span class="ruby-constant">Format</span>.<span class="ruby-identifier">new</span>(:<span class="ruby-identifier">mono</span>, :<span class="ruby-identifier">pcm_16</span>, <span class="ruby-value">44100</span>))
+<span class="ruby-identifier">writer</span> = <span class="ruby-constant">Writer</span>.<span class="ruby-identifier">new</span>(<span class="ruby-string">&quot;my_file.wav&quot;</span>, <span class="ruby-constant">Format</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">:mono</span>, <span class="ruby-value">:pcm_16</span>, <span class="ruby-value">44100</span>))
 <span class="ruby-identifier">writer</span>.<span class="ruby-identifier">write</span>(<span class="ruby-identifier">buffer</span>)
 <span class="ruby-identifier">exit</span>
 <span class="ruby-comment"># At this point &quot;my_file.wav&quot; won&#39;t be a valid Wave file, because close</span>
@@ -370,7 +366,7 @@ do with the IO after closing the <a href="Writer.html">Writer</a>.</p>
 
 <span class="ruby-comment"># But, close() doesn&#39;t need to be called when constructing the Writer</span>
 <span class="ruby-comment"># with a block, because it is automatically called when the block exits.</span>
-<span class="ruby-constant">Writer</span>.<span class="ruby-identifier">new</span>(<span class="ruby-string">&quot;my_file.wav&quot;</span>, <span class="ruby-constant">Format</span>.<span class="ruby-identifier">new</span>(:<span class="ruby-identifier">mono</span>, :<span class="ruby-identifier">pcm_16</span>, <span class="ruby-value">44100</span>)) <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">writer</span><span class="ruby-operator">|</span>
+<span class="ruby-constant">Writer</span>.<span class="ruby-identifier">new</span>(<span class="ruby-string">&quot;my_file.wav&quot;</span>, <span class="ruby-constant">Format</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">:mono</span>, <span class="ruby-value">:pcm_16</span>, <span class="ruby-value">44100</span>)) <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">writer</span><span class="ruby-operator">|</span>
   <span class="ruby-identifier">writer</span>.<span class="ruby-identifier">write</span>(<span class="ruby-identifier">buffer</span>)
 <span class="ruby-keyword">end</span>
 <span class="ruby-comment"># Writer is automatically closed here, because block has exited</span>
@@ -379,19 +375,16 @@ do with the IO after closing the <a href="Writer.html">Writer</a>.</p>
 <h3 id="method-i-close-label-Returns">Returns<span><a href="#method-i-close-label-Returns">&para;</a> <a href="#top">&uarr;</a></span></h3>
 
 <p>Returns nothing. Has side effect of closing the <a
-href="Writer.html">Writer</a>. Raises <a
-href="WriterClosedError.html">WriterClosedError</a> if the <a
-href="Writer.html">Writer</a> is already closed.</p>
+href="Writer.html">Writer</a>. If the <a href="Writer.html">Writer</a> is
+already closed, does nothing.</p>
           
           
 
           
           <div class="method-source-code" id="close-source">
-            <pre><span class="ruby-comment"># File lib/wavefile/writer.rb, line 173</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">close</span>
-  <span class="ruby-keyword">if</span> <span class="ruby-ivar">@closed</span>
-    <span class="ruby-identifier">raise</span> <span class="ruby-constant">WriterClosedError</span>
-  <span class="ruby-keyword">end</span>
+            <pre><span class="ruby-comment"># File lib/wavefile/writer.rb, line 174</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">close</span>
+  <span class="ruby-keyword">return</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@closed</span>
 
   <span class="ruby-comment"># The RIFF specification requires that each chunk be aligned to an even number of bytes,</span>
   <span class="ruby-comment"># even if the byte count is an odd number. Therefore if an odd number of bytes has been</span>
@@ -453,7 +446,7 @@ if it is open and available for writing.</p>
           
           <div class="method-source-code" id="closed-3F-source">
             <pre><span class="ruby-comment"># File lib/wavefile/writer.rb, line 115</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">closed?</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">closed?</span>
   <span class="ruby-ivar">@closed</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -488,8 +481,8 @@ sample frames that have been written so far</p>
 
           
           <div class="method-source-code" id="total_duration-source">
-            <pre><span class="ruby-comment"># File lib/wavefile/writer.rb, line 207</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">total_duration</span>
+            <pre><span class="ruby-comment"># File lib/wavefile/writer.rb, line 206</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">total_duration</span>
   <span class="ruby-constant">Duration</span>.<span class="ruby-identifier">new</span>(<span class="ruby-ivar">@total_sample_frames</span>, <span class="ruby-ivar">@format</span>.<span class="ruby-identifier">sample_rate</span>)
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -529,15 +522,15 @@ automatically be converted to the correct format.</p>
 <h3 id="method-i-write-label-Examples">Examples<span><a href="#method-i-write-label-Examples">&para;</a> <a href="#top">&uarr;</a></span></h3>
 
 <pre class="ruby"><span class="ruby-identifier">square_wave_samples</span> = ([<span class="ruby-value">0.5</span>] <span class="ruby-operator">*</span> <span class="ruby-value">100</span>) <span class="ruby-operator">+</span> ([<span class="ruby-value">-0.5</span>] <span class="ruby-operator">*</span> <span class="ruby-value">100</span>)
-<span class="ruby-identifier">buffer</span> = <span class="ruby-constant">Buffer</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">square_wave_samples</span>, <span class="ruby-constant">Format</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">1</span>, :<span class="ruby-identifier">float</span>, <span class="ruby-value">44100</span>))
+<span class="ruby-identifier">buffer</span> = <span class="ruby-constant">Buffer</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">square_wave_samples</span>, <span class="ruby-constant">Format</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">1</span>, <span class="ruby-value">:float</span>, <span class="ruby-value">44100</span>))
 
-<span class="ruby-constant">Writer</span>.<span class="ruby-identifier">new</span>(<span class="ruby-string">&quot;my_file.wav&quot;</span>, <span class="ruby-constant">Format</span>.<span class="ruby-identifier">new</span>(:<span class="ruby-identifier">stereo</span>, :<span class="ruby-identifier">pcm_16</span>, <span class="ruby-value">44100</span>)) <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">writer</span><span class="ruby-operator">|</span>
+<span class="ruby-constant">Writer</span>.<span class="ruby-identifier">new</span>(<span class="ruby-string">&quot;my_file.wav&quot;</span>, <span class="ruby-constant">Format</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">:stereo</span>, <span class="ruby-value">:pcm_16</span>, <span class="ruby-value">44100</span>)) <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">writer</span><span class="ruby-operator">|</span>
   <span class="ruby-identifier">writer</span>.<span class="ruby-identifier">write</span>(<span class="ruby-identifier">buffer</span>)
 <span class="ruby-keyword">end</span>
 
-<span class="ruby-constant">Writer</span>.<span class="ruby-identifier">new</span>(<span class="ruby-string">&quot;my_file.wav&quot;</span>, <span class="ruby-constant">Format</span>.<span class="ruby-identifier">new</span>(:<span class="ruby-identifier">stereo</span>, :<span class="ruby-identifier">pcm_16</span>, <span class="ruby-value">44100</span>)) <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">writer</span><span class="ruby-operator">|</span>
-  <span class="ruby-identifier">writer</span>.<span class="ruby-identifier">write</span>(<span class="ruby-identifier">buffer</span>)
-<span class="ruby-keyword">end</span>
+<span class="ruby-identifier">writer</span> = <span class="ruby-constant">Writer</span>.<span class="ruby-identifier">new</span>(<span class="ruby-string">&quot;my_file.wav&quot;</span>, <span class="ruby-constant">Format</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">:stereo</span>, <span class="ruby-value">:pcm_16</span>, <span class="ruby-value">44100</span>))
+<span class="ruby-identifier">writer</span>.<span class="ruby-identifier">write</span>(<span class="ruby-identifier">buffer</span>)
+<span class="ruby-identifier">writer</span>.<span class="ruby-identifier">close</span>
 <span class="ruby-comment"># This will raise WriterClosedError because the Writer has already been closed.</span>
 <span class="ruby-identifier">writer</span>.<span class="ruby-identifier">write</span>(<span class="ruby-identifier">buffer</span>)
 </pre>
@@ -556,7 +549,7 @@ format</p>
           
           <div class="method-source-code" id="write-source">
             <pre><span class="ruby-comment"># File lib/wavefile/writer.rb, line 94</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">write</span>(<span class="ruby-identifier">buffer</span>)
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">write</span>(<span class="ruby-identifier">buffer</span>)
   <span class="ruby-keyword">if</span> <span class="ruby-ivar">@closed</span>
     <span class="ruby-identifier">raise</span> <span class="ruby-constant">WriterClosedError</span>
   <span class="ruby-keyword">end</span>
@@ -586,35 +579,12 @@ format</p>
     </section>
   
   </section>
-
-  
-  
-  <section id="Internal" class="documentation-section">
-    
-    <header class="documentation-section-title">
-      <h2>
-        Internal
-      </h2>
-      <span class="section-click-top">
-        <a href="#top">&uarr; top</a>
-      </span>
-    </header>
-    
-
-    
-
-    
-
-    
-
-    
-  </section>
 </main>
 
 
 <footer id="validator-badges" role="contentinfo">
-  <p><a href="http://validator.w3.org/check/referer">Validate</a>
-  <p>Generated by <a href="https://rdoc.github.io/rdoc">RDoc</a> 5.0.0.
+  <p><a href="https://validator.w3.org/check/referer">Validate</a>
+  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.0.1.
   <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
 </footer>
 

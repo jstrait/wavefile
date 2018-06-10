@@ -118,8 +118,6 @@ format.</p>
   </section>
 
   
-  
-  
   <section id="5Buntitled-5D" class="documentation-section">
     
 
@@ -132,8 +130,6 @@ format.</p>
     
   </section>
 
-  
-  
   <section id="Public" class="documentation-section">
     
     <header class="documentation-section-title">
@@ -256,13 +252,13 @@ don&#39;t match, unexpected things will happen.</p>
 <h3 id="method-c-new-label-Examples">Examples<span><a href="#method-c-new-label-Examples">&para;</a> <a href="#top">&uarr;</a></span></h3>
 
 <pre class="ruby"><span class="ruby-identifier">samples</span> = ([<span class="ruby-value">0.5</span>] <span class="ruby-operator">*</span> <span class="ruby-value">50</span>) <span class="ruby-operator">+</span> ([<span class="ruby-value">-0.5</span>] <span class="ruby-operator">*</span> <span class="ruby-value">50</span>)   <span class="ruby-comment"># A floating point 440Hz mono square wave</span>
-<span class="ruby-identifier">buffer</span> = <span class="ruby-constant">Buffer</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">samples</span>, <span class="ruby-constant">Format</span>.<span class="ruby-identifier">new</span>(:<span class="ruby-identifier">mono</span>, :<span class="ruby-identifier">float</span>, <span class="ruby-value">44100</span>)
+<span class="ruby-identifier">buffer</span> = <span class="ruby-constant">Buffer</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">samples</span>, <span class="ruby-constant">Format</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">:mono</span>, <span class="ruby-value">:float</span>, <span class="ruby-value">44100</span>)
 
 <span class="ruby-identifier">samples</span> = ([<span class="ruby-value">0.5</span>, <span class="ruby-value">0.5</span>] <span class="ruby-operator">*</span> <span class="ruby-value">50</span>) <span class="ruby-operator">+</span> ([<span class="ruby-value">-0.5</span>, <span class="ruby-value">-0.5</span>] <span class="ruby-operator">*</span> <span class="ruby-value">50</span>)   <span class="ruby-comment"># A 440Hz stereo square wave</span>
-<span class="ruby-identifier">buffer</span> = <span class="ruby-constant">Buffer</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">samples</span>, <span class="ruby-constant">Format</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">2</span>, :<span class="ruby-identifier">float</span>, <span class="ruby-value">44100</span>)
+<span class="ruby-identifier">buffer</span> = <span class="ruby-constant">Buffer</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">samples</span>, <span class="ruby-constant">Format</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">2</span>, <span class="ruby-value">:float</span>, <span class="ruby-value">44100</span>)
 
 <span class="ruby-identifier">samples</span> = ([<span class="ruby-value">16000</span>] <span class="ruby-operator">*</span> <span class="ruby-value">50</span>) <span class="ruby-operator">+</span> ([<span class="ruby-value">-16000</span>] <span class="ruby-operator">*</span> <span class="ruby-value">50</span>)   <span class="ruby-comment"># A 16-bit PCM 440Hz mono square wave</span>
-<span class="ruby-identifier">buffer</span> = <span class="ruby-constant">Buffer</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">samples</span>, <span class="ruby-constant">Format</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">1</span>, :<span class="ruby-identifier">pcm_16</span>, <span class="ruby-value">44100</span>)
+<span class="ruby-identifier">buffer</span> = <span class="ruby-constant">Buffer</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">samples</span>, <span class="ruby-constant">Format</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">1</span>, <span class="ruby-value">:pcm_16</span>, <span class="ruby-value">44100</span>)
 </pre>
 
 <h3 id="method-c-new-label-Returns">Returns<span><a href="#method-c-new-label-Returns">&para;</a> <a href="#top">&uarr;</a></span></h3>
@@ -274,7 +270,7 @@ don&#39;t match, unexpected things will happen.</p>
           
           <div class="method-source-code" id="new-source">
             <pre><span class="ruby-comment"># File lib/wavefile/buffer.rb, line 51</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">samples</span>, <span class="ruby-identifier">format</span>)
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">initialize</span>(<span class="ruby-identifier">samples</span>, <span class="ruby-identifier">format</span>)
   <span class="ruby-ivar">@samples</span> = <span class="ruby-identifier">samples</span>
   <span class="ruby-ivar">@format</span> = <span class="ruby-identifier">format</span>
 <span class="ruby-keyword">end</span></pre>
@@ -318,7 +314,7 @@ don&#39;t match, unexpected things will happen.</p>
           
           <div class="method-source-code" id="bits_per_sample-source">
             <pre><span class="ruby-comment"># File lib/wavefile/buffer.rb, line 101</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">bits_per_sample</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">bits_per_sample</span>
   <span class="ruby-ivar">@format</span>.<span class="ruby-identifier">bits_per_sample</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -353,7 +349,7 @@ don&#39;t match, unexpected things will happen.</p>
           
           <div class="method-source-code" id="channels-source">
             <pre><span class="ruby-comment"># File lib/wavefile/buffer.rb, line 95</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">channels</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">channels</span>
   <span class="ruby-ivar">@format</span>.<span class="ruby-identifier">channels</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -389,7 +385,7 @@ format.</p>
 
 <h3 id="method-i-convert-label-Examples">Examples<span><a href="#method-i-convert-label-Examples">&para;</a> <a href="#top">&uarr;</a></span></h3>
 
-<pre class="ruby"><span class="ruby-identifier">new_format</span> = <span class="ruby-constant">Format</span>.<span class="ruby-identifier">new</span>(:<span class="ruby-identifier">mono</span>, :<span class="ruby-identifier">pcm_16</span>, <span class="ruby-value">44100</span>)
+<pre class="ruby"><span class="ruby-identifier">new_format</span> = <span class="ruby-constant">Format</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">:mono</span>, <span class="ruby-value">:pcm_16</span>, <span class="ruby-value">44100</span>)
 <span class="ruby-identifier">new_buffer</span> = <span class="ruby-identifier">old_buffer</span>.<span class="ruby-identifier">convert</span>(<span class="ruby-identifier">new_format</span>)
 </pre>
 
@@ -405,7 +401,7 @@ href="Buffer.html">Buffer</a> can&#39;t be converted to the given format</p>
           
           <div class="method-source-code" id="convert-source">
             <pre><span class="ruby-comment"># File lib/wavefile/buffer.rb, line 69</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">convert</span>(<span class="ruby-identifier">new_format</span>)
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">convert</span>(<span class="ruby-identifier">new_format</span>)
   <span class="ruby-identifier">new_samples</span> = <span class="ruby-identifier">convert_buffer</span>(<span class="ruby-ivar">@samples</span>.<span class="ruby-identifier">dup</span>, <span class="ruby-ivar">@format</span>, <span class="ruby-identifier">new_format</span>)
   <span class="ruby-constant">Buffer</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">new_samples</span>, <span class="ruby-identifier">new_format</span>)
 <span class="ruby-keyword">end</span></pre>
@@ -442,7 +438,7 @@ href="Buffer.html">Buffer</a> is modified.</p>
 
 <h3 id="method-i-convert-21-label-Examples">Examples<span><a href="#method-i-convert-21-label-Examples">&para;</a> <a href="#top">&uarr;</a></span></h3>
 
-<pre class="ruby"><span class="ruby-identifier">new_format</span> = <span class="ruby-constant">Format</span>.<span class="ruby-identifier">new</span>(:<span class="ruby-identifier">mono</span>, :<span class="ruby-identifier">pcm_16</span>, <span class="ruby-value">44100</span>)
+<pre class="ruby"><span class="ruby-identifier">new_format</span> = <span class="ruby-constant">Format</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">:mono</span>, <span class="ruby-value">:pcm_16</span>, <span class="ruby-value">44100</span>)
 <span class="ruby-identifier">old_buffer</span>.<span class="ruby-identifier">convert!</span>(<span class="ruby-identifier">new_format</span>)
 </pre>
 
@@ -457,7 +453,7 @@ href="Buffer.html">Buffer</a> can&#39;t be converted to the given format</p>
           
           <div class="method-source-code" id="convert-21-source">
             <pre><span class="ruby-comment"># File lib/wavefile/buffer.rb, line 87</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">convert!</span>(<span class="ruby-identifier">new_format</span>)
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">convert!</span>(<span class="ruby-identifier">new_format</span>)
   <span class="ruby-ivar">@samples</span> = <span class="ruby-identifier">convert_buffer</span>(<span class="ruby-ivar">@samples</span>, <span class="ruby-ivar">@format</span>, <span class="ruby-identifier">new_format</span>)
   <span class="ruby-ivar">@format</span> = <span class="ruby-identifier">new_format</span>
   <span class="ruby-keyword">self</span>
@@ -494,7 +490,7 @@ href="Buffer.html">Buffer</a> can&#39;t be converted to the given format</p>
           
           <div class="method-source-code" id="sample_rate-source">
             <pre><span class="ruby-comment"># File lib/wavefile/buffer.rb, line 107</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">sample_rate</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">sample_rate</span>
   <span class="ruby-ivar">@format</span>.<span class="ruby-identifier">sample_rate</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -514,8 +510,8 @@ href="Buffer.html">Buffer</a> can&#39;t be converted to the given format</p>
 
 
 <footer id="validator-badges" role="contentinfo">
-  <p><a href="http://validator.w3.org/check/referer">Validate</a>
-  <p>Generated by <a href="https://rdoc.github.io/rdoc">RDoc</a> 5.0.0.
+  <p><a href="https://validator.w3.org/check/referer">Validate</a>
+  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.0.1.
   <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
 </footer>
 

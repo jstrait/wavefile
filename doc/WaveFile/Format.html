@@ -114,8 +114,6 @@ constructed, it can&#39;t be modified.</p>
   </section>
 
   
-  
-  
   <section id="5Buntitled-5D" class="documentation-section">
     
 
@@ -128,8 +126,6 @@ constructed, it can&#39;t be modified.</p>
     
   </section>
 
-  
-  
   <section id="Public" class="documentation-section">
     
     <header class="documentation-section-title">
@@ -249,6 +245,21 @@ Integer, even if the number of channels is specified with a symbol (e.g.
         </div>
       </div>
       
+      <div id="attribute-i-speaker_mapping" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">speaker_mapping</span><span
+            class="attribute-access-type">[R]</span>
+        </div>
+
+        <div class="method-description">
+        
+        <h3 id="attribute-i-speaker_mapping-label-Returns">Returns<span><a href="#attribute-i-speaker_mapping-label-Returns">&para;</a> <a href="#top">&uarr;</a></span></h3>
+
+<p>Returns the mapping of each channel to a speaker.</p>
+        
+        </div>
+      </div>
+      
     </section>
     
 
@@ -263,7 +274,7 @@ Integer, even if the number of channels is specified with a symbol (e.g.
         
         <div class="method-heading">
           <span class="method-name">new</span><span
-            class="method-args">(channels, format_code, sample_rate)</span>
+            class="method-args">(channels, format_code, sample_rate, speaker_mapping: nil)</span>
           
           <span class="method-click-advice">click to toggle source</span>
           
@@ -276,39 +287,82 @@ Integer, even if the number of channels is specified with a symbol (e.g.
 <dl class="rdoc-list note-list"><dt>channels
 <dd>
 <p>The number of channels in the format. Can either be an Integer (e.g. 1, 2,
-3) or the symbols :mono (equivalent to 1) or :stereo (equivalent to 2).</p>
+3) or the symbols <code>:mono</code> (equivalent to 1) or
+<code>:stereo</code> (equivalent to 2).</p>
 </dd><dt>format_code
 <dd>
 <p>A symbol indicating the format of each sample. Consists of two parts: a
-format code, and the bits per sample. The valid values are :pcm_8, :pcm_16,
-:pcm_24, :pcm_32, :float_32, :float_64, and :float (equivalent to
-:float_32)</p>
+format code, and the bits per sample. The valid values are
+<code>:pcm_8</code>, <code>:pcm_16</code>, <code>:pcm_24</code>,
+<code>:pcm_32</code>, <code>:float_32</code>, <code>:float_64</code>, and
+<code>:float</code> (equivalent to <code>:float_32</code>)</p>
 </dd><dt><a href="Format.html#attribute-i-sample_rate">#sample_rate</a>
 <dd>
 <p>The number of samples per second, such as 44100</p>
+</dd><dt><a href="Format.html#attribute-i-speaker_mapping">#speaker_mapping</a>
+<dd>
+<p>An optional array which indicates which speaker each channel should be
+mapped to. Each value in the array should be one of these values:
+<code>:front_left</code>, <code>:front_right</code>,
+<code>:front_center</code>, <code>:low_frequency</code>,
+<code>:back_left</code>, <code>:back_right</code>,
+<code>:front_left_of_center</code>, <code>:front_right_of_center</code>,
+<code>:back_center</code>, <code>:side_left</code>,
+<code>:side_right</code>, <code>:top_center</code>,
+<code>:top_front_left</code>, <code>:top_front_center</code>,
+<code>:top_front_right</code>, <code>:top_back_left</code>,
+<code>:top_back_center</code>, <code>:top_back_right</code>. Each value
+should only appear once, and the channels must follow the ordering above.
+For example, [:front_center, :back_left] is a valid speaker mapping, but
+[:back_left, :front_center] is not. If a given channel should not be mapped
+to a specific speaker, the value :undefined can be used. If this field is
+omitted, a default value for the given number of channels. For example, if
+there are 2 channels, this will be set to [:front_left, :front_right].</p>
 </dd></dl>
 
 <h3 id="method-c-new-label-Examples">Examples<span><a href="#method-c-new-label-Examples">&para;</a> <a href="#top">&uarr;</a></span></h3>
 
-<pre class="ruby"><span class="ruby-identifier">format</span> = <span class="ruby-constant">Format</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">1</span>, :<span class="ruby-identifier">pcm_16</span>, <span class="ruby-value">44100</span>)
-<span class="ruby-identifier">format</span> = <span class="ruby-constant">Format</span>.<span class="ruby-identifier">new</span>(:<span class="ruby-identifier">mono</span>, :<span class="ruby-identifier">pcm_16</span>, <span class="ruby-value">44100</span>)  <span class="ruby-comment"># Equivalent to above</span>
+<pre class="ruby"><span class="ruby-identifier">format</span> = <span class="ruby-constant">Format</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">1</span>, <span class="ruby-value">:pcm_16</span>, <span class="ruby-value">44100</span>)
+<span class="ruby-identifier">format</span> = <span class="ruby-constant">Format</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">:mono</span>, <span class="ruby-value">:pcm_16</span>, <span class="ruby-value">44100</span>)  <span class="ruby-comment"># Equivalent to above</span>
 
-<span class="ruby-identifier">format</span> = <span class="ruby-constant">Format</span>.<span class="ruby-identifier">new</span>(:<span class="ruby-identifier">stereo</span>, :<span class="ruby-identifier">float_32</span>, <span class="ruby-value">44100</span>)
-<span class="ruby-identifier">format</span> = <span class="ruby-constant">Format</span>.<span class="ruby-identifier">new</span>(:<span class="ruby-identifier">stereo</span>, :<span class="ruby-identifier">float</span>, <span class="ruby-value">44100</span>)  <span class="ruby-comment"># Equivalent to above</span>
+<span class="ruby-identifier">format</span> = <span class="ruby-constant">Format</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">:stereo</span>, <span class="ruby-value">:float_32</span>, <span class="ruby-value">44100</span>)
+<span class="ruby-identifier">format</span> = <span class="ruby-constant">Format</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">:stereo</span>, <span class="ruby-value">:float</span>, <span class="ruby-value">44100</span>)  <span class="ruby-comment"># Equivalent to above</span>
+
+<span class="ruby-identifier">format</span> = <span class="ruby-constant">Format</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">2</span>, <span class="ruby-value">:pcm_16</span>, <span class="ruby-value">44100</span>, <span class="ruby-value">speaker_mapping:</span> [<span class="ruby-value">:front_right</span>, <span class="ruby-value">:front_center</span>])
+
+<span class="ruby-comment"># Channels should explicitly not be mapped to particular speakers</span>
+<span class="ruby-comment"># (otherwise, if no speaker_mapping set, it will be set to a default</span>
+<span class="ruby-comment"># value for the number of channels).</span>
+<span class="ruby-identifier">format</span> = <span class="ruby-constant">Format</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">2</span>, <span class="ruby-value">:pcm_16</span>, <span class="ruby-value">44100</span>, <span class="ruby-value">speaker_mapping:</span> [<span class="ruby-value">:undefined</span>, <span class="ruby-value">:undefined</span>])
+
+<span class="ruby-comment"># Will result in InvalidFormatError, because speakers are defined in</span>
+<span class="ruby-comment"># invalid order</span>
+<span class="ruby-identifier">format</span> = <span class="ruby-constant">Format</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">2</span>, <span class="ruby-value">:pcm_16</span>, <span class="ruby-value">44100</span>, <span class="ruby-value">speaker_mapping:</span> [<span class="ruby-value">:front_right</span>, <span class="ruby-value">:front_left</span>])
+
+<span class="ruby-comment"># speaker_mapping will be set to [:front_left, :undefined, :undefined],</span>
+<span class="ruby-comment"># because channels without a speaker mapping will be mapped to :undefined</span>
+<span class="ruby-identifier">format</span> = <span class="ruby-constant">Format</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">3</span>, <span class="ruby-value">:pcm_16</span>, <span class="ruby-value">44100</span>, <span class="ruby-value">speaker_mapping:</span> [<span class="ruby-value">:front_left</span>])
 </pre>
+
+<p>Raises <a href="InvalidFormatError.html">InvalidFormatError</a> if the
+given arguments are invalid.</p>
           
           
 
           
           <div class="method-source-code" id="new-source">
-            <pre><span class="ruby-comment"># File lib/wavefile/format.rb, line 41</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">channels</span>, <span class="ruby-identifier">format_code</span>, <span class="ruby-identifier">sample_rate</span>)
+            <pre><span class="ruby-comment"># File lib/wavefile/format.rb, line 72</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">initialize</span>(<span class="ruby-identifier">channels</span>, <span class="ruby-identifier">format_code</span>, <span class="ruby-identifier">sample_rate</span>, <span class="ruby-value">speaker_mapping:</span> <span class="ruby-keyword">nil</span>)
   <span class="ruby-identifier">channels</span> = <span class="ruby-identifier">normalize_channels</span>(<span class="ruby-identifier">channels</span>)
-  <span class="ruby-identifier">sample_format</span>, <span class="ruby-identifier">bits_per_sample</span> = <span class="ruby-identifier">normalize_format_code</span>(<span class="ruby-identifier">format_code</span>)
+
   <span class="ruby-identifier">validate_channels</span>(<span class="ruby-identifier">channels</span>)
-  <span class="ruby-identifier">validate_sample_format</span>(<span class="ruby-identifier">sample_format</span>)
-  <span class="ruby-identifier">validate_bits_per_sample</span>(<span class="ruby-identifier">sample_format</span>, <span class="ruby-identifier">bits_per_sample</span>)
+  <span class="ruby-identifier">validate_format_code</span>(<span class="ruby-identifier">format_code</span>)
   <span class="ruby-identifier">validate_sample_rate</span>(<span class="ruby-identifier">sample_rate</span>)
+
+  <span class="ruby-identifier">sample_format</span>, <span class="ruby-identifier">bits_per_sample</span> = <span class="ruby-identifier">normalize_format_code</span>(<span class="ruby-identifier">format_code</span>)
+
+  <span class="ruby-identifier">speaker_mapping</span> = <span class="ruby-identifier">normalize_speaker_mapping</span>(<span class="ruby-identifier">channels</span>, <span class="ruby-identifier">speaker_mapping</span>)
+  <span class="ruby-identifier">validate_speaker_mapping</span>(<span class="ruby-identifier">channels</span>, <span class="ruby-identifier">speaker_mapping</span>)
 
   <span class="ruby-ivar">@channels</span> = <span class="ruby-identifier">channels</span>
   <span class="ruby-ivar">@sample_format</span> = <span class="ruby-identifier">sample_format</span>
@@ -316,6 +370,7 @@ format code, and the bits per sample. The valid values are :pcm_8, :pcm_16,
   <span class="ruby-ivar">@sample_rate</span> = <span class="ruby-identifier">sample_rate</span>
   <span class="ruby-ivar">@block_align</span> = (<span class="ruby-ivar">@bits_per_sample</span> <span class="ruby-operator">/</span> <span class="ruby-value">8</span>) <span class="ruby-operator">*</span> <span class="ruby-ivar">@channels</span>
   <span class="ruby-ivar">@byte_rate</span> = <span class="ruby-ivar">@block_align</span> <span class="ruby-operator">*</span> <span class="ruby-ivar">@sample_rate</span>
+  <span class="ruby-ivar">@speaker_mapping</span> = <span class="ruby-identifier">speaker_mapping</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -356,8 +411,8 @@ format code, and the bits per sample. The valid values are :pcm_8, :pcm_16,
 
           
           <div class="method-source-code" id="mono-3F-source">
-            <pre><span class="ruby-comment"># File lib/wavefile/format.rb, line 58</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">mono?</span>
+            <pre><span class="ruby-comment"># File lib/wavefile/format.rb, line 94</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">mono?</span>
   <span class="ruby-ivar">@channels</span> <span class="ruby-operator">==</span> <span class="ruby-value">1</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -391,8 +446,8 @@ format code, and the bits per sample. The valid values are :pcm_8, :pcm_16,
 
           
           <div class="method-source-code" id="stereo-3F-source">
-            <pre><span class="ruby-comment"># File lib/wavefile/format.rb, line 63</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">stereo?</span>
+            <pre><span class="ruby-comment"># File lib/wavefile/format.rb, line 99</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">stereo?</span>
   <span class="ruby-ivar">@channels</span> <span class="ruby-operator">==</span> <span class="ruby-value">2</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
@@ -412,8 +467,8 @@ format code, and the bits per sample. The valid values are :pcm_8, :pcm_16,
 
 
 <footer id="validator-badges" role="contentinfo">
-  <p><a href="http://validator.w3.org/check/referer">Validate</a>
-  <p>Generated by <a href="https://rdoc.github.io/rdoc">RDoc</a> 5.0.0.
+  <p><a href="https://validator.w3.org/check/referer">Validate</a>
+  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.0.1.
   <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
 </footer>
 

@@ -1,16 +1,16 @@
-Sun, 29 Jan 2017 16:40:13 -0800
-README.rdoc	Sun, 29 Jan 2017 16:39:54 -0800
-lib/wavefile/buffer.rb	Sun, 29 Jan 2017 16:39:54 -0800
-lib/wavefile/chunk_readers/base_chunk_reader.rb	Sun, 29 Jan 2017 16:39:54 -0800
-lib/wavefile/chunk_readers/data_chunk_reader.rb	Sun, 29 Jan 2017 16:39:54 -0800
-lib/wavefile/chunk_readers/format_chunk_reader.rb	Sun, 29 Jan 2017 16:39:54 -0800
-lib/wavefile/chunk_readers/generic_chunk_reader.rb	Sun, 29 Jan 2017 16:39:54 -0800
-lib/wavefile/chunk_readers/riff_chunk_reader.rb	Sun, 29 Jan 2017 16:39:54 -0800
-lib/wavefile/chunk_readers/riff_reader.rb	Sun, 29 Jan 2017 16:39:54 -0800
-lib/wavefile/chunk_readers.rb	Sun, 29 Jan 2017 16:39:54 -0800
-lib/wavefile/duration.rb	Sun, 29 Jan 2017 16:39:54 -0800
-lib/wavefile/format.rb	Sun, 29 Jan 2017 16:39:54 -0800
-lib/wavefile/reader.rb	Sun, 29 Jan 2017 16:39:54 -0800
-lib/wavefile/unvalidated_format.rb	Sun, 29 Jan 2017 16:39:54 -0800
-lib/wavefile/writer.rb	Sun, 29 Jan 2017 16:39:54 -0800
-lib/wavefile.rb	Sun, 29 Jan 2017 16:39:54 -0800
+Sun, 10 Jun 2018 10:22:14 -0700
+README.rdoc	Mon, 02 Apr 2018 14:59:09 -0700
+lib/wavefile.rb	Sun, 10 Jun 2018 10:08:01 -0700
+lib/wavefile/chunk_readers/riff_reader.rb	Mon, 02 Apr 2018 14:59:09 -0700
+lib/wavefile/chunk_readers/riff_chunk_reader.rb	Mon, 02 Apr 2018 14:59:09 -0700
+lib/wavefile/chunk_readers/format_chunk_reader.rb	Sun, 10 Jun 2018 10:08:01 -0700
+lib/wavefile/chunk_readers/data_chunk_reader.rb	Mon, 02 Apr 2018 14:59:09 -0700
+lib/wavefile/chunk_readers/base_chunk_reader.rb	Mon, 02 Apr 2018 14:59:09 -0700
+lib/wavefile/chunk_readers/generic_chunk_reader.rb	Mon, 02 Apr 2018 14:59:09 -0700
+lib/wavefile/chunk_readers.rb	Mon, 02 Apr 2018 14:59:09 -0700
+lib/wavefile/buffer.rb	Mon, 02 Apr 2018 14:59:09 -0700
+lib/wavefile/writer.rb	Sun, 10 Jun 2018 10:08:01 -0700
+lib/wavefile/reader.rb	Sun, 10 Jun 2018 10:08:01 -0700
+lib/wavefile/format.rb	Sun, 10 Jun 2018 10:08:01 -0700
+lib/wavefile/unvalidated_format.rb	Sun, 10 Jun 2018 10:08:01 -0700
+lib/wavefile/duration.rb	Sat, 07 Apr 2018 14:41:45 -0700
