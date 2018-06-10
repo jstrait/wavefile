@@ -37,9 +37,9 @@ This gem lets you read and write audio data! You can use it to create Ruby progr
 * Written in pure Ruby, so it's easy to include in your program. There's no need to compile a separate extension in order to use it.
 
 
-# Future Release: v1.0.0
+# Current Release: v1.0.0
 
-Released on __TBD__, this version has these changes:
+Released on June 10, 2018, this version has these changes:
 
 * **Ruby 2.0 or greater is now required** - the gem no longer works in Ruby 1.9.3.
 * **Backwards incompatible change:** Calling `Reader.close` on a `Reader` instance that is already closed no longer raises `ReaderClosedError`. Instead, it does nothing. Similarly, calling `Writer.close` on a `Writer` instance that is already closed no longer raises `WriterClosedError`. Thanks to [@kylekyle](https://github.com/kylekyle) for raising this as an issue.
