@@ -105,8 +105,6 @@ def read_format_chunk(chunk_id_data, chunk_size_data)
   else
     puts "* NO EXTENSION *"
   end
-  puts ""
-  puts ""
 end
 
 
@@ -117,9 +115,6 @@ def read_fact_chunk(chunk_id_data, chunk_size_data)
   if chunk_size_data[:actual] > 4
     FILE.sysread(chunk_size_data[:actual] - 4)
   end
-
-  puts ""
-  puts ""
 end
 
 
@@ -134,9 +129,6 @@ def read_peak_chunk(chunk_id_data, chunk_size_data)
     display_line "Chan. #{i + 1} Value",    "int_32", read_bytes(UNSIGNED_INT_32)
     display_line "Chan. #{i + 1} Position", "int_32", read_bytes(UNSIGNED_INT_32)
   end
-
-  puts ""
-  puts ""
 end
 
 
@@ -153,9 +145,6 @@ def read_cue_chunk(chunk_id_data, chunk_size_data)
     display_line "Block start #{i + 1}", "int_32", read_bytes(UNSIGNED_INT_32)
     display_line "Sample offset #{i + 1}", "int_32", read_bytes(UNSIGNED_INT_32)
   end
-
-  puts ""
-  puts ""
 end
 
 
@@ -193,9 +182,6 @@ def read_sample_chunk(chunk_id_data, chunk_size_data)
     puts "----------------------------------+------------+----------------------------------"
     display_line "Extra data", "alpha_#{extra_sampler_data_size}", read_bytes("a#{extra_sampler_data_size}")
   end
-
-  puts ""
-  puts ""
 end
 
 
@@ -214,9 +200,6 @@ def read_instrument_chunk(chunk_id_data, chunk_size_data)
   if extra_data_size > 0
     display_line "Extra Data", "alpha_#{extra_data_size}", read_bytes("a#{extra_data_size}")
   end
-
-  puts ""
-  puts ""
 end
 
 
@@ -241,9 +224,6 @@ def read_list_chunk(chunk_id_data, chunk_size_data)
   end
 
   FILE.sysread(bytes_remaining)
-
-  puts ""
-  puts ""
 end
 
 
@@ -251,8 +231,6 @@ def read_data_chunk(chunk_id_data, chunk_size_data)
   display_chunk_header("Data Chunk", "data", chunk_id_data, chunk_size_data)
   display_line "Data Start", "alpha_10", read_bytes("a10")
   FILE.sysread(chunk_size_data[:actual] - 10)
-  puts ""
-  puts ""
 end
 
 
@@ -293,9 +271,10 @@ begin
 
         FILE.sysread(chunk_size)
         puts "'#{chunk_id_data[:actual]}' chunk of size #{chunk_size_data[:actual]}, skipping."
-        puts ""
-        puts ""
     end
+
+    puts ""
+    puts ""
 
     chunk_id_data = read_bytes("a4")
     chunk_size_data = read_bytes(UNSIGNED_INT_32)
