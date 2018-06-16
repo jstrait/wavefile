@@ -210,11 +210,24 @@ end
 def read_list_chunk(chunk_id_data, chunk_size_data)
   display_chunk_header("List Chunk", "list", chunk_id_data, chunk_size_data)
 
-  display_line "Type id", "alpha_4", read_bytes("a4")
-  display_line "FOO", "alpha_4", read_bytes("a4")
-  display_line "BAR", "int_32", read_bytes(UNSIGNED_INT_32)
-  display_line "BAZ", "alpha_4", read_bytes("a4")
-  display_line "REMAIN", "a#{chunk_size_data[:actual] - 16}", read_bytes("a#{chunk_size_data[:actual] - 16}")
+  display_line "List Type", "alpha_4", read_bytes("a4")
+
+  bytes_remaining = chunk_size_data[:actual] - 4
+
+  while bytes_remaining > 1
+    puts "----------------------------------+------------+----------------------------------"
+    display_line "Sub Type ID", "alpha_4", read_bytes("a4")
+
+    size_bytes = read_bytes(UNSIGNED_INT_32)
+    size = size_bytes[:actual]
+
+    display_line "Size", "int_32", size_bytes
+    display_line "Content", "alpha_#{size}", read_bytes("a#{size}")
+
+    bytes_remaining -= (size + 8)
+  end
+
+  FILE.sysread(bytes_remaining)
 
   puts ""
   puts ""
