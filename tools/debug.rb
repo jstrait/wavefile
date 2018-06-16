@@ -148,6 +148,38 @@ def read_cue_chunk(chunk_id_data, chunk_size_data)
 end
 
 
+def read_sample_chunk(chunk_id_data, chunk_size_data)
+  display_chunk_header("Sample Chunk", "smpl", chunk_id_data, chunk_size_data)
+
+  display_line "Manufacturer",        "int_32", read_bytes(UNSIGNED_INT_32)
+  display_line "Product",             "int_32", read_bytes(UNSIGNED_INT_32)
+  display_line "Sample Period",       "int_32", read_bytes(UNSIGNED_INT_32)
+  display_line "MIDI Unity Note",     "int_32", read_bytes(UNSIGNED_INT_32)
+  display_line "MIDI Pitch Fraction", "int_32", read_bytes(UNSIGNED_INT_32)
+  display_line "SMPTEFormat",         "int_32", read_bytes(UNSIGNED_INT_32)
+  display_line "SMPTEOffset",         "int_32", read_bytes(UNSIGNED_INT_32)
+
+  sample_loops_bytes = read_bytes(UNSIGNED_INT_32)
+  loop_count = sample_loops_bytes[:actual]
+  display_line "Sample Loops",        "int_32", sample_loops_bytes
+  display_line "Sampler Data",        "int_32", read_bytes(UNSIGNED_INT_32)
+
+  loop_count.times do |i|
+    puts "----------------------------------+------------+----------------------------------"
+    puts "Loop ##{i + 1}:"
+    display_line "Identifier", "int_32", read_bytes(UNSIGNED_INT_32)
+    display_line "Type",       "int_32", read_bytes(UNSIGNED_INT_32)
+    display_line "Start",      "int_32", read_bytes(UNSIGNED_INT_32)
+    display_line "End",        "int_32", read_bytes(UNSIGNED_INT_32)
+    display_line "Fraction",   "int_32", read_bytes(UNSIGNED_INT_32)
+    display_line "Play Count", "int_32", read_bytes(UNSIGNED_INT_32)
+  end
+
+  puts ""
+  puts ""
+end
+
+
 def read_list_chunk(chunk_id_data, chunk_size_data)
   display_chunk_header("List Chunk", "list", chunk_id_data, chunk_size_data)
 
@@ -182,6 +214,8 @@ begin
       read_peak_chunk(chunk_id_data, chunk_size_data)
     elsif chunk_id_data[:actual] == "cue "
       read_cue_chunk(chunk_id_data, chunk_size_data)
+    elsif chunk_id_data[:actual] == "smpl"
+      read_sample_chunk(chunk_id_data, chunk_size_data)
     elsif chunk_id_data[:actual] == "LIST"
       read_list_chunk(chunk_id_data, chunk_size_data)
     elsif chunk_id_data[:actual] == "data"
