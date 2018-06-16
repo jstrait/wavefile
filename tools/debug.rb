@@ -241,7 +241,6 @@ display_line "Format code", "WAVE", read_bytes("a4")
 puts ""
 puts ""
 
-count = 0
 chunk_id_data = read_bytes("a4")
 chunk_size_data = read_bytes(UNSIGNED_INT_32)
 begin
