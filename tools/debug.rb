@@ -202,6 +202,11 @@ def read_instrument_chunk(chunk_id_data, chunk_size_data)
   display_line "Low Velocity",   "byte", read_bytes(UNSIGNED_INT_8)
   display_line "High Velocity",  "byte", read_bytes(UNSIGNED_INT_8)
 
+  extra_data_size = chunk_size_data[:actual] - 7
+  if extra_data_size > 0
+    display_line "Extra Data", "alpha_#{extra_data_size}", read_bytes("a#{extra_data_size}")
+  end
+
   puts ""
   puts ""
 end
