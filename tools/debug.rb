@@ -221,6 +221,15 @@ def read_list_chunk(chunk_id_data, chunk_size_data)
 end
 
 
+def read_data_chunk(chunk_id_data, chunk_size_data)
+  display_chunk_header("Data Chunk", "data", chunk_id_data, chunk_size_data)
+  display_line "Data Start", "alpha_10", read_bytes("a10")
+  FILE.sysread(chunk_size_data[:actual] - 10)
+  puts ""
+  puts ""
+end
+
+
 # RIFF header
 puts ""
 display_chunk_header("Riff Chunk Header", "RIFF", read_bytes("a4"), read_bytes(UNSIGNED_INT_32))
@@ -249,11 +258,7 @@ begin
       when "LIST" then
         read_list_chunk(chunk_id_data, chunk_size_data)
       when "data" then
-        display_chunk_header("Data Chunk", "data", chunk_id_data, chunk_size_data)
-        display_line "Data Start", "alpha_10", read_bytes("a10")
-        FILE.sysread(chunk_size_data[:actual] - 10)
-        puts ""
-        puts ""
+        read_data_chunk(chunk_id_data, chunk_size_data)
       else
         chunk_size = chunk_size_data[:actual]
         if chunk_size.odd?
