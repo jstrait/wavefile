@@ -233,36 +233,37 @@ chunk_id_data = read_bytes("a4")
 chunk_size_data = read_bytes(UNSIGNED_INT_32)
 begin
   while true
-    if chunk_id_data[:actual] == "fmt "
-      read_format_chunk(chunk_id_data, chunk_size_data)
-    elsif chunk_id_data[:actual] == "fact"
-      read_fact_chunk(chunk_id_data, chunk_size_data)
-    elsif chunk_id_data[:actual] == "PEAK"
-      read_peak_chunk(chunk_id_data, chunk_size_data)
-    elsif chunk_id_data[:actual] == "cue "
-      read_cue_chunk(chunk_id_data, chunk_size_data)
-    elsif chunk_id_data[:actual] == "smpl"
-      read_sample_chunk(chunk_id_data, chunk_size_data)
-      elsif chunk_id_data[:actual] == "inst"
-      read_instrument_chunk(chunk_id_data, chunk_size_data)
-    elsif chunk_id_data[:actual] == "LIST"
-      read_list_chunk(chunk_id_data, chunk_size_data)
-    elsif chunk_id_data[:actual] == "data"
-      display_chunk_header("Data Chunk", "data", chunk_id_data, chunk_size_data)
-      display_line "Data Start", "alpha_10", read_bytes("a10")
-      FILE.sysread(chunk_size_data[:actual] - 10)
-      puts ""
-      puts ""
-    else
-      chunk_size = chunk_size_data[:actual]
-      if chunk_size.odd?
-        chunk_size += 1
-      end
+    case chunk_id_data[:actual]
+      when "fmt " then
+        read_format_chunk(chunk_id_data, chunk_size_data)
+      when "fact" then
+        read_fact_chunk(chunk_id_data, chunk_size_data)
+      when "PEAK" then
+        read_peak_chunk(chunk_id_data, chunk_size_data)
+      when "cue " then
+        read_cue_chunk(chunk_id_data, chunk_size_data)
+      when "smpl" then
+        read_sample_chunk(chunk_id_data, chunk_size_data)
+      when "inst" then
+        read_instrument_chunk(chunk_id_data, chunk_size_data)
+      when "LIST" then
+        read_list_chunk(chunk_id_data, chunk_size_data)
+      when "data" then
+        display_chunk_header("Data Chunk", "data", chunk_id_data, chunk_size_data)
+        display_line "Data Start", "alpha_10", read_bytes("a10")
+        FILE.sysread(chunk_size_data[:actual] - 10)
+        puts ""
+        puts ""
+      else
+        chunk_size = chunk_size_data[:actual]
+        if chunk_size.odd?
+          chunk_size += 1
+        end
 
-      FILE.sysread(chunk_size)
-      puts "#{chunk_id_data[:actual]} chunk of size #{chunk_size_data[:actual]}, skipping."
-      puts ""
-      puts ""
+        FILE.sysread(chunk_size)
+        puts "#{chunk_id_data[:actual]} chunk of size #{chunk_size_data[:actual]}, skipping."
+        puts ""
+        puts ""
     end
 
     chunk_id_data = read_bytes("a4")
