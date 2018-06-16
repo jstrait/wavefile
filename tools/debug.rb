@@ -251,6 +251,8 @@ begin
       display_chunk_header("Data Chunk", "data", chunk_id_data, chunk_size_data)
       display_line "Data Start", "alpha_10", read_bytes("a10")
       FILE.sysread(chunk_size_data[:actual] - 10)
+      puts ""
+      puts ""
     else
       chunk_size = chunk_size_data[:actual]
       if chunk_size.odd?
