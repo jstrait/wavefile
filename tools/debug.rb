@@ -241,10 +241,11 @@ display_line "Format code", "WAVE", read_bytes("a4")
 puts ""
 puts ""
 
-chunk_id_data = read_bytes("a4")
-chunk_size_data = read_bytes(UNSIGNED_INT_32)
 begin
   while true
+    chunk_id_data = read_bytes("a4")
+    chunk_size_data = read_bytes(UNSIGNED_INT_32)
+
     case chunk_id_data[:actual]
       when "fmt " then
         read_format_chunk(chunk_id_data, chunk_size_data)
@@ -274,9 +275,6 @@ begin
 
     puts ""
     puts ""
-
-    chunk_id_data = read_bytes("a4")
-    chunk_size_data = read_bytes(UNSIGNED_INT_32)
   end
 rescue EOFError
   FILE.close()
