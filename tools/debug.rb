@@ -1,6 +1,7 @@
 FILE = File.open(ARGV[0], "rb")
 
 UNSIGNED_INT_8  = "C"
+SIGNED_INT_8 = "c"
 UNSIGNED_INT_16 = "v"
 UNSIGNED_INT_32 = "V"
 
@@ -26,6 +27,16 @@ def read_bytes(pack_str)
   elsif pack_str == UNSIGNED_INT_16
     2.times { bytes << FILE.sysread(1) }
     val = bytes.join().unpack(UNSIGNED_INT_16).first
+
+    return {:actual => val, :bytes => bytes }
+  elsif pack_str == UNSIGNED_INT_8
+    bytes << FILE.sysread(1)
+    val = bytes.join().unpack(UNSIGNED_INT_8).first
+
+    return {:actual => val, :bytes => bytes }
+  elsif pack_str == SIGNED_INT_8
+    bytes << FILE.sysread(1)
+    val = bytes.join().unpack(SIGNED_INT_8).first
 
     return {:actual => val, :bytes => bytes }
   elsif pack_str.start_with?("B")
@@ -180,6 +191,22 @@ def read_sample_chunk(chunk_id_data, chunk_size_data)
 end
 
 
+def read_instrument_chunk(chunk_id_data, chunk_size_data)
+  display_chunk_header("Instrument Chunk", "inst", chunk_id_data, chunk_size_data)
+
+  display_line "Unshifted Note", "byte", read_bytes(UNSIGNED_INT_8)
+  display_line "Fine Tune",      "byte", read_bytes(SIGNED_INT_8)
+  display_line "Gain",           "byte", read_bytes(SIGNED_INT_8)
+  display_line "Low Note",       "byte", read_bytes(UNSIGNED_INT_8)
+  display_line "High Note",      "byte", read_bytes(UNSIGNED_INT_8)
+  display_line "Low Velocity",   "byte", read_bytes(UNSIGNED_INT_8)
+  display_line "High Velocity",  "byte", read_bytes(UNSIGNED_INT_8)
+
+  puts ""
+  puts ""
+end
+
+
 def read_list_chunk(chunk_id_data, chunk_size_data)
   display_chunk_header("List Chunk", "list", chunk_id_data, chunk_size_data)
 
@@ -216,6 +243,8 @@ begin
       read_cue_chunk(chunk_id_data, chunk_size_data)
     elsif chunk_id_data[:actual] == "smpl"
       read_sample_chunk(chunk_id_data, chunk_size_data)
+      elsif chunk_id_data[:actual] == "inst"
+      read_instrument_chunk(chunk_id_data, chunk_size_data)
     elsif chunk_id_data[:actual] == "LIST"
       read_list_chunk(chunk_id_data, chunk_size_data)
     elsif chunk_id_data[:actual] == "data"
