@@ -292,7 +292,7 @@ begin
         end
 
         FILE.sysread(chunk_size)
-        puts "#{chunk_id_data[:actual]} chunk of size #{chunk_size_data[:actual]}, skipping."
+        puts "'#{chunk_id_data[:actual]}' chunk of size #{chunk_size_data[:actual]}, skipping."
         puts ""
         puts ""
     end
