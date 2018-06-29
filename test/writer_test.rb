@@ -252,6 +252,8 @@ class WriterTest < Minitest::Test
     assert_equal(false, io.closed?)
     assert_equal(0, io.pos)
 
+
+    # Write first file
     writer = Writer.new(io, Format.new(:mono, :pcm_16, 44100))
     assert_equal(false, writer.closed?)
 
@@ -262,6 +264,36 @@ class WriterTest < Minitest::Test
 
     assert_equal(false, io.closed?)
     assert_equal(2092, io.pos)    # 44 bytes for header, plus 2 bytes per sample, with 8 * 128 samples
+
+    # Verify the first file header was written correctly
+    io.seek(0)
+    header = io.read(44).unpack("a4Va4a4VvvVVvva4V")
+    assert_equal(["RIFF", 2084, "WAVE", "fmt ", 16, 1, 1, 44100, 88200, 2, 16, "data", 2048], header)
+    io.seek(2092)
+
+
+    # Write 2nd file to same IO
+    writer = Writer.new(io, Format.new(:stereo, :float, 22050))
+    assert_equal(false, writer.closed?)
+
+    writer.write(Buffer.new(SQUARE_WAVE_CYCLE[:stereo][:float_32] * 10, Format.new(:stereo, :float_32, 44100)))
+
+    writer.close
+    assert(writer.closed?)
+
+    assert_equal(false, io.closed?)
+    assert_equal(2790, io.pos)    # 44 bytes for header, plus 2 bytes per sample, with 8 * 128 samples
+
+    # Verify the first file header was not over-written
+    io.seek(0)
+    header = io.read(44).unpack("a4Va4a4VvvVVvva4V")
+    assert_equal(["RIFF", 2084, "WAVE", "fmt ", 16, 1, 1, 44100, 88200, 2, 16, "data", 2048], header)
+
+    # Verify the 2nd file header was written in the correct location
+    io.seek(2092)
+    header = io.read(58).unpack("a4Va4a4VvvVVvvva4VVa4V")
+    assert_equal(["RIFF", 690, "WAVE", "fmt ", 18, 3, 2, 22050, 176400, 8, 32, 0, "fact", 4, 80, "data", 640], header)
+
     io.close
   end
 

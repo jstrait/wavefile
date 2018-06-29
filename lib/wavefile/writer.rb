@@ -44,6 +44,10 @@ module WaveFile
         @io = io_or_file_name
         @io_source = :io
       end
+
+      # The position to seek back to when re-writing the header on close
+      @start_pos = @io.pos
+
       @format = format
 
       @closed = false
@@ -187,7 +191,7 @@ module WaveFile
       # We can't know what chunk sizes to write for the RIFF and data chunks until all
       # samples have been written, so go back to the beginning of the file and re-write
       # those chunk headers with the correct sizes.
-      @io.seek(0)
+      @io.seek(@start_pos)
       write_header(@total_sample_frames)
 
       if @io_source == :file_name
