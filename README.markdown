@@ -37,7 +37,12 @@ This gem lets you read and write audio data! You can use it to create Ruby progr
 * Written in pure Ruby, so it's easy to include in your program. There's no need to compile a separate extension in order to use it.
 
 
-# Current Release: v1.0.0
+# Current Release: v1.0.1
+
+Released on August 2, 2018, this version contains a bug fix: the file(s) written to an arbitrary `IO` instance are no longer corrupt if the initial seek position is greater than 0.
+
+
+# Previous Release: v1.0.0
 
 Released on June 10, 2018, this version has these changes:
 

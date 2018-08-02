@@ -1,3 +1,9 @@
+1.0.1
+===============================================================================
+* Bug fix: The file(s) written to an arbitrary `IO` instance are no longer
+  corrupt if the initial seek position is greater than 0.
+
+
 1.0.0
 ===============================================================================
 * Ruby 2.0 or greater is now required - the gem no longer works in Ruby 1.9.3.
