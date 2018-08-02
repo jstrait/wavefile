@@ -18,7 +18,7 @@ module WaveFile
   #     # Read sample data here
   #     reader.close
   class Reader
-    # Public: Returns a Reader object that is ready to start reading the specified file's
+    # Public: Constructs a Reader object that is ready to start reading the specified file's
     # sample data.
     #
     # io_or_file_name - The name of the wave file to read from,

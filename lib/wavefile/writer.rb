@@ -19,10 +19,10 @@ module WaveFile
   #    writer.close
   class Writer
 
-    # Public: Returns a constructed Writer object which is available for writing sample data to the
-    # specified file (via the write method). When all sample data has been written, the Writer should
-    # be closed. Note that the wave file being written to will NOT be valid (and playable in other programs)
-    # until the Writer has been closed.
+    # Public: Constructs a Writer object which is available for writing sample data to the specified file
+    # (via the write method). When all sample data has been written, the Writer should be closed. Note
+    # that the wave file being written to will NOT be valid (and playable in other programs) until the
+    # Writer has been closed.
     #
     # If a block is given to this method, sample data can be written inside the given block. When the
     # block terminates, the Writer will be automatically closed (and no more sample data can be written).
