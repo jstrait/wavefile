@@ -50,7 +50,6 @@
 * Errors raised by `Format.new` are improved to provide more detail.
 
 
-
 0.8.1
 ===============================================================================
 * Fixes an error when frozen string literals are enabled in Ruby 2.3 or higher.
