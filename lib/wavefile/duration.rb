@@ -7,8 +7,6 @@ module WaveFile
   # stopwatch running for exactly 2 hours would show something like "2:00:00.000".
   # Accordingly, if the given sample frame count and sample rate add up to exactly
   # 2 hours, then hours will be 2, and minutes, seconds, and milliseconds will all be 0.
-  #
-  # This class is immutable - once a new Duration is constructed, it can't be modified.
   class Duration
     # Public: Constructs a new immutable Duration.
     #

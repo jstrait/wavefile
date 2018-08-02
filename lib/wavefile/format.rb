@@ -17,8 +17,6 @@ module WaveFile
   # channels, bits per sample, sample rate, and so forth. A Format instance is used
   # by Reader to indicate what format to read samples out as, and by Writer to
   # indicate what format to write samples as.
-  #
-  # This class is immutable - once a new Format is constructed, it can't be modified.
   class Format
 
     # Public: Constructs a new immutable Format.
