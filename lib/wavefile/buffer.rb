@@ -57,7 +57,17 @@ module WaveFile
     # Public: Creates a new Buffer containing the sample data of this Buffer, but converted
     # to a different format.
     #
-    # new_format - The format that the sample data should be converted to
+    # new_format - The format that the sample data should be converted to. If the new format
+    #              has a different number of channels than the original buffer format, the sample data
+    #              will be converted in the following way:
+    #
+    #              1 -> n: Each mono sample will be duplicated into the new number of channels.
+    #
+    #              n -> 1: Each sample in each sample frame will be averaged into a single sample.
+    #
+    #              (n > 2) -> 2: The first two channels will be kept, all other channels discarded.
+    #
+    #              other: Unsupported, will cause BufferConversionError to be raised.
     #
     # Examples
     #
@@ -75,7 +85,9 @@ module WaveFile
     # Public: Converts the sample data contained in the Buffer to a new format. The sample
     # data is converted in place, so the existing Buffer is modified.
     #
-    # new_format - The format that the sample data should be converted to
+    # new_format - The format that the sample data should be converted to. See Buffer#create
+    #              for how samples will be mapped if the new number of channels differs from
+    #              the original number of channels.
     #
     # Examples
     #
