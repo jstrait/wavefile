@@ -1,0 +1,16 @@
+Thu, 02 Aug 2018 11:15:58 -0700
+README.rdoc	Sat, 16 Jun 2018 12:55:26 -0700
+lib/wavefile.rb	Sat, 16 Jun 2018 12:55:26 -0700
+lib/wavefile/chunk_readers/riff_reader.rb	Sat, 16 Jun 2018 12:55:26 -0700
+lib/wavefile/chunk_readers/riff_chunk_reader.rb	Sat, 16 Jun 2018 12:55:26 -0700
+lib/wavefile/chunk_readers/format_chunk_reader.rb	Sat, 16 Jun 2018 12:55:26 -0700
+lib/wavefile/chunk_readers/data_chunk_reader.rb	Sat, 16 Jun 2018 12:55:26 -0700
+lib/wavefile/chunk_readers/base_chunk_reader.rb	Sat, 16 Jun 2018 12:55:26 -0700
+lib/wavefile/chunk_readers/generic_chunk_reader.rb	Sat, 16 Jun 2018 12:55:26 -0700
+lib/wavefile/chunk_readers.rb	Sat, 16 Jun 2018 12:55:26 -0700
+lib/wavefile/buffer.rb	Thu, 02 Aug 2018 09:51:55 -0700
+lib/wavefile/writer.rb	Thu, 02 Aug 2018 10:41:00 -0700
+lib/wavefile/reader.rb	Thu, 02 Aug 2018 10:40:35 -0700
+lib/wavefile/format.rb	Thu, 02 Aug 2018 10:26:27 -0700
+lib/wavefile/unvalidated_format.rb	Thu, 02 Aug 2018 10:27:12 -0700
+lib/wavefile/duration.rb	Thu, 02 Aug 2018 10:26:37 -0700

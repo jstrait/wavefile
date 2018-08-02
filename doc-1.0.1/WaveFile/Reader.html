@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta charset="UTF-8">
+
+<title>class WaveFile::Reader - WaveFile Gem - Read/Write *.wav Files with Ruby</title>
+
+<script type="text/javascript">
+  var rdoc_rel_prefix = "../";
+  var index_rel_prefix = "../";
+</script>
+
+<script src="../js/jquery.js"></script>
+<script src="../js/darkfish.js"></script>
+
+<link href="../css/fonts.css" rel="stylesheet">
+<link href="../css/rdoc.css" rel="stylesheet">
+
+
+
+<body id="top" role="document" class="class">
+<nav role="navigation">
+  <div id="project-navigation">
+    <div id="home-section" role="region" title="Quick navigation" class="nav-section">
+  <h2>
+    <a href="../index.html" rel="home">Home</a>
+  </h2>
+
+  <div id="table-of-contents-navigation">
+    <a href="../table_of_contents.html#pages">Pages</a>
+    <a href="../table_of_contents.html#classes">Classes</a>
+    <a href="../table_of_contents.html#methods">Methods</a>
+  </div>
+</div>
+
+    <div id="search-section" role="search" class="project-section initially-hidden">
+  <form action="#" method="get" accept-charset="utf-8">
+    <div id="search-field-wrapper">
+      <input id="search-field" role="combobox" aria-label="Search"
+             aria-autocomplete="list" aria-controls="search-results"
+             type="text" name="search" placeholder="Search" spellcheck="false"
+             title="Type to search, Up and Down to navigate, Enter to load">
+    </div>
+
+    <ul id="search-results" aria-label="Search Results"
+        aria-busy="false" aria-expanded="false"
+        aria-atomic="false" class="initially-hidden"></ul>
+  </form>
+</div>
+
+  </div>
+
+  
+
+  <div id="class-metadata">
+    <div id="sections-section" class="nav-section">
+  <h3>Sections</h3>
+
+  <ul class="link-list" role="directory">
+    
+      <li><a href="#5Buntitled-5D"></a></li>
+    
+      <li><a href="#Public">Public</a></li>
+    
+  </ul>
+</div>
+
+    <div id="parent-class-section" class="nav-section">
+  <h3>Parent</h3>
+
+  
+  <p class="link">Object
+  
+</div>
+
+    
+    
+    <!-- Method Quickref -->
+<div id="method-list-section" class="nav-section">
+  <h3>Methods</h3>
+
+  <ul class="link-list" role="directory">
+    
+    <li ><a href="#method-c-new">::new</a>
+    
+    <li ><a href="#method-i-close">#close</a>
+    
+    <li ><a href="#method-i-closed-3F">#closed?</a>
+    
+    <li ><a href="#method-i-current_sample_frame">#current_sample_frame</a>
+    
+    <li ><a href="#method-i-each_buffer">#each_buffer</a>
+    
+    <li ><a href="#method-i-format">#format</a>
+    
+    <li ><a href="#method-i-native_format">#native_format</a>
+    
+    <li ><a href="#method-i-read">#read</a>
+    
+    <li ><a href="#method-i-readable_format-3F">#readable_format?</a>
+    
+    <li ><a href="#method-i-total_duration">#total_duration</a>
+    
+    <li ><a href="#method-i-total_sample_frames">#total_sample_frames</a>
+    
+  </ul>
+</div>
+
+  </div>
+</nav>
+
+<main role="main" aria-labelledby="class-WaveFile::Reader">
+  <h1 id="class-WaveFile::Reader" class="class">
+    class WaveFile::Reader
+  </h1>
+
+  <section class="description">
+    
+<p>Provides the ability to read sample data out of a wave file, as well as
+query a wave file about its metadata (e.g. number of channels, sample rate,
+etc).</p>
+
+<p>When constructing a <a href="Reader.html">Reader</a> a block can be given.
+All data should be read inside this block, and when the block exits the <a
+href="Reader.html">Reader</a> will automatically be closed.</p>
+
+<pre class="ruby"><span class="ruby-constant">Reader</span>.<span class="ruby-identifier">new</span>(<span class="ruby-string">&quot;my_file.wav&quot;</span>) <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">reader</span><span class="ruby-operator">|</span>
+  <span class="ruby-comment"># Read sample data here</span>
+<span class="ruby-keyword">end</span>
+</pre>
+
+<p>Alternately, if a block isn&#39;t given you should make sure to call close
+when finished reading.</p>
+
+<pre class="ruby"><span class="ruby-identifier">reader</span> = <span class="ruby-constant">Reader</span>.<span class="ruby-identifier">new</span>(<span class="ruby-string">&quot;my_file.wav&quot;</span>)
+<span class="ruby-comment"># Read sample data here</span>
+<span class="ruby-identifier">reader</span>.<span class="ruby-identifier">close</span>
+</pre>
+
+  </section>
+
+  
+  <section id="5Buntitled-5D" class="documentation-section">
+    
+
+    
+
+    
+
+    
+
+    
+  </section>
+
+  <section id="Public" class="documentation-section">
+    
+    <header class="documentation-section-title">
+      <h2>
+        Public
+      </h2>
+      <span class="section-click-top">
+        <a href="#top">&uarr; top</a>
+      </span>
+    </header>
+    
+
+    
+
+    
+
+    
+
+    
+     <section id="public-class-Public-method-details" class="method-section">
+       <header>
+         <h3>Public Class Methods</h3>
+       </header>
+
+    
+      <div id="method-c-new" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">new</span><span
+            class="method-args">(io_or_file_name, format=nil) { |self| ... }</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Constructs a <a href="Reader.html">Reader</a> object that is ready to start
+reading the specified file&#39;s sample data.</p>
+<dl class="rdoc-list note-list"><dt>io_or_file_name
+<dd>
+<p>The name of the wave file to read from, or an open IO object to read from.</p>
+</dd><dt>format
+<dd>
+<p>The format that read sample data should be returned in (default: the wave
+file&#39;s internal format).</p>
+</dd></dl>
+
+<h3 id="method-c-new-label-Returns">Returns<span><a href="#method-c-new-label-Returns">&para;</a> <a href="#top">&uarr;</a></span></h3>
+
+<p>Returns a <a href="Reader.html">Reader</a> object that is ready to start
+reading the specified file&#39;s sample data. Raises
+<code>Errno::ENOENT</code> if the specified file can&#39;t be found. Raises
+<a href="InvalidFormatError.html">InvalidFormatError</a> if the specified
+file isn&#39;t a valid wave file.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="new-source">
+            <pre><span class="ruby-comment"># File lib/wavefile/reader.rb, line 32</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">initialize</span>(<span class="ruby-identifier">io_or_file_name</span>, <span class="ruby-identifier">format</span>=<span class="ruby-keyword">nil</span>)
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">io_or_file_name</span>.<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">String</span>)
+    <span class="ruby-ivar">@io</span> = <span class="ruby-constant">File</span>.<span class="ruby-identifier">open</span>(<span class="ruby-identifier">io_or_file_name</span>, <span class="ruby-string">&quot;rb&quot;</span>)
+    <span class="ruby-ivar">@io_source</span> = <span class="ruby-value">:file_name</span>
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-ivar">@io</span> = <span class="ruby-identifier">io_or_file_name</span>
+    <span class="ruby-ivar">@io_source</span> = <span class="ruby-value">:io</span>
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-ivar">@closed</span> = <span class="ruby-keyword">false</span>
+
+  <span class="ruby-keyword">begin</span>
+    <span class="ruby-identifier">riff_reader</span> = <span class="ruby-constant">ChunkReaders</span><span class="ruby-operator">::</span><span class="ruby-constant">RiffReader</span>.<span class="ruby-identifier">new</span>(<span class="ruby-ivar">@io</span>, <span class="ruby-identifier">format</span>)
+  <span class="ruby-keyword">rescue</span> <span class="ruby-constant">InvalidFormatError</span>
+    <span class="ruby-identifier">raise</span> <span class="ruby-constant">InvalidFormatError</span>, <span class="ruby-string">&quot;Does not appear to be a valid Wave file&quot;</span>
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-ivar">@data_chunk_reader</span> = <span class="ruby-identifier">riff_reader</span>.<span class="ruby-identifier">data_chunk_reader</span>
+
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">block_given?</span>
+    <span class="ruby-keyword">begin</span>
+      <span class="ruby-keyword">yield</span>(<span class="ruby-keyword">self</span>)
+    <span class="ruby-keyword">ensure</span>
+      <span class="ruby-identifier">close</span>
+    <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+    </section>
+  
+     <section id="public-instance-Public-method-details" class="method-section">
+       <header>
+         <h3>Public Instance Methods</h3>
+       </header>
+
+    
+      <div id="method-i-close" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">close</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Closes the <a href="Reader.html">Reader</a>. If the <a
+href="Reader.html">Reader</a> is already closed, does nothing. After a <a
+href="Reader.html">Reader</a> is closed, no more sample data can be read
+from it. Note: If the <a href="Reader.html">Reader</a> is constructed from
+an open IO instance (as opposed to a file name), the IO instance will
+<em>not</em> be closed. You&#39;ll have to manually close it yourself. This
+is intentional, because <a href="Reader.html">Reader</a> can&#39;t know
+what you may/may not want to do with the IO instance in the future.</p>
+
+<h3 id="method-i-close-label-Returns">Returns<span><a href="#method-i-close-label-Returns">&para;</a> <a href="#top">&uarr;</a></span></h3>
+
+<p>Returns nothing.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="close-source">
+            <pre><span class="ruby-comment"># File lib/wavefile/reader.rb, line 143</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">close</span>
+  <span class="ruby-keyword">return</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@closed</span>
+
+  <span class="ruby-keyword">if</span> <span class="ruby-ivar">@io_source</span> <span class="ruby-operator">==</span> <span class="ruby-value">:file_name</span>
+    <span class="ruby-ivar">@io</span>.<span class="ruby-identifier">close</span>
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-ivar">@closed</span> = <span class="ruby-keyword">true</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-closed-3F" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">closed?</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <h3 id="method-i-closed-3F-label-Returns">Returns<span><a href="#method-i-closed-3F-label-Returns">&para;</a> <a href="#top">&uarr;</a></span></h3>
+
+<p>Returns true if the <a href="Reader.html">Reader</a> is closed, and false
+if it is open and available for reading.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="closed-3F-source">
+            <pre><span class="ruby-comment"># File lib/wavefile/reader.rb, line 131</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">closed?</span>
+  <span class="ruby-ivar">@closed</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-current_sample_frame" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">current_sample_frame</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <h3 id="method-i-current_sample_frame-label-Returns">Returns<span><a href="#method-i-current_sample_frame-label-Returns">&para;</a> <a href="#top">&uarr;</a></span></h3>
+
+<p>Returns the index of the sample frame which is “cued up” for reading. I.e.,
+the index of the next sample frame that will be read. A sample frame
+contains a single sample for each channel. So if there are 1,000 sample
+frames in a stereo file, this means there are 1,000 left-channel samples
+and 1,000 right-channel samples.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="current_sample_frame-source">
+            <pre><span class="ruby-comment"># File lib/wavefile/reader.rb, line 186</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">current_sample_frame</span>
+  <span class="ruby-ivar">@data_chunk_reader</span>.<span class="ruby-identifier">current_sample_frame</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-each_buffer" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">each_buffer</span><span
+            class="method-args">(sample_frame_count=4096) { |read(sample_frame_count)| ... }</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Reads sample data of the into successive Buffers of the specified size,
+until there is no more sample data to be read. When all sample data has
+been read, the <a href="Reader.html">Reader</a> is automatically closed.
+Each <a href="Buffer.html">Buffer</a> is passed to the given block.</p>
+
+<p>If the <a href="Reader.html">Reader</a> is constructed from an open IO, the
+IO is NOT closed after all sample data is read. However, the <a
+href="Reader.html">Reader</a> will be closed and any attempt to continue to
+read from it will result in an error.</p>
+
+<p>Note that sample_frame_count indicates the number of sample frames to read,
+not number of samples. A sample frame include one sample for each channel.
+For example, if sample_frame_count is 1024, then for a stereo file 1024
+samples will be read from the left channel, and 1024 samples will be read
+from the right channel.</p>
+<dl class="rdoc-list note-list"><dt>sample_frame_count
+<dd>
+<p>The number of sample frames to read into each <a
+href="Buffer.html">Buffer</a> from each channel. The number of sample
+frames read into the final <a href="Buffer.html">Buffer</a> could be less
+than this size, if there are not enough remaining.</p>
+</dd></dl>
+
+<h3 id="method-i-each_buffer-label-Examples">Examples<span><a href="#method-i-each_buffer-label-Examples">&para;</a> <a href="#top">&uarr;</a></span></h3>
+
+<pre class="ruby"><span class="ruby-comment"># sample_frame_count not given, so default buffer size</span>
+<span class="ruby-constant">Reader</span>.<span class="ruby-identifier">new</span>(<span class="ruby-string">&quot;my_file.wav&quot;</span>).<span class="ruby-identifier">each_buffer</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">buffer</span><span class="ruby-operator">|</span>
+  <span class="ruby-identifier">puts</span> <span class="ruby-node">&quot;#{buffer.samples.length} sample frames read&quot;</span>
+<span class="ruby-keyword">end</span>
+
+<span class="ruby-comment"># Specific sample_frame_count given for each buffer</span>
+<span class="ruby-constant">Reader</span>.<span class="ruby-identifier">new</span>(<span class="ruby-string">&quot;my_file.wav&quot;</span>).<span class="ruby-identifier">each_buffer</span>(<span class="ruby-value">1024</span>) <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">buffer</span><span class="ruby-operator">|</span>
+  <span class="ruby-identifier">puts</span> <span class="ruby-node">&quot;#{buffer.samples.length} sample frames read&quot;</span>
+<span class="ruby-keyword">end</span>
+
+<span class="ruby-comment"># Reading each buffer from an externally created IO</span>
+<span class="ruby-identifier">file</span> = <span class="ruby-constant">File</span>.<span class="ruby-identifier">open</span>(<span class="ruby-string">&quot;my_file.wav&quot;</span>, <span class="ruby-string">&quot;rb&quot;</span>)
+<span class="ruby-constant">Reader</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">file</span>).<span class="ruby-identifier">each_buffer</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">buffer</span><span class="ruby-operator">|</span>
+  <span class="ruby-identifier">puts</span> <span class="ruby-node">&quot;#{buffer.samples.length} sample frames read&quot;</span>
+<span class="ruby-keyword">end</span>
+<span class="ruby-comment"># Although Reader is closed, file still needs to be manually closed</span>
+<span class="ruby-identifier">file</span>.<span class="ruby-identifier">close</span>
+</pre>
+
+<h3 id="method-i-each_buffer-label-Returns">Returns<span><a href="#method-i-each_buffer-label-Returns">&para;</a> <a href="#top">&uarr;</a></span></h3>
+
+<p>Returns nothing. Has side effect of closing the <a
+href="Reader.html">Reader</a>.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="each_buffer-source">
+            <pre><span class="ruby-comment"># File lib/wavefile/reader.rb, line 99</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">each_buffer</span>(<span class="ruby-identifier">sample_frame_count</span>=<span class="ruby-value">4096</span>)
+  <span class="ruby-keyword">begin</span>
+    <span class="ruby-keyword">while</span> <span class="ruby-keyword">true</span> <span class="ruby-keyword">do</span>
+      <span class="ruby-keyword">yield</span>(<span class="ruby-identifier">read</span>(<span class="ruby-identifier">sample_frame_count</span>))
+    <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">rescue</span> <span class="ruby-constant">EOFError</span>
+    <span class="ruby-identifier">close</span>
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-format" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">format</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <h3 id="method-i-format-label-Returns">Returns<span><a href="#method-i-format-label-Returns">&para;</a> <a href="#top">&uarr;</a></span></h3>
+
+<p>Returns an object describing how sample data is being read from the Wave
+file. I.e., number of channels, bits per sample, sample format, etc. If <a
+href="Reader.html#method-i-readable_format-3F">readable_format?</a> is
+true, then this will be a <a href="Format.html">Format</a> object. The
+format the samples are read out as might be different from how the samples
+are actually stored in the file. Therefore, <a
+href="Reader.html#method-i-format">format</a> might not match <a
+href="Reader.html#method-i-native_format">native_format</a>. If <a
+href="Reader.html#method-i-readable_format-3F">readable_format?</a> is
+false, then this will return the same value as <a
+href="Reader.html#method-i-native_format">native_format</a>.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="format-source">
+            <pre><span class="ruby-comment"># File lib/wavefile/reader.rb, line 178</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">format</span>
+  <span class="ruby-ivar">@data_chunk_reader</span>.<span class="ruby-identifier">format</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-native_format" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">native_format</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <h3 id="method-i-native_format-label-Returns">Returns<span><a href="#method-i-native_format-label-Returns">&para;</a> <a href="#top">&uarr;</a></span></h3>
+
+<p>Returns an object describing the sample format of the Wave file being read.
+This returns the data contained in the “fmt ” chunk of the Wave file. It
+will not necessarily match the format that the samples are read out as (for
+that, see <a href="Reader.html#method-i-format">format</a>).</p>
+          
+          
+
+          
+          <div class="method-source-code" id="native_format-source">
+            <pre><span class="ruby-comment"># File lib/wavefile/reader.rb, line 161</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">native_format</span>
+  <span class="ruby-ivar">@data_chunk_reader</span>.<span class="ruby-identifier">raw_native_format</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-read" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">read</span><span
+            class="method-args">(sample_frame_count)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Reads the specified number of sample frames from the wave file into a <a
+href="Buffer.html">Buffer</a>. Note that the <a
+href="Buffer.html">Buffer</a> will have at most sample_frame_count sample
+frames, but could have less if the file doesn&#39;t have enough remaining.</p>
+<dl class="rdoc-list note-list"><dt>sample_frame_count
+<dd>
+<p>The number of sample frames to read. Note that each sample frame includes a
+sample for each channel.</p>
+</dd></dl>
+
+<h3 id="method-i-read-label-Returns">Returns<span><a href="#method-i-read-label-Returns">&para;</a> <a href="#top">&uarr;</a></span></h3>
+
+<p>Returns a <a href="Buffer.html">Buffer</a> containing sample_frame_count
+sample frames. Raises <a
+href="UnsupportedFormatError.html">UnsupportedFormatError</a> if file is in
+a format that can&#39;t be read by this gem. Raises <a
+href="ReaderClosedError.html">ReaderClosedError</a> if the <a
+href="Writer.html">Writer</a> has been closed. Raises EOFError if no
+samples could be read due to reaching the end of the file.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="read-source">
+            <pre><span class="ruby-comment"># File lib/wavefile/reader.rb, line 121</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">read</span>(<span class="ruby-identifier">sample_frame_count</span>)
+  <span class="ruby-keyword">if</span> <span class="ruby-ivar">@closed</span>
+    <span class="ruby-identifier">raise</span> <span class="ruby-constant">ReaderClosedError</span>
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-ivar">@data_chunk_reader</span>.<span class="ruby-identifier">read</span>(<span class="ruby-identifier">sample_frame_count</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-readable_format-3F" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">readable_format?</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <h3 id="method-i-readable_format-3F-label-Returns">Returns<span><a href="#method-i-readable_format-3F-label-Returns">&para;</a> <a href="#top">&uarr;</a></span></h3>
+
+<p>Returns true if this is a valid Wave file and contains sample data that is
+in a format that this class can read, and returns false if this is a valid
+Wave file but does not contain a sample format that this gem knows how to
+read.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="readable_format-3F-source">
+            <pre><span class="ruby-comment"># File lib/wavefile/reader.rb, line 168</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">readable_format?</span>
+  <span class="ruby-ivar">@data_chunk_reader</span>.<span class="ruby-identifier">readable_format</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-total_duration" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">total_duration</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <h3 id="method-i-total_duration-label-Returns">Returns<span><a href="#method-i-total_duration-label-Returns">&para;</a> <a href="#top">&uarr;</a></span></h3>
+
+<p>Returns a <a href="Duration.html">Duration</a> instance for the total
+number of sample frames in the file</p>
+          
+          
+
+          
+          <div class="method-source-code" id="total_duration-source">
+            <pre><span class="ruby-comment"># File lib/wavefile/reader.rb, line 154</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">total_duration</span>
+  <span class="ruby-constant">Duration</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">total_sample_frames</span>, <span class="ruby-ivar">@data_chunk_reader</span>.<span class="ruby-identifier">format</span>.<span class="ruby-identifier">sample_rate</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-total_sample_frames" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">total_sample_frames</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <h3 id="method-i-total_sample_frames-label-Returns">Returns<span><a href="#method-i-total_sample_frames-label-Returns">&para;</a> <a href="#top">&uarr;</a></span></h3>
+
+<p>Returns the total number of sample frames in the file. A sample frame
+contains a single sample for each channel. So if there are 1,000 sample
+frames in a stereo file, this means there are 1,000 left-channel samples
+and 1,000 right-channel samples.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="total_sample_frames-source">
+            <pre><span class="ruby-comment"># File lib/wavefile/reader.rb, line 193</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">total_sample_frames</span>
+  <span class="ruby-ivar">@data_chunk_reader</span>.<span class="ruby-identifier">total_sample_frames</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+    </section>
+  
+  </section>
+</main>
+
+
+<footer id="validator-badges" role="contentinfo">
+  <p><a href="https://validator.w3.org/check/referer">Validate</a>
+  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.0.4.
+  <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
+</footer>
+
