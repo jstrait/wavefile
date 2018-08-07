@@ -263,7 +263,15 @@ and Data Specifications 1.0, August 1991</a></li>
   </div>
   <p><span class="label">Valid Bits Per Sample</span> &ndash; Allows storing samples with bit-depths that are not a byte multiple in size. For example, to store 12-bit samples, this value can be set to 12, and the bits-per-sample field in the format chunk set to 16. Each sample will still take up 16 bytes on disk, but the reader can be informed that only the lower 12 bits should be used.</p>
   <p><span class="label">Channel Mask</span> &ndash; Indicates which audio channels map to which speakers.</p>
-  <p><span class="label">Sub Format</span> &ndash; Identifies the format of the sample data in the data chunk. This is a replacement for the original format code field, since it will have a format code of 65534.</p>
+  <p><span class="label">Sub Format</span> &ndash; Identifies the format of the sample data in the data chunk. This is a replacement for the original format code field, since it will have a format code of 65534. Some GUIDs include:</p>
+  <ul>
+    <li>PCM Integer: <code>0x0100000000001000800000aa00389b71</code></li>
+    <li>PCM Float: <code>0x0300000000001000800000aa00389b71</code></li>
+    <li>A-law: <code>0x0600000000001000800000aa00389b71</code></li>
+    <li>&mu;-law: <code>0x0700000000001000800000aa00389b71</code></li>
+    <li>ADPCM: <code>0x0200000000001000800000aa00389b71</code></li>
+    <li>MPEG: <code>0x5000000000001000800000aa00389b71</code></li>
+  </ul>
 
   <h2>The Fact Chunk</h2>
   <div class="scroll-x">
