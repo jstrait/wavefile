@@ -39,6 +39,17 @@ def read_bytes(pack_str)
     val = bytes.join().unpack(SIGNED_INT_8).first
 
     return {:actual => val, :bytes => bytes }
+  elsif pack_str.start_with?("H")
+    if pack_str.length > 2
+      size = pack_str[1...(pack_str.length)].to_i / 2
+    else
+      size = 1
+    end
+
+    size.times { bytes << FILE.sysread(1).unpack("H2") }
+    full_string = "0x#{bytes.join()}"
+
+    return {:actual => full_string, :bytes => bytes }
   elsif pack_str.start_with?("B")
     if pack_str.length > 1
       size = pack_str[1...(pack_str.length)].to_i
@@ -96,7 +107,7 @@ def read_format_chunk(chunk_id_data, chunk_size_data)
       if audio_format_code[:actual] == 65534
         display_line "Valid bits per sample", "int_16", read_bytes(UNSIGNED_INT_16)
         display_line "Speaker mapping", "binary", read_bytes("B32")
-        display_line "Sub format GUID", "a16", read_bytes("a16")
+        display_line "Sub format GUID", "hex", read_bytes("H32")
       else
         extension_pack_code = "a#{extension_size_data[:actual]}"
         display_line "Raw extension", "alpha_#{extension_size_data[:actual]}", read_bytes(extension_pack_code)
