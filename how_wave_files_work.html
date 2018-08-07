@@ -357,6 +357,48 @@ and Data Specifications 1.0, August 1991</a></li>
   <p><span class="tag-important">Important!</span>Notice that 8-bit samples are unsigned, while larger bit depths are signed.</p>
   <p>Samples in a multi-channel PCM wave file are interleaved. That is, in a stereo file, one sample for the left channel will be followed by one sample for the right channel, followed by another sample for the left channel, then right channel, and so forth.</p>
   <p>The samples for all channels at a moment in time are called a <em>sample frame</em> (also called a <em>block</em>). That is, a sample frame will contain one sample for each channel. In a monophonic file, a sample frame will consist on 1 sample. In a stereo file, a sample frame has 2 samples (one for the left channel, one for the right channel). In a 5-channel file, a sample frame has 5 samples. The block align field in the format chunk gives the size in bytes of each sample frame. This can be useful when seeking to a particular sample frame in the file.</p>
+  <p>For example, for a 2 channel file with 16-bit PCM samples, the sample data would look like this:</p>
+  <div style="font-size: 0.8rem; display: flex; flex-direction: row; text-align: center; align-items: center; justify-content: center;">
+    <div style="border: 2px solid #a1a1a1; border-radius: 0.5rem; padding: 0.5rem; margin-right: 0.5rem;">
+      Sample Frame 1
+      <div>
+        <div style="border: 2px solid #a1a1a1; padding: 0.5rem; margin: 0.0rem 0; border-radius: 0.5rem; display: inline-block;">
+          Left Channel
+          <div>
+            <code style="font-size: 0.6rem;">Byte 1</code>
+            <code style="font-size: 0.6rem;">Byte 2</code>
+          </div>
+        </div>
+        <div style="border: 2px solid #a1a1a1; padding: 0.5rem; margin: 0.0rem 0; border-radius: 0.5rem; display: inline-block;">
+          Right Channel
+          <div>
+            <code style="font-size: 0.6rem;">Byte 1</code>
+            <code style="font-size: 0.6rem;">Byte 2</code>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div style="border: 2px solid #a1a1a1; border-radius: 0.5rem; padding: 0.5rem; margin-right: 0.5rem;">
+      Sample Frame 2
+      <div>
+        <div style="border: 2px solid #a1a1a1; padding: 0.5rem; margin: 0.0rem 0; border-radius: 0.5rem; display: inline-block;">
+          Left Channel
+          <div>
+            <code style="font-size: 0.6rem;">Byte 1</code>
+            <code style="font-size: 0.6rem;">Byte 2</code>
+          </div>
+        </div>
+        <div style="border: 2px solid #a1a1a1; padding: 0.5rem; margin: 0.0rem 0; border-radius: 0.5rem; display: inline-block;">
+          Right Channel
+          <div>
+            <code style="font-size: 0.6rem;">Byte 1</code>
+            <code style="font-size: 0.6rem;">Byte 2</code>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div style="padding: 0.5rem;">...etc</div>
+  </div>
   <h2>Floating Point Data Chunk</h2>
   <p>Another basic format is to store samples as floating point values (format code 3). This is essentially the same as PCM format, except that samples are in the range -1.0 to 1.0. The bits per sample field for floating point files should be set to 32 or 64.</p>
   <h2>EXTENSIBLE Data Chunk</h2>
