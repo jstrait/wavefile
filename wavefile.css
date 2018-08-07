@@ -273,6 +273,8 @@ span.label {
   margin: 0 auto;
 }
 
+.flex-column { flex-direction: column; }
+
 
 @media (min-width: 744px) {
   ul#feature-list > li {
@@ -284,6 +286,8 @@ span.label {
   pre {
     padding: 1.5rem;
   }
+
+  .flex-row-l { flex-direction: row; }
 }
 
 @media (max-width: 744px) {
