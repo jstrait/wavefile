@@ -97,7 +97,6 @@ and Data Specifications 1.0, August 1991</a></li>
 
   <h2>The Format Chunk</h2>
   <p>The format chunk describes the format that the samples in the data chunk are encoded in. The exact structure of the format chunk depends on the value of the format code field. If the format code is 1 (PCM), then the format chunk will only contain the fields above the dashed line in the diagram below. If it's not 1, the chunk will also contain the fields after the dashed line.</p>
-  <p>The reason for these differences is that the Wave format is a container for many different kinds of sample formats, and because the Wave format has evolved over time to support new formats. Extra fields that are needed for one sample format might not be needed for another sample format. This also allows new fields to be added without having to change pre-existing Wave files.</p>
   <div class="scroll-x">
     <table>
       <tr>
@@ -160,6 +159,7 @@ and Data Specifications 1.0, August 1991</a></li>
       </tr>
     </table>
   </div>
+  <p>The reason for the different types of extension is that the Wave format is a container for many different kinds of sample formats, and because the Wave format has evolved over time to support new formats. Extra fields that are needed for one sample format might not be needed for another sample format. This also allows new fields to be added without having to change pre-existing Wave files.</p>
   <p>While some of these fields have a large range of possible values, in practice there are only a few that will actually be used. For some background on what some of this terminology means, check out <a href="https://www.joelstrait.com/digital_audio_primer/">this blog post</a>.</p>
   <p><span class="label">Format Code</span> &ndash; Indicates how the sample data for the wave file is stored. The most common format is PCM, which has a code of 1. Other formats include IEEE floating point (3), ADPCM (2), &mu;-law (7), and WaveFormatExtensible (65534).</p>
   <p><span class="label">Number of channels</span> &ndash; Typically a file will have 1 channel (mono) or 2 channels (stereo). A 5.1 surround sound file will have 6 channels.</p>
