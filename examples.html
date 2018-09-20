@@ -112,7 +112,7 @@ end</code></pre>
 <div class="section">
   <h2>Writing a Wave File With A Block</h2>
 
-  <p>The <code>Writer</code> object is used to write data to a wave file. When constructing the <code>Writer</code>, one can pass a block inside which the writing will occur. When the block exits the file will automatically be closed. The example below shows how to write a basic square wave to a file.</p>
+  <p>The <code>Writer</code> object is used to write data to a wave file. When constructing the <code>Writer</code>, you can pass a block inside which the writing will occur. When the block exits the file will automatically be closed. The example below shows how to write a basic square wave to a file.</p>
 
   <pre><code>require 'wavefile'
 include WaveFile
@@ -129,7 +129,7 @@ end</code></pre>
 <div class="section bg-white">
   <h2>Writing a Wave File (Manual File Close Edition)</h2>
 
-  <p>Alternately, one can manually control when to close the file, as shown below. Note that a file won&rsquo;t be valid for playback until it is closed. This is because some data required for playback (such as the total number of samples) isn&rsquo;t written to the file until it is closed.</p>
+  <p>Alternately, you can manually control when to close the file, as shown below. Note that a file won&rsquo;t be valid for playback until it is closed. This is because some data required for playback (such as the total number of samples) isn&rsquo;t written to the file until it is closed.</p>
 
   <pre><code>require 'wavefile'
 include WaveFile
