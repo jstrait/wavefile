@@ -29,7 +29,7 @@
 include WaveFile
 
 Reader.new("my_file.wav").each_buffer do |buffer|
-  puts "Read #{buffer.samples.length} samples."
+  puts "Read #{buffer.samples.length} sample frames."
 end</code></pre>
 
   <p>First construct a <code>Reader</code> object, then call <code>each_buffer()</code> on it. Successive sample buffers will be read from the file and passed to the given block, until all sample data in the file has been read. Finally, the <code>Reader</code> will automatically be closed. (Note that this is essentially the same as how <code>IO.open</code> works if you pass it a block).</p>
@@ -51,10 +51,10 @@ reader = Reader.new("my_file.wav")
 begin
   while reader.current_sample_frame < reader.total_sample_frames do
     buffer = reader.read(SAMPLES_PER_BUFFER)
-    puts "Read #{buffer.samples.length} samples."
+    puts "Read #{buffer.samples.length} sample frames."
   end
 rescue EOFError
-  puts "Unexpected EOFError before reading all samples"
+  puts "Unexpected EOFError before reading all sample frames"
 ensure
   reader.close
 end</code></pre>
@@ -72,7 +72,7 @@ include WaveFile
 # regardless of the actual sample format on disk
 format = Format.new(:mono, :float, 44100)
 reader = Reader.new("my_file.wav", format).each_buffer do |buffer|
-  puts "Read #{buffer.samples.length} samples."
+  puts "Read #{buffer.samples.length} sample frames."
 end</code></pre>
   <p><strong>Note:</strong> Sample data will not be re-sampled to match the target sample rate. For example, if reading data out of a file with 44,100Hz sample rate using a target <code>Format</code> with a 22,050Hz sample rate, the samples will not be re-converted to a 22,050Hz sample rate. This means the audio will sound pitch shifted unless the two sample rates are the same.</p>
 </div>
