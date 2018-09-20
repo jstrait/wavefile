@@ -123,6 +123,7 @@ buffer = Buffer.new(cycle, Format.new(:mono, :float, 44100))
 Writer.new("my_file.wav", Format.new(:mono, :pcm_16, 44100)) do |writer|
   100.times { writer.write(buffer) }
 end</code></pre>
+  <p>For more info on how to create simple sounds with Ruby, check out <a href="https://www.joelstrait.com/nanosynth_create_sound_with_ruby/">NanoSynth</a>.</p>
 </div>
 
 <div class="section bg-white">
