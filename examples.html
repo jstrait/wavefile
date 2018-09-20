@@ -63,18 +63,17 @@ end</code></pre>
 <div class="section">
   <h2>Reading a Wave File Into an Arbitrary Format</h2>
 
-  <p>It&rsquo;s easy to read sample data out of a file in whatever format you need, regardless of what format is used inside the file. For example, suppose that <code>my_file.wav</code> is stereo/16-bit, but you need mono normalized floating point samples. No problem, as shown below.</p>
-
+  <p>When reading sample data you can convert it to a different format on the fly. For example, let&rsquo;s say <code>my_file.wav</code> has 2 channels and 16-bit PCM samples, but you want 1 channel normalized floating point samples. By passing a <code>Format</code> instance to the constructor, the samples will be read out in the desired format regardless of what is actually in the file:</p>
   <pre><code>require 'wavefile'
 include WaveFile
 
 # Samples will be read as monophonic floating point,
-# regardless of the actual sample format on disk
-format = Format.new(:mono, :float, 44100)
-reader = Reader.new("my_file.wav", format).each_buffer do |buffer|
+# regardless of the actual sample format in the file
+target_format = Format.new(:mono, :float, 44100)
+reader = Reader.new("my_file.wav", target_format).each_buffer do |buffer|
   puts "Read #{buffer.samples.length} sample frames."
 end</code></pre>
-  <p><strong>Note:</strong> Sample data will not be re-sampled to match the target sample rate. For example, if reading data out of a file with 44,100Hz sample rate using a target <code>Format</code> with a 22,050Hz sample rate, the samples will not be re-converted to a 22,050Hz sample rate. This means the audio will sound pitch shifted unless the two sample rates are the same.</p>
+  <p><strong>Note:</strong> Sample data will not be re-sampled to match the target sample rate. For example, if reading data out of a file with 44,100Hz sample rate using a target <code>Format</code> with a 22,050Hz sample rate, the samples will not be re-sampled to a 22,050Hz sample rate. This means that audio will sound pitch shifted unless the file&rsquo;s actual sample rate and the target sample rate are the same.</p>
 </div>
 
 <div class="section bg-white">
