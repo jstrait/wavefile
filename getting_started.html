@@ -41,7 +41,7 @@
   <pre><code>[0.3, 0.3, 0.3, 0.3, -0.3, -0.3, -0.3, -0.3,  ...and repeated...]</code></pre>
   <p>We&rsquo;ll write some code to generate these samples, wrap them in a <code>Buffer</code>, and then write this <code>Buffer</code> to a file using <code>Writer</code>.</p>
   <p>The samples we&rsquo;ll generate will be in float format, which means they should be between -1.0 and 1.0. The larger each sample value, the higher the amplitude (i.e. how loud it is). The faster that we alternate between the positive and negative samples, the higher the frequency of the tone (i.e., <code>[0.2, 0.2, -0.2, -0.2]</code> will have a higher pitch than <code>[0.2, 0.2, 0.2, -0.2, -0.2, -0.2]</code>). (This is a really simplified explanation of things).</p>
-  <p>50 positive samples followed by 50 negative samples will produce the same pitch as middle A on a piano when the sample rate in 44,100Hz. Let&rsquo;s use that and generate our sample array:</p>
+  <p>50 positive samples followed by 50 negative samples will produce the same pitch as middle A on a piano when the sample rate is 44,100Hz. Let&rsquo;s use that and generate our sample array:</p>
   <pre><code>AMPLITUDE = 0.3
 one_square_cycle = ([AMPLITUDE] * 50) + ([-AMPLITUDE] * 50)</code></pre>
   <p>Next, let&rsquo;s wrap the samples in a <code>Buffer</code>:</p>
