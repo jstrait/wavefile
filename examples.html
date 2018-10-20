@@ -6,12 +6,12 @@ layout: default
 
   <p>This is a simple way to read an entire wave file:</p>
 
-  <pre><code>require 'wavefile'
+  {% highlight ruby %}require 'wavefile'
 include WaveFile
 
 Reader.new("my_file.wav").each_buffer do |buffer|
   puts "Read #{buffer.samples.length} sample frames."
-end</code></pre>
+end{% endhighlight %}
 
   <p>First construct a <code>Reader</code> object, then call <code>each_buffer()</code> on it. Successive sample buffers will be read from the file and passed to the given block, until all sample data in the file has been read. Finally, the <code>Reader</code> will automatically be closed. (Note that this is essentially the same as how <code>IO.open</code> works if you pass it a block).</p>
 
@@ -23,7 +23,7 @@ end</code></pre>
 
   <p>Alternately, you can manually call <code>read()</code> to control exactly how much of the file to read. When doing this, make sure to close the <code>Reader</code> when you&rsquo;re done.</p>
 
-  <pre><code>require 'wavefile'
+  {% highlight ruby %}require 'wavefile'
 include WaveFile
 
 SAMPLES_PER_BUFFER = 4096
@@ -38,14 +38,14 @@ rescue EOFError
   puts "Unexpected EOFError before reading all sample frames"
 ensure
   reader.close
-end</code></pre>
+end{% endhighlight %}
 </div>
 
 <div class="section">
   <h2>Reading a Wave File Into an Arbitrary Format</h2>
 
   <p>When reading sample data you can convert it to a different format on the fly. For example, let&rsquo;s say <code>my_file.wav</code> has 2 channels and 16-bit PCM samples, but you want 1 channel normalized floating point samples. By passing a <code>Format</code> instance to the constructor, the samples will be read out in the desired format regardless of what is actually in the file:</p>
-  <pre><code>require 'wavefile'
+  {% highlight ruby %}require 'wavefile'
 include WaveFile
 
 # Samples will be read as monophonic floating point,
@@ -53,14 +53,14 @@ include WaveFile
 target_format = Format.new(:mono, :float, 44100)
 reader = Reader.new("my_file.wav", target_format).each_buffer do |buffer|
   puts "Read #{buffer.samples.length} sample frames."
-end</code></pre>
+end{% endhighlight %}
   <p><strong>Note:</strong> Sample data will not be re-sampled to match the target sample rate. For example, if reading data out of a file with 44,100Hz sample rate using a target <code>Format</code> with a 22,050Hz sample rate, the samples will not be re-sampled to a 22,050Hz sample rate. This means that audio will sound pitch shifted unless the file&rsquo;s actual sample rate and the target sample rate are the same.</p>
 </div>
 
 <div class="section bg-white">
   <h2>Getting Metadata About a Wave File</h2>
 
-  <pre><code>require 'wavefile'
+  {% highlight ruby %}require 'wavefile'
 include WaveFile
 
 file_name = ARGV[0]
@@ -86,7 +86,7 @@ begin
   puts "  Play time:             #{formatted_duration}"
 rescue InvalidFormatError
   puts "  Not a valid Wave file!"
-end</code></pre>
+end{% endhighlight %}
 </div>
 
 <div class="section">
@@ -94,7 +94,7 @@ end</code></pre>
 
   <p>The <code>Writer</code> object is used to write data to a wave file. When constructing the <code>Writer</code>, you can pass a block inside which the writing will occur. When the block exits the file will automatically be closed. The example below shows how to write a basic square wave to a file.</p>
 
-  <pre><code>require 'wavefile'
+  {% highlight ruby %}require 'wavefile'
 include WaveFile
 
 # Write a 440Hz square wave beep
@@ -102,7 +102,7 @@ cycle = ([0.5] * 50) + ([-0.5] * 50)
 buffer = Buffer.new(cycle, Format.new(:mono, :float, 44100))
 Writer.new("my_file.wav", Format.new(:mono, :pcm_16, 44100)) do |writer|
   100.times { writer.write(buffer) }
-end</code></pre>
+end{% endhighlight %}
   <p>For more info on how to create simple sounds with Ruby, check out <a href="https://www.joelstrait.com/nanosynth_create_sound_with_ruby/">NanoSynth</a>.</p>
 </div>
 
@@ -111,7 +111,7 @@ end</code></pre>
 
   <p>Alternately, you can manually control when to close the file, as shown below. Note that a file won&rsquo;t be valid for playback until it is closed. This is because some data required for playback (such as the total number of samples) isn&rsquo;t written to the file until it is closed.</p>
 
-  <pre><code>require 'wavefile'
+  {% highlight ruby %}require 'wavefile'
 include WaveFile
 
 writer = Writer.new("my_file.wav", Format.new(:mono, :pcm_16, 44100))
@@ -124,7 +124,7 @@ buffer = Buffer.new(cycle, Format.new(:mono, :float, 44100))
 end
 
 # The Wave file isn't in a valid state until this is called
-writer.close</code></pre>
+writer.close{% endhighlight %}
 </div>
 
 <div class="section">
@@ -134,14 +134,14 @@ writer.close</code></pre>
 
   <p>This example also shows that you can also pass a block to <code>Writer.new()</code>, and the <code>Writer</code> will automatically be closed when the block exits.</p>
 
-  <pre><code>require 'wavefile'
+  {% highlight ruby %}require 'wavefile'
 include WaveFile
 
 Writer.new("copy.wav", Format.new(:stereo, :pcm_16, 44100)) do |writer|
   Reader.new("original.wav").each_buffer do |buffer|
     writer.write(buffer)
   end
-end</code></pre>
+end{% endhighlight %}
 </div>
 
 <div class="section bg-white">
@@ -149,7 +149,7 @@ end</code></pre>
 
   <p>This example will take 3 Wave files, and write them to a single file containing each input file played one after another. Note that the individual files can be in different formats. They will all be converted to the output file&rsquo;s format.</p>
 
-  <pre><code>require 'wavefile'
+  {% highlight ruby %}require 'wavefile'
 include WaveFile
 
 FILES_TO_APPEND = ["file1.wav", "file2.wav", "file3.wav"]
@@ -160,5 +160,5 @@ Writer.new("append.wav", Format.new(:stereo, :pcm_16, 44100)) do |writer|
       writer.write(buffer)
     end
   end
-end</code></pre>
+end{% endhighlight %}
 </div>

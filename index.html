@@ -49,7 +49,7 @@ layout: default
       </audio>
     </li>
   </ul>
-  <pre><code>require "wavefile"
+{% highlight ruby %}require "wavefile"
 include WaveFile    # To avoid prefixing classes with "WaveFile::"
 
 FILES_TO_APPEND = ["one.wav", "two.wav", "three.wav"]
@@ -61,7 +61,7 @@ Writer.new("one_two_three.wav", OUTPUT_FORMAT) do |writer|
       writer.write(buffer)
     end
   end
-end</pre></code>
+end{% endhighlight %}
   <p>Intrigued? Check out <a href="/examples.html">more examples</a>.</p>
   <p>Don&rsquo;t have any idea what this code means? Check out the <a href="/getting_started.html">Getting Started</a> guide.</p>
 </div>
