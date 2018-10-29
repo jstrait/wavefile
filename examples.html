@@ -97,11 +97,11 @@ end{% endhighlight %}
   {% highlight ruby %}require 'wavefile'
 include WaveFile
 
-# Write a 440Hz square wave beep
-cycle = ([0.5] * 50) + ([-0.5] * 50)
-buffer = Buffer.new(cycle, Format.new(:mono, :float, 44100))
+# Write a 440Hz square wave beep lasting for 1 second
+square_cycle = ([0.3] * 50) + ([-0.3] * 50)
+buffer = Buffer.new(square_cycle, Format.new(:mono, :float, 44100))
 Writer.new("my_file.wav", Format.new(:mono, :pcm_16, 44100)) do |writer|
-  100.times { writer.write(buffer) }
+  441.times { writer.write(buffer) }
 end{% endhighlight %}
   <p>For more info on how to create simple sounds with Ruby, check out <a href="https://www.joelstrait.com/nanosynth/">NanoSynth</a>.</p>
 </div>
@@ -116,10 +116,10 @@ include WaveFile
 
 writer = Writer.new("my_file.wav", Format.new(:mono, :pcm_16, 44100))
 
-# Write a 440Hz square wave beep
-cycle = ([0.5] * 50) + ([-0.5] * 50)
-buffer = Buffer.new(cycle, Format.new(:mono, :float, 44100))
-100.times do
+# Write a 440Hz square wave beep lasting for 1 second
+square_cycle = ([0.3] * 50) + ([-0.3] * 50)
+buffer = Buffer.new(square_cycle, Format.new(:mono, :float, 44100))
+441.times do
   writer.write(buffer)
 end
 
