@@ -58,6 +58,138 @@ class FileWriter
   end
 end
 
+def write_riff_chunk(file_writer, config)
+  file_writer.write_or_quit(config["chunk_id"], FOUR_CC)
+  file_writer.write_or_quit(config["chunk_size"], UNSIGNED_INT_32_LITTLE_ENDIAN)
+  file_writer.write_or_quit(config["wave_format"], FOUR_CC)
+end
+
+def write_format_chunk(file_writer, config)
+  file_writer.write_or_quit(config["chunk_id"], FOUR_CC)
+  file_writer.write_or_quit(config["chunk_size"], UNSIGNED_INT_32_LITTLE_ENDIAN)
+  file_writer.write_or_quit(config["audio_format"], UNSIGNED_INT_16_LITTLE_ENDIAN)
+  file_writer.write_or_quit(config["channels"], UNSIGNED_INT_16_LITTLE_ENDIAN)
+  file_writer.write_or_quit(config["sample_rate"], UNSIGNED_INT_32_LITTLE_ENDIAN)
+  file_writer.write_or_quit(config["byte_rate"], UNSIGNED_INT_32_LITTLE_ENDIAN)
+  file_writer.write_or_quit(config["block_align"], UNSIGNED_INT_16_LITTLE_ENDIAN)
+  file_writer.write_or_quit(config["bits_per_sample"], UNSIGNED_INT_16_LITTLE_ENDIAN)
+  file_writer.write_or_skip(config["extension_size"], UNSIGNED_INT_16_LITTLE_ENDIAN)
+  file_writer.write_or_skip(config["valid_bits_per_sample"], UNSIGNED_INT_16_LITTLE_ENDIAN)
+  file_writer.write_or_skip(config["speaker_mapping"], UNSIGNED_INT_32_LITTLE_ENDIAN)
+  if config["subformat_guid"]
+    config["subformat_guid"].each do |byte|
+      file_writer.write_or_skip(byte, UNSIGNED_INT_8)
+    end
+  end
+end
+
+def write_fact_chunk(file_writer, config)
+  file_writer.write_or_quit(config["chunk_id"], FOUR_CC)
+  file_writer.write_or_quit(config["chunk_size"], UNSIGNED_INT_32_LITTLE_ENDIAN)
+  if config["sample_count"] == "auto"
+    file_writer.write_or_quit(TOTAL_SAMPLE_FRAMES, UNSIGNED_INT_32_LITTLE_ENDIAN)
+  else
+    file_writer.write_or_quit(config["sample_count"], UNSIGNED_INT_32_LITTLE_ENDIAN)
+  end
+end
+
+def write_junk_chunk(file_writer, config)
+  file_writer.write_or_quit("JUNK", FOUR_CC)
+  file_writer.write_or_quit(9, UNSIGNED_INT_32_LITTLE_ENDIAN)
+  file_writer.write_or_quit("123456789\000", "a10")
+end
+
+def write_sample_chunk(file_writer, config)
+  file_writer.write_or_quit(config["chunk_id"], FOUR_CC)
+  file_writer.write_or_quit(config["chunk_size"], UNSIGNED_INT_32_LITTLE_ENDIAN)
+  file_writer.write_or_quit(config["manufacturer_id"], UNSIGNED_INT_32_LITTLE_ENDIAN)
+  file_writer.write_or_quit(config["product_id"], UNSIGNED_INT_32_LITTLE_ENDIAN)
+  file_writer.write_or_quit(config["sample_duration"], UNSIGNED_INT_32_LITTLE_ENDIAN)
+  file_writer.write_or_quit(config["unity_note"], UNSIGNED_INT_32_LITTLE_ENDIAN)
+  file_writer.write_or_quit(config["pitch_fraction"], UNSIGNED_INT_32_LITTLE_ENDIAN)
+  file_writer.write_or_quit(config["smpte_format"], UNSIGNED_INT_32_LITTLE_ENDIAN)
+  file_writer.write_or_quit(config["smpte_offset"], UNSIGNED_INT_32_LITTLE_ENDIAN)
+  file_writer.write_or_quit(config["loop_count"], UNSIGNED_INT_32_LITTLE_ENDIAN)
+  file_writer.write_or_quit(config["sampler_data"], UNSIGNED_INT_32_LITTLE_ENDIAN)
+
+  if config["loops"]
+    config["loops"].each do |loop|
+      file_writer.write_or_quit(loop["id"], UNSIGNED_INT_32_LITTLE_ENDIAN)
+      file_writer.write_or_quit(loop["type"], UNSIGNED_INT_32_LITTLE_ENDIAN)
+      file_writer.write_or_quit(loop["start"], UNSIGNED_INT_32_LITTLE_ENDIAN)
+      file_writer.write_or_quit(loop["end"], UNSIGNED_INT_32_LITTLE_ENDIAN)
+      file_writer.write_or_quit(loop["fraction"], UNSIGNED_INT_32_LITTLE_ENDIAN)
+      file_writer.write_or_quit(loop["play_count"], UNSIGNED_INT_32_LITTLE_ENDIAN)
+    end
+  end
+end
+
+def write_data_chunk(file_writer, config, format_chunk)
+  if format_chunk["audio_format"] == 1
+    sample_format = :pcm
+  elsif format_chunk["audio_format"] == 3
+    sample_format = :float
+  elsif format_chunk["audio_format"] == 65534
+    if format_chunk["subformat_guid"][0] == 1
+      sample_format = :pcm
+    elsif format_chunk["subformat_guid"][0] == 3
+      sample_format = :float
+    end
+  end
+
+  file_writer.write_or_quit("data", FOUR_CC)
+  file_writer.write_or_quit((TOTAL_SAMPLE_FRAMES * format_chunk["block_align"]), UNSIGNED_INT_32_LITTLE_ENDIAN)
+
+  write_square_wave_samples(file_writer, sample_format, format_chunk["bits_per_sample"], config["channel_format"])
+end
+
+def write_square_wave_samples(file_writer, sample_format, bits_per_sample, channel_format)
+  if sample_format == :pcm
+    if bits_per_sample == 8
+      low_val, high_val, pack_code = 88, 167, UNSIGNED_INT_8
+    elsif bits_per_sample == 16
+      low_val, high_val, pack_code = -10000, 10000, "s<"
+    elsif bits_per_sample == 24
+      low_val, high_val, pack_code = -1_000_000, 1_000_000, "24"
+    elsif bits_per_sample == 32
+      low_val, high_val, pack_code = -1_000_000_000, 1_000_000_000, "l<"
+    end
+  elsif sample_format == :float
+    if bits_per_sample == 32
+      low_val, high_val, pack_code = -0.5, 0.5, FLOAT_32_LITTLE_ENDIAN
+    elsif bits_per_sample == 64
+      low_val, high_val, pack_code = -0.5, 0.5, FLOAT_64_LITTLE_ENDIAN
+    end
+  end
+
+  if channel_format == "mono"
+    channel_count = 1
+  elsif channel_format == "stereo"
+    channel_count = 2
+  elsif channel_format == "tri"
+    channel_count = 3
+  elsif channel_format.is_a? Integer
+    channel_count = channel_format
+  else
+    channel_count = 0
+  end
+
+  SQUARE_WAVE_CYCLE_REPEATS.times do
+    channel_count.times do
+      file_writer.write_or_quit(low_val,  pack_code)
+      file_writer.write_or_quit(low_val,  pack_code)
+      file_writer.write_or_quit(low_val,  pack_code)
+      file_writer.write_or_quit(low_val,  pack_code)
+    end
+    channel_count.times do
+      file_writer.write_or_quit(high_val, pack_code)
+      file_writer.write_or_quit(high_val, pack_code)
+      file_writer.write_or_quit(high_val, pack_code)
+      file_writer.write_or_quit(high_val, pack_code)
+    end
+  end
+end
+
 
 yaml_file_name = ARGV[0]
 output_file_name = ARGV[1]
@@ -81,140 +213,11 @@ end
 
 file_writer = FileWriter.new(output_file_name)
 
-
-# Write the RIFF chunk
-file_writer.write_or_quit(riff_chunk["chunk_id"], FOUR_CC)
-file_writer.write_or_quit(riff_chunk["chunk_size"], UNSIGNED_INT_32_LITTLE_ENDIAN)
-file_writer.write_or_quit(riff_chunk["wave_format"], FOUR_CC)
-
-# Write the Format chunk
-if format_chunk
-  file_writer.write_or_quit(format_chunk["chunk_id"], FOUR_CC)
-  file_writer.write_or_quit(format_chunk["chunk_size"], UNSIGNED_INT_32_LITTLE_ENDIAN)
-  file_writer.write_or_quit(format_chunk["audio_format"], UNSIGNED_INT_16_LITTLE_ENDIAN)
-  file_writer.write_or_quit(format_chunk["channels"], UNSIGNED_INT_16_LITTLE_ENDIAN)
-  file_writer.write_or_quit(format_chunk["sample_rate"], UNSIGNED_INT_32_LITTLE_ENDIAN)
-  file_writer.write_or_quit(format_chunk["byte_rate"], UNSIGNED_INT_32_LITTLE_ENDIAN)
-  file_writer.write_or_quit(format_chunk["block_align"], UNSIGNED_INT_16_LITTLE_ENDIAN)
-  file_writer.write_or_quit(format_chunk["bits_per_sample"], UNSIGNED_INT_16_LITTLE_ENDIAN)
-  file_writer.write_or_skip(format_chunk["extension_size"], UNSIGNED_INT_16_LITTLE_ENDIAN)
-  file_writer.write_or_skip(format_chunk["valid_bits_per_sample"], UNSIGNED_INT_16_LITTLE_ENDIAN)
-  file_writer.write_or_skip(format_chunk["speaker_mapping"], UNSIGNED_INT_32_LITTLE_ENDIAN)
-  if format_chunk["subformat_guid"]
-    format_chunk["subformat_guid"].each do |byte|
-      file_writer.write_or_skip(byte, UNSIGNED_INT_8)
-    end
-  end
-end
-
-if fact_chunk
-  file_writer.write_or_quit(fact_chunk["chunk_id"], FOUR_CC)
-  file_writer.write_or_quit(fact_chunk["chunk_size"], UNSIGNED_INT_32_LITTLE_ENDIAN)
-  if fact_chunk["sample_count"] == "auto"
-    file_writer.write_or_quit(TOTAL_SAMPLE_FRAMES, UNSIGNED_INT_32_LITTLE_ENDIAN)
-  else
-    file_writer.write_or_quit(fact_chunk["sample_count"], UNSIGNED_INT_32_LITTLE_ENDIAN)
-  end
-end
-
-# Write a Junk chunk
-if junk_chunk
-  file_writer.write_or_quit("JUNK", FOUR_CC)
-  file_writer.write_or_quit(9, UNSIGNED_INT_32_LITTLE_ENDIAN)
-  file_writer.write_or_quit("123456789\000", "a10")
-end
-
-# Write a 'smpl' chunk
-if smpl_chunk
-  file_writer.write_or_quit(smpl_chunk["chunk_id"], FOUR_CC)
-  file_writer.write_or_quit(smpl_chunk["chunk_size"], UNSIGNED_INT_32_LITTLE_ENDIAN)
-  file_writer.write_or_quit(smpl_chunk["manufacturer_id"], UNSIGNED_INT_32_LITTLE_ENDIAN)
-  file_writer.write_or_quit(smpl_chunk["product_id"], UNSIGNED_INT_32_LITTLE_ENDIAN)
-  file_writer.write_or_quit(smpl_chunk["sample_duration"], UNSIGNED_INT_32_LITTLE_ENDIAN)
-  file_writer.write_or_quit(smpl_chunk["unity_note"], UNSIGNED_INT_32_LITTLE_ENDIAN)
-  file_writer.write_or_quit(smpl_chunk["pitch_fraction"], UNSIGNED_INT_32_LITTLE_ENDIAN)
-  file_writer.write_or_quit(smpl_chunk["smpte_format"], UNSIGNED_INT_32_LITTLE_ENDIAN)
-  file_writer.write_or_quit(smpl_chunk["smpte_offset"], UNSIGNED_INT_32_LITTLE_ENDIAN)
-  file_writer.write_or_quit(smpl_chunk["loop_count"], UNSIGNED_INT_32_LITTLE_ENDIAN)
-  file_writer.write_or_quit(smpl_chunk["sampler_data"], UNSIGNED_INT_32_LITTLE_ENDIAN)
-
-  if smpl_chunk["loops"]
-    smpl_chunk["loops"].each do |loop|
-      file_writer.write_or_quit(loop["id"], UNSIGNED_INT_32_LITTLE_ENDIAN)
-      file_writer.write_or_quit(loop["type"], UNSIGNED_INT_32_LITTLE_ENDIAN)
-      file_writer.write_or_quit(loop["start"], UNSIGNED_INT_32_LITTLE_ENDIAN)
-      file_writer.write_or_quit(loop["end"], UNSIGNED_INT_32_LITTLE_ENDIAN)
-      file_writer.write_or_quit(loop["fraction"], UNSIGNED_INT_32_LITTLE_ENDIAN)
-      file_writer.write_or_quit(loop["play_count"], UNSIGNED_INT_32_LITTLE_ENDIAN)
-    end
-  end
-end
-
-# Write the Data chunk
-if (data_chunk)
-  file_writer.write_or_quit("data", FOUR_CC)
-  file_writer.write_or_quit((TOTAL_SAMPLE_FRAMES * format_chunk["block_align"]), UNSIGNED_INT_32_LITTLE_ENDIAN)
-
-  def write_square_wave_samples(file_writer, sample_format, bits_per_sample, channel_format)
-    if sample_format == :pcm
-      if bits_per_sample == 8
-        low_val, high_val, pack_code = 88, 167, UNSIGNED_INT_8
-      elsif bits_per_sample == 16
-        low_val, high_val, pack_code = -10000, 10000, "s<"
-      elsif bits_per_sample == 24
-        low_val, high_val, pack_code = -1_000_000, 1_000_000, "24"
-      elsif bits_per_sample == 32
-        low_val, high_val, pack_code = -1_000_000_000, 1_000_000_000, "l<"
-      end
-    elsif sample_format == :float
-      if bits_per_sample == 32
-        low_val, high_val, pack_code = -0.5, 0.5, FLOAT_32_LITTLE_ENDIAN
-      elsif bits_per_sample == 64
-        low_val, high_val, pack_code = -0.5, 0.5, FLOAT_64_LITTLE_ENDIAN
-      end
-    end
-
-    if channel_format == "mono"
-      channel_count = 1
-    elsif channel_format == "stereo"
-      channel_count = 2
-    elsif channel_format == "tri"
-      channel_count = 3
-    elsif channel_format.is_a? Integer
-      channel_count = channel_format
-    else
-      channel_count = 0
-    end
-
-    SQUARE_WAVE_CYCLE_REPEATS.times do
-      channel_count.times do
-        file_writer.write_or_quit(low_val,  pack_code)
-        file_writer.write_or_quit(low_val,  pack_code)
-        file_writer.write_or_quit(low_val,  pack_code)
-        file_writer.write_or_quit(low_val,  pack_code)
-      end
-      channel_count.times do
-        file_writer.write_or_quit(high_val, pack_code)
-        file_writer.write_or_quit(high_val, pack_code)
-        file_writer.write_or_quit(high_val, pack_code)
-        file_writer.write_or_quit(high_val, pack_code)
-      end
-    end
-  end
-
-  if format_chunk["audio_format"] == 1
-    sample_format = :pcm
-  elsif format_chunk["audio_format"] == 3
-    sample_format = :float
-  elsif format_chunk["audio_format"] == 65534
-    if format_chunk["subformat_guid"][0] == 1
-      sample_format = :pcm
-    elsif format_chunk["subformat_guid"][0] == 3
-      sample_format = :float
-    end
-  end
-
-  write_square_wave_samples(file_writer, sample_format, format_chunk["bits_per_sample"], data_chunk["channel_format"])
-end
+write_riff_chunk(file_writer, riff_chunk)
+write_format_chunk(file_writer, format_chunk) if format_chunk
+write_fact_chunk(file_writer, fact_chunk) if fact_chunk
+write_junk_chunk(file_writer, {}) if junk_chunk
+write_sample_chunk(file_writer, smpl_chunk) if smpl_chunk
+write_data_chunk(file_writer, data_chunk, format_chunk) if data_chunk
 
 file_writer.close
