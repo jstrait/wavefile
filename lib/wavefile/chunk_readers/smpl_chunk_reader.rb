@@ -47,16 +47,16 @@ module WaveFile
       end
 
       def read
-        @manufacturer_id = @io.sysread(4).unpack('V')[0]
-        @product_id = @io.sysread(4).unpack('V')[0]
-        @sample_duration = @io.sysread(4).unpack('V')[0]
-        @unity_note = @io.sysread(4).unpack('V')[0]
-        @pitch_fraction = @io.sysread(4).unpack('V')[0]
-        @smpte_format = @io.sysread(4).unpack('V')[0]
+        @manufacturer_id = @io.sysread(4).unpack(UNSIGNED_INT_32)[0]
+        @product_id = @io.sysread(4).unpack(UNSIGNED_INT_32)[0]
+        @sample_duration = @io.sysread(4).unpack(UNSIGNED_INT_32)[0]
+        @unity_note = @io.sysread(4).unpack(UNSIGNED_INT_32)[0]
+        @pitch_fraction = @io.sysread(4).unpack(UNSIGNED_INT_32)[0]
+        @smpte_format = @io.sysread(4).unpack(UNSIGNED_INT_32)[0]
         # TODO: It might make more sense to return the offset in a different format according to specs.
-        @smpte_offset = @io.sysread(4).unpack('V')[0]
-        @loop_count = @io.sysread(4).unpack('V')[0]
-        @sampler_data = @io.sysread(4).unpack('V')[0]
+        @smpte_offset = @io.sysread(4).unpack(UNSIGNED_INT_32)[0]
+        @loop_count = @io.sysread(4).unpack(UNSIGNED_INT_32)[0]
+        @sampler_data = @io.sysread(4).unpack(UNSIGNED_INT_32)[0]
         @loops = []
         @loop_count.times do
           @loops << Loop.new(@io)
@@ -104,13 +104,13 @@ module WaveFile
         end
 
         def initialize(io)
-          @id = io.sysread(4).unpack('V')[0]
-          loop_type_id = io.sysread(4).unpack('V')[0]
+          @id = io.sysread(4).unpack(UNSIGNED_INT_32)[0]
+          loop_type_id = io.sysread(4).unpack(UNSIGNED_INT_32)[0]
           @type = loop_type(loop_type_id)
-          @start = io.sysread(4).unpack('V')[0]
-          @end = io.sysread(4).unpack('V')[0]
-          @fraction = io.sysread(4).unpack('V')[0]
-          @play_count = io.sysread(4).unpack('V')[0]
+          @start = io.sysread(4).unpack(UNSIGNED_INT_32)[0]
+          @end = io.sysread(4).unpack(UNSIGNED_INT_32)[0]
+          @fraction = io.sysread(4).unpack(UNSIGNED_INT_32)[0]
+          @play_count = io.sysread(4).unpack(UNSIGNED_INT_32)[0]
         end
       end
     end
