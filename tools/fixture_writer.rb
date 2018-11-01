@@ -213,11 +213,21 @@ end
 
 file_writer = FileWriter.new(output_file_name)
 
-write_riff_chunk(file_writer, riff_chunk)
-write_format_chunk(file_writer, format_chunk) if format_chunk
-write_fact_chunk(file_writer, fact_chunk) if fact_chunk
-write_junk_chunk(file_writer, {}) if junk_chunk
-write_sample_chunk(file_writer, smpl_chunk) if smpl_chunk
-write_data_chunk(file_writer, data_chunk, format_chunk) if data_chunk
+chunks.keys.each do |chunk_key|
+  case chunk_key
+  when 'riff_chunk'
+    write_riff_chunk(file_writer, riff_chunk)
+  when 'format_chunk'
+    write_format_chunk(file_writer, format_chunk)
+  when 'fact_chunk'
+    write_fact_chunk(file_writer, fact_chunk)
+  when 'junk_chunk'
+    write_junk_chunk(file_writer, {})
+  when 'smpl_chunk'
+    write_sample_chunk(file_writer, smpl_chunk)
+  when 'data_chunk'
+    write_data_chunk(file_writer, data_chunk, format_chunk)
+  end
+end
 
 file_writer.close
