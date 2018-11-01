@@ -600,6 +600,28 @@ class ReaderTest < Minitest::Test
     end
   end
 
+  def test_smpl_chunk
+    file_name = fixture("valid/valid_with_sample_chunk_before_data_chunk.wav")
+    reader = Reader.new(file_name)
+
+    assert_equal(0, reader.sample_info.manufacturer_id)
+    assert_equal(0, reader.sample_info.product_id)
+    assert_equal(0, reader.sample_info.sample_duration)
+    assert_equal(60, reader.sample_info.unity_note)
+    assert_equal(0, reader.sample_info.pitch_fraction)
+    assert_equal(0, reader.sample_info.smpte_format)
+    assert_equal(0, reader.sample_info.smpte_offset)
+    assert_equal(1, reader.sample_info.loop_count)
+    assert_equal(0, reader.sample_info.sampler_data)
+    assert_equal(1, reader.sample_info.loops.length)
+    assert_equal(0, reader.sample_info.loops[0].id)
+    assert_equal(:backward, reader.sample_info.loops[0].type)
+    assert_equal(0, reader.sample_info.loops[0].start)
+    assert_equal(0, reader.sample_info.loops[0].end)
+    assert_equal(0, reader.sample_info.loops[0].fraction)
+    assert_equal(1, reader.sample_info.loops[0].play_count)
+  end
+
 private
 
   def read_file(file_name, buffer_size, format=nil)

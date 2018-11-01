@@ -68,6 +68,7 @@ riff_chunk = chunks["riff_chunk"]
 format_chunk = chunks["format_chunk"]
 fact_chunk = chunks["fact_chunk"]
 junk_chunk = chunks["junk_chunk"]
+smpl_chunk = chunks["smpl_chunk"]
 data_chunk = chunks["data_chunk"]
 SQUARE_WAVE_CYCLE_REPEATS = (data_chunk && data_chunk["cycle_repeats"]) || 0
 TOTAL_SAMPLE_FRAMES = SQUARE_WAVE_CYCLE_SAMPLE_FRAMES * SQUARE_WAVE_CYCLE_REPEATS
@@ -121,6 +122,32 @@ if junk_chunk
   file_writer.write_or_quit("JUNK", FOUR_CC)
   file_writer.write_or_quit(9, UNSIGNED_INT_32_LITTLE_ENDIAN)
   file_writer.write_or_quit("123456789\000", "a10")
+end
+
+# Write a 'smpl' chunk
+if smpl_chunk
+  file_writer.write_or_quit(smpl_chunk["chunk_id"], FOUR_CC)
+  file_writer.write_or_quit(smpl_chunk["chunk_size"], UNSIGNED_INT_32_LITTLE_ENDIAN)
+  file_writer.write_or_quit(smpl_chunk["manufacturer_id"], UNSIGNED_INT_32_LITTLE_ENDIAN)
+  file_writer.write_or_quit(smpl_chunk["product_id"], UNSIGNED_INT_32_LITTLE_ENDIAN)
+  file_writer.write_or_quit(smpl_chunk["sample_duration"], UNSIGNED_INT_32_LITTLE_ENDIAN)
+  file_writer.write_or_quit(smpl_chunk["unity_note"], UNSIGNED_INT_32_LITTLE_ENDIAN)
+  file_writer.write_or_quit(smpl_chunk["pitch_fraction"], UNSIGNED_INT_32_LITTLE_ENDIAN)
+  file_writer.write_or_quit(smpl_chunk["smpte_format"], UNSIGNED_INT_32_LITTLE_ENDIAN)
+  file_writer.write_or_quit(smpl_chunk["smpte_offset"], UNSIGNED_INT_32_LITTLE_ENDIAN)
+  file_writer.write_or_quit(smpl_chunk["loop_count"], UNSIGNED_INT_32_LITTLE_ENDIAN)
+  file_writer.write_or_quit(smpl_chunk["sampler_data"], UNSIGNED_INT_32_LITTLE_ENDIAN)
+
+  if smpl_chunk["loops"]
+    smpl_chunk["loops"].each do |loop|
+      file_writer.write_or_quit(loop["id"], UNSIGNED_INT_32_LITTLE_ENDIAN)
+      file_writer.write_or_quit(loop["type"], UNSIGNED_INT_32_LITTLE_ENDIAN)
+      file_writer.write_or_quit(loop["start"], UNSIGNED_INT_32_LITTLE_ENDIAN)
+      file_writer.write_or_quit(loop["end"], UNSIGNED_INT_32_LITTLE_ENDIAN)
+      file_writer.write_or_quit(loop["fraction"], UNSIGNED_INT_32_LITTLE_ENDIAN)
+      file_writer.write_or_quit(loop["play_count"], UNSIGNED_INT_32_LITTLE_ENDIAN)
+    end
+  end
 end
 
 # Write the Data chunk
