@@ -93,13 +93,13 @@ module WaveFile
         def loop_type(loop_type_id)
           case loop_type_id
           when 0
-            'Forward'
+            :forward
           when 1
-            'Alternating'
+            :alternating
           when 2
-            'Backward'
+            :backward
           else
-            'Unknown'
+            :unknown
           end
         end
 
