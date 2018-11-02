@@ -66,7 +66,7 @@ class ReaderTest < Minitest::Test
       assert_nil(reader.format.speaker_mapping)
       assert_equal(false, reader.closed?)
       assert_equal(0, reader.current_sample_frame)
-      assert_equal(2240, reader.total_sample_frames)
+      assert_equal(0, reader.total_sample_frames)
       assert_equal(false, reader.readable_format?)
       reader.close
     end
@@ -84,7 +84,7 @@ class ReaderTest < Minitest::Test
       assert_equal([:front_center], reader.format.speaker_mapping)
       assert_equal(false, reader.closed?)
       assert_equal(0, reader.current_sample_frame)
-      assert_equal(2240, reader.total_sample_frames)
+      assert_equal(0, reader.total_sample_frames)
       assert_equal(false, reader.readable_format?)
       reader.close
     end
