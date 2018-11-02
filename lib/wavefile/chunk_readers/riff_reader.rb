@@ -32,6 +32,10 @@ module WaveFile
 
             case chunk_id
             when CHUNK_IDS[:format]
+              if data_chunk_seek_pos != nil
+                raise_error InvalidFormatError, "The format chunk is after the data chunk; it must come before."
+              end
+
               @native_format = FormatChunkReader.new(@io, chunk_size).read
             when CHUNK_IDS[:sample]
               @sample_chunk = SampleChunkReader.new(@io, chunk_size).read
@@ -59,7 +63,7 @@ module WaveFile
         end
 
         if @native_format == nil
-          raise_error InvalidFormatError, "The format chunk is either missing, or it comes after the data chunk."
+          raise_error InvalidFormatError, "It doesn't have a format chunk."
         end
 
         if data_chunk_seek_pos.nil?

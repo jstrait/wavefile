@@ -39,6 +39,9 @@ class ReaderTest < Minitest::Test
 
       # The RIFF header and format chunk are OK, but there is no data chunk
       "invalid/no_data_chunk.wav",
+
+      # The format chunk comes after the data chunk; it must come before
+      "invalid/format_chunk_after_data_chunk.wav",
     ]
 
     invalid_fixtures.each do |fixture_name|
