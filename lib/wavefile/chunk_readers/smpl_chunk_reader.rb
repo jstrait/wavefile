@@ -2,44 +2,59 @@ module WaveFile
   module ChunkReaders
     # Internal
     class SmplChunkReader < BaseChunkReader    # :nodoc:
-      # Public: Returns the ID of the manufacturer
-      # See the list at https://www.midi.org/specifications-old/item/manufacturer-id-numbers
-      attr_reader :manufacturer_id
+      class SmplChunk
+        def initialize(fields)
+          @manufacturer_id = fields[:manufacturer_id]
+          @product_id = fields[:product_id]
+          @sample_duration = fields[:sample_duration]
+          @midi_note = fields[:midi_note]
+          @pitch_fraction = fields[:pitch_fraction]
+          @smpte_format = fields[:smpte_format]
+          @smpte_offset = fields[:smpte_offset]
+          @loop_count = fields[:loop_count]
+          @sampler_data = fields[:sampler_data]
+          @loops = fields[:loops]
+        end
 
-      # Public: Returns the ID of the product
-      attr_reader :product_id
+        # Public: Returns the ID of the manufacturer
+        # See the list at https://www.midi.org/specifications-old/item/manufacturer-id-numbers
+        attr_reader :manufacturer_id
 
-      # Public: Returns the length of each sample in nanoseconds
-      attr_reader :sample_duration
+        # Public: Returns the ID of the product
+        attr_reader :product_id
 
-      # Public: Returns the MIDI note number of the sample (0-127)
-      attr_reader :midi_note
+        # Public: Returns the length of each sample in nanoseconds
+        attr_reader :sample_duration
 
-      # Public: Returns the fraction of a semitone up from the specified MIDI unity note field.
-      # A value of 0x80000000 means 1/2 semitone (50 cents) and a value of 0x00000000 means no fine tuning between semitones.
-      # - https://sites.google.com/site/musicgapi/technical-documents/wav-file-format
-      # Integer
-      attr_reader :pitch_fraction
+        # Public: Returns the MIDI note number of the sample (0-127)
+        attr_reader :midi_note
 
-      # Public: Returns the SMPTE format (0, 24, 25, 29 or 30)
-      attr_reader :smpte_format
+        # Public: Returns the fraction of a semitone up from the specified MIDI unity note field.
+        # A value of 0x80000000 means 1/2 semitone (50 cents) and a value of 0x00000000 means no fine tuning between semitones.
+        # - https://sites.google.com/site/musicgapi/technical-documents/wav-file-format
+        # Integer
+        attr_reader :pitch_fraction
 
-      # Public: Returns the SMPTE time offset.
-      # This value uses a format of 0xhhmmssff where hh is a signed value that specifies the number of hours (-23 to 23),
-      # mm is an unsigned value that specifies the number of minutes (0 to 59), ss is an unsigned value that specifies
-      # the number of seconds (0 to 59) and ff is an unsigned value that specifies the number of frames (0 to -1).
-      # - https://sites.google.com/site/musicgapi/technical-documents/wav-file-format
-      attr_reader :smpte_offset
+        # Public: Returns the SMPTE format (0, 24, 25, 29 or 30)
+        attr_reader :smpte_format
 
-      # Public: Returns the number of loops defined in the sample
-      attr_reader :loop_count
+        # Public: Returns the SMPTE time offset.
+        # This value uses a format of 0xhhmmssff where hh is a signed value that specifies the number of hours (-23 to 23),
+        # mm is an unsigned value that specifies the number of minutes (0 to 59), ss is an unsigned value that specifies
+        # the number of seconds (0 to 59) and ff is an unsigned value that specifies the number of frames (0 to -1).
+        # - https://sites.google.com/site/musicgapi/technical-documents/wav-file-format
+        attr_reader :smpte_offset
 
-      # Public: Returns anumber of bytes used for additional sampler data
-      attr_reader :sampler_data
+        # Public: Returns the number of loops defined in the sample
+        attr_reader :loop_count
 
-      # Public: Returns the loop specifications
-      # Array of Loop objects
-      attr_reader :loops
+        # Public: Returns anumber of bytes used for additional sampler data
+        attr_reader :sampler_data
+
+        # Public: Returns the loop specifications
+        # Array of Loop objects
+        attr_reader :loops
+      end
 
       def initialize(io, chunk_size)
         @io = io
@@ -47,22 +62,23 @@ module WaveFile
       end
 
       def read
-        @manufacturer_id = @io.sysread(4).unpack(UNSIGNED_INT_32)[0]
-        @product_id = @io.sysread(4).unpack(UNSIGNED_INT_32)[0]
-        @sample_duration = @io.sysread(4).unpack(UNSIGNED_INT_32)[0]
-        @midi_note = @io.sysread(4).unpack(UNSIGNED_INT_32)[0]
-        @pitch_fraction = @io.sysread(4).unpack(UNSIGNED_INT_32)[0]
-        @smpte_format = @io.sysread(4).unpack(UNSIGNED_INT_32)[0]
+        fields = {}
+        fields[:manufacturer_id] = @io.sysread(4).unpack(UNSIGNED_INT_32)[0]
+        fields[:product_id] = @io.sysread(4).unpack(UNSIGNED_INT_32)[0]
+        fields[:sample_duration] = @io.sysread(4).unpack(UNSIGNED_INT_32)[0]
+        fields[:midi_note] = @io.sysread(4).unpack(UNSIGNED_INT_32)[0]
+        fields[:pitch_fraction] = @io.sysread(4).unpack(UNSIGNED_INT_32)[0]
+        fields[:smpte_format] = @io.sysread(4).unpack(UNSIGNED_INT_32)[0]
         # TODO: It might make more sense to return the offset in a different format according to specs.
-        @smpte_offset = @io.sysread(4).unpack(UNSIGNED_INT_32)[0]
-        @loop_count = @io.sysread(4).unpack(UNSIGNED_INT_32)[0]
-        @sampler_data = @io.sysread(4).unpack(UNSIGNED_INT_32)[0]
-        @loops = []
-        @loop_count.times do
-          @loops << Loop.new(@io)
+        fields[:smpte_offset] = @io.sysread(4).unpack(UNSIGNED_INT_32)[0]
+        fields[:loop_count] = @io.sysread(4).unpack(UNSIGNED_INT_32)[0]
+        fields[:sampler_data] = @io.sysread(4).unpack(UNSIGNED_INT_32)[0]
+        fields[:loops] = []
+        fields[:loop_count].times do
+          fields[:loops] << Loop.new(@io)
         end
 
-        self
+        SmplChunk.new(fields)
       end
 
       class Loop

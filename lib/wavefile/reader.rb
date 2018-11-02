@@ -47,7 +47,7 @@ module WaveFile
       end
 
       @data_chunk_reader = riff_reader.data_chunk_reader
-      @smpl_chunk_reader = riff_reader.smpl_chunk_reader
+      @smpl_chunk = riff_reader.smpl_chunk
 
       if block_given?
         begin
@@ -196,7 +196,7 @@ module WaveFile
     end
 
     def sample_info
-      @smpl_chunk_reader
+      @smpl_chunk
     end
   end
 end
