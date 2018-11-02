@@ -618,7 +618,7 @@ class ReaderTest < Minitest::Test
     assert_equal(:backward, sample_info.loops[0].type)
     assert_equal(0, sample_info.loops[0].start_sample_frame)
     assert_equal(0, sample_info.loops[0].end_sample_frame)
-    assert_equal(0, sample_info.loops[0].fraction)
+    assert_equal(0.5, sample_info.loops[0].fraction)
     assert_equal(1, sample_info.loops[0].play_count)
   end
 
@@ -640,7 +640,7 @@ class ReaderTest < Minitest::Test
     assert_equal(:backward, sample_info.loops[0].type)
     assert_equal(0, sample_info.loops[0].start_sample_frame)
     assert_equal(0, sample_info.loops[0].end_sample_frame)
-    assert_equal(0, sample_info.loops[0].fraction)
+    assert_equal(0.5, sample_info.loops[0].fraction)
     assert_equal(1, sample_info.loops[0].play_count)
   end
 
@@ -662,7 +662,7 @@ class ReaderTest < Minitest::Test
     assert_equal(:backward, sample_info.loops[0].type)
     assert_equal(0, sample_info.loops[0].start_sample_frame)
     assert_equal(0, sample_info.loops[0].end_sample_frame)
-    assert_equal(0, sample_info.loops[0].fraction)
+    assert_equal(0.5, sample_info.loops[0].fraction)
     assert_equal(1, sample_info.loops[0].play_count)
     assert_equal("\x04\x01\x03\x02", sample_info.sampler_data)
   end

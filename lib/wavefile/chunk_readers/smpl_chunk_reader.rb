@@ -129,7 +129,7 @@ module WaveFile
           @type = loop_type(loop_type_id)
           @start_sample_frame = io.sysread(4).unpack(UNSIGNED_INT_32)[0]
           @end_sample_frame = io.sysread(4).unpack(UNSIGNED_INT_32)[0]
-          @fraction = io.sysread(4).unpack(UNSIGNED_INT_32)[0]
+          @fraction = io.sysread(4).unpack(UNSIGNED_INT_32)[0] / 4_294_967_296.0
           @play_count = io.sysread(4).unpack(UNSIGNED_INT_32)[0]
         end
       end

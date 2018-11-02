@@ -31,6 +31,6 @@ smpl_chunk:
     type: 2
     start_sample_frame: 0
     end_sample_frame: 0
-    fraction: 0
+    fraction: 2_147_483_648
     play_count: 1
   sampler_data: []
