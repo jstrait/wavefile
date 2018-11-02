@@ -21,7 +21,7 @@ smpl_chunk:
   product_id: 0
   sample_duration: 0
   unity_note: 60
-  pitch_fraction: 0
+  pitch_fraction: 2_147_483_648
   smpte_format: 0
   smpte_offset: 0
   loop_count: 1

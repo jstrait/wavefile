@@ -8,7 +8,7 @@ module WaveFile
           @product_id = fields[:product_id]
           @sample_duration = fields[:sample_duration]
           @midi_note = fields[:midi_note]
-          @pitch_fraction = fields[:pitch_fraction]
+          @fine_tuning_cents = (fields[:pitch_fraction] / 4_294_967_296.0) * 100
           @smpte_format = fields[:smpte_format]
           @smpte_offset = fields[:smpte_offset]
           @loop_count = fields[:loop_count]
@@ -33,7 +33,7 @@ module WaveFile
         # A value of 0x80000000 means 1/2 semitone (50 cents) and a value of 0x00000000 means no fine tuning between semitones.
         # - https://sites.google.com/site/musicgapi/technical-documents/wav-file-format
         # Integer
-        attr_reader :pitch_fraction
+        attr_reader :fine_tuning_cents
 
         # Public: Returns the SMPTE format (0, 24, 25, 29 or 30)
         attr_reader :smpte_format
