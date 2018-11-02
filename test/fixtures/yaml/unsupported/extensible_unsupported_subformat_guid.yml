@@ -16,5 +16,5 @@ format_chunk:
   speaker_mapping: 0x00000001
   subformat_guid: [2, 0, 0, 0, 0, 0, 16, 0, 128, 0, 0, 170, 0, 56, 155, 113]  # First byte is 2, invalid subformat GUID
 data_chunk:
-  cycle_repeats: 280
+  cycle_repeats: 0
   channel_format: mono
