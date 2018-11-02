@@ -116,8 +116,8 @@ def write_sample_chunk(file_writer, config)
     config["loops"].each do |loop|
       file_writer.write_or_quit(loop["id"], UNSIGNED_INT_32_LITTLE_ENDIAN)
       file_writer.write_or_quit(loop["type"], UNSIGNED_INT_32_LITTLE_ENDIAN)
-      file_writer.write_or_quit(loop["start"], UNSIGNED_INT_32_LITTLE_ENDIAN)
-      file_writer.write_or_quit(loop["end"], UNSIGNED_INT_32_LITTLE_ENDIAN)
+      file_writer.write_or_quit(loop["start_sample_frame"], UNSIGNED_INT_32_LITTLE_ENDIAN)
+      file_writer.write_or_quit(loop["end_sample_frame"], UNSIGNED_INT_32_LITTLE_ENDIAN)
       file_writer.write_or_quit(loop["fraction"], UNSIGNED_INT_32_LITTLE_ENDIAN)
       file_writer.write_or_quit(loop["play_count"], UNSIGNED_INT_32_LITTLE_ENDIAN)
     end

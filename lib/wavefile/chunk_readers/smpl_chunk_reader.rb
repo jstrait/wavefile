@@ -94,10 +94,10 @@ module WaveFile
         attr_reader :type
 
         # Public: Returns the start-position (in samples) of the loop
-        attr_reader :start
+        attr_reader :start_sample_frame
 
         # Public: Returns the end-position (in samples) of the loop
-        attr_reader :end
+        attr_reader :end_sample_frame
 
         # Public: The fractional value specifies a fraction of a sample at which to loop. This allows a loop to be fine
         # tuned at a resolution greater than one sample. The value can range from 0x00000000 to 0xFFFFFFFF. A value of
@@ -127,8 +127,8 @@ module WaveFile
           @id = io.sysread(4).unpack(UNSIGNED_INT_32)[0]
           loop_type_id = io.sysread(4).unpack(UNSIGNED_INT_32)[0]
           @type = loop_type(loop_type_id)
-          @start = io.sysread(4).unpack(UNSIGNED_INT_32)[0]
-          @end = io.sysread(4).unpack(UNSIGNED_INT_32)[0]
+          @start_sample_frame = io.sysread(4).unpack(UNSIGNED_INT_32)[0]
+          @end_sample_frame = io.sysread(4).unpack(UNSIGNED_INT_32)[0]
           @fraction = io.sysread(4).unpack(UNSIGNED_INT_32)[0]
           @play_count = io.sysread(4).unpack(UNSIGNED_INT_32)[0]
         end
