@@ -110,7 +110,7 @@ def write_sample_chunk(file_writer, config)
   file_writer.write_or_quit(config["smpte_format"], UNSIGNED_INT_32_LITTLE_ENDIAN)
   file_writer.write_or_quit(config["smpte_offset"], UNSIGNED_INT_32_LITTLE_ENDIAN)
   file_writer.write_or_quit(config["loop_count"], UNSIGNED_INT_32_LITTLE_ENDIAN)
-  file_writer.write_or_quit(config["sampler_data"], UNSIGNED_INT_32_LITTLE_ENDIAN)
+  file_writer.write_or_quit(config["sampler_data_size"], UNSIGNED_INT_32_LITTLE_ENDIAN)
 
   if config["loops"]
     config["loops"].each do |loop|

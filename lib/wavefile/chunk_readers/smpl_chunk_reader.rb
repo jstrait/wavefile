@@ -12,7 +12,7 @@ module WaveFile
           @smpte_format = fields[:smpte_format]
           @smpte_offset = fields[:smpte_offset]
           @loop_count = fields[:loop_count]
-          @sampler_data = fields[:sampler_data]
+          @sampler_data_size = fields[:sampler_data_size]
           @loops = fields[:loops]
         end
 
@@ -49,7 +49,7 @@ module WaveFile
         attr_reader :loop_count
 
         # Public: Returns anumber of bytes used for additional sampler data
-        attr_reader :sampler_data
+        attr_reader :sampler_data_size
 
         # Public: Returns the loop specifications
         # Array of Loop objects
@@ -72,7 +72,7 @@ module WaveFile
         # TODO: It might make more sense to return the offset in a different format according to specs.
         fields[:smpte_offset] = @io.sysread(4).unpack(UNSIGNED_INT_32)[0]
         fields[:loop_count] = @io.sysread(4).unpack(UNSIGNED_INT_32)[0]
-        fields[:sampler_data] = @io.sysread(4).unpack(UNSIGNED_INT_32)[0]
+        fields[:sampler_data_size] = @io.sysread(4).unpack(UNSIGNED_INT_32)[0]
         fields[:loops] = []
         fields[:loop_count].times do
           fields[:loops] << Loop.new(@io)

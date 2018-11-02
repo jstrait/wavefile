@@ -22,7 +22,7 @@ smpl_chunk:
   smpte_format: 0
   smpte_offset: 0
   loop_count: 1
-  sampler_data: 0
+  sampler_data_size: 0
   loops:
   - id: 0
     type: 2
