@@ -49,7 +49,7 @@ module WaveFile
         # Public: Returns the number of loops defined in the sample
         attr_reader :loop_count
 
-        # Public: Returns anumber of bytes used for additional sampler data
+        # Public: Returns a number of bytes used for additional sampler data
         attr_reader :sampler_data_size
 
         # Public: Returns the loop specifications
