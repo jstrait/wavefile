@@ -30,6 +30,7 @@ smpl_chunk:
     end: 0
     fraction: 0
     play_count: 1
+  sampler_data: []
 data_chunk:
   cycle_repeats: 280
   channel_format: stereo

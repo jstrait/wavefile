@@ -122,6 +122,12 @@ def write_sample_chunk(file_writer, config)
       file_writer.write_or_quit(loop["play_count"], UNSIGNED_INT_32_LITTLE_ENDIAN)
     end
   end
+
+  if config["sampler_data"]
+    config["sampler_data"].each do |byte|
+      file_writer.write_or_skip(byte, UNSIGNED_INT_8)
+    end
+  end
 end
 
 def write_data_chunk(file_writer, config, format_chunk)

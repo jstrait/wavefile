@@ -644,6 +644,29 @@ class ReaderTest < Minitest::Test
     assert_equal(1, reader.sample_info.loops[0].play_count)
   end
 
+  def test_smpl_chunk_with_sampler_specific_data
+    file_name = fixture("valid/valid_with_sample_chunk_with_sampler_specific_data.wav")
+    reader = Reader.new(file_name)
+
+    assert_equal(0, reader.sample_info.manufacturer_id)
+    assert_equal(0, reader.sample_info.product_id)
+    assert_equal(0, reader.sample_info.sample_duration)
+    assert_equal(60, reader.sample_info.midi_note)
+    assert_equal(50.0, reader.sample_info.fine_tuning_cents)
+    assert_equal(0, reader.sample_info.smpte_format)
+    assert_equal(0, reader.sample_info.smpte_offset)
+    assert_equal(1, reader.sample_info.loop_count)
+    assert_equal(4, reader.sample_info.sampler_data_size)
+    assert_equal(1, reader.sample_info.loops.length)
+    assert_equal(0, reader.sample_info.loops[0].id)
+    assert_equal(:backward, reader.sample_info.loops[0].type)
+    assert_equal(0, reader.sample_info.loops[0].start)
+    assert_equal(0, reader.sample_info.loops[0].end)
+    assert_equal(0, reader.sample_info.loops[0].fraction)
+    assert_equal(1, reader.sample_info.loops[0].play_count)
+    assert_equal("\x04\x01\x03\x02", reader.sample_info.sampler_data)
+  end
+
 private
 
   def read_file(file_name, buffer_size, format=nil)
