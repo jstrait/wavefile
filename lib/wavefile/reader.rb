@@ -40,12 +40,7 @@ module WaveFile
 
       @closed = false
 
-      begin
-        riff_reader = ChunkReaders::RiffReader.new(@io, format)
-      rescue InvalidFormatError
-        raise InvalidFormatError, "Does not appear to be a valid Wave file"
-      end
-
+      riff_reader = ChunkReaders::RiffReader.new(@io, format)
       @data_chunk_reader = riff_reader.data_chunk_reader
       @sample_chunk = riff_reader.sample_chunk
 
