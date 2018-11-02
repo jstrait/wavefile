@@ -38,7 +38,7 @@ module WaveFile
             when CHUNK_IDS[:data]
               data_chunk_seek_pos = @io.pos
               data_chunk_size = chunk_size
-              @io.sysread(chunk_size)
+              @io.seek(data_chunk_seek_pos + chunk_size, IO::SEEK_SET)
             else
               # Other chunk types besides the format chunk are ignored. This may change in the future.
               GenericChunkReader.new(@io, chunk_size).read
