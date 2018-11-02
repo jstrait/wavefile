@@ -208,7 +208,8 @@ TOTAL_SAMPLE_FRAMES = SQUARE_WAVE_CYCLE_SAMPLE_FRAMES * SQUARE_WAVE_CYCLE_REPEAT
 if riff_chunk["chunk_size"] == "auto"
   format_chunk_size = format_chunk["chunk_size"] + CHUNK_HEADER_SIZE_IN_BYTES
   fact_chunk_size = fact_chunk ? fact_chunk["chunk_size"] + CHUNK_HEADER_SIZE_IN_BYTES : 0
-  riff_chunk["chunk_size"] = format_chunk_size + fact_chunk_size + RIFF_CHUNK_HEADER_SIZE + (TOTAL_SAMPLE_FRAMES * format_chunk["block_align"])
+  smpl_chunk_size = smpl_chunk ? smpl_chunk["chunk_size"] + CHUNK_HEADER_SIZE_IN_BYTES : 0
+  riff_chunk["chunk_size"] = format_chunk_size + fact_chunk_size + smpl_chunk_size + RIFF_CHUNK_HEADER_SIZE + (TOTAL_SAMPLE_FRAMES * format_chunk["block_align"])
 end
 
 file_writer = FileWriter.new(output_file_name)
