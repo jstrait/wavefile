@@ -16,19 +16,29 @@ module WaveFile
 
       def read_until_data_chunk(format)
         begin
-          chunk_id, chunk_size = read_chunk_header
+          chunk_id, riff_chunk_size = read_chunk_header
           unless chunk_id == CHUNK_IDS[:riff]
             raise_error InvalidFormatError, "Expected chunk ID '#{CHUNK_IDS[:riff]}', but was '#{chunk_id}'"
           end
-          RiffChunkReader.new(@io, chunk_size).read
+          RiffChunkReader.new(@io, riff_chunk_size).read
 
-          chunk_id, chunk_size = read_chunk_header
-          while chunk_id != CHUNK_IDS[:data]
+          data_chunk_seek_pos = nil
+          data_chunk_size = nil
+          bytes_read = 4
+
+          loop do
+            chunk_id, chunk_size = read_chunk_header
+            bytes_read += (8 + chunk_size)
+
             case chunk_id
             when CHUNK_IDS[:format]
               @native_format = FormatChunkReader.new(@io, chunk_size).read
             when CHUNK_IDS[:sample]
               @smpl_chunk_reader = SmplChunkReader.new(@io, chunk_size).read
+            when CHUNK_IDS[:data]
+              data_chunk_seek_pos = @io.pos
+              data_chunk_size = chunk_size
+              @io.sysread(chunk_size)
             else
               # Other chunk types besides the format chunk are ignored. This may change in the future.
               GenericChunkReader.new(@io, chunk_size).read
@@ -42,7 +52,7 @@ module WaveFile
               @io.sysread(1)
             end
 
-            chunk_id, chunk_size = read_chunk_header
+            break if bytes_read >= riff_chunk_size
           end
         rescue EOFError
           raise_error InvalidFormatError, "It doesn't have a data chunk."
@@ -52,7 +62,12 @@ module WaveFile
           raise_error InvalidFormatError, "The format chunk is either missing, or it comes after the data chunk."
         end
 
-        @data_chunk_reader = DataChunkReader.new(@io, chunk_size, @native_format, format)
+        if data_chunk_seek_pos.nil?
+          raise_error InvalidFormatError, "It doesn't have a data chunk."
+        end
+
+        @io.seek(data_chunk_seek_pos, IO::SEEK_SET)
+        @data_chunk_reader = DataChunkReader.new(@io, data_chunk_size, @native_format, format)
       end
 
       def read_chunk_header
