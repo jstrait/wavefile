@@ -13,7 +13,7 @@ module WaveFile
       attr_reader :sample_duration
 
       # Public: Returns the MIDI note number of the sample (0-127)
-      attr_reader :unity_note
+      attr_reader :midi_note
 
       # Public: Returns the fraction of a semitone up from the specified MIDI unity note field.
       # A value of 0x80000000 means 1/2 semitone (50 cents) and a value of 0x00000000 means no fine tuning between semitones.
@@ -50,7 +50,7 @@ module WaveFile
         @manufacturer_id = @io.sysread(4).unpack(UNSIGNED_INT_32)[0]
         @product_id = @io.sysread(4).unpack(UNSIGNED_INT_32)[0]
         @sample_duration = @io.sysread(4).unpack(UNSIGNED_INT_32)[0]
-        @unity_note = @io.sysread(4).unpack(UNSIGNED_INT_32)[0]
+        @midi_note = @io.sysread(4).unpack(UNSIGNED_INT_32)[0]
         @pitch_fraction = @io.sysread(4).unpack(UNSIGNED_INT_32)[0]
         @smpte_format = @io.sysread(4).unpack(UNSIGNED_INT_32)[0]
         # TODO: It might make more sense to return the offset in a different format according to specs.
