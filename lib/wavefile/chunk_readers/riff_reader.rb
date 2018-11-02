@@ -59,7 +59,7 @@ module WaveFile
             break if bytes_read >= riff_chunk_size
           end
         rescue EOFError
-          raise_error InvalidFormatError, "It doesn't have a data chunk."
+          raise_error InvalidFormatError, "Unexpected end of file."
         end
 
         if @native_format == nil
