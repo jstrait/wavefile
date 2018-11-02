@@ -16,7 +16,6 @@ module WaveFile
             seconds: fields[:smpte_offset][2],
             frame_count: fields[:smpte_offset][3],
           }.freeze
-          @loop_count = fields[:loop_count]
           @sampler_data_size = fields[:sampler_data_size]
           @loops = fields[:loops]
           @sampler_data = fields[:sampler_data]
@@ -50,9 +49,6 @@ module WaveFile
         # the number of seconds (0 to 59) and ff is an unsigned value that specifies the number of frames (0 to -1).
         # - https://sites.google.com/site/musicgapi/technical-documents/wav-file-format
         attr_reader :smpte_offset
-
-        # Public: Returns the number of loops defined in the sample
-        attr_reader :loop_count
 
         # Public: Returns a number of bytes used for additional sampler data
         attr_reader :sampler_data_size
