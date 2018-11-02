@@ -1,8 +1,8 @@
 module WaveFile
   module ChunkReaders
     # Internal
-    class SmplChunkReader < BaseChunkReader    # :nodoc:
-      class SmplChunk
+    class SampleChunkReader < BaseChunkReader    # :nodoc:
+      class SampleChunk
         def initialize(fields)
           @manufacturer_id = fields[:manufacturer_id]
           @product_id = fields[:product_id]
@@ -82,7 +82,7 @@ module WaveFile
         end
         fields[:sampler_data] = @io.sysread(fields[:sampler_data_size])
 
-        SmplChunk.new(fields)
+        SampleChunk.new(fields)
       end
 
       class Loop

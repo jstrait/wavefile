@@ -11,7 +11,7 @@ format_chunk:
   byte_rate: 176400
   block_align: 4
   bits_per_sample: 16
-smpl_chunk:
+sample_chunk:
   chunk_id: "smpl"
   chunk_size: 60
   manufacturer_id: 0

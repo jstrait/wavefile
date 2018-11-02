@@ -206,7 +206,7 @@ riff_chunk = chunks["riff_chunk"]
 format_chunk = chunks["format_chunk"]
 fact_chunk = chunks["fact_chunk"]
 junk_chunk = chunks["junk_chunk"]
-smpl_chunk = chunks["smpl_chunk"]
+sample_chunk = chunks["sample_chunk"]
 data_chunk = chunks["data_chunk"]
 SQUARE_WAVE_CYCLE_REPEATS = (data_chunk && data_chunk["cycle_repeats"]) || 0
 TOTAL_SAMPLE_FRAMES = SQUARE_WAVE_CYCLE_SAMPLE_FRAMES * SQUARE_WAVE_CYCLE_REPEATS
@@ -214,8 +214,8 @@ TOTAL_SAMPLE_FRAMES = SQUARE_WAVE_CYCLE_SAMPLE_FRAMES * SQUARE_WAVE_CYCLE_REPEAT
 if riff_chunk["chunk_size"] == "auto"
   format_chunk_size = format_chunk["chunk_size"] + CHUNK_HEADER_SIZE_IN_BYTES
   fact_chunk_size = fact_chunk ? fact_chunk["chunk_size"] + CHUNK_HEADER_SIZE_IN_BYTES : 0
-  smpl_chunk_size = smpl_chunk ? smpl_chunk["chunk_size"] + CHUNK_HEADER_SIZE_IN_BYTES : 0
-  riff_chunk["chunk_size"] = format_chunk_size + fact_chunk_size + smpl_chunk_size + RIFF_CHUNK_HEADER_SIZE + (TOTAL_SAMPLE_FRAMES * format_chunk["block_align"])
+  sample_chunk_size = sample_chunk ? sample_chunk["chunk_size"] + CHUNK_HEADER_SIZE_IN_BYTES : 0
+  riff_chunk["chunk_size"] = format_chunk_size + fact_chunk_size + sample_chunk_size + RIFF_CHUNK_HEADER_SIZE + (TOTAL_SAMPLE_FRAMES * format_chunk["block_align"])
 end
 
 file_writer = FileWriter.new(output_file_name)
@@ -230,8 +230,8 @@ chunks.keys.each do |chunk_key|
     write_fact_chunk(file_writer, fact_chunk)
   when 'junk_chunk'
     write_junk_chunk(file_writer, {})
-  when 'smpl_chunk'
-    write_sample_chunk(file_writer, smpl_chunk)
+  when 'sample_chunk'
+    write_sample_chunk(file_writer, sample_chunk)
   when 'data_chunk'
     write_data_chunk(file_writer, data_chunk, format_chunk)
   end
