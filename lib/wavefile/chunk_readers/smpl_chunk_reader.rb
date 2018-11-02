@@ -10,7 +10,12 @@ module WaveFile
           @midi_note = fields[:midi_note]
           @fine_tuning_cents = (fields[:pitch_fraction] / 4_294_967_296.0) * 100
           @smpte_format = fields[:smpte_format]
-          @smpte_offset = fields[:smpte_offset]
+          @smpte_offset = {
+            hours: fields[:smpte_offset][0],
+            minutes: fields[:smpte_offset][1],
+            seconds: fields[:smpte_offset][2],
+            frame_count: fields[:smpte_offset][3],
+          }.freeze
           @loop_count = fields[:loop_count]
           @sampler_data_size = fields[:sampler_data_size]
           @loops = fields[:loops]
@@ -72,8 +77,7 @@ module WaveFile
         fields[:midi_note] = @io.sysread(4).unpack(UNSIGNED_INT_32)[0]
         fields[:pitch_fraction] = @io.sysread(4).unpack(UNSIGNED_INT_32)[0]
         fields[:smpte_format] = @io.sysread(4).unpack(UNSIGNED_INT_32)[0]
-        # TODO: It might make more sense to return the offset in a different format according to specs.
-        fields[:smpte_offset] = @io.sysread(4).unpack(UNSIGNED_INT_32)[0]
+        fields[:smpte_offset] = @io.sysread(4).unpack("cCCC")
         fields[:loop_count] = @io.sysread(4).unpack(UNSIGNED_INT_32)[0]
         fields[:sampler_data_size] = @io.sysread(4).unpack(UNSIGNED_INT_32)[0]
         fields[:loops] = []
