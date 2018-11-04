@@ -97,6 +97,15 @@ module WaveFile
       end
 
       class Loop
+        def initialize(id:, type:, start_sample_frame:, end_sample_frame:, fraction:, play_count:)
+          @id = id
+          @type = loop_type(type)
+          @start_sample_frame = start_sample_frame
+          @end_sample_frame = end_sample_frame
+          @fraction = fraction / 4_294_967_296.0
+          @play_count = play_count
+        end
+
         # Public: Returns the ID of the specific Loop
         attr_reader :id
 
@@ -121,6 +130,8 @@ module WaveFile
         # Public: Returns the number of times to loop. 0 means infinitely.
         attr_reader :play_count
 
+        private
+
         def loop_type(loop_type_id)
           case loop_type_id
           when 0
@@ -132,15 +143,6 @@ module WaveFile
           else
             :unknown
           end
-        end
-
-        def initialize(id:, type:, start_sample_frame:, end_sample_frame:, fraction:, play_count:)
-          @id = id
-          @type = loop_type(type)
-          @start_sample_frame = start_sample_frame
-          @end_sample_frame = end_sample_frame
-          @fraction = fraction / 4_294_967_296.0
-          @play_count = play_count
         end
       end
 
