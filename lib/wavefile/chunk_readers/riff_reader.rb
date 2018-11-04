@@ -45,7 +45,7 @@ module WaveFile
               @io.seek(data_chunk_seek_pos + chunk_size, IO::SEEK_SET)
             else
               # Other chunk types besides the format chunk are ignored. This may change in the future.
-              GenericChunkReader.new(@io, chunk_size).read
+              @io.seek(chunk_size, IO::SEEK_CUR)
             end
 
             # The RIFF specification requires that each chunk be aligned to an even number of bytes,
