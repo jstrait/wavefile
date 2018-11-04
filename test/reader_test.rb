@@ -633,6 +633,8 @@ class ReaderTest < Minitest::Test
     assert_equal(0, sample_info.loops[0].end_sample_frame)
     assert_equal(0.5, sample_info.loops[0].fraction)
     assert_equal(1, sample_info.loops[0].play_count)
+    assert_equal("", sample_info.sampler_data)
+    assert_equal(Encoding::ASCII_8BIT, sample_info.sampler_data.encoding)
   end
 
   def test_smpl_chunk_after_data_chunk
@@ -654,6 +656,8 @@ class ReaderTest < Minitest::Test
     assert_equal(0, sample_info.loops[0].end_sample_frame)
     assert_equal(0.5, sample_info.loops[0].fraction)
     assert_equal(1, sample_info.loops[0].play_count)
+    assert_equal("", sample_info.sampler_data)
+    assert_equal(Encoding::ASCII_8BIT, sample_info.sampler_data.encoding)
   end
 
   def test_smpl_chunk_with_sampler_specific_data
@@ -676,6 +680,7 @@ class ReaderTest < Minitest::Test
     assert_equal(0.5, sample_info.loops[0].fraction)
     assert_equal(1, sample_info.loops[0].play_count)
     assert_equal("\x04\x01\x03\x02", sample_info.sampler_data)
+    assert_equal(Encoding::ASCII_8BIT, sample_info.sampler_data.encoding)
   end
 
   def test_smpl_chunk_no_loops
@@ -692,6 +697,7 @@ class ReaderTest < Minitest::Test
     assert_equal(0, sample_info.sampler_data_size)
     assert_equal([], sample_info.loops)
     assert_equal("", sample_info.sampler_data)
+    assert_equal(Encoding::ASCII_8BIT, sample_info.sampler_data.encoding)
   end
 
 private
