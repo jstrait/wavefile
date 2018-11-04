@@ -44,7 +44,7 @@ module WaveFile
               data_chunk_size = chunk_size
               @io.seek(data_chunk_seek_pos + chunk_size, IO::SEEK_SET)
             else
-              # Other chunk types besides the format chunk are ignored. This may change in the future.
+              # Unsupported chunk types are ignored
               @io.seek(chunk_size, IO::SEEK_CUR)
             end
 
