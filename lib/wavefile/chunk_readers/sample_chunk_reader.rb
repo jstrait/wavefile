@@ -76,7 +76,7 @@ module WaveFile
         fields[:smpte_offset_seconds],
         fields[:smpte_offset_frame_count],
         fields[:loop_count],
-        fields[:sampler_data_size] = raw_bytes.slice!(0...36).unpack("VVVVVVcCCCVV")
+        fields[:sampler_data_size] = raw_bytes.slice!(0...CORE_BYTE_COUNT).unpack("VVVVVVcCCCVV")
 
         fields[:loops] = []
         fields[:loop_count].times do
@@ -86,7 +86,7 @@ module WaveFile
           loop_fields[:start_sample_frame],
           loop_fields[:end_sample_frame],
           loop_fields[:fraction],
-          loop_fields[:play_count] = raw_bytes.slice!(0...24).unpack("VVVVVV")
+          loop_fields[:play_count] = raw_bytes.slice!(0...LOOP_BYTE_COUNT).unpack("VVVVVV")
 
           fields[:loops] << Loop.new(loop_fields)
         end
@@ -143,6 +143,11 @@ module WaveFile
           @play_count = fields[:play_count]
         end
       end
+
+      private
+
+      CORE_BYTE_COUNT = 36
+      LOOP_BYTE_COUNT = 24
     end
   end
 end
