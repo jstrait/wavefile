@@ -109,22 +109,19 @@ module WaveFile
         # Public: Returns the ID of the specific Loop
         attr_reader :id
 
-        # Public: Returns the loop type
-        # String
+        # Public: Returns a symbol indicating which direction the loop should run. The possible values
+        #         are :forward, :alternating, :backward, or :unknown.
         attr_reader :type
 
-        # Public: Returns the start-position (in samples) of the loop
+        # Public: Returns the start-position (in sample frames) of the loop
         attr_reader :start_sample_frame
 
-        # Public: Returns the end-position (in samples) of the loop
+        # Public: Returns the end-position (in sample frames) of the loop. The ending sample frame
+        #         should be included in the loop.
         attr_reader :end_sample_frame
 
-        # Public: The fractional value specifies a fraction of a sample at which to loop. This allows a loop to be fine
-        # tuned at a resolution greater than one sample. The value can range from 0x00000000 to 0xFFFFFFFF. A value of
-        # 0 means no fraction, a value of 0x80000000 means 1/2 of a sample length. 0xFFFFFFFF is the smallest fraction
-        # of a sample that can be represented.
-        # - https://sites.google.com/site/musicgapi/technical-documents/wav-file-format
-        # Integer
+        # Public: A value between 0.0 and 1.0 which specifies a fraction of a sample at which to loop.
+        #         This allows a loop to be fine tuned at a resolution finer than one sample.
         attr_reader :fraction
 
         # Public: Returns the number of times to loop. 0 means infinitely.
