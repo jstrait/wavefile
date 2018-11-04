@@ -134,13 +134,13 @@ module WaveFile
           end
         end
 
-        def initialize(fields)
-          @id = fields[:id]
-          @type = loop_type(fields[:type])
-          @start_sample_frame = fields[:start_sample_frame]
-          @end_sample_frame = fields[:end_sample_frame]
-          @fraction = fields[:fraction] / 4_294_967_296.0
-          @play_count = fields[:play_count]
+        def initialize(id:, type:, start_sample_frame:, end_sample_frame:, fraction:, play_count:)
+          @id = id
+          @type = loop_type(type)
+          @start_sample_frame = start_sample_frame
+          @end_sample_frame = end_sample_frame
+          @fraction = fraction / 4_294_967_296.0
+          @play_count = play_count
         end
       end
 
