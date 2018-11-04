@@ -17,7 +17,7 @@ module WaveFile
             frame_count: fields[:smpte_offset][3],
           }.freeze
           @loops = fields[:loops]
-          @sampler_data = fields[:sampler_data]
+          @sampler_specific_data = fields[:sampler_specific_data]
         end
 
         # Public: Returns the ID of the manufacturer
@@ -53,7 +53,7 @@ module WaveFile
         # Array of Loop objects
         attr_reader :loops
 
-        attr_reader :sampler_data
+        attr_reader :sampler_specific_data
       end
 
       def initialize(io, chunk_size)
@@ -76,7 +76,7 @@ module WaveFile
         fields[:loop_count].times do
           fields[:loops] << Loop.new(@io)
         end
-        fields[:sampler_data] = @io.sysread(fields[:sampler_data_size])
+        fields[:sampler_specific_data] = @io.sysread(fields[:sampler_data_size])
 
         SampleChunk.new(fields)
       end
