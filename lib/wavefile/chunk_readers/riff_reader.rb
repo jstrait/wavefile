@@ -20,15 +20,16 @@ module WaveFile
           unless chunk_id == CHUNK_IDS[:riff]
             raise_error InvalidFormatError, "Expected chunk ID '#{CHUNK_IDS[:riff]}', but was '#{chunk_id}'"
           end
+
+          end_of_file_pos = @io.pos + riff_chunk_size
+
           RiffChunkReader.new(@io, riff_chunk_size).read
 
           data_chunk_seek_pos = nil
           data_chunk_size = nil
-          bytes_read = 4
 
           loop do
             chunk_id, chunk_size = read_chunk_header
-            bytes_read += (8 + chunk_size)
 
             case chunk_id
             when CHUNK_IDS[:format]
@@ -56,7 +57,7 @@ module WaveFile
               @io.sysread(1)
             end
 
-            break if bytes_read >= riff_chunk_size
+            break if @io.pos >= end_of_file_pos
           end
         rescue EOFError
           raise_error InvalidFormatError, "Unexpected end of file."
