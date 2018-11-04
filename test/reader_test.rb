@@ -71,6 +71,7 @@ class ReaderTest < Minitest::Test
       assert_equal(0, reader.current_sample_frame)
       assert_equal(0, reader.total_sample_frames)
       assert_equal(false, reader.readable_format?)
+      assert_nil(reader.sample_info)
       reader.close
     end
 
@@ -89,6 +90,7 @@ class ReaderTest < Minitest::Test
       assert_equal(0, reader.current_sample_frame)
       assert_equal(0, reader.total_sample_frames)
       assert_equal(false, reader.readable_format?)
+      assert_nil(reader.sample_info)
       reader.close
     end
   end
@@ -149,6 +151,7 @@ class ReaderTest < Minitest::Test
         assert_equal(0, reader.current_sample_frame)
         assert_equal(2240, reader.total_sample_frames)
         assert_equal(true, reader.readable_format?)
+        assert_nil(reader.sample_info)
         reader.close
       end
 
@@ -165,6 +168,7 @@ class ReaderTest < Minitest::Test
         assert_equal(0, reader.current_sample_frame)
         assert_equal(2240, reader.total_sample_frames)
         assert_equal(true, reader.readable_format?)
+        assert_nil(reader.sample_info)
         reader.close
       end
 
@@ -181,6 +185,7 @@ class ReaderTest < Minitest::Test
         assert_equal(1024, reader.current_sample_frame)
         assert_equal(2240, reader.total_sample_frames)
         assert_equal(true, reader.readable_format?)
+        assert_nil(reader.sample_info)
       end
     end
   end
@@ -214,6 +219,7 @@ class ReaderTest < Minitest::Test
     assert_equal(0, reader.current_sample_frame)
     assert_equal(2240, reader.total_sample_frames)
     assert_equal(true, reader.readable_format?)
+    assert_nil(reader.sample_info)
     reader.close
 
     buffers = read_file("valid/valid_extensible_stereo_pcm_16_44100.wav", 1024)
@@ -240,6 +246,7 @@ class ReaderTest < Minitest::Test
     assert_equal(0, reader.current_sample_frame)
     assert_equal(2240, reader.total_sample_frames)
     assert_equal(true, reader.readable_format?)
+    assert_nil(reader.sample_info)
     reader.close
 
     buffers = read_file("valid/valid_extensible_stereo_pcm_24_44100_no_speaker_mapping.wav", 1024)
@@ -266,6 +273,7 @@ class ReaderTest < Minitest::Test
     assert_equal(0, reader.current_sample_frame)
     assert_equal(2240, reader.total_sample_frames)
     assert_equal(true, reader.readable_format?)
+    assert_nil(reader.sample_info)
     reader.close
 
     buffers = read_file("valid/valid_extensible_stereo_pcm_16_44100_more_speakers_than_channels.wav", 1024)
@@ -310,6 +318,7 @@ class ReaderTest < Minitest::Test
     assert_equal(0, reader.current_sample_frame)
     assert_equal(2240, reader.total_sample_frames)
     assert_equal(true, reader.readable_format?)
+    assert_nil(reader.sample_info)
     reader.close
 
     buffers = read_file("valid/valid_extensible_stereo_pcm_16_44100_more_speakers_than_defined_by_spec.wav", 1024)
@@ -336,6 +345,7 @@ class ReaderTest < Minitest::Test
     assert_equal(0, reader.current_sample_frame)
     assert_equal(2240, reader.total_sample_frames)
     assert_equal(true, reader.readable_format?)
+    assert_nil(reader.sample_info)
     reader.close
 
     buffers = read_file("valid/valid_extensible_stereo_pcm_16_44100_only_undefined_high_bit_speakers.wav", 1024)
@@ -365,6 +375,7 @@ class ReaderTest < Minitest::Test
     assert_equal(0, reader.current_sample_frame)
     assert_equal(2240, reader.total_sample_frames)
     assert_equal(true, reader.readable_format?)
+    assert_nil(reader.sample_info)
     reader.close
 
     buffers = read_file("valid/valid_mono_pcm_16_44100_with_extension.wav", 1024)
