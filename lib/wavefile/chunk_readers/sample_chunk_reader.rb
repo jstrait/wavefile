@@ -11,10 +11,10 @@ module WaveFile
           @fine_tuning_cents = (fields[:pitch_fraction] / 4_294_967_296.0) * 100
           @smpte_format = fields[:smpte_format]
           @smpte_offset = {
-            hours: fields[:smpte_offset][0],
-            minutes: fields[:smpte_offset][1],
-            seconds: fields[:smpte_offset][2],
-            frame_count: fields[:smpte_offset][3],
+            hours: fields[:smpte_offset_hours],
+            minutes: fields[:smpte_offset_minutes],
+            seconds: fields[:smpte_offset_seconds],
+            frame_count: fields[:smpte_offset_frame_count],
           }.freeze
           @loops = fields[:loops]
           @sampler_specific_data = fields[:sampler_specific_data]
@@ -62,21 +62,36 @@ module WaveFile
       end
 
       def read
+        raw_bytes = @io.sysread(@chunk_size)
+
         fields = {}
-        fields[:manufacturer_id] = @io.sysread(4).unpack(UNSIGNED_INT_32)[0]
-        fields[:product_id] = @io.sysread(4).unpack(UNSIGNED_INT_32)[0]
-        fields[:sample_duration] = @io.sysread(4).unpack(UNSIGNED_INT_32)[0]
-        fields[:midi_note] = @io.sysread(4).unpack(UNSIGNED_INT_32)[0]
-        fields[:pitch_fraction] = @io.sysread(4).unpack(UNSIGNED_INT_32)[0]
-        fields[:smpte_format] = @io.sysread(4).unpack(UNSIGNED_INT_32)[0]
-        fields[:smpte_offset] = @io.sysread(4).unpack("cCCC")
-        fields[:loop_count] = @io.sysread(4).unpack(UNSIGNED_INT_32)[0]
-        fields[:sampler_data_size] = @io.sysread(4).unpack(UNSIGNED_INT_32)[0]
+        fields[:manufacturer_id],
+        fields[:product_id],
+        fields[:sample_duration],
+        fields[:midi_note],
+        fields[:pitch_fraction],
+        fields[:smpte_format],
+        fields[:smpte_offset_hours],
+        fields[:smpte_offset_minutes],
+        fields[:smpte_offset_seconds],
+        fields[:smpte_offset_frame_count],
+        fields[:loop_count],
+        fields[:sampler_data_size] = raw_bytes.slice!(0...36).unpack("VVVVVVcCCCVV")
+
         fields[:loops] = []
         fields[:loop_count].times do
-          fields[:loops] << Loop.new(@io)
+          loop_fields = {}
+          loop_fields[:id],
+          loop_fields[:type],
+          loop_fields[:start_sample_frame],
+          loop_fields[:end_sample_frame],
+          loop_fields[:fraction],
+          loop_fields[:play_count] = raw_bytes.slice!(0...24).unpack("VVVVVV")
+
+          fields[:loops] << Loop.new(loop_fields)
         end
-        fields[:sampler_specific_data] = @io.sysread(fields[:sampler_data_size])
+
+        fields[:sampler_specific_data] = raw_bytes.slice!(0...fields[:sampler_data_size])
 
         SampleChunk.new(fields)
       end
@@ -119,14 +134,13 @@ module WaveFile
           end
         end
 
-        def initialize(io)
-          @id = io.sysread(4).unpack(UNSIGNED_INT_32)[0]
-          loop_type_id = io.sysread(4).unpack(UNSIGNED_INT_32)[0]
-          @type = loop_type(loop_type_id)
-          @start_sample_frame = io.sysread(4).unpack(UNSIGNED_INT_32)[0]
-          @end_sample_frame = io.sysread(4).unpack(UNSIGNED_INT_32)[0]
-          @fraction = io.sysread(4).unpack(UNSIGNED_INT_32)[0] / 4_294_967_296.0
-          @play_count = io.sysread(4).unpack(UNSIGNED_INT_32)[0]
+        def initialize(fields)
+          @id = fields[:id]
+          @type = loop_type(fields[:type])
+          @start_sample_frame = fields[:start_sample_frame]
+          @end_sample_frame = fields[:end_sample_frame]
+          @fraction = fields[:fraction] / 4_294_967_296.0
+          @play_count = fields[:play_count]
         end
       end
     end
