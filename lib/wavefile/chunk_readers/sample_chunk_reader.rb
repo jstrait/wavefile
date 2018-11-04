@@ -2,6 +2,46 @@ module WaveFile
   module ChunkReaders
     # Internal
     class SampleChunkReader < BaseChunkReader    # :nodoc:
+      def initialize(io, chunk_size)
+        @io = io
+        @chunk_size = chunk_size
+      end
+
+      def read
+        raw_bytes = @io.sysread(@chunk_size)
+
+        fields = {}
+        fields[:manufacturer_id],
+        fields[:product_id],
+        fields[:sample_duration],
+        fields[:midi_note],
+        fields[:pitch_fraction],
+        fields[:smpte_format],
+        fields[:smpte_offset_hours],
+        fields[:smpte_offset_minutes],
+        fields[:smpte_offset_seconds],
+        fields[:smpte_offset_frame_count],
+        fields[:loop_count],
+        fields[:sampler_data_size] = raw_bytes.slice!(0...CORE_BYTE_COUNT).unpack("VVVVVVcCCCVV")
+
+        fields[:loops] = []
+        fields[:loop_count].times do
+          loop_fields = {}
+          loop_fields[:id],
+          loop_fields[:type],
+          loop_fields[:start_sample_frame],
+          loop_fields[:end_sample_frame],
+          loop_fields[:fraction],
+          loop_fields[:play_count] = raw_bytes.slice!(0...LOOP_BYTE_COUNT).unpack("VVVVVV")
+
+          fields[:loops] << Loop.new(loop_fields)
+        end
+
+        fields[:sampler_specific_data] = raw_bytes.slice!(0...fields[:sampler_data_size])
+
+        SampleChunk.new(fields)
+      end
+
       class SampleChunk
         def initialize(fields)
           @manufacturer_id = fields[:manufacturer_id]
@@ -54,46 +94,6 @@ module WaveFile
         attr_reader :loops
 
         attr_reader :sampler_specific_data
-      end
-
-      def initialize(io, chunk_size)
-        @io = io
-        @chunk_size = chunk_size
-      end
-
-      def read
-        raw_bytes = @io.sysread(@chunk_size)
-
-        fields = {}
-        fields[:manufacturer_id],
-        fields[:product_id],
-        fields[:sample_duration],
-        fields[:midi_note],
-        fields[:pitch_fraction],
-        fields[:smpte_format],
-        fields[:smpte_offset_hours],
-        fields[:smpte_offset_minutes],
-        fields[:smpte_offset_seconds],
-        fields[:smpte_offset_frame_count],
-        fields[:loop_count],
-        fields[:sampler_data_size] = raw_bytes.slice!(0...CORE_BYTE_COUNT).unpack("VVVVVVcCCCVV")
-
-        fields[:loops] = []
-        fields[:loop_count].times do
-          loop_fields = {}
-          loop_fields[:id],
-          loop_fields[:type],
-          loop_fields[:start_sample_frame],
-          loop_fields[:end_sample_frame],
-          loop_fields[:fraction],
-          loop_fields[:play_count] = raw_bytes.slice!(0...LOOP_BYTE_COUNT).unpack("VVVVVV")
-
-          fields[:loops] << Loop.new(loop_fields)
-        end
-
-        fields[:sampler_specific_data] = raw_bytes.slice!(0...fields[:sampler_data_size])
-
-        SampleChunk.new(fields)
       end
 
       class Loop
