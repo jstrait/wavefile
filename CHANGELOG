@@ -1,3 +1,12 @@
+1.1.0
+===============================================================================
+* **Can read `smpl` chunk data from files that contain this kind of chunk.**
+  Thanks to [@henrikj242](https://github.com/henrikj242) for providing the
+  base implementation.
+* Errors raised by `Reader.new` when attempting to read an invalid file are
+  improved to provide more detail about why the file is invalid.
+
+
 1.0.1
 ===============================================================================
 * Bug fix: The file(s) written to an arbitrary `IO` instance are no longer

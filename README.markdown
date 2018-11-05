@@ -37,33 +37,14 @@ This gem lets you read and write audio data! You can use it to create Ruby progr
 * Written in pure Ruby, so it's easy to include in your program. There's no need to compile a separate extension in order to use it.
 
 
-# Current Release: v1.0.1
+# Current Release: v1.1.0
 
-Released on August 2, 2018, this version contains a bug fix: the file(s) written to an arbitrary `IO` instance are no longer corrupt if the initial seek position is greater than 0.
+Released on TBD, this version has these changes:
 
+* **Can read `smpl` chunk data from files that contain this kind of chunk.** Thanks to [@henrikj242](https://github.com/henrikj242) for providing the base implementation.
+* Errors raised by `Reader.new` when attempting to read an invalid file are improved to provide more detail about why the file is invalid.
 
-# Previous Release: v1.0.0
-
-Released on June 10, 2018, this version has these changes:
-
-* **Ruby 2.0 or greater is now required** - the gem no longer works in Ruby 1.9.3.
-* **Backwards incompatible change:** Calling `Reader.close` on a `Reader` instance that is already closed no longer raises `ReaderClosedError`. Instead, it does nothing. Similarly, calling `Writer.close` on a `Writer` instance that is already closed no longer raises `WriterClosedError`. Thanks to [@kylekyle](https://github.com/kylekyle) for raising this as an issue.
-* **Better compatibility when writing Wave files.** `Writer` will now write files using a format called WAVE_FORMAT_EXTENSIBLE where appropriate. This is a behind-the-scenes improvement - for most use cases it won't affect how you use the gem, but can result in better compatibility with other programs.
-  * A file will automatically be written using WAVE_FORMAT_EXTENSIBLE format if any of the following are true:
-    * It has more than 2 channels
-    * It uses integer PCM sample format and the bits per sample is not 8 or 16 (in other words, if the sample format is `:pcm_24` or `:pcm_32`).
-    * A specific channel->speaker mapping is given (see below).
-* **The channel->speaker mapping field can now be read from files that have it defined.** For example, if a file indicates that the first sound channel should be mapped to the back right speaker, the second channel to the top center speaker, etc., this can be read using the `Reader.format.speaker_mapping` field.
-  * Example:
-    * ~~~
-      reader = Reader.new("4_channel_file.wav")
-      puts reader.format.speaker_mapping.inspect  # [:front_left, :front_right, :front_center, :back_center]
-      ~~~
-  * The channel->speaker mapping field isn't present in all Wave files. (Specifically, it's only present if the file uses WAVE_FORMAT_EXTENSIBLE format). For a non-WAVE_FORMAT_EXTENSIBLE file, `Reader.native_format.speaker_mapping` will be `nil`, to reflect that the channel->speaker mapping is undefined. `Reader.format.speaker_mapping` will use a "sensible" default value for the given number of channels.
-* **A channel->speaker mapping array can optionally be given when constructing a `Format` instance.** If not given, a default value will be set for the given number of channels.
-  * Example:
-    * `Format.new(4, :pcm_16, 44100, speaker_mapping: [:front_left, :front_right, :front_center, :low_frequency])`
-* **Errors raised by `Format.new` are improved to provide more detail.**
+For changes in previous versions, visit <https://github.com/jstrait/wavefile/releases>.
 
 
 # Compatibility
