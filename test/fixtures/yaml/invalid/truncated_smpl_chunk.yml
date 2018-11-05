@@ -1,0 +1,25 @@
+riff_chunk:
+  chunk_id: "RIFF"
+  chunk_size: auto
+  wave_format: "WAVE"
+format_chunk:
+  chunk_id: "fmt "
+  chunk_size: 16
+  audio_format: 1
+  channels: 2
+  sample_rate: 44100
+  byte_rate: 176400
+  block_align: 4
+  bits_per_sample: 16
+data_chunk:
+  cycle_repeats: 280
+  channel_format: stereo
+sample_chunk:
+  chunk_id: "smpl"
+  chunk_size: 60    # There are fewer bytes in the chunk than this
+  manufacturer_id: 0
+  product_id: 0
+  sample_duration: 0
+  unity_note: 60
+  pitch_fraction: 2_147_483_648
+  smpte_format: 0

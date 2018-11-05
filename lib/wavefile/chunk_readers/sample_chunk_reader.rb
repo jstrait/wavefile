@@ -9,6 +9,9 @@ module WaveFile
 
       def read
         raw_bytes = @io.sysread(@chunk_size)
+        if raw_bytes.length < @chunk_size
+          raise_error InvalidFormatError, "Contains an incomplete sample chunks."
+        end
 
         fields = {}
         fields[:manufacturer_id],
