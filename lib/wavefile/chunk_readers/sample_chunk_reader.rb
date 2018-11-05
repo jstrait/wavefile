@@ -21,12 +21,12 @@ module WaveFile
         fields[:smpte_offset_minutes],
         fields[:smpte_offset_seconds],
         fields[:smpte_offset_frame_count],
-        fields[:loop_count],
-        fields[:sampler_data_size] = raw_bytes.slice!(0...CORE_BYTE_COUNT).unpack("VVVVVVcCCCVV")
+        loop_count,
+        sampler_data_size = raw_bytes.slice!(0...CORE_BYTE_COUNT).unpack("VVVVVVcCCCVV")
         fields[:pitch_fraction] = (fields[:pitch_fraction] / 4_294_967_296.0) * 100
 
         fields[:loops] = []
-        fields[:loop_count].times do
+        loop_count.times do
           loop_fields = {}
           loop_fields[:id],
           loop_fields[:type],
@@ -40,7 +40,7 @@ module WaveFile
           fields[:loops] << Loop.new(loop_fields)
         end
 
-        fields[:sampler_specific_data] = raw_bytes.slice!(0...fields[:sampler_data_size])
+        fields[:sampler_specific_data] = raw_bytes.slice!(0...sampler_data_size)
 
         SampleChunk.new(fields)
       end
