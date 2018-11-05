@@ -30,6 +30,10 @@ module WaveFile
 
         fields[:loops] = []
         loop_count.times do
+          if raw_bytes.length < LOOP_BYTE_COUNT
+            raise_error InvalidFormatError, "`smpl` chunk loop count is #{loop_count}, but it does not contain that many loops"
+          end
+
           loop_fields = {}
           loop_fields[:id],
           loop_fields[:type],

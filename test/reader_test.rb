@@ -45,6 +45,9 @@ class ReaderTest < Minitest::Test
 
       # Contains a `smpl` chunk that doesn't have enough bytes to match the chunk's size
       "invalid/truncated_smpl_chunk.wav",
+
+      # `smpl` chunk does not contain as many loops as the 'loop count' field indicates
+      "invalid/smpl_chunk_loop_count_too_high.wav",
     ]
 
     invalid_fixtures.each do |fixture_name|
