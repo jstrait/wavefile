@@ -26,6 +26,37 @@ end
 More examples can be found at <http://wavefilegem.com/examples>.
 
 
+# Installation
+
+First, install the WaveFile gem from rubygems.org:
+
+    gem install wavefile
+
+...and include it in your Ruby program:
+
+    require 'wavefile'
+
+Note that if you're installing the gem into the default Ruby that comes pre-installed on MacOS (as opposed to a Ruby installed via [RVM](http://rvm.io/) or [rbenv](https://github.com/sstephenson/rbenv/)), you should used `sudo gem install wavefile`. Otherwise you might run into a file permission error.
+
+
+# Compatibility
+
+WaveFile has been tested with these Ruby versions, and appears to be compatible with them:
+
+* MRI 2.5.1, 2.4.4, 2.3.7, 2.2.10, 2.1.10, 2.0
+
+2.0 is the minimum supported Ruby version.
+
+If you find any compatibility issues, please let me know by opening a GitHub issue.
+
+
+# Dependencies
+
+WaveFile has no external dependencies when used as a gem.
+
+However, it does have dependencies for local development, in order to run the tests. See below in section "Local Development".
+
+
 # Features
 
 This gem lets you read and write audio data! You can use it to create Ruby programs that work with sound.
@@ -45,37 +76,6 @@ Released on TBD, this version has these changes:
 * Errors raised by `Reader.new` when attempting to read an invalid file are improved to provide more detail about why the file is invalid.
 
 For changes in previous versions, visit <https://github.com/jstrait/wavefile/releases>.
-
-
-# Compatibility
-
-WaveFile has been tested with these Ruby versions, and appears to be compatible with them:
-
-* MRI 2.5.1, 2.4.4, 2.3.7, 2.2.10, 2.1.10, 2.0
-
-2.0 is the minimum supported Ruby version.
-
-If you find any compatibility issues, please let me know by opening a GitHub issue.
-
-
-# Installation
-
-First, install the WaveFile gem from rubygems.org:
-
-    gem install wavefile
-
-...and include it in your Ruby program:
-
-    require 'wavefile'
-
-Note that if you're installing the gem into the default Ruby that comes pre-installed on MacOS (as opposed to a Ruby installed via [RVM](http://rvm.io/) or [rbenv](https://github.com/sstephenson/rbenv/)), you should used `sudo gem install wavefile`. Otherwise you might run into a file permission error.
-
-
-# Dependencies
-
-WaveFile has no external dependencies when used as a gem.
-
-However, it does have dependencies for local development, in order to run the tests. See below in section "Local Development".
 
 
 # Local Development
