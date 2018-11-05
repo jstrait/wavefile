@@ -44,7 +44,7 @@ module WaveFile
           loop_fields[:type] = loop_type(loop_fields[:type])
           loop_fields[:fraction] /= 4_294_967_296.0
 
-          fields[:loops] << Loop.new(loop_fields)
+          fields[:loops] << SamplerLoop.new(loop_fields)
         end
 
         if sampler_data_size > 0
@@ -55,10 +55,10 @@ module WaveFile
           fields[:sampler_specific_data] = raw_bytes.slice!(0...sampler_data_size)
         end
 
-        SampleChunk.new(fields)
+        SamplerInfo.new(fields)
       end
 
-      class SampleChunk
+      class SamplerInfo
         def initialize(fields)
           @manufacturer_id = fields[:manufacturer_id]
           @product_id = fields[:product_id]
@@ -114,7 +114,7 @@ module WaveFile
         attr_reader :sampler_specific_data
       end
 
-      class Loop
+      class SamplerLoop
         def initialize(id:, type:, start_sample_frame:, end_sample_frame:, fraction:, play_count:)
           @id = id
           @type = type
