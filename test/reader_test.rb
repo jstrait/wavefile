@@ -48,6 +48,9 @@ class ReaderTest < Minitest::Test
 
       # `smpl` chunk does not contain as many loops as the 'loop count' field indicates
       "invalid/smpl_chunk_loop_count_too_high.wav",
+
+      # `smpl` chunk does not contain as bytes as 'sampler specific data size' field indicates
+      "invalid/smpl_chunk_truncated_sampler_specific_data.wav",
     ]
 
     invalid_fixtures.each do |fixture_name|

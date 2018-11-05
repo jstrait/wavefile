@@ -48,6 +48,10 @@ module WaveFile
         end
 
         if sampler_data_size > 0
+          if raw_bytes.length < sampler_data_size
+            raise_error InvalidFormatError, "`smpl` chunk \"sampler specific data\" field is smaller than expected."
+          end
+
           fields[:sampler_specific_data] = raw_bytes.slice!(0...sampler_data_size)
         end
 
