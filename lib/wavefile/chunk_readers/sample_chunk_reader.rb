@@ -23,6 +23,7 @@ module WaveFile
         fields[:smpte_offset_frame_count],
         fields[:loop_count],
         fields[:sampler_data_size] = raw_bytes.slice!(0...CORE_BYTE_COUNT).unpack("VVVVVVcCCCVV")
+        fields[:pitch_fraction] = (fields[:pitch_fraction] / 4_294_967_296.0) * 100
 
         fields[:loops] = []
         fields[:loop_count].times do
@@ -33,6 +34,8 @@ module WaveFile
           loop_fields[:end_sample_frame],
           loop_fields[:fraction],
           loop_fields[:play_count] = raw_bytes.slice!(0...LOOP_BYTE_COUNT).unpack("VVVVVV")
+          loop_fields[:type] = loop_type(loop_fields[:type])
+          loop_fields[:fraction] /= 4_294_967_296.0
 
           fields[:loops] << Loop.new(loop_fields)
         end
@@ -48,7 +51,7 @@ module WaveFile
           @product_id = fields[:product_id]
           @sample_duration = fields[:sample_duration]
           @midi_note = fields[:midi_note]
-          @fine_tuning_cents = (fields[:pitch_fraction] / 4_294_967_296.0) * 100
+          @fine_tuning_cents = fields[:pitch_fraction]
           @smpte_format = fields[:smpte_format]
           @smpte_offset = {
             hours: fields[:smpte_offset_hours],
@@ -101,10 +104,10 @@ module WaveFile
       class Loop
         def initialize(id:, type:, start_sample_frame:, end_sample_frame:, fraction:, play_count:)
           @id = id
-          @type = loop_type(type)
+          @type = type
           @start_sample_frame = start_sample_frame
           @end_sample_frame = end_sample_frame
-          @fraction = fraction / 4_294_967_296.0
+          @fraction = fraction
           @play_count = play_count
         end
 
@@ -128,27 +131,25 @@ module WaveFile
 
         # Public: Returns the number of times to loop. 0 means infinitely.
         attr_reader :play_count
-
-        private
-
-        def loop_type(loop_type_id)
-          case loop_type_id
-          when 0
-            :forward
-          when 1
-            :alternating
-          when 2
-            :backward
-          else
-            :unknown
-          end
-        end
       end
 
       private
 
       CORE_BYTE_COUNT = 36
       LOOP_BYTE_COUNT = 24
+
+      def loop_type(loop_type_id)
+        case loop_type_id
+        when 0
+          :forward
+        when 1
+          :alternating
+        when 2
+          :backward
+        else
+          :unknown
+        end
+      end
     end
   end
 end
