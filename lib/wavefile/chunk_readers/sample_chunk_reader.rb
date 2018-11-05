@@ -17,12 +17,12 @@ module WaveFile
         fields[:midi_note],
         fields[:pitch_fraction],
         fields[:smpte_format],
-        fields[:smpte_offset_hours],
-        fields[:smpte_offset_minutes],
-        fields[:smpte_offset_seconds],
         fields[:smpte_offset_frame_count],
+        fields[:smpte_offset_seconds],
+        fields[:smpte_offset_minutes],
+        fields[:smpte_offset_hours],
         loop_count,
-        sampler_data_size = raw_bytes.slice!(0...CORE_BYTE_COUNT).unpack("VVVVVVcCCCVV")
+        sampler_data_size = raw_bytes.slice!(0...CORE_BYTE_COUNT).unpack("VVVVVVCCCcVV")
         fields[:pitch_fraction] = (fields[:pitch_fraction] / 4_294_967_296.0) * 100
 
         fields[:loops] = []
