@@ -40,7 +40,9 @@ module WaveFile
           fields[:loops] << Loop.new(loop_fields)
         end
 
-        fields[:sampler_specific_data] = raw_bytes.slice!(0...sampler_data_size)
+        if sampler_data_size > 0
+          fields[:sampler_specific_data] = raw_bytes.slice!(0...sampler_data_size)
+        end
 
         SampleChunk.new(fields)
       end

@@ -632,8 +632,7 @@ class ReaderTest < Minitest::Test
     assert_equal(0, sample_info.loops[0].end_sample_frame)
     assert_equal(0.5, sample_info.loops[0].fraction)
     assert_equal(1, sample_info.loops[0].play_count)
-    assert_equal("", sample_info.sampler_specific_data)
-    assert_equal(Encoding::ASCII_8BIT, sample_info.sampler_specific_data.encoding)
+    assert_nil(sample_info.sampler_specific_data)
   end
 
   def test_smpl_chunk_after_data_chunk
@@ -654,8 +653,7 @@ class ReaderTest < Minitest::Test
     assert_equal(0, sample_info.loops[0].end_sample_frame)
     assert_equal(0.5, sample_info.loops[0].fraction)
     assert_equal(1, sample_info.loops[0].play_count)
-    assert_equal("", sample_info.sampler_specific_data)
-    assert_equal(Encoding::ASCII_8BIT, sample_info.sampler_specific_data.encoding)
+    assert_nil(sample_info.sampler_specific_data)
   end
 
   def test_smpl_chunk_with_sampler_specific_data
@@ -692,8 +690,7 @@ class ReaderTest < Minitest::Test
     assert_equal(0, sample_info.smpte_format)
     assert_equal({hours: 0, minutes: 0, seconds: 0, frame_count: 0}, sample_info.smpte_offset)
     assert_equal([], sample_info.loops)
-    assert_equal("", sample_info.sampler_specific_data)
-    assert_equal(Encoding::ASCII_8BIT, sample_info.sampler_specific_data.encoding)
+    assert_nil(sample_info.sampler_specific_data)
   end
 
 private
