@@ -1,6 +1,6 @@
 = \WaveFile Gem
 
-The WaveFile gem lets you read and write wave files.
+The \WaveFile gem lets you read and write wave files.
 
 Reading is done using the Reader[WaveFile/Reader.html] class, and writing is done using the Writer[WaveFile/Writer.html] class.
 
