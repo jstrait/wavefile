@@ -1,4 +1,11 @@
 module WaveFile
+  # Public: Provides a way to indicate the data contained in a "smpl" chunk.
+  #         That is, information about how the *.wav file could be used by a
+  #         sampler, such as the file's MIDI note or loop points. If a *.wav
+  #         file contains a "smpl" chunk, then Reader.sample_info will
+  #         return an instance of this object with the relevant info.
+  #
+  # Returns a SamplerInfo containing the info in a file's "smpl" chunk.
   class SamplerInfo
     def initialize(fields)
       @manufacturer_id = fields[:manufacturer_id]
@@ -45,7 +52,9 @@ module WaveFile
     # Public: Returns a Hash representing the SMPTE time offset.
     attr_reader :smpte_offset
 
-    # Public: Returns an Array of 0 or more loop specifications.
+    # Public: Returns an Array of 0 or more SampleLoop objects containing loop point info. Loop point info
+    #         can indicate that (for example) the sampler should loop between a given sample range as long
+    #         as the sample is played.
     attr_reader :loops
 
     # Public: Returns a String of data specific to the intended target sampler. This is returned as a raw

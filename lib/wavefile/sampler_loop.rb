@@ -1,4 +1,11 @@
 module WaveFile
+  # Public: Provides a way to indicate the data about sampler loop points
+  #         in a file's "smpl" chunk. That is, information about how a sampler
+  #         could loop between a sample  range while playing this *.wav as a note.
+  #         If a *.wav file contains a "smpl" chunk, then Reader.sample_info.loops
+  #         will return an array of SamplerLoop objects with the relevant info.
+  #
+  # Returns a SamplerLoop containing the info in a file's "smpl" chunk.
   class SamplerLoop
     def initialize(id:, type:, start_sample_frame:, end_sample_frame:, fraction:, play_count:)
       @id = id
