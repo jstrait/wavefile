@@ -31,17 +31,21 @@ module WaveFile
     # sample_rate - The number of samples per second, such as 44100
     # speaker_mapping - An optional array which indicates which speaker each channel should be
     #                   mapped to. Each value in the array should be one of these values:
+    #
     #                   +:front_left+, +:front_right+, +:front_center+, +:low_frequency+, +:back_left+,
     #                   +:back_right+, +:front_left_of_center+, +:front_right_of_center+,
     #                   +:back_center+, +:side_left+, +:side_right+, +:top_center+, +:top_front_left+,
     #                   +:top_front_center+, +:top_front_right+, +:top_back_left+, +:top_back_center+,
-    #                   +:top_back_right+. Each value should only appear once, and the channels
-    #                   must follow the ordering above. For example, [:front_center, :back_left]
-    #                   is a valid speaker mapping, but [:back_left, :front_center] is not.
+    #                   +:top_back_right+.
+    #
+    #                   Each value should only appear once, and the channels must follow the ordering above.
+    #
+    #                   For example, <code>[:front_center, :back_left]</code>
+    #                   is a valid speaker mapping, but <code>[:back_left, :front_center]</code> is not.
     #                   If a given channel should not be mapped to a specific speaker, the
-    #                   value :undefined can be used. If this field is omitted, a default
+    #                   value +:undefined+ can be used. If this field is omitted, a default
     #                   value for the given number of channels. For example, if there are 2
-    #                   channels, this will be set to [:front_left, :front_right].
+    #                   channels, this will be set to <code>[:front_left, :front_right]</code>.
     #
     # Examples
     #
@@ -99,11 +103,11 @@ module WaveFile
     end
 
     # Public: Returns the number of channels, such as 1 or 2. This will always return a
-    # Integer, even if the number of channels is specified with a symbol (e.g. :mono)
+    # Integer, even if the number of channels is specified with a symbol (e.g. +:mono+)
     # in the constructor.
     attr_reader :channels
 
-    # Public: Returns a symbol indicating the sample format, such as :pcm or :float
+    # Public: Returns a symbol indicating the sample format, such as +:pcm+ or +:float+
     attr_reader :sample_format
 
     # Public: Returns the number of bits per sample, such as 8, 16, 24, 32, or 64.

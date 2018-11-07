@@ -15,9 +15,9 @@ module WaveFile
     # Public: Creates a new Buffer.
     #
     # samples - An array of samples. If the Format has 1 channel (i.e. is mono), this
-    #           should be a flat array of samples such as [0.5, 0.4, -0.3, ...]. If the
-    #           Format has 2 or more channels the array should include a sub-array for
-    #           each sample frame. For example, [[0.5, 0.2], [0.1, 0.6], [-0.2, 0.4], ...]
+    #           should be a flat array of samples such as <code>[0.5, 0.4, -0.3, ...]</code>.
+    #           If the Format has 2 or more channels the array should include a sub-array for
+    #           each sample frame. For example, <code>[[0.5, 0.2], [0.1, 0.6], [-0.2, 0.4], ...]</code>
     #           for a stereo file.
     #
     #           The individual samples should match the given format:
