@@ -1,7 +1,7 @@
 module WaveFile
   # Public: Error that is raised when an attempt is made to perform an unsupported or
   # undefined conversion between two sample data formats. For example, converting a Buffer
-  # with 3 channels into a Buffer with 2 channels is undefined.
+  # with 4 channels into a Buffer with 3 channels is undefined.
   class BufferConversionError < StandardError; end
 
 
