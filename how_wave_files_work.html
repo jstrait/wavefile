@@ -43,7 +43,7 @@ and Data Specifications 1.0, August 1991</a></li>
     <div style="border: 2px solid black; padding: 0.75rem; margin: 0.75rem 0; border-radius: 0.75rem;"><em>other optional chunk</em></div>
     <div style="border: 2px solid black; padding: 0.75rem; margin: 0.75rem 0; border-radius: 0.75rem;">Data Chunk (ID <code>"data"</code>)</div>
   </div>
-  <p><span class="tag-important">Important!</span>Other than the format chunk coming before the data chunk, there isn&rsquo;t any requirement that the chunks come in any particular order. You shouldn&rsquo;t assume that the data chunk is the last chunk. (Although in practice, it usually is).</p>
+  <p><span class="tag-important">Important!</span>Other than the format chunk coming before the data chunk, there isn&rsquo;t any requirement that the chunks come in any particular order. You shouldn&rsquo;t assume that the data chunk is the last chunk. (Although in practice, it often is).</p>
   <h2>The RIFF Chunk</h2>
   <p>Like all chunks, the RIFF chunk starts with an ID code, in this the bytes that correspond to the ASCII string <code>"RIFF"</code>. Next is the size field, which is the size of the entire Wave file except for the 8-byte RIFF header.</p>
   <p>The first 4 bytes following the header will identify the type of RIFF chunk. In the case of Wave files, it will be <code>"WAVE"</code>. Immediately following that will be the inner Wave file chunks.</p>
