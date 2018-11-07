@@ -93,7 +93,9 @@ module WaveFile
     #   writer.write(buffer)
     #
     # Returns the number of sample frames that have been written to the file so far.
+    #
     # Raises WriterClosedError if the Writer has been closed.
+    #
     # Raises BufferConversionError if the Buffer can't be converted to the Writer's format.
     def write(buffer)
       if @closed

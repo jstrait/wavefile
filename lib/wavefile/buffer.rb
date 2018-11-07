@@ -75,6 +75,7 @@ module WaveFile
     #   new_buffer = old_buffer.convert(new_format)
     #
     # Returns a new Buffer; the existing Buffer is unmodified.
+    #
     # Raises BufferConversionError if the Buffer can't be converted to the given format
     def convert(new_format)
       new_samples = convert_buffer(@samples.dup, @format, new_format)
@@ -95,6 +96,7 @@ module WaveFile
     #   old_buffer.convert!(new_format)
     #
     # Returns self.
+    #
     # Raises BufferConversionError if the Buffer can't be converted to the given format
     def convert!(new_format)
       @samples = convert_buffer(@samples, @format, new_format)

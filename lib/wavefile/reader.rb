@@ -27,7 +27,9 @@ module WaveFile
     #          (default: the wave file's internal format).
     #
     # Returns a Reader object that is ready to start reading the specified file's sample data.
+    #
     # Raises +Errno::ENOENT+ if the specified file can't be found.
+    #
     # Raises InvalidFormatError if the specified file isn't a valid wave file.
     def initialize(io_or_file_name, format=nil)
       if io_or_file_name.is_a?(String)
@@ -111,8 +113,11 @@ module WaveFile
     #                      each channel.
     #
     # Returns a Buffer containing sample_frame_count sample frames.
+    #
     # Raises UnsupportedFormatError if file is in a format that can't be read by this gem.
+    #
     # Raises ReaderClosedError if the Writer has been closed.
+    #
     # Raises EOFError if no samples could be read due to reaching the end of the file.
     def read(sample_frame_count)
       if @closed
