@@ -14,8 +14,6 @@ Reader.new("my_file.wav").each_buffer do |buffer|
 end{% endhighlight %}
 
   <p>First construct a <code>Reader</code> object, then call <code>each_buffer()</code> on it. Successive sample buffers will be read from the file and passed to the given block, until all sample data in the file has been read. Finally, the <code>Reader</code> will automatically be closed. (Note that this is essentially the same as how <code>IO.open</code> works if you pass it a block).</p>
-
-  <p><strong>Note:</strong> When calling <code>each_buffer()</code> (and <code>read()</code>), the number you pass indicates the number of samples to read for <em>each channel</em>. That is, if you call <code>each_buffer(1024)</code> on a stereo/16-bit file, then the returned buffer will contain 1024 samples for the left channel, and 1024 samples for the right channel.</p>
 </div>
 
 <div class="section bg-white">
