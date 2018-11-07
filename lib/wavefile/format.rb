@@ -121,7 +121,7 @@ module WaveFile
     attr_reader :block_align
 
     # Public: Returns the number of bytes contained in 1 second of sample data.
-    # Is equivalent to block_align * sample_rate.
+    # Is equivalent to #block_align * #sample_rate.
     attr_reader :byte_rate
 
     # Public: Returns the mapping of each channel to a speaker.
