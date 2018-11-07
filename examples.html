@@ -58,6 +58,10 @@ end{% endhighlight %}
 <div class="section bg-white">
   <h2>Getting Metadata About a Wave File</h2>
 
+  <p><code>Reader.format</code> contains info about the format samples will be converted to when being read out of the file, while <code>Reader.native_format</code> contains info about how the samples are actually stored in the file.</p>
+  <p><code>Reader.readable_format?</code> will indicate whether the sample data is in a format understood by the WaveFile gem. (If not, an error will be raised when calling <code>Reader.read</code>).</p>
+  <p><code>Reader.duration</code> can be used to determine the playback time of the file.</p>
+
   {% highlight ruby %}require 'wavefile'
 include WaveFile
 
