@@ -273,6 +273,43 @@ span.label {
   margin: 0 auto;
 }
 
+.chunk-parent {
+  border: 2px solid #a1a1a1;
+  box-sizing: border-box;
+  max-width: 15.0rem;
+  margin: 0 auto;
+  border-radius: 0.5rem;
+}
+
+.chunk-child {
+  border: 2px solid #a1a1a1;
+  margin: 0.75rem;
+  box-sizing: border-box;
+  width: calc(100% - 1.5rem);
+  border-radius: 0.25rem;
+}
+
+.chunk-parent-field {
+  border-bottom: 1px solid #a1a1a1;
+  padding: 0.25rem 0.75rem;
+  width: 100%;
+  display: block;
+  box-sizing: border-box;
+}
+
+.chunk-child-field {
+  border-bottom: 1px solid #a1a1a1;
+  padding: 0.25rem;
+  width: 100%;
+  display: block;
+  box-sizing: border-box;
+}
+
+.chunk-child-field:last-child {
+  border-bottom: none;
+}
+
+
 .flex-column { flex-direction: column; }
 
 
