@@ -151,7 +151,7 @@ module WaveFile
       @closed = true
     end
 
-    # Public: Returns a Duration instance for the total number of sample frames in the file
+    # Public: Returns a Duration instance which indicates the playback time of the file.
     def total_duration
       Duration.new(total_sample_frames, @data_chunk_reader.format.sample_rate)
     end
