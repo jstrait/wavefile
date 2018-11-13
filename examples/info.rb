@@ -32,19 +32,31 @@ begin
   puts "  Sample frame count:    #{reader.total_sample_frames}"
   puts "  Speaker mapping:       #{reader.native_format.speaker_mapping.nil? ? 'Not defined' : reader.native_format.speaker_mapping.inspect}"
 
-  unless reader.sample_info.nil?
-    puts "  #{reader.sample_info.loop_count} Loops:"
-    reader.sample_info.loops.each do |loop|
-      puts "    ID: #{loop.id}: #{loop.type} from #{loop.start} to #{loop.end}"
-    end
-  end
-
   duration = reader.total_duration
   formatted_duration = duration.hours.to_s.rjust(2, "0") << ":" <<
                        duration.minutes.to_s.rjust(2, "0") << ":" <<
                        duration.seconds.to_s.rjust(2, "0") << ":" <<
                        duration.milliseconds.to_s.rjust(3, "0")
   puts "  Play time:             #{formatted_duration}"
+
+  unless reader.sample_info.nil?
+    puts "  Sampler Info:"
+    puts "    Manufacturer ID: #{reader.sample_info.manufacturer_id}"
+    puts "    Product ID: #{reader.sample_info.product_id}"
+    puts "    Sample Duration: #{reader.sample_info.sample_duration}ns"
+    puts "    MIDI Note Number: #{reader.sample_info.midi_note}"
+    puts "    Fine Tuning Cents: #{reader.sample_info.fine_tuning_cents}"
+    puts "    SMPTE Format: #{reader.sample_info.smpte_format}"
+    puts "    SMPTE Offset: #{reader.sample_info.smpte_offset[:hours].to_s.rjust(2, "0")}:#{reader.sample_info.smpte_offset[:minutes].to_s.rjust(2, "0")}:#{reader.sample_info.smpte_offset[:seconds].to_s.rjust(2, "0")} #{reader.sample_info.smpte_offset[:frame_count].to_s.rjust(2, "0")}"
+    if reader.sample_info.loops.any?
+      puts "    #{reader.sample_info.loops.length} Loop(s):"
+      reader.sample_info.loops.each do |loop|
+        puts "      ID #{loop.id}: #{loop.type} from sample frame #{loop.start_sample_frame} to sample frame #{loop.end_sample_frame}"
+      end
+    else
+      puts "    No loops."
+    end
+  end
 rescue InvalidFormatError
   puts "  Not a valid Wave file!"
 end
