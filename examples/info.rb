@@ -2,6 +2,10 @@ require 'wavefile'
 include WaveFile
 
 file_name = ARGV[0]
+if file_name.nil?
+  puts "No file name given."
+  exit
+end
 
 begin
   reader = Reader.new(file_name)
@@ -56,6 +60,8 @@ begin
       puts "  No loops."
     end
   end
+rescue Errno::ENOENT
+  puts "File not found!"
 rescue InvalidFormatError
   puts "Not a valid Wave file!"
 end
