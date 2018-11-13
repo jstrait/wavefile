@@ -26,7 +26,10 @@ module WaveFile
         raise UnsupportedFormatError unless @readable_format
 
         if @current_sample_frame >= @total_sample_frames
-          #FIXME: Do something different here, because the end of the file has not actually necessarily been reached
+          # The end of the file has not necessarily been reached if there is another chunk after
+          # the data chunk, but EOFError is raised for backwards compatibility with older versions
+          # of the gem, and because it is also generally semantically correct that the "relevant"
+          # end of the file has been reached.
           raise EOFError
         elsif sample_frame_count > sample_frames_remaining
           sample_frame_count = sample_frames_remaining
