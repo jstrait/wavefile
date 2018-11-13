@@ -26,7 +26,7 @@ and Data Specifications 1.0, August 1991</a></li>
 
   <h2>Wave Files are RIFF Files</h2>
   <p>Back in the late 80s Electronic Arts came up with a general container file format that could be used to store different types of data &ndash; audio, graphics, etc. It was called <em>IFF</em>, for <em>Interchange File Format</em>. Microsoft then took this format, switched the byte order to <a href="http://en.wikipedia.org/wiki/Endianness">little-endian</a> to match Intel processors, and dubbed it <em>RIFF (Resource Interchange File Format</em>). Many of the venerable Microsoft multimedia file formats are stored as RIFF files, including <code>*.rtf</code> (&ldquo;rich text format&rdquo;, a WYSIWYG text format), <code>*.avi</code> (a basically obsolete movie format), and of course, <code>*.wav</code>.</p>
-  <p>As mentioned above, all numbers in a RIFF file are stored as <a href="http://en.wikipedia.org/wiki/Endianness">little-endian</a>. (Some non-numeric data is stored as a sequence of bytes, in which endianness isn't relevant).</p>
+  <p>As mentioned above, all numbers in a RIFF file are stored as <a href="http://en.wikipedia.org/wiki/Endianness">little-endian</a>. (Some non-numeric data is stored as a sequence of bytes, in which endianness isn&rsquo;t relevant).</p>
   <h2>RIFF Files Contain &ldquo;Chunks&rdquo;</h2>
   <p>An IFF file, and therefore a RIFF file, is broken up into several &ldquo;chunks&rdquo; of data. Each chunk has an 8-byte header containing a 4-byte identifier code, and a 4-byte size field.</p>
   <p>The identifier code, called a <a href="http://en.wikipedia.org/wiki/Fourcc">FourCC</a>, is a sequence of 4 bytes. When each byte is interpreted as an ASCII character, they typically form a human readable string. For example, <code>0x52</code> <code>0x49</code> <code>0x46</code> <code>0x46</code> (i.e. <code>"RIFF"</code>), or <code>0x64</code> <code>0x61</code> <code>0x74</code> <code>0x61</code> (i.e. <code>"data"</code>). Since this is a raw sequence of bytes, the characters are case-sensitive.</p>
@@ -78,7 +78,7 @@ and Data Specifications 1.0, August 1991</a></li>
   </div>
 
   <h2>The Format Chunk</h2>
-  <p>The format chunk describes the format that the samples in the data chunk are encoded in. The exact structure of the format chunk depends on the value of the format code field. If the format code is 1 (integer PCM), then the format chunk will only contain the fields above the dashed line in the diagram below. If it's not 1, the chunk will also contain the fields after the dashed line.</p>
+  <p>The format chunk describes the format that the samples in the data chunk are encoded in. The exact structure of the format chunk depends on the value of the format code field. If the format code is 1 (integer PCM), then the format chunk will only contain the fields above the dashed line in the diagram below. If it&rsquo;s not 1, the chunk will also contain the fields after the dashed line.</p>
   <div class="scroll-x">
     <table>
       <tr>
@@ -184,7 +184,7 @@ and Data Specifications 1.0, August 1991</a></li>
   </div>
   <p>This field can be used to calculate the bytes per second field. Another possible use is for seeking around in a file. For example, if the bytes per sample frame is 32, then to seek forward 10 sample frames you need to seek forward 320 bytes.</p>
   <p>For PCM data, this field is essentially redundant since it can be calculated from the other fields. However, be sure to note the point of rounding bits per sample values to the nearest multiple of 8.</p>
-  <p><span class="label">Bits per sample</span> &ndash; For PCM data, typical values will be 8, 16, or 32. If the sample format doesn't require this field, it should be set to 0.</p>
+  <p><span class="label">Bits per sample</span> &ndash; For PCM data, typical values will be 8, 16, or 32. If the sample format doesn&rsquo;t require this field, it should be set to 0.</p>
   <p><span class="label">Extension Size</span> &ndash; This field should only be present if the format code is not 1. This indicates the size of the extra fields in bytes. It does not include the bytes in this field itself. If the given sample format has no extra fields, then this field should be set to 0.</p>
   <p><span class="label">Extra Fields</span> &ndash; It depends on the format code! The next sections describe the extra fields for a few audio formats.</p>
 
@@ -392,7 +392,7 @@ and Data Specifications 1.0, August 1991</a></li>
   <h2>Floating Point Data Chunk</h2>
   <p>Another basic format is to store samples as floating point values (format code 3). This is essentially the same as PCM format, except that samples are in the range -1.0 to 1.0. The bits per sample field for floating point files should be set to 32 or 64.</p>
   <h2>EXTENSIBLE Data Chunk</h2>
-  <p>Since WAVE_FORMAT_EXTENSIBLE is a container format, the format code of 65534 doesn't imply any particular sample format. The sample format is instead determined by the sub format GUID in the format chunk. For example, if the sub format GUID is the GUID for PCM, then the samples are in the same format as if the format code was 1.</p>
+  <p>Since WAVE_FORMAT_EXTENSIBLE is a container format, the format code of 65534 doesn&rsquo;t imply any particular sample format. The sample format is instead determined by the sub format GUID in the format chunk. For example, if the sub format GUID is the GUID for PCM, then the samples are in the same format as if the format code was 1.</p>
 
   <h2>References</h2>
   <p>Documents from Microsoft defining the initial file format, and changes over time:</p>
