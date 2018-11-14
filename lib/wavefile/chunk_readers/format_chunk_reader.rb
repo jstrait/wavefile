@@ -12,7 +12,7 @@ module WaveFile
           raise_error InvalidFormatError, "The format chunk is incomplete."
         end
 
-        raw_bytes = read_chunk_body(CHUNK_IDS[:format], @chunk_size)
+        raw_bytes = read_entire_chunk_body(CHUNK_IDS[:format])
 
         format_chunk = {}
         format_chunk[:audio_format],
@@ -46,14 +46,6 @@ module WaveFile
       private
 
       MINIMUM_CHUNK_SIZE = 16
-
-      def read_chunk_body(chunk_id, chunk_size)
-        begin
-          return @io.sysread(chunk_size)
-        rescue EOFError
-          raise_error InvalidFormatError, "The #{chunk_id} chunk has incomplete data."
-        end
-      end
     end
   end
 end
