@@ -27,6 +27,7 @@ module WaveFile
 
           data_chunk_seek_pos = nil
           data_chunk_size = nil
+          data_chunk_is_last_chunk = nil
 
           loop do
             chunk_id, chunk_size = read_chunk_header
@@ -43,7 +44,12 @@ module WaveFile
             when CHUNK_IDS[:data]
               data_chunk_seek_pos = @io.pos
               data_chunk_size = chunk_size
-              @io.seek(data_chunk_seek_pos + chunk_size, IO::SEEK_SET)
+
+              if (@io.pos + data_chunk_size) < end_of_file_pos
+                @io.seek(data_chunk_seek_pos + chunk_size, IO::SEEK_SET)
+              else
+                data_chunk_is_last_chunk = true
+              end
             else
               # Unsupported chunk types are ignored
               @io.seek(chunk_size, IO::SEEK_CUR)
@@ -57,7 +63,7 @@ module WaveFile
               @io.sysread(1)
             end
 
-            break if @io.pos >= end_of_file_pos
+            break if @io.pos >= end_of_file_pos || data_chunk_is_last_chunk
           end
         rescue EOFError
           raise_error InvalidFormatError, "Unexpected end of file."
@@ -71,7 +77,9 @@ module WaveFile
           raise_error InvalidFormatError, "It doesn't have a data chunk."
         end
 
-        @io.seek(data_chunk_seek_pos, IO::SEEK_SET)
+        if @io.pos != data_chunk_seek_pos
+          @io.seek(data_chunk_seek_pos, IO::SEEK_SET)
+        end
         @data_chunk_reader = DataChunkReader.new(@io, data_chunk_size, @native_format, format)
       end
 
