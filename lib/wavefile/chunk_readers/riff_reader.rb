@@ -52,7 +52,7 @@ module WaveFile
               end
             else
               # Unsupported chunk types are ignored
-              @io.seek(chunk_size, IO::SEEK_CUR)
+              @io.sysread(chunk_size)
             end
 
             # The RIFF specification requires that each chunk be aligned to an even number of bytes,
