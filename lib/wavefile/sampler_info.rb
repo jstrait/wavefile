@@ -7,21 +7,24 @@ module WaveFile
   #
   # Returns a SamplerInfo containing the info in a file's "smpl" chunk.
   class SamplerInfo
-    def initialize(fields)
-      @manufacturer_id = fields[:manufacturer_id]
-      @product_id = fields[:product_id]
-      @sample_duration = fields[:sample_duration]
-      @midi_note = fields[:midi_note]
-      @fine_tuning_cents = fields[:pitch_fraction]
-      @smpte_format = fields[:smpte_format]
-      @smpte_offset = {
-        hours: fields[:smpte_offset_hours],
-        minutes: fields[:smpte_offset_minutes],
-        seconds: fields[:smpte_offset_seconds],
-        frame_count: fields[:smpte_offset_frame_count],
-      }.freeze
-      @loops = fields[:loops]
-      @sampler_specific_data = fields[:sampler_specific_data]
+    def initialize(manufacturer_id:,
+                   product_id:,
+                   sample_duration:,
+                   midi_note:,
+                   fine_tuning_cents:,
+                   smpte_format:,
+                   smpte_offset:,
+                   loops:,
+                   sampler_specific_data:)
+      @manufacturer_id = manufacturer_id
+      @product_id = product_id
+      @sample_duration = sample_duration
+      @midi_note = midi_note
+      @fine_tuning_cents = fine_tuning_cents
+      @smpte_format = smpte_format
+      @smpte_offset = smpte_offset
+      @loops = loops
+      @sampler_specific_data = sampler_specific_data
     end
 
     # Public: Returns the ID of the manufacturer that this sample is intended for. If it's not

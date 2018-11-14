@@ -15,15 +15,21 @@ module WaveFile
         fields[:product_id],
         fields[:sample_duration],
         fields[:midi_note],
-        fields[:pitch_fraction],
+        fields[:fine_tuning_cents],
         fields[:smpte_format],
-        fields[:smpte_offset_frame_count],
-        fields[:smpte_offset_seconds],
-        fields[:smpte_offset_minutes],
-        fields[:smpte_offset_hours],
+        smpte_offset_frame_count,
+        smpte_offset_seconds,
+        smpte_offset_minutes,
+        smpte_offset_hours,
         loop_count,
         sampler_data_size = raw_bytes.slice!(0...CORE_BYTE_COUNT).unpack("VVVVVVCCCcVV")
-        fields[:pitch_fraction] = (fields[:pitch_fraction] / 4_294_967_296.0) * 100
+        fields[:fine_tuning_cents] = (fields[:fine_tuning_cents] / 4_294_967_296.0) * 100
+        fields[:smpte_offset] = {
+          hours: smpte_offset_hours,
+          minutes: smpte_offset_minutes,
+          seconds: smpte_offset_seconds,
+          frame_count: smpte_offset_frame_count,
+        }.freeze
 
         fields[:loops] = []
         loop_count.times do
@@ -50,6 +56,8 @@ module WaveFile
           end
 
           fields[:sampler_specific_data] = raw_bytes.slice!(0...sampler_data_size)
+        else
+          fields[:sampler_specific_data] = nil
         end
 
         SamplerInfo.new(fields)
