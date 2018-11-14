@@ -8,6 +8,8 @@ module WaveFile
   # Returns a SamplerLoop containing the info in a file's "smpl" chunk.
   class SamplerLoop
     def initialize(id:, type:, start_sample_frame:, end_sample_frame:, fraction:, play_count:)
+      type = normalize_type(type)
+
       validate_id(id)
       validate_loop_type(type)
       validate_start_sample_frame(start_sample_frame)
@@ -47,10 +49,30 @@ module WaveFile
     private
 
     VALID_ID_RANGE = 0..4_294_967_295    # :nodoc:
+    VALID_TYPE_RANGE = 0..4_294_967_295    # :nodoc:
     VALID_LOOP_TYPES = [:forward, :alternating, :backward, :unknown].freeze    # :nodoc:
     VALID_FRACTION_RANGE = 0..1    # :nodoc:
     VALID_SAMPLE_FRAME_RANGE = 0..4_294_967_295    # :nodoc:
     VALID_PLAY_COUNT_RANGE = 0..4_294_967_295    # :nodoc:
+
+    # Internal
+    def normalize_type(type)
+      if !type.is_a?(Integer)
+        return type
+      end
+
+      if type == 0
+        :forward
+      elsif type == 1
+        :alternating
+      elsif type == 2
+        :backward
+      elsif VALID_TYPE_RANGE === type
+        :unknown
+      else
+        type
+      end
+    end
 
     # Internal
     def validate_id(candidate_id)
@@ -64,7 +86,7 @@ module WaveFile
     def validate_loop_type(candidate_type)
       unless VALID_LOOP_TYPES.include?(candidate_type)
         raise InvalidFormatError,
-              "Invalid sample loop type: `#{candidate_type}`. Must be one of #{VALID_LOOP_TYPES}"
+              "Invalid sample loop type: `#{candidate_type}`. Must be an Integer between #{VALID_TYPE_RANGE.min} and #{VALID_TYPE_RANGE.max} or one of #{VALID_LOOP_TYPES}"
       end
     end
 

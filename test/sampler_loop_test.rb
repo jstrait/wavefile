@@ -31,7 +31,7 @@ class SamplerLoopTest < Minitest::Test
   end
 
   def test_valid_type
-    [:forward, :backward, :alternating, :unknown].each do |valid_value|
+    [:forward, :alternating, :backward, :unknown].each do |valid_value|
       sampler_loop = SamplerLoop.new(id: 0,
                                      type: valid_value,
                                      start_sample_frame: 0,
@@ -41,6 +41,46 @@ class SamplerLoopTest < Minitest::Test
 
       assert_equal(valid_value, sampler_loop.type)
     end
+
+    sampler_loop = SamplerLoop.new(id: 0,
+                                   type: 0,
+                                   start_sample_frame: 0,
+                                   end_sample_frame: 0,
+                                   fraction: 0.0,
+                                   play_count: 0)
+    assert_equal(:forward, sampler_loop.type)
+
+    sampler_loop = SamplerLoop.new(id: 0,
+                                   type: 1,
+                                   start_sample_frame: 0,
+                                   end_sample_frame: 0,
+                                   fraction: 0.0,
+                                   play_count: 0)
+    assert_equal(:alternating, sampler_loop.type)
+
+    sampler_loop = SamplerLoop.new(id: 0,
+                                   type: 2,
+                                   start_sample_frame: 0,
+                                   end_sample_frame: 0,
+                                   fraction: 0.0,
+                                   play_count: 0)
+    assert_equal(:backward, sampler_loop.type)
+
+    sampler_loop = SamplerLoop.new(id: 0,
+                                   type: 3,
+                                   start_sample_frame: 0,
+                                   end_sample_frame: 0,
+                                   fraction: 0.0,
+                                   play_count: 0)
+    assert_equal(:unknown, sampler_loop.type)
+
+    sampler_loop = SamplerLoop.new(id: 0,
+                                   type: 4_294_967_295,
+                                   start_sample_frame: 0,
+                                   end_sample_frame: 0,
+                                   fraction: 0.0,
+                                   play_count: 0)
+    assert_equal(:unknown, sampler_loop.type)
   end
 
   def test_invalid_type
