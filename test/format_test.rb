@@ -46,13 +46,13 @@ class FormatTest < Minitest::Test
   end
 
   def test_valid_sample_rate
-    [1, 44100, 4294967296].each do |valid_sample_rate|
+    [1, 44100, 4294967295].each do |valid_sample_rate|
       assert_equal(valid_sample_rate, Format.new(:mono, :pcm_16, valid_sample_rate).sample_rate)
     end
   end
 
   def test_invalid_sample_rate
-    ["dsfsfsdf", :foo, 0, -1, 4294967297, 44100.5, 44100.0].each do |invalid_sample_rate|
+    ["dsfsfsdf", :foo, 0, -1, 4294967296, 44100.5, 44100.0].each do |invalid_sample_rate|
       assert_raises(InvalidFormatError) { Format.new(:mono, :pcm_16, invalid_sample_rate) }
     end
   end

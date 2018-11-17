@@ -132,7 +132,7 @@ module WaveFile
     # Internal
     VALID_CHANNEL_RANGE     = 1..65535    # :nodoc:
     # Internal
-    VALID_SAMPLE_RATE_RANGE = 1..4_294_967_296    # :nodoc:
+    VALID_SAMPLE_RATE_RANGE = 1..4_294_967_295    # :nodoc:
 
     # Internal
     SUPPORTED_FORMAT_CODES = [:pcm_8, :pcm_16, :pcm_24, :pcm_32, :float, :float_32, :float_64].freeze    # :nodoc:

@@ -74,6 +74,7 @@ Released on TBD, this version has these changes:
 
 * **Can read `smpl` chunk data from files that contain this kind of chunk.** Thanks to [@henrikj242](https://github.com/henrikj242) for providing the base implementation.
 * Errors raised by `Reader.new` when attempting to read an invalid file are improved to provide more detail about why the file is invalid.
+* **Bug Fix**: Fixed off-by-one error in the maximum allowed value for `Format#sample rate`.
 
 For changes in previous versions, visit <https://github.com/jstrait/wavefile/releases>.
 

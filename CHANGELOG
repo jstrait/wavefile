@@ -5,6 +5,8 @@
   base implementation.
 * Errors raised by `Reader.new` when attempting to read an invalid file are
   improved to provide more detail about why the file is invalid.
+* Bug Fix: Fixed off-by-one error in the maximum allowed value for
+  `Format#sample rate`.
 
 
 1.0.1
