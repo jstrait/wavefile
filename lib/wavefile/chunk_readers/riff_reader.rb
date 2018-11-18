@@ -70,11 +70,11 @@ module WaveFile
         end
 
         if @native_format == nil
-          raise_error InvalidFormatError, "It doesn't have a format chunk."
+          raise_error InvalidFormatError, "Format chunk couldn't be found."
         end
 
         if data_chunk_seek_pos.nil?
-          raise_error InvalidFormatError, "It doesn't have a data chunk."
+          raise_error InvalidFormatError, "Data chunk couldn't be found."
         end
 
         if @io.pos != data_chunk_seek_pos
