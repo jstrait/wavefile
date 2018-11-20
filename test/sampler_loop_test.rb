@@ -149,7 +149,7 @@ class SamplerLoopTest < Minitest::Test
   end
 
   def test_valid_fraction
-    [0, 0.0, 1, 1.0, 0.5, 0.99999999999999, 0.0000000000000001].each do |valid_value|
+    [0, 0.0, 0.5, 0.99999999999999, 0.0000000000000001].each do |valid_value|
       sampler_loop = SamplerLoop.new(id: 0,
                                      type: :forward,
                                      start_sample_frame: 0,
@@ -162,7 +162,7 @@ class SamplerLoopTest < Minitest::Test
   end
 
   def test_invalid_fraction
-    ["dsfsfsdf", :foo, -1, 4_294_967_296, 2.5, 2.0, nil, [0.5], 1.00000000001, -0.0000000000001].each do |invalid_value|
+    ["dsfsfsdf", :foo, -1, 4_294_967_296, 2.5, 2.0, nil, [0.5], 1, 1.0, 1.00000000001, -0.0000000000001].each do |invalid_value|
       assert_raises(InvalidFormatError) do
         SamplerLoop.new(id: 0,
                         type: :forward,

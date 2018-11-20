@@ -62,7 +62,6 @@ module WaveFile
     VALID_ID_RANGE = 0..4_294_967_295    # :nodoc:
     VALID_TYPE_RANGE = 0..4_294_967_295    # :nodoc:
     VALID_LOOP_TYPES = [:forward, :alternating, :backward, :unknown].freeze    # :nodoc:
-    VALID_FRACTION_RANGE = 0..1    # :nodoc:
     VALID_SAMPLE_FRAME_RANGE = 0..4_294_967_295    # :nodoc:
     VALID_PLAY_COUNT_RANGE = 0..4_294_967_295    # :nodoc:
 
@@ -119,9 +118,9 @@ module WaveFile
 
     # Internal
     def validate_fraction(candidate_fraction)
-      unless VALID_FRACTION_RANGE === candidate_fraction
+      unless (candidate_fraction.is_a?(Integer) || candidate_fraction.is_a?(Float)) && candidate_fraction >= 0.0 && candidate_fraction < 1.0
         raise InvalidFormatError,
-              "Invalid sample loop fraction: `#{candidate_fraction}`. Must be between #{VALID_FRACTION_RANGE.min} and #{VALID_FRACTION_RANGE.max}"
+              "Invalid sample loop fraction: `#{candidate_fraction}`. Must be >= 0.0 and < 1.0"
       end
     end
 
