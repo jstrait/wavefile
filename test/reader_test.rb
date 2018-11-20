@@ -80,7 +80,7 @@ class ReaderTest < Minitest::Test
       assert_equal(0, reader.current_sample_frame)
       assert_equal(0, reader.total_sample_frames)
       assert_equal(false, reader.readable_format?)
-      assert_nil(reader.sample_info)
+      assert_nil(reader.sampler_info)
       reader.close
     end
 
@@ -99,7 +99,7 @@ class ReaderTest < Minitest::Test
       assert_equal(0, reader.current_sample_frame)
       assert_equal(0, reader.total_sample_frames)
       assert_equal(false, reader.readable_format?)
-      assert_nil(reader.sample_info)
+      assert_nil(reader.sampler_info)
       reader.close
     end
   end
@@ -160,7 +160,7 @@ class ReaderTest < Minitest::Test
         assert_equal(0, reader.current_sample_frame)
         assert_equal(2240, reader.total_sample_frames)
         assert_equal(true, reader.readable_format?)
-        assert_nil(reader.sample_info)
+        assert_nil(reader.sampler_info)
         reader.close
       end
 
@@ -177,7 +177,7 @@ class ReaderTest < Minitest::Test
         assert_equal(0, reader.current_sample_frame)
         assert_equal(2240, reader.total_sample_frames)
         assert_equal(true, reader.readable_format?)
-        assert_nil(reader.sample_info)
+        assert_nil(reader.sampler_info)
         reader.close
       end
 
@@ -194,7 +194,7 @@ class ReaderTest < Minitest::Test
         assert_equal(1024, reader.current_sample_frame)
         assert_equal(2240, reader.total_sample_frames)
         assert_equal(true, reader.readable_format?)
-        assert_nil(reader.sample_info)
+        assert_nil(reader.sampler_info)
       end
     end
   end
@@ -228,7 +228,7 @@ class ReaderTest < Minitest::Test
     assert_equal(0, reader.current_sample_frame)
     assert_equal(2240, reader.total_sample_frames)
     assert_equal(true, reader.readable_format?)
-    assert_nil(reader.sample_info)
+    assert_nil(reader.sampler_info)
     reader.close
 
     buffers = read_file("valid/valid_extensible_stereo_pcm_16_44100.wav", 1024)
@@ -255,7 +255,7 @@ class ReaderTest < Minitest::Test
     assert_equal(0, reader.current_sample_frame)
     assert_equal(2240, reader.total_sample_frames)
     assert_equal(true, reader.readable_format?)
-    assert_nil(reader.sample_info)
+    assert_nil(reader.sampler_info)
     reader.close
 
     buffers = read_file("valid/valid_extensible_stereo_pcm_24_44100_no_speaker_mapping.wav", 1024)
@@ -282,7 +282,7 @@ class ReaderTest < Minitest::Test
     assert_equal(0, reader.current_sample_frame)
     assert_equal(2240, reader.total_sample_frames)
     assert_equal(true, reader.readable_format?)
-    assert_nil(reader.sample_info)
+    assert_nil(reader.sampler_info)
     reader.close
 
     buffers = read_file("valid/valid_extensible_stereo_pcm_16_44100_more_speakers_than_channels.wav", 1024)
@@ -327,7 +327,7 @@ class ReaderTest < Minitest::Test
     assert_equal(0, reader.current_sample_frame)
     assert_equal(2240, reader.total_sample_frames)
     assert_equal(true, reader.readable_format?)
-    assert_nil(reader.sample_info)
+    assert_nil(reader.sampler_info)
     reader.close
 
     buffers = read_file("valid/valid_extensible_stereo_pcm_16_44100_more_speakers_than_defined_by_spec.wav", 1024)
@@ -354,7 +354,7 @@ class ReaderTest < Minitest::Test
     assert_equal(0, reader.current_sample_frame)
     assert_equal(2240, reader.total_sample_frames)
     assert_equal(true, reader.readable_format?)
-    assert_nil(reader.sample_info)
+    assert_nil(reader.sampler_info)
     reader.close
 
     buffers = read_file("valid/valid_extensible_stereo_pcm_16_44100_only_undefined_high_bit_speakers.wav", 1024)
@@ -384,7 +384,7 @@ class ReaderTest < Minitest::Test
     assert_equal(0, reader.current_sample_frame)
     assert_equal(2240, reader.total_sample_frames)
     assert_equal(true, reader.readable_format?)
-    assert_nil(reader.sample_info)
+    assert_nil(reader.sampler_info)
     reader.close
 
     buffers = read_file("valid/valid_mono_pcm_16_44100_with_extension.wav", 1024)
@@ -625,81 +625,81 @@ class ReaderTest < Minitest::Test
 
   def test_smpl_chunk
     file_name = fixture("valid/valid_with_sample_chunk_before_data_chunk.wav")
-    sample_info = Reader.new(file_name).sample_info
+    sampler_info = Reader.new(file_name).sampler_info
 
-    assert_equal(0, sample_info.manufacturer_id)
-    assert_equal(0, sample_info.product_id)
-    assert_equal(0, sample_info.sample_duration)
-    assert_equal(60, sample_info.midi_note)
-    assert_equal(50.0, sample_info.fine_tuning_cents)
-    assert_equal(0, sample_info.smpte_format)
-    assert_equal({hours: 0, minutes: 0, seconds: 0, frame_count: 0}, sample_info.smpte_offset)
-    assert_equal(1, sample_info.loops.length)
-    assert_equal(0, sample_info.loops[0].id)
-    assert_equal(:backward, sample_info.loops[0].type)
-    assert_equal(0, sample_info.loops[0].start_sample_frame)
-    assert_equal(0, sample_info.loops[0].end_sample_frame)
-    assert_equal(0.5, sample_info.loops[0].fraction)
-    assert_equal(1, sample_info.loops[0].play_count)
-    assert_nil(sample_info.sampler_specific_data)
+    assert_equal(0, sampler_info.manufacturer_id)
+    assert_equal(0, sampler_info.product_id)
+    assert_equal(0, sampler_info.sample_duration)
+    assert_equal(60, sampler_info.midi_note)
+    assert_equal(50.0, sampler_info.fine_tuning_cents)
+    assert_equal(0, sampler_info.smpte_format)
+    assert_equal({hours: 0, minutes: 0, seconds: 0, frame_count: 0}, sampler_info.smpte_offset)
+    assert_equal(1, sampler_info.loops.length)
+    assert_equal(0, sampler_info.loops[0].id)
+    assert_equal(:backward, sampler_info.loops[0].type)
+    assert_equal(0, sampler_info.loops[0].start_sample_frame)
+    assert_equal(0, sampler_info.loops[0].end_sample_frame)
+    assert_equal(0.5, sampler_info.loops[0].fraction)
+    assert_equal(1, sampler_info.loops[0].play_count)
+    assert_nil(sampler_info.sampler_specific_data)
   end
 
   def test_smpl_chunk_after_data_chunk
     file_name = fixture("valid/valid_with_sample_chunk_after_data_chunk.wav")
-    sample_info = Reader.new(file_name).sample_info
+    sampler_info = Reader.new(file_name).sampler_info
 
-    assert_equal(0, sample_info.manufacturer_id)
-    assert_equal(0, sample_info.product_id)
-    assert_equal(0, sample_info.sample_duration)
-    assert_equal(60, sample_info.midi_note)
-    assert_equal(50.0, sample_info.fine_tuning_cents)
-    assert_equal(0, sample_info.smpte_format)
-    assert_equal({hours: 0, minutes: 0, seconds: 0, frame_count: 0}, sample_info.smpte_offset)
-    assert_equal(1, sample_info.loops.length)
-    assert_equal(0, sample_info.loops[0].id)
-    assert_equal(:backward, sample_info.loops[0].type)
-    assert_equal(0, sample_info.loops[0].start_sample_frame)
-    assert_equal(0, sample_info.loops[0].end_sample_frame)
-    assert_equal(0.5, sample_info.loops[0].fraction)
-    assert_equal(1, sample_info.loops[0].play_count)
-    assert_nil(sample_info.sampler_specific_data)
+    assert_equal(0, sampler_info.manufacturer_id)
+    assert_equal(0, sampler_info.product_id)
+    assert_equal(0, sampler_info.sample_duration)
+    assert_equal(60, sampler_info.midi_note)
+    assert_equal(50.0, sampler_info.fine_tuning_cents)
+    assert_equal(0, sampler_info.smpte_format)
+    assert_equal({hours: 0, minutes: 0, seconds: 0, frame_count: 0}, sampler_info.smpte_offset)
+    assert_equal(1, sampler_info.loops.length)
+    assert_equal(0, sampler_info.loops[0].id)
+    assert_equal(:backward, sampler_info.loops[0].type)
+    assert_equal(0, sampler_info.loops[0].start_sample_frame)
+    assert_equal(0, sampler_info.loops[0].end_sample_frame)
+    assert_equal(0.5, sampler_info.loops[0].fraction)
+    assert_equal(1, sampler_info.loops[0].play_count)
+    assert_nil(sampler_info.sampler_specific_data)
   end
 
   def test_smpl_chunk_with_sampler_specific_data
     file_name = fixture("valid/valid_with_sample_chunk_with_sampler_specific_data.wav")
-    sample_info = Reader.new(file_name).sample_info
+    sampler_info = Reader.new(file_name).sampler_info
 
-    assert_equal(0, sample_info.manufacturer_id)
-    assert_equal(0, sample_info.product_id)
-    assert_equal(0, sample_info.sample_duration)
-    assert_equal(60, sample_info.midi_note)
-    assert_equal(50.0, sample_info.fine_tuning_cents)
-    assert_equal(0, sample_info.smpte_format)
-    assert_equal({hours: 0, minutes: 0, seconds: 0, frame_count: 0}, sample_info.smpte_offset)
-    assert_equal(1, sample_info.loops.length)
-    assert_equal(0, sample_info.loops[0].id)
-    assert_equal(:backward, sample_info.loops[0].type)
-    assert_equal(0, sample_info.loops[0].start_sample_frame)
-    assert_equal(0, sample_info.loops[0].end_sample_frame)
-    assert_equal(0.5, sample_info.loops[0].fraction)
-    assert_equal(1, sample_info.loops[0].play_count)
-    assert_equal("\x04\x01\x03\x02", sample_info.sampler_specific_data)
-    assert_equal(Encoding::ASCII_8BIT, sample_info.sampler_specific_data.encoding)
+    assert_equal(0, sampler_info.manufacturer_id)
+    assert_equal(0, sampler_info.product_id)
+    assert_equal(0, sampler_info.sample_duration)
+    assert_equal(60, sampler_info.midi_note)
+    assert_equal(50.0, sampler_info.fine_tuning_cents)
+    assert_equal(0, sampler_info.smpte_format)
+    assert_equal({hours: 0, minutes: 0, seconds: 0, frame_count: 0}, sampler_info.smpte_offset)
+    assert_equal(1, sampler_info.loops.length)
+    assert_equal(0, sampler_info.loops[0].id)
+    assert_equal(:backward, sampler_info.loops[0].type)
+    assert_equal(0, sampler_info.loops[0].start_sample_frame)
+    assert_equal(0, sampler_info.loops[0].end_sample_frame)
+    assert_equal(0.5, sampler_info.loops[0].fraction)
+    assert_equal(1, sampler_info.loops[0].play_count)
+    assert_equal("\x04\x01\x03\x02", sampler_info.sampler_specific_data)
+    assert_equal(Encoding::ASCII_8BIT, sampler_info.sampler_specific_data.encoding)
   end
 
   def test_smpl_chunk_no_loops
     file_name = fixture("valid/valid_with_sample_chunk_no_loops.wav")
-    sample_info = Reader.new(file_name).sample_info
+    sampler_info = Reader.new(file_name).sampler_info
 
-    assert_equal(0, sample_info.manufacturer_id)
-    assert_equal(0, sample_info.product_id)
-    assert_equal(0, sample_info.sample_duration)
-    assert_equal(60, sample_info.midi_note)
-    assert_equal(50.0, sample_info.fine_tuning_cents)
-    assert_equal(0, sample_info.smpte_format)
-    assert_equal({hours: 0, minutes: 0, seconds: 0, frame_count: 0}, sample_info.smpte_offset)
-    assert_equal([], sample_info.loops)
-    assert_nil(sample_info.sampler_specific_data)
+    assert_equal(0, sampler_info.manufacturer_id)
+    assert_equal(0, sampler_info.product_id)
+    assert_equal(0, sampler_info.sample_duration)
+    assert_equal(60, sampler_info.midi_note)
+    assert_equal(50.0, sampler_info.fine_tuning_cents)
+    assert_equal(0, sampler_info.smpte_format)
+    assert_equal({hours: 0, minutes: 0, seconds: 0, frame_count: 0}, sampler_info.smpte_offset)
+    assert_equal([], sampler_info.loops)
+    assert_nil(sampler_info.sampler_specific_data)
   end
 
 private

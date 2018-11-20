@@ -198,7 +198,7 @@ module WaveFile
     # Public: Returns a SamplerInfo object if the file contains "smpl" chunk, or nil if it doesn't.
     # If present, this will contain information about how the file can be use by a sampler, such as
     # corresponding MIDI note, or loop points.
-    def sample_info
+    def sampler_info
       @sample_chunk
     end
   end
