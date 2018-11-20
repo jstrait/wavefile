@@ -13,7 +13,7 @@ module WaveFile
         fields = {}
         fields[:manufacturer_id],
         fields[:product_id],
-        fields[:sample_duration],
+        fields[:sample_nanoseconds],
         fields[:midi_note],
         fields[:fine_tuning_cents],
         fields[:smpte_format],

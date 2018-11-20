@@ -629,7 +629,7 @@ class ReaderTest < Minitest::Test
 
     assert_equal(0, sampler_info.manufacturer_id)
     assert_equal(0, sampler_info.product_id)
-    assert_equal(0, sampler_info.sample_duration)
+    assert_equal(0, sampler_info.sample_nanoseconds)
     assert_equal(60, sampler_info.midi_note)
     assert_equal(50.0, sampler_info.fine_tuning_cents)
     assert_equal(0, sampler_info.smpte_format)
@@ -652,7 +652,7 @@ class ReaderTest < Minitest::Test
 
     assert_equal(0, sampler_info.manufacturer_id)
     assert_equal(0, sampler_info.product_id)
-    assert_equal(0, sampler_info.sample_duration)
+    assert_equal(0, sampler_info.sample_nanoseconds)
     assert_equal(10000, sampler_info.midi_note)
     assert_equal(50.0, sampler_info.fine_tuning_cents)
     assert_equal(99999, sampler_info.smpte_format)
@@ -673,7 +673,7 @@ class ReaderTest < Minitest::Test
 
     assert_equal(0, sampler_info.manufacturer_id)
     assert_equal(0, sampler_info.product_id)
-    assert_equal(0, sampler_info.sample_duration)
+    assert_equal(0, sampler_info.sample_nanoseconds)
     assert_equal(60, sampler_info.midi_note)
     assert_equal(50.0, sampler_info.fine_tuning_cents)
     assert_equal(0, sampler_info.smpte_format)
@@ -694,7 +694,7 @@ class ReaderTest < Minitest::Test
 
     assert_equal(0, sampler_info.manufacturer_id)
     assert_equal(0, sampler_info.product_id)
-    assert_equal(0, sampler_info.sample_duration)
+    assert_equal(0, sampler_info.sample_nanoseconds)
     assert_equal(60, sampler_info.midi_note)
     assert_equal(50.0, sampler_info.fine_tuning_cents)
     assert_equal(0, sampler_info.smpte_format)
@@ -716,7 +716,7 @@ class ReaderTest < Minitest::Test
 
     assert_equal(0, sampler_info.manufacturer_id)
     assert_equal(0, sampler_info.product_id)
-    assert_equal(0, sampler_info.sample_duration)
+    assert_equal(0, sampler_info.sample_nanoseconds)
     assert_equal(60, sampler_info.midi_note)
     assert_equal(50.0, sampler_info.fine_tuning_cents)
     assert_equal(0, sampler_info.smpte_format)
