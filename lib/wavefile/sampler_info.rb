@@ -12,9 +12,10 @@ module WaveFile
     #                   See the list at https://www.midi.org/specifications-old/item/manufacturer-id-numbers
     # product_id - the ID of the product made by the manufacturer this sample is intended for.
     #              If not intended for a particular product, this should be 0.
-    # sample_nanoseconds - the length of each sample in nanoseconds, which is typically <code>1 / sample rate</code>.
-    #                      For example, with a sample rate of 44100 this would be 22675 nanoseconds. However, this
-    #                      can be set to an arbitrary value to allow for fine tuning.
+    # sample_nanoseconds - the length of each sample in nanoseconds, which is typically determined by
+    #                      converting <code>1 / sample rate</code> (in seconds) into nanoseconds.
+    #                      For example, with a sample rate of 44100 this would be 22675 nanoseconds. However,
+    #                      this can be set to an arbitrary value to allow for fine tuning.
     # midi_note - the MIDI note number of the sample. Should be between 0 and 127.
     # fine_tuning_cents - the number of cents up from the specified MIDI unity note field. 100 cents is equal to
     #                     one semitone. For example, if this value is 50, and #midi_note is 60, then the sample is
@@ -58,9 +59,10 @@ module WaveFile
     #         If not intended for a particular product, this should be 0.
     attr_reader :product_id
 
-    # Public: Returns the length of each sample in nanoseconds, which is typically <code>1 / sample rate</code>.
-    #         For example, with a sample rate of 44100 this would be 22675 nanoseconds. However, this
-    #         can be set to an arbitrary value to allow for fine tuning.
+    # Public: Returns the length of each sample in nanoseconds, which is typically determined by
+    #         converting <code>1 / sample rate</code> (in seconds) into nanoseconds. For example,
+    #         with a sample rate of 44100 this would be 22675 nanoseconds. However, this can be set
+    #         to an arbitrary value to allow for fine tuning.
     attr_reader :sample_nanoseconds
 
     # Public: Returns the MIDI note number of the sample (0-127)
