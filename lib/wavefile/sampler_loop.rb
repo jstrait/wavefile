@@ -113,7 +113,7 @@ module WaveFile
     def validate_end_sample_frame(candidate_end_sample_frame)
       unless candidate_end_sample_frame.is_a?(Integer) && VALID_SAMPLE_FRAME_RANGE === candidate_end_sample_frame
         raise InvalidFormatError,
-              "Invalid start sample frame: `#{candidate_end_sample_frame}`. Must be an Integer between #{VALID_SAMPLE_FRAME_RANGE.min} and #{VALID_SAMPLE_FRAME_RANGE.max}"
+              "Invalid end sample frame: `#{candidate_end_sample_frame}`. Must be an Integer between #{VALID_SAMPLE_FRAME_RANGE.min} and #{VALID_SAMPLE_FRAME_RANGE.max}"
       end
     end
 
