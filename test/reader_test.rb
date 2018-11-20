@@ -644,6 +644,29 @@ class ReaderTest < Minitest::Test
     assert_nil(sampler_info.sampler_specific_data)
   end
 
+  # Several field values are out of the expected range, but the file should be successfully
+  # read anyway because the sample chunk has the correct structure
+  def test_smpl_chunk_field_values_out_of_range
+    file_name = fixture("invalid/smpl_chunk_fields_out_of_range.wav")
+    sampler_info = Reader.new(file_name).sampler_info
+
+    assert_equal(0, sampler_info.manufacturer_id)
+    assert_equal(0, sampler_info.product_id)
+    assert_equal(0, sampler_info.sample_duration)
+    assert_equal(10000, sampler_info.midi_note)
+    assert_equal(50.0, sampler_info.fine_tuning_cents)
+    assert_equal(99999, sampler_info.smpte_format)
+    assert_equal({hours: -128, minutes: 128, seconds: 8, frame_count: 1}, sampler_info.smpte_offset)
+    assert_equal(1, sampler_info.loops.length)
+    assert_equal(0, sampler_info.loops[0].id)
+    assert_equal(:unknown, sampler_info.loops[0].type)
+    assert_equal(9999999, sampler_info.loops[0].start_sample_frame)
+    assert_equal(9999999, sampler_info.loops[0].end_sample_frame)
+    assert_equal(0.5, sampler_info.loops[0].fraction)
+    assert_equal(1, sampler_info.loops[0].play_count)
+    assert_nil(sampler_info.sampler_specific_data)
+  end
+
   def test_smpl_chunk_after_data_chunk
     file_name = fixture("valid/valid_with_sample_chunk_after_data_chunk.wav")
     sampler_info = Reader.new(file_name).sampler_info
