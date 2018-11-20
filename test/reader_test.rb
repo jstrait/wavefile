@@ -710,6 +710,34 @@ class ReaderTest < Minitest::Test
     assert_equal(Encoding::ASCII_8BIT, sampler_info.sampler_specific_data.encoding)
   end
 
+  def test_smpl_chunk_with_extra_unused_bytes
+    file_name = fixture("valid/valid_with_sample_chunk_with_extra_unused_bytes.wav")
+    reader = Reader.new(file_name)
+    sampler_info = reader.sampler_info
+
+    assert_equal(0, sampler_info.manufacturer_id)
+    assert_equal(0, sampler_info.product_id)
+    assert_equal(0, sampler_info.sample_nanoseconds)
+    assert_equal(60, sampler_info.midi_note)
+    assert_equal(50.0, sampler_info.fine_tuning_cents)
+    assert_equal(0, sampler_info.smpte_format)
+    assert_equal({hours: 0, minutes: 0, seconds: 0, frame_count: 0}, sampler_info.smpte_offset)
+    assert_equal(1, sampler_info.loops.length)
+    assert_equal(0, sampler_info.loops[0].id)
+    assert_equal(:backward, sampler_info.loops[0].type)
+    assert_equal(0, sampler_info.loops[0].start_sample_frame)
+    assert_equal(0, sampler_info.loops[0].end_sample_frame)
+    assert_equal(0.5, sampler_info.loops[0].fraction)
+    assert_equal(1, sampler_info.loops[0].play_count)
+    assert_equal("\x04\x01\x05", sampler_info.sampler_specific_data)
+    assert_equal(Encoding::ASCII_8BIT, sampler_info.sampler_specific_data.encoding)
+
+    # Data chunk should be queued correctly and not raise an error, despite extra bytes
+    # at end of `smpl` chunk.
+    buffer = reader.read(1)
+    assert_equal([[-10000, -10000]], buffer.samples)
+  end
+
   def test_smpl_chunk_no_loops
     file_name = fixture("valid/valid_with_sample_chunk_no_loops.wav")
     sampler_info = Reader.new(file_name).sampler_info

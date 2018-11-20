@@ -128,6 +128,12 @@ def write_sample_chunk(file_writer, config)
       file_writer.write_or_skip(byte, UNSIGNED_INT_8)
     end
   end
+
+  if config["extra_bytes"]
+    config["extra_bytes"].each do |byte|
+      file_writer.write_or_skip(byte, UNSIGNED_INT_8)
+    end
+  end
 end
 
 def write_data_chunk(file_writer, config, format_chunk)
