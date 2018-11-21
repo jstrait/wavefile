@@ -10,8 +10,7 @@ module WaveFile
     # id - A numeric ID which identifies the specific loop.
     # type - Indicates which direction the loop should run. Should either be one of the symbols
     #        +:forward+, +:alternating+, +:backward+, or a positive Integer. If an Integer, then 0 will
-    #        be normalized to +:forward+, 1 to +:alternating+, 2 to +:backward+, and 3 or greater will
-    #        be normalized to +:unknown+.
+    #        be normalized to +:forward+, 1 to +:alternating+, 2 to +:backward+.
     # start_sample_frame - The first sample frame in the loop.
     # end_sample_frame - The last sample frame in the loop.
     # fraction - A Float between 0.0 and 1.0 which specifies a fraction of a sample at which to loop.
@@ -41,7 +40,7 @@ module WaveFile
     attr_reader :id
 
     # Public: Returns a symbol indicating which direction the loop should run. The possible values
-    #         are :forward, :alternating, :backward, or :unknown.
+    #         are :forward, :alternating, :backward, or a positive Integer.
     attr_reader :type
 
     # Public: Returns the first sample frame of the loop.
@@ -61,7 +60,7 @@ module WaveFile
 
     VALID_ID_RANGE = 0..4_294_967_295    # :nodoc:
     VALID_TYPE_RANGE = 0..4_294_967_295    # :nodoc:
-    VALID_LOOP_TYPES = [:forward, :alternating, :backward, :unknown].freeze    # :nodoc:
+    VALID_LOOP_TYPES = [:forward, :alternating, :backward].freeze    # :nodoc:
     VALID_SAMPLE_FRAME_RANGE = 0..4_294_967_295    # :nodoc:
     VALID_PLAY_COUNT_RANGE = 0..4_294_967_295    # :nodoc:
 
@@ -77,8 +76,6 @@ module WaveFile
         :alternating
       elsif type == 2
         :backward
-      elsif VALID_TYPE_RANGE === type
-        :unknown
       else
         type
       end
@@ -94,7 +91,7 @@ module WaveFile
 
     # Internal
     def validate_loop_type(candidate_type)
-      unless VALID_LOOP_TYPES.include?(candidate_type)
+      unless VALID_LOOP_TYPES.include?(candidate_type) || (candidate_type.is_a?(Integer) && VALID_TYPE_RANGE === candidate_type)
         raise InvalidFormatError,
               "Invalid sample loop type: `#{candidate_type}`. Must be an Integer between #{VALID_TYPE_RANGE.min} and #{VALID_TYPE_RANGE.max} or one of #{VALID_LOOP_TYPES}"
       end

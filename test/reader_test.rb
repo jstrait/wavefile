@@ -659,7 +659,7 @@ class ReaderTest < Minitest::Test
     assert_equal({hours: -128, minutes: 128, seconds: 8, frame_count: 1}, sampler_info.smpte_offset)
     assert_equal(1, sampler_info.loops.length)
     assert_equal(0, sampler_info.loops[0].id)
-    assert_equal(:unknown, sampler_info.loops[0].type)
+    assert_equal(88888, sampler_info.loops[0].type)
     assert_equal(9999999, sampler_info.loops[0].start_sample_frame)
     assert_equal(9999999, sampler_info.loops[0].end_sample_frame)
     assert_equal(0.5, sampler_info.loops[0].fraction)

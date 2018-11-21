@@ -31,7 +31,7 @@ class SamplerLoopTest < Minitest::Test
   end
 
   def test_valid_type
-    [:forward, :alternating, :backward, :unknown].each do |valid_value|
+    [:forward, :alternating, :backward].each do |valid_value|
       sampler_loop = SamplerLoop.new(id: 0,
                                      type: valid_value,
                                      start_sample_frame: 0,
@@ -72,7 +72,7 @@ class SamplerLoopTest < Minitest::Test
                                    end_sample_frame: 0,
                                    fraction: 0.0,
                                    play_count: 0)
-    assert_equal(:unknown, sampler_loop.type)
+    assert_equal(3, sampler_loop.type)
 
     sampler_loop = SamplerLoop.new(id: 0,
                                    type: 4_294_967_295,
@@ -80,7 +80,7 @@ class SamplerLoopTest < Minitest::Test
                                    end_sample_frame: 0,
                                    fraction: 0.0,
                                    play_count: 0)
-    assert_equal(:unknown, sampler_loop.type)
+    assert_equal(4_294_967_295, sampler_loop.type)
   end
 
   def test_invalid_type
