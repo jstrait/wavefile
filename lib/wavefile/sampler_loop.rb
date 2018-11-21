@@ -58,11 +58,8 @@ module WaveFile
 
     private
 
-    VALID_ID_RANGE = 0..4_294_967_295    # :nodoc:
-    VALID_TYPE_RANGE = 0..4_294_967_295    # :nodoc:
+    VALID_32_BIT_INTEGER_RANGE = 0..4_294_967_295    # :nodoc:
     VALID_LOOP_TYPES = [:forward, :alternating, :backward].freeze    # :nodoc:
-    VALID_SAMPLE_FRAME_RANGE = 0..4_294_967_295    # :nodoc:
-    VALID_PLAY_COUNT_RANGE = 0..4_294_967_295    # :nodoc:
 
     # Internal
     def normalize_type(type)
@@ -83,33 +80,33 @@ module WaveFile
 
     # Internal
     def validate_id(candidate)
-      unless candidate.is_a?(Integer) && VALID_ID_RANGE === candidate
+      unless candidate.is_a?(Integer) && VALID_32_BIT_INTEGER_RANGE === candidate
         raise InvalidFormatError,
-              "Invalid sample loop ID: `#{candidate}`. Must be an Integer between #{VALID_ID_RANGE.min} and #{VALID_ID_RANGE.max}"
+              "Invalid sample loop ID: `#{candidate}`. Must be an Integer between #{VALID_32_BIT_INTEGER_RANGE.min} and #{VALID_32_BIT_INTEGER_RANGE.max}"
       end
     end
 
     # Internal
     def validate_loop_type(candidate)
-      unless VALID_LOOP_TYPES.include?(candidate) || (candidate.is_a?(Integer) && VALID_TYPE_RANGE === candidate)
+      unless VALID_LOOP_TYPES.include?(candidate) || (candidate.is_a?(Integer) && VALID_32_BIT_INTEGER_RANGE === candidate)
         raise InvalidFormatError,
-              "Invalid sample loop type: `#{candidate}`. Must be an Integer between #{VALID_TYPE_RANGE.min} and #{VALID_TYPE_RANGE.max} or one of #{VALID_LOOP_TYPES}"
+              "Invalid sample loop type: `#{candidate}`. Must be an Integer between #{VALID_32_BIT_INTEGER_RANGE.min} and #{VALID_32_BIT_INTEGER_RANGE.max} or one of #{VALID_LOOP_TYPES}"
       end
     end
 
     # Internal
     def validate_start_sample_frame(candidate)
-      unless candidate.is_a?(Integer) && VALID_SAMPLE_FRAME_RANGE === candidate
+      unless candidate.is_a?(Integer) && VALID_32_BIT_INTEGER_RANGE === candidate
         raise InvalidFormatError,
-              "Invalid start sample frame: `#{candidate}`. Must be an Integer between #{VALID_SAMPLE_FRAME_RANGE.min} and #{VALID_SAMPLE_FRAME_RANGE.max}"
+              "Invalid start sample frame: `#{candidate}`. Must be an Integer between #{VALID_32_BIT_INTEGER_RANGE.min} and #{VALID_32_BIT_INTEGER_RANGE.max}"
       end
     end
 
     # Internal
     def validate_end_sample_frame(candidate)
-      unless candidate.is_a?(Integer) && VALID_SAMPLE_FRAME_RANGE === candidate
+      unless candidate.is_a?(Integer) && VALID_32_BIT_INTEGER_RANGE === candidate
         raise InvalidFormatError,
-              "Invalid end sample frame: `#{candidate}`. Must be an Integer between #{VALID_SAMPLE_FRAME_RANGE.min} and #{VALID_SAMPLE_FRAME_RANGE.max}"
+              "Invalid end sample frame: `#{candidate}`. Must be an Integer between #{VALID_32_BIT_INTEGER_RANGE.min} and #{VALID_32_BIT_INTEGER_RANGE.max}"
       end
     end
 
@@ -123,9 +120,9 @@ module WaveFile
 
     # Internal
     def validate_play_count(candidate)
-      unless candidate.is_a?(Integer) && VALID_PLAY_COUNT_RANGE === candidate
+      unless candidate.is_a?(Integer) && VALID_32_BIT_INTEGER_RANGE === candidate
         raise InvalidFormatError,
-              "Invalid play count: `#{candidate}`. Must be an Integer between #{VALID_PLAY_COUNT_RANGE.min} and #{VALID_PLAY_COUNT_RANGE.max}"
+              "Invalid play count: `#{candidate}`. Must be an Integer between #{VALID_32_BIT_INTEGER_RANGE.min} and #{VALID_32_BIT_INTEGER_RANGE.max}"
       end
     end
   end
