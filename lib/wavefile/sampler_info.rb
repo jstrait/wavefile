@@ -39,6 +39,15 @@ module WaveFile
                    smpte_offset:,
                    loops:,
                    sampler_specific_data:)
+      validate_32_bit_integer_field(manufacturer_id, "manufacturer_id")
+      validate_32_bit_integer_field(product_id, "product_id")
+      validate_32_bit_integer_field(sample_nanoseconds, "sample_nanoseconds")
+      validate_32_bit_integer_field(midi_note, "midi_note")
+      validate_fine_tuning_cents(fine_tuning_cents)
+      validate_32_bit_integer_field(smpte_format, "smpte_format")
+      validate_loops(loops)
+      validate_sampler_specific_data(sampler_specific_data)
+
       @manufacturer_id = manufacturer_id
       @product_id = product_id
       @sample_nanoseconds = sample_nanoseconds
@@ -88,5 +97,41 @@ module WaveFile
     #         specific data. This is returned as a raw String because the structure of this data depends on
     #         the specific sampler. If you want to use it, you'll need to unpack the string yourself.
     attr_reader :sampler_specific_data
+
+    private
+
+    VALID_32_BIT_INTEGER_RANGE = 0..4_294_967_295    # :nodoc:
+
+    # Internal
+    def validate_32_bit_integer_field(candidate, field_name)
+      unless candidate.is_a?(Integer) && VALID_32_BIT_INTEGER_RANGE === candidate
+        raise InvalidFormatError,
+              "Invalid `#{field_name}` value: `#{candidate}`. Must be an Integer between #{VALID_32_BIT_INTEGER_RANGE.min} and #{VALID_32_BIT_INTEGER_RANGE.max}"
+      end
+    end
+
+    # Internal
+    def validate_fine_tuning_cents(candidate)
+      unless (candidate.is_a?(Integer) || candidate.is_a?(Float)) && candidate >= 0.0 && candidate < 100.0
+        raise InvalidFormatError,
+              "Invalid `fine_tuning_cents` value: `#{candidate}`. Must be a number >= 0.0 and < 100.0"
+      end
+    end
+
+    # Internal
+    def validate_loops(candidate)
+      unless candidate.is_a?(Array) && candidate.select {|loop| !loop.is_a?(SamplerLoop) }.empty?
+        raise InvalidFormatError,
+              "Invalid `loops` value: `#{candidate}`. Must be an Array of SampleLoop objects."
+      end
+    end
+
+    # Internal
+    def validate_sampler_specific_data(candidate)
+      unless candidate.nil? || candidate.is_a?(String)
+        raise InvalidFormatError,
+              "Invalid `sampler_specific_data` value: `#{candidate}`. Must be nil, or a String"
+      end
+    end
   end
 end
