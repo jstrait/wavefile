@@ -174,9 +174,9 @@ def read_sample_chunk(chunk_id_data, chunk_size_data)
   loop_count = sample_loops_bytes[:actual]
   display_line "Sample Loops",        "int_32", sample_loops_bytes
 
-  extra_sampler_data_size_bytes = read_bytes(UNSIGNED_INT_32)
-  extra_sampler_data_size = extra_sampler_data_size_bytes[:actual]
-  display_line "Sampler Data Size",   "int_32", extra_sampler_data_size_bytes
+  sampler_specific_data_size_bytes = read_bytes(UNSIGNED_INT_32)
+  sampler_specific_data_size = sampler_specific_data_size_bytes[:actual]
+  display_line "Sampler Data Size",   "int_32", sampler_specific_data_size_bytes
 
   loop_count.times do |i|
     puts "----------------------------------+------------+----------------------------------"
@@ -189,9 +189,9 @@ def read_sample_chunk(chunk_id_data, chunk_size_data)
     display_line "Play Count", "int_32", read_bytes(UNSIGNED_INT_32)
   end
 
-  if extra_sampler_data_size > 0
+  if sampler_specific_data_size > 0
     puts "----------------------------------+------------+----------------------------------"
-    display_line "Extra data", "alpha_#{extra_sampler_data_size}", read_bytes("a#{extra_sampler_data_size}")
+    display_line "Sampler specific data", "alpha_#{sampler_specific_data_size}", read_bytes("a#{sampler_specific_data_size}")
   end
 end
 
