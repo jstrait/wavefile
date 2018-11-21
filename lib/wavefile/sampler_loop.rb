@@ -82,50 +82,50 @@ module WaveFile
     end
 
     # Internal
-    def validate_id(candidate_id)
-      unless candidate_id.is_a?(Integer) && VALID_ID_RANGE === candidate_id
+    def validate_id(candidate)
+      unless candidate.is_a?(Integer) && VALID_ID_RANGE === candidate
         raise InvalidFormatError,
-              "Invalid sample loop ID: `#{candidate_id}`. Must be an Integer between #{VALID_ID_RANGE.min} and #{VALID_ID_RANGE.max}"
+              "Invalid sample loop ID: `#{candidate}`. Must be an Integer between #{VALID_ID_RANGE.min} and #{VALID_ID_RANGE.max}"
       end
     end
 
     # Internal
-    def validate_loop_type(candidate_type)
-      unless VALID_LOOP_TYPES.include?(candidate_type) || (candidate_type.is_a?(Integer) && VALID_TYPE_RANGE === candidate_type)
+    def validate_loop_type(candidate)
+      unless VALID_LOOP_TYPES.include?(candidate) || (candidate.is_a?(Integer) && VALID_TYPE_RANGE === candidate)
         raise InvalidFormatError,
-              "Invalid sample loop type: `#{candidate_type}`. Must be an Integer between #{VALID_TYPE_RANGE.min} and #{VALID_TYPE_RANGE.max} or one of #{VALID_LOOP_TYPES}"
+              "Invalid sample loop type: `#{candidate}`. Must be an Integer between #{VALID_TYPE_RANGE.min} and #{VALID_TYPE_RANGE.max} or one of #{VALID_LOOP_TYPES}"
       end
     end
 
     # Internal
-    def validate_start_sample_frame(candidate_start_sample_frame)
-      unless candidate_start_sample_frame.is_a?(Integer) && VALID_SAMPLE_FRAME_RANGE === candidate_start_sample_frame
+    def validate_start_sample_frame(candidate)
+      unless candidate.is_a?(Integer) && VALID_SAMPLE_FRAME_RANGE === candidate
         raise InvalidFormatError,
-              "Invalid start sample frame: `#{candidate_start_sample_frame}`. Must be an Integer between #{VALID_SAMPLE_FRAME_RANGE.min} and #{VALID_SAMPLE_FRAME_RANGE.max}"
+              "Invalid start sample frame: `#{candidate}`. Must be an Integer between #{VALID_SAMPLE_FRAME_RANGE.min} and #{VALID_SAMPLE_FRAME_RANGE.max}"
       end
     end
 
     # Internal
-    def validate_end_sample_frame(candidate_end_sample_frame)
-      unless candidate_end_sample_frame.is_a?(Integer) && VALID_SAMPLE_FRAME_RANGE === candidate_end_sample_frame
+    def validate_end_sample_frame(candidate)
+      unless candidate.is_a?(Integer) && VALID_SAMPLE_FRAME_RANGE === candidate
         raise InvalidFormatError,
-              "Invalid end sample frame: `#{candidate_end_sample_frame}`. Must be an Integer between #{VALID_SAMPLE_FRAME_RANGE.min} and #{VALID_SAMPLE_FRAME_RANGE.max}"
+              "Invalid end sample frame: `#{candidate}`. Must be an Integer between #{VALID_SAMPLE_FRAME_RANGE.min} and #{VALID_SAMPLE_FRAME_RANGE.max}"
       end
     end
 
     # Internal
-    def validate_fraction(candidate_fraction)
-      unless (candidate_fraction.is_a?(Integer) || candidate_fraction.is_a?(Float)) && candidate_fraction >= 0.0 && candidate_fraction < 1.0
+    def validate_fraction(candidate)
+      unless (candidate.is_a?(Integer) || candidate.is_a?(Float)) && candidate >= 0.0 && candidate < 1.0
         raise InvalidFormatError,
-              "Invalid sample loop fraction: `#{candidate_fraction}`. Must be >= 0.0 and < 1.0"
+              "Invalid sample loop fraction: `#{candidate}`. Must be >= 0.0 and < 1.0"
       end
     end
 
     # Internal
-    def validate_play_count(candidate_play_count)
-      unless candidate_play_count.is_a?(Integer) && VALID_PLAY_COUNT_RANGE === candidate_play_count
+    def validate_play_count(candidate)
+      unless candidate.is_a?(Integer) && VALID_PLAY_COUNT_RANGE === candidate
         raise InvalidFormatError,
-              "Invalid play count: `#{candidate_play_count}`. Must be an Integer between #{VALID_PLAY_COUNT_RANGE.min} and #{VALID_PLAY_COUNT_RANGE.max}"
+              "Invalid play count: `#{candidate}`. Must be an Integer between #{VALID_PLAY_COUNT_RANGE.min} and #{VALID_PLAY_COUNT_RANGE.max}"
       end
     end
   end
