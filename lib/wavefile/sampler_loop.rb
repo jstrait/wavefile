@@ -21,12 +21,12 @@ module WaveFile
     def initialize(id:, type:, start_sample_frame:, end_sample_frame:, fraction:, play_count:)
       type = normalize_type(type)
 
-      validate_id(id)
+      validate_32_bit_integer_field(id, "id")
       validate_loop_type(type)
-      validate_start_sample_frame(start_sample_frame)
-      validate_end_sample_frame(end_sample_frame)
+      validate_32_bit_integer_field(start_sample_frame, "start_sample_frame")
+      validate_32_bit_integer_field(end_sample_frame, "end_sample_frame")
       validate_fraction(fraction)
-      validate_play_count(play_count)
+      validate_32_bit_integer_field(play_count, "play_count")
 
       @id = id
       @type = type
@@ -79,10 +79,10 @@ module WaveFile
     end
 
     # Internal
-    def validate_id(candidate)
+    def validate_32_bit_integer_field(candidate, field_name)
       unless candidate.is_a?(Integer) && VALID_32_BIT_INTEGER_RANGE === candidate
         raise InvalidFormatError,
-              "Invalid `id` value: `#{candidate}`. Must be an Integer between #{VALID_32_BIT_INTEGER_RANGE.min} and #{VALID_32_BIT_INTEGER_RANGE.max}"
+              "Invalid `#{field_name}` value: `#{candidate}`. Must be an Integer between #{VALID_32_BIT_INTEGER_RANGE.min} and #{VALID_32_BIT_INTEGER_RANGE.max}"
       end
     end
 
@@ -95,34 +95,10 @@ module WaveFile
     end
 
     # Internal
-    def validate_start_sample_frame(candidate)
-      unless candidate.is_a?(Integer) && VALID_32_BIT_INTEGER_RANGE === candidate
-        raise InvalidFormatError,
-              "Invalid `start_sample_frame` value: `#{candidate}`. Must be an Integer between #{VALID_32_BIT_INTEGER_RANGE.min} and #{VALID_32_BIT_INTEGER_RANGE.max}"
-      end
-    end
-
-    # Internal
-    def validate_end_sample_frame(candidate)
-      unless candidate.is_a?(Integer) && VALID_32_BIT_INTEGER_RANGE === candidate
-        raise InvalidFormatError,
-              "Invalid `end_sample_frame` value: `#{candidate}`. Must be an Integer between #{VALID_32_BIT_INTEGER_RANGE.min} and #{VALID_32_BIT_INTEGER_RANGE.max}"
-      end
-    end
-
-    # Internal
     def validate_fraction(candidate)
       unless (candidate.is_a?(Integer) || candidate.is_a?(Float)) && candidate >= 0.0 && candidate < 1.0
         raise InvalidFormatError,
               "Invalid `fraction` value: `#{candidate}`. Must be >= 0.0 and < 1.0"
-      end
-    end
-
-    # Internal
-    def validate_play_count(candidate)
-      unless candidate.is_a?(Integer) && VALID_32_BIT_INTEGER_RANGE === candidate
-        raise InvalidFormatError,
-              "Invalid `play_count` value: `#{candidate}`. Must be an Integer between #{VALID_32_BIT_INTEGER_RANGE.min} and #{VALID_32_BIT_INTEGER_RANGE.max}"
       end
     end
   end
