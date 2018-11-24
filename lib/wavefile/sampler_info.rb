@@ -1,4 +1,10 @@
 module WaveFile
+  # Public: Error that is raised when constructing a SamplerInfo instance that is not valid.
+  # Valid means that each field is in the range that can be encoded in a *.wav file, but not
+  # not necessarily semantically correct. For example, a SamplerInfo field can be constructed
+  # with a midi_note value of 10000, even though this isn't a valid value in real life.
+  class InvalidSamplerInfoError < FormatError; end
+
   # Public: Provides a way to indicate the data contained in a "smpl" chunk.
   #         That is, information about how the *.wav file could be used by a
   #         sampler, such as the file's MIDI note or loop points. If a *.wav
@@ -105,7 +111,7 @@ module WaveFile
     # Internal
     def validate_32_bit_integer_field(candidate, field_name)
       unless candidate.is_a?(Integer) && VALID_32_BIT_INTEGER_RANGE === candidate
-        raise InvalidFormatError,
+        raise InvalidSamplerInfoError,
               "Invalid `#{field_name}` value: `#{candidate}`. Must be an Integer between #{VALID_32_BIT_INTEGER_RANGE.min} and #{VALID_32_BIT_INTEGER_RANGE.max}"
       end
     end
@@ -113,7 +119,7 @@ module WaveFile
     # Internal
     def validate_fine_tuning_cents(candidate)
       unless (candidate.is_a?(Integer) || candidate.is_a?(Float)) && candidate >= 0.0 && candidate < 100.0
-        raise InvalidFormatError,
+        raise InvalidSamplerInfoError,
               "Invalid `fine_tuning_cents` value: `#{candidate}`. Must be a number >= 0.0 and < 100.0"
       end
     end
@@ -121,7 +127,7 @@ module WaveFile
     # Internal
     def validate_loops(candidate)
       unless candidate.is_a?(Array) && candidate.select {|loop| !loop.is_a?(SamplerLoop) }.empty?
-        raise InvalidFormatError,
+        raise InvalidSamplerInfoError,
               "Invalid `loops` value: `#{candidate}`. Must be an Array of SampleLoop objects."
       end
     end
@@ -129,7 +135,7 @@ module WaveFile
     # Internal
     def validate_sampler_specific_data(candidate)
       unless candidate.nil? || candidate.is_a?(String)
-        raise InvalidFormatError,
+        raise InvalidSamplerInfoError,
               "Invalid `sampler_specific_data` value: `#{candidate}`. Must be nil, or a String"
       end
     end

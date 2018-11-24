@@ -22,7 +22,7 @@ class SMPTETimecodeTest < Minitest::Test
 
   def test_invalid_hours
     INVALID_8_BIT_SIGNED_INTEGER_TEST_VALUES.each do |invalid_value|
-      assert_raises(InvalidFormatError) do
+      assert_raises(InvalidSMPTETimecodeError) do
         SMPTETimecode.new(hours: invalid_value,
                           minutes: 0,
                           seconds: 0,
@@ -44,7 +44,7 @@ class SMPTETimecodeTest < Minitest::Test
 
   def test_invalid_minutes
     INVALID_8_BIT_UNSIGNED_INTEGER_TEST_VALUES.each do |invalid_value|
-      assert_raises(InvalidFormatError) do
+      assert_raises(InvalidSMPTETimecodeError) do
         SMPTETimecode.new(hours: 0,
                           minutes: invalid_value,
                           seconds: 0,
@@ -66,7 +66,7 @@ class SMPTETimecodeTest < Minitest::Test
 
   def test_invalid_seconds
     INVALID_8_BIT_UNSIGNED_INTEGER_TEST_VALUES.each do |invalid_value|
-      assert_raises(InvalidFormatError) do
+      assert_raises(InvalidSMPTETimecodeError) do
         SMPTETimecode.new(hours: 0,
                           minutes: 0,
                           seconds: invalid_value,
@@ -88,7 +88,7 @@ class SMPTETimecodeTest < Minitest::Test
 
   def test_invalid_frames
     INVALID_8_BIT_UNSIGNED_INTEGER_TEST_VALUES.each do |invalid_value|
-      assert_raises(InvalidFormatError) do
+      assert_raises(InvalidSMPTETimecodeError) do
         SMPTETimecode.new(hours: 0,
                           minutes: 0,
                           seconds: 0,

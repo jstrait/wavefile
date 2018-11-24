@@ -1,4 +1,10 @@
 module WaveFile
+  # Public: Error that is raised when constructing a SMPTETimecode instance that is not valid.
+  # Valid means that each field is in the range that can be encoded in a *.wav file, but not
+  # not necessarily semantically correct. For example, a SMPTETimecode field can be constructed
+  # with a hours value of 100, even though this isn't a valid value in real life.
+  class InvalidSMPTETimecodeError < FormatError; end
+
   # Public: Represents an SMPTE timecode: https://en.wikipedia.org/wiki/SMPTE_timecode
   #         If a *.wav file has a `smpl` chunk, then Reader.SamplerInfo.smpte_offset
   #         will return an instance of this class.
@@ -28,14 +34,14 @@ module WaveFile
 
   def validate_8_bit_unsigned_integer_field(candidate, field_name)
     unless candidate.is_a?(Integer) && VALID_8_BIT_UNSIGNED_INTEGER_RANGE === candidate
-      raise InvalidFormatError,
+      raise InvalidSMPTETimecodeError,
             "Invalid `#{field_name}` value: `#{candidate}`. Must be an Integer between #{VALID_8_BIT_UNSIGNED_INTEGER_RANGE.min} and #{VALID_8_BIT_UNSIGNED_INTEGER_RANGE.max}"
     end
   end
 
   def validate_8_bit_signed_integer_field(candidate, field_name)
     unless candidate.is_a?(Integer) && VALID_8_BIT_SIGNED_INTEGER_RANGE === candidate
-      raise InvalidFormatError,
+      raise InvalidSMPTETimecodeError,
             "Invalid `#{field_name}` value: `#{candidate}`. Must be an Integer between #{VALID_8_BIT_SIGNED_INTEGER_RANGE.min} and #{VALID_8_BIT_SIGNED_INTEGER_RANGE.max}"
     end
   end

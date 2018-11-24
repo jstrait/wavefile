@@ -1,4 +1,11 @@
 module WaveFile
+  # Public: Error that is raised when constructing a SamplerLoop instance that is not valid.
+  # Valid means that each field is in the range that can be encoded in a *.wav file, but not
+  # not necessarily semantically correct. For example, a SamplerInfo field can be constructed
+  # with starting or ending sample frames that don't correspond to the actual sample frame
+  # range of the file.
+  class InvalidSamplerLoopError < FormatError; end
+
   # Public: Provides a way to indicate the data about sampler loop points
   #         in a file's "smpl" chunk. That is, information about how a sampler
   #         could loop between a sample range while playing this *.wav as a note.
@@ -81,7 +88,7 @@ module WaveFile
     # Internal
     def validate_32_bit_integer_field(candidate, field_name)
       unless candidate.is_a?(Integer) && VALID_32_BIT_INTEGER_RANGE === candidate
-        raise InvalidFormatError,
+        raise InvalidSamplerLoopError,
               "Invalid `#{field_name}` value: `#{candidate}`. Must be an Integer between #{VALID_32_BIT_INTEGER_RANGE.min} and #{VALID_32_BIT_INTEGER_RANGE.max}"
       end
     end
@@ -89,7 +96,7 @@ module WaveFile
     # Internal
     def validate_loop_type(candidate)
       unless VALID_LOOP_TYPES.include?(candidate) || (candidate.is_a?(Integer) && VALID_32_BIT_INTEGER_RANGE === candidate)
-        raise InvalidFormatError,
+        raise InvalidSamplerLoopError,
               "Invalid `type` value: `#{candidate}`. Must be an Integer between #{VALID_32_BIT_INTEGER_RANGE.min} and #{VALID_32_BIT_INTEGER_RANGE.max} or one of #{VALID_LOOP_TYPES}"
       end
     end
@@ -97,7 +104,7 @@ module WaveFile
     # Internal
     def validate_fraction(candidate)
       unless (candidate.is_a?(Integer) || candidate.is_a?(Float)) && candidate >= 0.0 && candidate < 1.0
-        raise InvalidFormatError,
+        raise InvalidSamplerLoopError,
               "Invalid `fraction` value: `#{candidate}`. Must be >= 0.0 and < 1.0"
       end
     end

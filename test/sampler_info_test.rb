@@ -25,7 +25,7 @@ class SamplerLoopTest < Minitest::Test
 
   def test_invalid_manufacturer_id
     INVALID_32_BIT_INTEGER_TEST_VALUES.each do |invalid_value|
-      assert_raises(InvalidFormatError) do
+      assert_raises(InvalidSamplerInfoError) do
         SamplerInfo.new(manufacturer_id: invalid_value,
                         product_id: 0,
                         sample_nanoseconds: 22675,
@@ -57,7 +57,7 @@ class SamplerLoopTest < Minitest::Test
 
   def test_invalid_product_id
     INVALID_32_BIT_INTEGER_TEST_VALUES.each do |invalid_value|
-      assert_raises(InvalidFormatError) do
+      assert_raises(InvalidSamplerInfoError) do
         SamplerInfo.new(manufacturer_id: 0,
                         product_id: invalid_value,
                         sample_nanoseconds: 22675,
@@ -89,7 +89,7 @@ class SamplerLoopTest < Minitest::Test
 
   def test_invalid_sample_nanoseconds
     INVALID_32_BIT_INTEGER_TEST_VALUES.each do |invalid_value|
-      assert_raises(InvalidFormatError) do
+      assert_raises(InvalidSamplerInfoError) do
         SamplerInfo.new(manufacturer_id: 0,
                         product_id: 0,
                         sample_nanoseconds: invalid_value,
@@ -121,7 +121,7 @@ class SamplerLoopTest < Minitest::Test
 
   def test_invalid_midi_note
     INVALID_32_BIT_INTEGER_TEST_VALUES.each do |invalid_value|
-      assert_raises(InvalidFormatError) do
+      assert_raises(InvalidSamplerInfoError) do
         SamplerInfo.new(manufacturer_id: 0,
                         product_id: 0,
                         sample_nanoseconds: 0,
@@ -153,7 +153,7 @@ class SamplerLoopTest < Minitest::Test
 
   def test_invalid_fine_tuning_cents
     ["dsfsfsdf", :foo, -1, 4_294_967_296, nil, [50], 100, 100.0, 100.00000000001, -0.0000000000001].each do |invalid_value|
-      assert_raises(InvalidFormatError) do
+      assert_raises(InvalidSamplerInfoError) do
         SamplerInfo.new(manufacturer_id: 0,
                         product_id: 0,
                         sample_nanoseconds: 0,
@@ -185,7 +185,7 @@ class SamplerLoopTest < Minitest::Test
 
   def test_invalid_smpte_format
     INVALID_32_BIT_INTEGER_TEST_VALUES.each do |invalid_value|
-      assert_raises(InvalidFormatError) do
+      assert_raises(InvalidSamplerInfoError) do
         SamplerInfo.new(manufacturer_id: 0,
                         product_id: 0,
                         sample_nanoseconds: 22675,
@@ -222,7 +222,7 @@ class SamplerLoopTest < Minitest::Test
     loop1 = SamplerLoop.new(id: 0, type: :forward, start_sample_frame: 0, end_sample_frame: 0, fraction: 0.0, play_count: 1)
 
     [1, 1.5, false, ["string"], { key: :value}, [loop1, "string"]].each do |invalid_value|
-      assert_raises(InvalidFormatError) do
+      assert_raises(InvalidSamplerInfoError) do
         SamplerInfo.new(manufacturer_id: 0,
                         product_id: 0,
                         sample_nanoseconds: 22675,
@@ -258,7 +258,7 @@ class SamplerLoopTest < Minitest::Test
 
   def test_invalid_sampler_specific_data
     [1, 1.5, false, ["string"], { key: :value}].each do |invalid_value|
-      assert_raises(InvalidFormatError) do
+      assert_raises(InvalidSamplerInfoError) do
         SamplerInfo.new(manufacturer_id: 0,
                         product_id: 0,
                         sample_nanoseconds: 22675,

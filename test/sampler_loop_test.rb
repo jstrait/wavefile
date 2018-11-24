@@ -19,7 +19,7 @@ class SamplerLoopTest < Minitest::Test
 
   def test_invalid_id
     ["dsfsfsdf", :foo, -1, 4_294_967_296, 2.5, 2.0, [10], nil].each do |invalid_value|
-      assert_raises(InvalidFormatError) do
+      assert_raises(InvalidSamplerLoopError) do
         SamplerLoop.new(id: invalid_value,
                         type: :forward,
                         start_sample_frame: 0,
@@ -85,7 +85,7 @@ class SamplerLoopTest < Minitest::Test
 
   def test_invalid_type
     ["dsfsfsdf", :foo, -1, :alternatin, 4_294_967_296, 2.5, 2.0, [:forward], nil].each do |invalid_value|
-      assert_raises(InvalidFormatError) do
+      assert_raises(InvalidSamplerLoopError) do
         SamplerLoop.new(id: 0,
                         type: invalid_value,
                         start_sample_frame: 0,
@@ -111,7 +111,7 @@ class SamplerLoopTest < Minitest::Test
 
   def test_invalid_start_sample_frame
     ["dsfsfsdf", :foo, -1, 4_294_967_296, 2.5, 2.0, [10], nil].each do |invalid_value|
-      assert_raises(InvalidFormatError) do
+      assert_raises(InvalidSamplerLoopError) do
         SamplerLoop.new(id: 0,
                         type: :forward,
                         start_sample_frame: invalid_value,
@@ -137,7 +137,7 @@ class SamplerLoopTest < Minitest::Test
 
   def test_invalid_end_sample_frame
     ["dsfsfsdf", :foo, -1, 4_294_967_296, 2.5, 2.0, [10], nil].each do |invalid_value|
-      assert_raises(InvalidFormatError) do
+      assert_raises(InvalidSamplerLoopError) do
         SamplerLoop.new(id: 0,
                         type: :forward,
                         start_sample_frame: 0,
@@ -163,7 +163,7 @@ class SamplerLoopTest < Minitest::Test
 
   def test_invalid_fraction
     ["dsfsfsdf", :foo, -1, 4_294_967_296, 2.5, 2.0, nil, [0.5], 1, 1.0, 1.00000000001, -0.0000000000001].each do |invalid_value|
-      assert_raises(InvalidFormatError) do
+      assert_raises(InvalidSamplerLoopError) do
         SamplerLoop.new(id: 0,
                         type: :forward,
                         start_sample_frame: 0,
@@ -189,7 +189,7 @@ class SamplerLoopTest < Minitest::Test
 
   def test_invalid_play_count
     ["dsfsfsdf", :foo, -1, 4_294_967_296, 2.5, 2.0, [10], nil].each do |invalid_value|
-      assert_raises(InvalidFormatError) do
+      assert_raises(InvalidSamplerLoopError) do
         SamplerLoop.new(id: 0,
                         type: :forward,
                         start_sample_frame: 0,
