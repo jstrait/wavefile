@@ -15,7 +15,7 @@ class SamplerLoopTest < Minitest::Test
                                      midi_note: 60,
                                      fine_tuning_cents: 0.0,
                                      smpte_format: 0,
-                                     smpte_offset: nil,
+                                     smpte_offset: SMPTETimecode.new(hours: 0, minutes: 0, seconds: 0, frames: 0),
                                      loops: [],
                                      sampler_specific_data: nil)
 
@@ -32,7 +32,7 @@ class SamplerLoopTest < Minitest::Test
                         midi_note: 60,
                         fine_tuning_cents: 0.0,
                         smpte_format: 0,
-                        smpte_offset: nil,
+                        smpte_offset: SMPTETimecode.new(hours: 0, minutes: 0, seconds: 0, frames: 0),
                         loops: [],
                         sampler_specific_data: nil)
       end
@@ -47,7 +47,7 @@ class SamplerLoopTest < Minitest::Test
                                      midi_note: 60,
                                      fine_tuning_cents: 0.0,
                                      smpte_format: 0,
-                                     smpte_offset: nil,
+                                     smpte_offset: SMPTETimecode.new(hours: 0, minutes: 0, seconds: 0, frames: 0),
                                      loops: [],
                                      sampler_specific_data: nil)
 
@@ -64,7 +64,7 @@ class SamplerLoopTest < Minitest::Test
                         midi_note: 60,
                         fine_tuning_cents: 0.0,
                         smpte_format: 0,
-                        smpte_offset: nil,
+                        smpte_offset: SMPTETimecode.new(hours: 0, minutes: 0, seconds: 0, frames: 0),
                         loops: [],
                         sampler_specific_data: nil)
       end
@@ -79,7 +79,7 @@ class SamplerLoopTest < Minitest::Test
                                      midi_note: 60,
                                      fine_tuning_cents: 0.0,
                                      smpte_format: 0,
-                                     smpte_offset: nil,
+                                     smpte_offset: SMPTETimecode.new(hours: 0, minutes: 0, seconds: 0, frames: 0),
                                      loops: [],
                                      sampler_specific_data: nil)
 
@@ -96,7 +96,7 @@ class SamplerLoopTest < Minitest::Test
                         midi_note: 60,
                         fine_tuning_cents: 0.0,
                         smpte_format: 0,
-                        smpte_offset: nil,
+                        smpte_offset: SMPTETimecode.new(hours: 0, minutes: 0, seconds: 0, frames: 0),
                         loops: [],
                         sampler_specific_data: nil)
       end
@@ -111,7 +111,7 @@ class SamplerLoopTest < Minitest::Test
                                      midi_note: valid_value,
                                      fine_tuning_cents: 0.0,
                                      smpte_format: 0,
-                                     smpte_offset: nil,
+                                     smpte_offset: SMPTETimecode.new(hours: 0, minutes: 0, seconds: 0, frames: 0),
                                      loops: [],
                                      sampler_specific_data: nil)
 
@@ -128,7 +128,7 @@ class SamplerLoopTest < Minitest::Test
                         midi_note: invalid_value,
                         fine_tuning_cents: 0.0,
                         smpte_format: 0,
-                        smpte_offset: nil,
+                        smpte_offset: SMPTETimecode.new(hours: 0, minutes: 0, seconds: 0, frames: 0),
                         loops: [],
                         sampler_specific_data: nil)
       end
@@ -143,7 +143,7 @@ class SamplerLoopTest < Minitest::Test
                                      midi_note: 60,
                                      fine_tuning_cents: valid_value,
                                      smpte_format: 0,
-                                     smpte_offset: nil,
+                                     smpte_offset: SMPTETimecode.new(hours: 0, minutes: 0, seconds: 0, frames: 0),
                                      loops: [],
                                      sampler_specific_data: nil)
 
@@ -160,7 +160,7 @@ class SamplerLoopTest < Minitest::Test
                         midi_note: 60,
                         fine_tuning_cents: invalid_value,
                         smpte_format: 0,
-                        smpte_offset: nil,
+                        smpte_offset: SMPTETimecode.new(hours: 0, minutes: 0, seconds: 0, frames: 0),
                         loops: [],
                         sampler_specific_data: nil)
       end
@@ -175,7 +175,7 @@ class SamplerLoopTest < Minitest::Test
                                      midi_note: 60,
                                      fine_tuning_cents: 0.0,
                                      smpte_format: valid_value,
-                                     smpte_offset: nil,
+                                     smpte_offset: SMPTETimecode.new(hours: 0, minutes: 0, seconds: 0, frames: 0),
                                      loops: [],
                                      sampler_specific_data: nil)
 
@@ -192,7 +192,43 @@ class SamplerLoopTest < Minitest::Test
                         midi_note: 60,
                         fine_tuning_cents: 0.0,
                         smpte_format: invalid_value,
-                        smpte_offset: nil,
+                        smpte_offset: SMPTETimecode.new(hours: 0, minutes: 0, seconds: 0, frames: 0),
+                        loops: [],
+                        sampler_specific_data: nil)
+      end
+    end
+  end
+
+  def test_valid_smpte_offset
+    smpte_timecode = SMPTETimecode.new(hours: 0, minutes: 0, seconds: 0, frames: 0)
+
+    [smpte_timecode].each do |valid_value|
+      sampler_info = SamplerInfo.new(manufacturer_id: 0,
+                                     product_id: 0,
+                                     sample_nanoseconds: 22675,
+                                     midi_note: 60,
+                                     fine_tuning_cents: 0.0,
+                                     smpte_format: 0,
+                                     smpte_offset: smpte_timecode,
+                                     loops: [],
+                                     sampler_specific_data: nil)
+
+      assert_equal(valid_value, sampler_info.smpte_offset)
+    end
+  end
+
+  def test_invalid_smpte_offset
+    smpte_timecode = SMPTETimecode.new(hours: 0, minutes: 0, seconds: 0, frames: 0)
+
+    [1, 1.5, false, ["string"], { key: :value}, [smpte_timecode = SMPTETimecode.new(hours: 0, minutes: 0, seconds: 0, frames: 0), "string"]].each do |invalid_value|
+      assert_raises(InvalidSamplerInfoError) do
+        SamplerInfo.new(manufacturer_id: 0,
+                        product_id: 0,
+                        sample_nanoseconds: 22675,
+                        midi_note: 60,
+                        fine_tuning_cents: 0.0,
+                        smpte_format: 0,
+                        smpte_offset: invalid_value,
                         loops: [],
                         sampler_specific_data: nil)
       end
@@ -210,7 +246,7 @@ class SamplerLoopTest < Minitest::Test
                                      midi_note: 60,
                                      fine_tuning_cents: 0.0,
                                      smpte_format: 0,
-                                     smpte_offset: nil,
+                                     smpte_offset: SMPTETimecode.new(hours: 0, minutes: 0, seconds: 0, frames: 0),
                                      loops: valid_value,
                                      sampler_specific_data: nil)
 
@@ -229,7 +265,7 @@ class SamplerLoopTest < Minitest::Test
                         midi_note: 60,
                         fine_tuning_cents: 0.0,
                         smpte_format: 0,
-                        smpte_offset: nil,
+                        smpte_offset: SMPTETimecode.new(hours: 0, minutes: 0, seconds: 0, frames: 0),
                         loops: invalid_value,
                         sampler_specific_data: nil)
       end
@@ -244,7 +280,7 @@ class SamplerLoopTest < Minitest::Test
                                      midi_note: 60,
                                      fine_tuning_cents: 0.0,
                                      smpte_format: 0,
-                                     smpte_offset: nil,
+                                     smpte_offset: SMPTETimecode.new(hours: 0, minutes: 0, seconds: 0, frames: 0),
                                      loops: [],
                                      sampler_specific_data: valid_value)
 
@@ -265,7 +301,7 @@ class SamplerLoopTest < Minitest::Test
                         midi_note: 60,
                         fine_tuning_cents: 0.0,
                         smpte_format: 0,
-                        smpte_offset: nil,
+                        smpte_offset: SMPTETimecode.new(hours: 0, minutes: 0, seconds: 0, frames: 0),
                         loops: [],
                         sampler_specific_data: invalid_value)
       end

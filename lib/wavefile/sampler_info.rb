@@ -51,6 +51,7 @@ module WaveFile
       validate_32_bit_integer_field(midi_note, "midi_note")
       validate_fine_tuning_cents(fine_tuning_cents)
       validate_32_bit_integer_field(smpte_format, "smpte_format")
+      validate_smpte_offset(smpte_offset)
       validate_loops(loops)
       validate_sampler_specific_data(sampler_specific_data)
 
@@ -121,6 +122,14 @@ module WaveFile
       unless (candidate.is_a?(Integer) || candidate.is_a?(Float)) && candidate >= 0.0 && candidate < 100.0
         raise InvalidSamplerInfoError,
               "Invalid `fine_tuning_cents` value: `#{candidate}`. Must be a number >= 0.0 and < 100.0"
+      end
+    end
+
+    # Internal
+    def validate_smpte_offset(candidate)
+      unless candidate.is_a?(SMPTETimecode)
+        raise InvalidSamplerInfoError,
+              "Invalid `smpte_offset` value: `#{candidate}`. Must be an instance of SMPTETimecode"
       end
     end
 
