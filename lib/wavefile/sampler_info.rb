@@ -137,7 +137,7 @@ module WaveFile
     def validate_loops(candidate)
       unless candidate.is_a?(Array) && candidate.select {|loop| !loop.is_a?(SamplerLoop) }.empty?
         raise InvalidSamplerInfoError,
-              "Invalid `loops` value: `#{candidate}`. Must be an Array of SampleLoop objects."
+              "Invalid `loops` value: `#{candidate}`. Must be an Array of SampleLoop objects"
       end
     end
 
