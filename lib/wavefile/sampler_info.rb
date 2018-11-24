@@ -22,7 +22,7 @@ module WaveFile
     #                     tuned half-way between MIDI note 60 and 61. If the value is 0, then the sample has no
     #                     fine tuning.
     # smpte_format - the SMPTE format. Should be 0, 24, 25, 29 or 30.
-    # smpte_offset - a Hash representing the SMPTE time offset.
+    # smpte_offset - a SMPTETimecode representing the SMPTE time offset.
     # loops - an Array of 0 or more SamplerLoop objects containing loop point info. Loop point info
     #         can indicate that (for example) the sampler should loop between a given sample range as long
     #         as the sample is played.
@@ -85,7 +85,7 @@ module WaveFile
     # Public: Returns the SMPTE format (0, 24, 25, 29 or 30)
     attr_reader :smpte_format
 
-    # Public: Returns a Hash representing the SMPTE time offset.
+    # Public: Returns a SMPTETimecode representing the SMPTE time offset.
     attr_reader :smpte_offset
 
     # Public: Returns an Array of 0 or more SamplerLoop objects containing loop point info. Loop point info

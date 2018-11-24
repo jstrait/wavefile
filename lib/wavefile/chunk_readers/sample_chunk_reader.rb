@@ -24,12 +24,10 @@ module WaveFile
         loop_count,
         sampler_data_size = raw_bytes.slice!(0...CORE_BYTE_COUNT).unpack("VVVVVVCCCcVV")
         fields[:fine_tuning_cents] = (fields[:fine_tuning_cents] / 4_294_967_296.0) * 100
-        fields[:smpte_offset] = {
-          hours: smpte_offset_hours,
-          minutes: smpte_offset_minutes,
-          seconds: smpte_offset_seconds,
-          frame_count: smpte_offset_frame_count,
-        }.freeze
+        fields[:smpte_offset] = SMPTETimecode.new(hours: smpte_offset_hours,
+                                                  minutes: smpte_offset_minutes,
+                                                  seconds: smpte_offset_seconds,
+                                                  frame_count: smpte_offset_frame_count)
 
         fields[:loops] = []
         loop_count.times do

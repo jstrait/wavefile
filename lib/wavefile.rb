@@ -5,6 +5,7 @@ require 'wavefile/format'
 require 'wavefile/reader'
 require 'wavefile/sampler_info'
 require 'wavefile/sampler_loop'
+require 'wavefile/smpte_timecode'
 require 'wavefile/unvalidated_format'
 require 'wavefile/writer'
 
