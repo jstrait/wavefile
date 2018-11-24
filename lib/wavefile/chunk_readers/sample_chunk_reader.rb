@@ -17,7 +17,7 @@ module WaveFile
         fields[:midi_note],
         fields[:fine_tuning_cents],
         fields[:smpte_format],
-        smpte_offset_frame_count,
+        smpte_offset_frames,
         smpte_offset_seconds,
         smpte_offset_minutes,
         smpte_offset_hours,
@@ -27,7 +27,7 @@ module WaveFile
         fields[:smpte_offset] = SMPTETimecode.new(hours: smpte_offset_hours,
                                                   minutes: smpte_offset_minutes,
                                                   seconds: smpte_offset_seconds,
-                                                  frame_count: smpte_offset_frame_count)
+                                                  frames: smpte_offset_frames)
 
         fields[:loops] = []
         loop_count.times do

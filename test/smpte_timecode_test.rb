@@ -14,7 +14,7 @@ class SMPTETimecodeTest < Minitest::Test
       smpte_timecode = SMPTETimecode.new(hours: valid_value,
                                          minutes: 0,
                                          seconds: 0,
-                                         frame_count: 0)
+                                         frames: 0)
 
       assert_equal(valid_value, smpte_timecode.hours)
     end
@@ -26,7 +26,7 @@ class SMPTETimecodeTest < Minitest::Test
         SMPTETimecode.new(hours: invalid_value,
                           minutes: 0,
                           seconds: 0,
-                          frame_count: 0)
+                          frames: 0)
       end
     end
   end
@@ -36,7 +36,7 @@ class SMPTETimecodeTest < Minitest::Test
       smpte_timecode = SMPTETimecode.new(hours: 0,
                                          minutes: valid_value,
                                          seconds: 0,
-                                         frame_count: 0)
+                                         frames: 0)
 
       assert_equal(valid_value, smpte_timecode.minutes)
     end
@@ -48,7 +48,7 @@ class SMPTETimecodeTest < Minitest::Test
         SMPTETimecode.new(hours: 0,
                           minutes: invalid_value,
                           seconds: 0,
-                          frame_count: 0)
+                          frames: 0)
       end
     end
   end
@@ -58,7 +58,7 @@ class SMPTETimecodeTest < Minitest::Test
       smpte_timecode = SMPTETimecode.new(hours: 0,
                                          minutes: 0,
                                          seconds: valid_value,
-                                         frame_count: 0)
+                                         frames: 0)
 
       assert_equal(valid_value, smpte_timecode.seconds)
     end
@@ -70,29 +70,29 @@ class SMPTETimecodeTest < Minitest::Test
         SMPTETimecode.new(hours: 0,
                           minutes: 0,
                           seconds: invalid_value,
-                          frame_count: 0)
+                          frames: 0)
       end
     end
   end
 
-  def test_valid_frame_count
+  def test_valid_frames
     VALID_8_BIT_UNSIGNED_INTEGER_TEST_VALUES.each do |valid_value|
       smpte_timecode = SMPTETimecode.new(hours: 0,
                                          minutes: 0,
                                          seconds: 0,
-                                         frame_count: valid_value)
+                                         frames: valid_value)
 
-      assert_equal(valid_value, smpte_timecode.frame_count)
+      assert_equal(valid_value, smpte_timecode.frames)
     end
   end
 
-  def test_invalid_frame_count
+  def test_invalid_frames
     INVALID_8_BIT_UNSIGNED_INTEGER_TEST_VALUES.each do |invalid_value|
       assert_raises(InvalidFormatError) do
         SMPTETimecode.new(hours: 0,
                           minutes: 0,
                           seconds: 0,
-                          frame_count: invalid_value)
+                          frames: invalid_value)
       end
     end
   end

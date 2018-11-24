@@ -3,22 +3,22 @@ module WaveFile
   #         If a *.wav file has a `smpl` chunk, then Reader.SamplerInfo.smpte_offset
   #         will return an instance of this class.
   class SMPTETimecode
-    def initialize(hours:, minutes:, seconds:, frame_count:)
+    def initialize(hours:, minutes:, seconds:, frames:)
       validate_8_bit_signed_integer_field(hours, "hours")
       validate_8_bit_unsigned_integer_field(minutes, "minutes")
       validate_8_bit_unsigned_integer_field(seconds, "seconds")
-      validate_8_bit_unsigned_integer_field(frame_count, "frame_count")
+      validate_8_bit_unsigned_integer_field(frames, "frames")
 
       @hours = hours
       @minutes = minutes
       @seconds = seconds
-      @frame_count = frame_count
+      @frames = frames
     end
 
     attr_reader :hours
     attr_reader :minutes
     attr_reader :seconds
-    attr_reader :frame_count
+    attr_reader :frames
   end
 
   private
