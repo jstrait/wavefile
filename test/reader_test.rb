@@ -697,6 +697,40 @@ class ReaderTest < Minitest::Test
     assert_nil(sampler_info.sampler_specific_data)
   end
 
+  def test_smpl_chunk_after_data_chunk_and_data_chunk_has_padding_byte
+    file_name = fixture("valid/valid_with_sample_chunk_after_data_chunk_and_data_chunk_has_padding_byte.wav")
+
+    reader = Reader.new(file_name)
+    sampler_info = reader.sampler_info
+
+    # Should correctly deal with data chunk with odd number of bytes, followed
+    # by a padding byte.
+    assert_equal(2241, reader.total_sample_frames)
+    # Test that data chunk read is correctly queued up to start of data chunk
+    assert_equal([88, 88, 88, 88, 167, 167, 167, 167], reader.read(8).samples)
+
+    # Sample chunk should be correctly located despite the padding byte following
+    # the data chunk.
+    assert_equal(0, sampler_info.manufacturer_id)
+    assert_equal(0, sampler_info.product_id)
+    assert_equal(0, sampler_info.sample_nanoseconds)
+    assert_equal(60, sampler_info.midi_note)
+    assert_equal(50.0, sampler_info.fine_tuning_cents)
+    assert_equal(0, sampler_info.smpte_format)
+    assert_equal(0, sampler_info.smpte_offset.hours)
+    assert_equal(0, sampler_info.smpte_offset.minutes)
+    assert_equal(0, sampler_info.smpte_offset.seconds)
+    assert_equal(0, sampler_info.smpte_offset.frames)
+    assert_equal(1, sampler_info.loops.length)
+    assert_equal(0, sampler_info.loops[0].id)
+    assert_equal(:backward, sampler_info.loops[0].type)
+    assert_equal(0, sampler_info.loops[0].start_sample_frame)
+    assert_equal(0, sampler_info.loops[0].end_sample_frame)
+    assert_equal(0.5, sampler_info.loops[0].fraction)
+    assert_equal(1, sampler_info.loops[0].play_count)
+    assert_nil(sampler_info.sampler_specific_data)
+  end
+
   def test_smpl_chunk_with_sampler_specific_data
     file_name = fixture("valid/valid_with_sample_chunk_with_sampler_specific_data.wav")
     sampler_info = Reader.new(file_name).sampler_info

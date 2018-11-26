@@ -150,9 +150,19 @@ def write_data_chunk(file_writer, config, format_chunk)
   end
 
   file_writer.write_or_quit("data", FOUR_CC)
-  file_writer.write_or_quit((TOTAL_SAMPLE_FRAMES * format_chunk["block_align"]), UNSIGNED_INT_32_LITTLE_ENDIAN)
+  if config["chunk_size"]
+    file_writer.write_or_quit(config["chunk_size"], UNSIGNED_INT_32_LITTLE_ENDIAN)
+  else
+    file_writer.write_or_quit((TOTAL_SAMPLE_FRAMES * format_chunk["block_align"]), UNSIGNED_INT_32_LITTLE_ENDIAN)
+  end
 
   write_square_wave_samples(file_writer, sample_format, format_chunk["bits_per_sample"], config["channel_format"])
+
+  if config["extra_data"]
+    config["extra_data"].each do |byte|
+      file_writer.write_or_skip(byte, UNSIGNED_INT_8)
+    end
+  end
 end
 
 def write_square_wave_samples(file_writer, sample_format, bits_per_sample, channel_format)
@@ -221,7 +231,8 @@ if riff_chunk["chunk_size"] == "auto"
   format_chunk_size = format_chunk["chunk_size"] + CHUNK_HEADER_SIZE_IN_BYTES
   fact_chunk_size = fact_chunk ? fact_chunk["chunk_size"] + CHUNK_HEADER_SIZE_IN_BYTES : 0
   sample_chunk_size = sample_chunk ? sample_chunk["chunk_size"] + CHUNK_HEADER_SIZE_IN_BYTES : 0
-  riff_chunk["chunk_size"] = format_chunk_size + fact_chunk_size + sample_chunk_size + RIFF_CHUNK_HEADER_SIZE + (TOTAL_SAMPLE_FRAMES * format_chunk["block_align"])
+  data_chunk_size = (data_chunk && data_chunk["chunk_size"]) ? data_chunk["chunk_size"] : (TOTAL_SAMPLE_FRAMES * format_chunk["block_align"])
+  riff_chunk["chunk_size"] = RIFF_CHUNK_HEADER_SIZE + format_chunk_size + fact_chunk_size + sample_chunk_size + data_chunk_size
 end
 
 file_writer = FileWriter.new(output_file_name)

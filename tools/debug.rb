@@ -276,12 +276,14 @@ begin
         read_data_chunk(chunk_id_data, chunk_size_data)
       else
         chunk_size = chunk_size_data[:actual]
-        if chunk_size.odd?
-          chunk_size += 1
-        end
 
         FILE.sysread(chunk_size)
-        puts "'#{chunk_id_data[:actual]}' chunk of size #{chunk_size_data[:actual]}, skipping."
+        puts "'#{chunk_id_data[:actual]}' chunk of size #{chunk_size}, skipping."
+    end
+
+    # Read padding byte if necessary
+    if chunk_size_data[:actual].odd?
+      FILE.sysread(1)
     end
 
     puts ""

@@ -1,0 +1,38 @@
+riff_chunk:
+  chunk_id: "RIFF"
+  chunk_size: auto
+  wave_format: "WAVE"
+format_chunk:
+  chunk_id: "fmt "
+  chunk_size: 16
+  audio_format: 1
+  channels: 1
+  sample_rate: 44100
+  byte_rate: 44100
+  block_align: 1
+  bits_per_sample: 8
+data_chunk:
+  chunk_size: 2241    # 280 cycle repeats plus 1 sample (does not include padding byte)
+  cycle_repeats: 280
+  channel_format: mono
+  extra_data: [88, 0]    # Extra sample to bring sample data to odd size, plus a padding byte
+sample_chunk:
+  chunk_id: "smpl"
+  chunk_size: 60
+  manufacturer_id: 0
+  product_id: 0
+  sample_nanoseconds: 0
+  unity_note: 60
+  pitch_fraction: 2_147_483_648
+  smpte_format: 0
+  smpte_offset: 0
+  loop_count: 1
+  sampler_data_size: 0
+  loops:
+  - id: 0
+    type: 2
+    start_sample_frame: 0
+    end_sample_frame: 0
+    fraction: 2_147_483_648
+    play_count: 1
+  sampler_data: []
