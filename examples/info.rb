@@ -46,7 +46,7 @@ begin
     puts "Sampler Info:"
     puts "  Manufacturer ID: #{reader.sample_info.manufacturer_id}"
     puts "  Product ID: #{reader.sample_info.product_id}"
-    puts "  Sample Duration: #{reader.sample_info.sample_duration}ns"
+    puts "  Sample Duration: #{reader.sample_info.sample_nanoseconds}ns"
     puts "  MIDI Note Number: #{reader.sample_info.midi_note}"
     puts "  Fine Tuning Cents: #{reader.sample_info.fine_tuning_cents}"
     puts "  SMPTE Format: #{reader.sample_info.smpte_format}"
