@@ -45,7 +45,11 @@ module WaveFile
               data_chunk_seek_pos = @io.pos
               data_chunk_size = chunk_size
 
-              if (@io.pos + data_chunk_size) < end_of_file_pos
+              # Only look for chunks after the data chunk if there are enough bytes
+              # left in the file for that to be possible.
+              start_of_next_chunk_pos = (@io.pos + data_chunk_size)
+              start_of_next_chunk_pos += 1 if chunk_size.odd?
+              if start_of_next_chunk_pos < end_of_file_pos
                 @io.seek(data_chunk_seek_pos + chunk_size, IO::SEEK_SET)
               else
                 data_chunk_is_last_chunk = true
