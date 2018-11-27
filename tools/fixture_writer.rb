@@ -94,9 +94,14 @@ def write_fact_chunk(file_writer, config)
 end
 
 def write_junk_chunk(file_writer, config)
-  file_writer.write_or_quit("JUNK", FOUR_CC)
-  file_writer.write_or_quit(9, UNSIGNED_INT_32_LITTLE_ENDIAN)
-  file_writer.write_or_quit("123456789\000", "a10")
+  file_writer.write_or_quit(config["chunk_id"], FOUR_CC)
+  file_writer.write_or_quit(config["chunk_size"], UNSIGNED_INT_32_LITTLE_ENDIAN)
+  #file_writer.write_or_quit("123456789\000", "a10")
+  if config["data"]
+    config["data"].each do |byte|
+      file_writer.write_or_skip(byte, UNSIGNED_INT_8)
+    end
+  end
 end
 
 def write_sample_chunk(file_writer, config)
@@ -230,9 +235,10 @@ TOTAL_SAMPLE_FRAMES = SQUARE_WAVE_CYCLE_SAMPLE_FRAMES * SQUARE_WAVE_CYCLE_REPEAT
 if riff_chunk["chunk_size"] == "auto"
   format_chunk_size = format_chunk["chunk_size"] + CHUNK_HEADER_SIZE_IN_BYTES
   fact_chunk_size = fact_chunk ? fact_chunk["chunk_size"] + CHUNK_HEADER_SIZE_IN_BYTES : 0
+  junk_chunk_size = junk_chunk ? junk_chunk["chunk_size"] + CHUNK_HEADER_SIZE_IN_BYTES : 0
   sample_chunk_size = sample_chunk ? sample_chunk["chunk_size"] + CHUNK_HEADER_SIZE_IN_BYTES : 0
   data_chunk_size = (data_chunk && data_chunk["chunk_size"]) ? data_chunk["chunk_size"] : (TOTAL_SAMPLE_FRAMES * format_chunk["block_align"])
-  riff_chunk["chunk_size"] = RIFF_CHUNK_HEADER_SIZE + format_chunk_size + fact_chunk_size + sample_chunk_size + data_chunk_size
+  riff_chunk["chunk_size"] = RIFF_CHUNK_HEADER_SIZE + format_chunk_size + fact_chunk_size + junk_chunk_size + sample_chunk_size + data_chunk_size
 end
 
 file_writer = FileWriter.new(output_file_name)
@@ -246,7 +252,7 @@ chunks.keys.each do |chunk_key|
   when 'fact_chunk'
     write_fact_chunk(file_writer, fact_chunk)
   when 'junk_chunk'
-    write_junk_chunk(file_writer, {})
+    write_junk_chunk(file_writer, junk_chunk)
   when 'sample_chunk'
     write_sample_chunk(file_writer, sample_chunk)
   when 'data_chunk'

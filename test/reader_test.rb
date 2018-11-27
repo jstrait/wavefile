@@ -410,10 +410,10 @@ class ReaderTest < Minitest::Test
     buffers = read_file("valid/valid_mono_pcm_8_44100_with_padding_byte.wav", 1024)
 
     assert_equal(3, buffers.length)
-    assert_equal([1024, 1024, 191], buffers.map {|buffer| buffer.samples.length })
+    assert_equal([1024, 1024, 193], buffers.map {|buffer| buffer.samples.length })
     assert_equal(SQUARE_WAVE_CYCLE[:mono][:pcm_8] * 128, buffers[0].samples)
     assert_equal(SQUARE_WAVE_CYCLE[:mono][:pcm_8] * 128, buffers[1].samples)
-    assert_equal((SQUARE_WAVE_CYCLE[:mono][:pcm_8] * 23) + [88, 88, 88, 88, 167, 167, 167],
+    assert_equal((SQUARE_WAVE_CYCLE[:mono][:pcm_8] * 24) + [88],
                  buffers[2].samples)
   end
 
@@ -480,13 +480,13 @@ class ReaderTest < Minitest::Test
     reader.each_buffer(1024) {|buffer| buffers << buffer }
 
     assert_equal(3, buffers.length)
-    assert_equal([1024, 1024, 191], buffers.map {|buffer| buffer.samples.length })
+    assert_equal([1024, 1024, 193], buffers.map {|buffer| buffer.samples.length })
     assert_equal(SQUARE_WAVE_CYCLE[:mono][:pcm_8] * 128, buffers[0].samples)
     assert_equal(SQUARE_WAVE_CYCLE[:mono][:pcm_8] * 128, buffers[1].samples)
-    assert_equal((SQUARE_WAVE_CYCLE[:mono][:pcm_8] * 23) + [88, 88, 88, 88, 167, 167, 167],
+    assert_equal((SQUARE_WAVE_CYCLE[:mono][:pcm_8] * 24) + [88],
                  buffers[2].samples)
-    assert_equal(2239, reader.current_sample_frame)
-    assert_equal(2239, reader.total_sample_frames)
+    assert_equal(2241, reader.current_sample_frame)
+    assert_equal(2241, reader.total_sample_frames)
   end
 
   def test_each_buffer_inside_reader_block

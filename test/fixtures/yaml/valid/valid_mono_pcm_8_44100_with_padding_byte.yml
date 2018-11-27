@@ -1,0 +1,18 @@
+riff_chunk:
+  chunk_id: "RIFF"
+  chunk_size: auto
+  wave_format: "WAVE"
+format_chunk:
+  chunk_id: "fmt "
+  chunk_size: 16
+  audio_format: 1
+  channels: 1
+  sample_rate: 44100
+  byte_rate: 44100
+  block_align: 1
+  bits_per_sample: 8
+data_chunk:
+  chunk_size: 2241    # 280 cycle repeats plus 1 sample (does not include padding byte)
+  cycle_repeats: 280
+  channel_format: mono
+  extra_data: [88, 0]    # Final sample, and then a padding byte

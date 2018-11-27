@@ -164,7 +164,7 @@ class WriterTest < Minitest::Test
       writer = Writer.new(io_or_file_name, format)
       writer.write(Buffer.new(SQUARE_WAVE_CYCLE[:mono][:pcm_8] * 128, format))
       writer.write(Buffer.new(SQUARE_WAVE_CYCLE[:mono][:pcm_8] * 128, format))
-      writer.write(Buffer.new(SQUARE_WAVE_CYCLE[:mono][:pcm_8] * 23 + [88, 88, 88, 88, 167, 167, 167], format))
+      writer.write(Buffer.new(SQUARE_WAVE_CYCLE[:mono][:pcm_8] * 24 + [88], format))
       writer.close
 
       assert_equal(read_file(:expected, file_name), read_file(:actual, file_name))
