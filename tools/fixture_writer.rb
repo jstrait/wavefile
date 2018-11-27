@@ -217,6 +217,10 @@ def write_square_wave_samples(file_writer, sample_format, bits_per_sample, chann
   end
 end
 
+def next_even(number)
+  number.even? ? number : (number + 1)
+end
+
 
 yaml_file_name = ARGV[0]
 output_file_name = ARGV[1]
@@ -238,7 +242,12 @@ if riff_chunk["chunk_size"] == "auto"
   junk_chunk_size = junk_chunk ? junk_chunk["chunk_size"] + CHUNK_HEADER_SIZE_IN_BYTES : 0
   sample_chunk_size = sample_chunk ? sample_chunk["chunk_size"] + CHUNK_HEADER_SIZE_IN_BYTES : 0
   data_chunk_size = (data_chunk && data_chunk["chunk_size"]) ? data_chunk["chunk_size"] : (TOTAL_SAMPLE_FRAMES * format_chunk["block_align"])
-  riff_chunk["chunk_size"] = RIFF_CHUNK_HEADER_SIZE + format_chunk_size + fact_chunk_size + junk_chunk_size + sample_chunk_size + data_chunk_size
+  riff_chunk["chunk_size"] = RIFF_CHUNK_HEADER_SIZE +
+                             next_even(format_chunk_size) +
+                             next_even(fact_chunk_size) +
+                             next_even(junk_chunk_size) +
+                             next_even(sample_chunk_size) +
+                             next_even(data_chunk_size)
 end
 
 file_writer = FileWriter.new(output_file_name)

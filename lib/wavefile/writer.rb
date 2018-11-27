@@ -289,10 +289,14 @@ module WaveFile
       requires_fact_chunk = (format_code != :pcm)
 
       sample_data_byte_count = sample_frame_count * @format.block_align
+      riff_chunk_size = CANONICAL_HEADER_BYTE_LENGTH[format_code] + sample_data_byte_count
+      if sample_data_byte_count.odd?
+        riff_chunk_size += 1
+      end
 
       # Write the header for the RIFF chunk
       header = CHUNK_IDS[:riff]
-      header += [CANONICAL_HEADER_BYTE_LENGTH[format_code] + sample_data_byte_count].pack(UNSIGNED_INT_32)
+      header += [riff_chunk_size].pack(UNSIGNED_INT_32)
       header += WAVEFILE_FORMAT_CODE
 
       # Write the format chunk
