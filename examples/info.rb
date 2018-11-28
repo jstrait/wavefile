@@ -52,6 +52,11 @@ begin
     puts "  Fine Tuning Cents: #{sampler_info.fine_tuning_cents}"
     puts "  SMPTE Format: #{sampler_info.smpte_format}"
     puts "  SMPTE Offset: #{sampler_info.smpte_offset.hours.to_s.rjust(2, "0")}:#{sampler_info.smpte_offset.minutes.to_s.rjust(2, "0")}:#{sampler_info.smpte_offset.seconds.to_s.rjust(2, "0")} #{sampler_info.smpte_offset.frames.to_s.rjust(2, "0")}"
+    if sampler_info.sampler_specific_data.nil?
+      puts "  Sampler Specific Data: None"
+    else
+      puts "  Sampler Specific Data: #{sampler_info.sampler_specific_data.bytes}"
+    end
     if sampler_info.loops.any?
       puts "  #{sampler_info.loops.length} Loop(s):"
       sampler_info.loops.each do |loop|
