@@ -6,11 +6,11 @@ module WaveFile
         begin
           raw_bytes = @io.sysread(@chunk_size)
         rescue EOFError
-          raise_error InvalidFormatError, "The #{chunk_id} chunk has incomplete data."
+          raise_error InvalidFormatError, "'#{chunk_id}' chunk indicated size of #{@chunk_size} bytes, but could only read 0 bytes."
         end
 
         if raw_bytes.length < @chunk_size
-          raise_error InvalidFormatError, "#{chunk_id} indicated size of #{@chunk_size} bytes, but could only read #{raw_bytes.length} bytes."
+          raise_error InvalidFormatError, "'#{chunk_id}' chunk indicated size of #{@chunk_size} bytes, but could only read #{raw_bytes.length} bytes."
         end
 
         raw_bytes
