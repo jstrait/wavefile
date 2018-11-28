@@ -6,7 +6,7 @@ module WaveFile
         begin
           raw_bytes = @io.sysread(@chunk_size)
         rescue EOFError
-          raise_error InvalidFormatError, "'#{chunk_id}' chunk indicated size of #{@chunk_size} bytes, but could only read 0 bytes."
+          raw_bytes = ""
         end
 
         if raw_bytes.length < @chunk_size
