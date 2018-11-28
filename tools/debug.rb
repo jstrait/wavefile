@@ -149,7 +149,7 @@ def read_cue_chunk(chunk_id_data, chunk_size_data)
   display_line "Cue point count", "int_32", read_bytes(UNSIGNED_INT_32)
 
   ((chunk_size_data[:actual] - 4) / 24).times do |i|
-    display_line "ID #{i + 1}", "a4", read_bytes("a4")
+    display_line "ID #{i + 1}", "int_32", read_bytes(UNSIGNED_INT_32)
     display_line "Position #{i + 1}", "int_32", read_bytes(UNSIGNED_INT_32)
     display_line "Data chunk ID #{i + 1}", "alpha_4", read_bytes("a4")
     display_line "Chunk start #{i + 1}", "int_32", read_bytes(UNSIGNED_INT_32)
@@ -217,7 +217,8 @@ end
 def read_list_chunk(chunk_id_data, chunk_size_data)
   display_chunk_header("List Chunk", "list", chunk_id_data, chunk_size_data)
 
-  display_line "List Type", "alpha_4", read_bytes("a4")
+  list_type = read_bytes("a4")
+  display_line "List Type", "alpha_4", list_type
 
   bytes_remaining = chunk_size_data[:actual] - 4
 
@@ -229,9 +230,17 @@ def read_list_chunk(chunk_id_data, chunk_size_data)
     size = size_bytes[:actual]
 
     display_line "Size", "int_32", size_bytes
-    display_line "Content", "alpha_#{size}", read_bytes("a#{size}")
 
-    bytes_remaining -= (size + 8)
+    if list_type[:actual] == "adtl"
+      display_line "Cue Point ID", "int_32", read_bytes(UNSIGNED_INT_32)
+      display_line "Content", "alpha_#{size - 4}", read_bytes("a#{size - 4}")
+
+      bytes_remaining -= (size + 8)
+    else   # INFO, and any unknown list type
+      display_line "Content", "alpha_#{size}", read_bytes("a#{size}")
+
+      bytes_remaining -= (size + 8)
+    end
   end
 
   FILE.sysread(bytes_remaining)
