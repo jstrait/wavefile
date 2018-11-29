@@ -14,14 +14,14 @@ module WaveFile
   class SamplerLoop
     # Public: Constructs a new SamplerLoop instance.
     #
-    # id - A numeric ID which identifies the specific loop.
+    # id - A numeric ID which identifies the specific loop. Should be an Integer 0 or greater.
     # type - Indicates which direction the loop should run. Should either be one of the symbols
     #        +:forward+, +:alternating+, +:backward+, or a positive Integer. If an Integer, then 0 will
     #        be normalized to +:forward+, 1 to +:alternating+, 2 to +:backward+.
     # start_sample_frame - The first sample frame in the loop.
     # end_sample_frame - The last sample frame in the loop.
-    # fraction - A Float between 0.0 and 1.0 which specifies a fraction of a sample at which to loop.
-    #            This allows a loop to be fine tuned at a resolution finer than one sample.
+    # fraction - A Float between 0.0 and 1.0 which specifies a fraction of a sample at which to start
+    #            the loop. This allows a loop start to be fine tuned at a resolution finer than one sample.
     # play_count - The number of times to loop. Can be an Integer 0 or greater, or Float::INFINITY.
     #              A value of 0 will be normalized to Float::INFINITY, because in the file format a
     #              value of 0 means to repeat the loop indefinitely.
