@@ -55,7 +55,7 @@ module WaveFile
 
           fields[:sampler_specific_data] = raw_bytes.slice!(0...sampler_data_size)
         else
-          fields[:sampler_specific_data] = nil
+          fields[:sampler_specific_data] = ""
         end
 
         SamplerInfo.new(fields)

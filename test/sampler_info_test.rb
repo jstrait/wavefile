@@ -17,7 +17,7 @@ class SamplerLoopTest < Minitest::Test
                                      smpte_format: 0,
                                      smpte_offset: SMPTETimecode.new(hours: 0, minutes: 0, seconds: 0, frames: 0),
                                      loops: [],
-                                     sampler_specific_data: nil)
+                                     sampler_specific_data: "")
 
       assert_equal(valid_value, sampler_info.manufacturer_id)
     end
@@ -34,7 +34,7 @@ class SamplerLoopTest < Minitest::Test
                         smpte_format: 0,
                         smpte_offset: SMPTETimecode.new(hours: 0, minutes: 0, seconds: 0, frames: 0),
                         loops: [],
-                        sampler_specific_data: nil)
+                        sampler_specific_data: "")
       end
     end
   end
@@ -49,7 +49,7 @@ class SamplerLoopTest < Minitest::Test
                                      smpte_format: 0,
                                      smpte_offset: SMPTETimecode.new(hours: 0, minutes: 0, seconds: 0, frames: 0),
                                      loops: [],
-                                     sampler_specific_data: nil)
+                                     sampler_specific_data: "")
 
       assert_equal(valid_value, sampler_info.product_id)
     end
@@ -66,7 +66,7 @@ class SamplerLoopTest < Minitest::Test
                         smpte_format: 0,
                         smpte_offset: SMPTETimecode.new(hours: 0, minutes: 0, seconds: 0, frames: 0),
                         loops: [],
-                        sampler_specific_data: nil)
+                        sampler_specific_data: "")
       end
     end
   end
@@ -81,7 +81,7 @@ class SamplerLoopTest < Minitest::Test
                                      smpte_format: 0,
                                      smpte_offset: SMPTETimecode.new(hours: 0, minutes: 0, seconds: 0, frames: 0),
                                      loops: [],
-                                     sampler_specific_data: nil)
+                                     sampler_specific_data: "")
 
       assert_equal(valid_value, sampler_info.sample_nanoseconds)
     end
@@ -98,7 +98,7 @@ class SamplerLoopTest < Minitest::Test
                         smpte_format: 0,
                         smpte_offset: SMPTETimecode.new(hours: 0, minutes: 0, seconds: 0, frames: 0),
                         loops: [],
-                        sampler_specific_data: nil)
+                        sampler_specific_data: "")
       end
     end
   end
@@ -113,7 +113,7 @@ class SamplerLoopTest < Minitest::Test
                                      smpte_format: 0,
                                      smpte_offset: SMPTETimecode.new(hours: 0, minutes: 0, seconds: 0, frames: 0),
                                      loops: [],
-                                     sampler_specific_data: nil)
+                                     sampler_specific_data: "")
 
       assert_equal(valid_value, sampler_info.midi_note)
     end
@@ -130,7 +130,7 @@ class SamplerLoopTest < Minitest::Test
                         smpte_format: 0,
                         smpte_offset: SMPTETimecode.new(hours: 0, minutes: 0, seconds: 0, frames: 0),
                         loops: [],
-                        sampler_specific_data: nil)
+                        sampler_specific_data: "")
       end
     end
   end
@@ -145,7 +145,7 @@ class SamplerLoopTest < Minitest::Test
                                      smpte_format: 0,
                                      smpte_offset: SMPTETimecode.new(hours: 0, minutes: 0, seconds: 0, frames: 0),
                                      loops: [],
-                                     sampler_specific_data: nil)
+                                     sampler_specific_data: "")
 
       assert_equal(valid_value, sampler_info.fine_tuning_cents)
     end
@@ -162,7 +162,7 @@ class SamplerLoopTest < Minitest::Test
                         smpte_format: 0,
                         smpte_offset: SMPTETimecode.new(hours: 0, minutes: 0, seconds: 0, frames: 0),
                         loops: [],
-                        sampler_specific_data: nil)
+                        sampler_specific_data: "")
       end
     end
   end
@@ -177,7 +177,7 @@ class SamplerLoopTest < Minitest::Test
                                      smpte_format: valid_value,
                                      smpte_offset: SMPTETimecode.new(hours: 0, minutes: 0, seconds: 0, frames: 0),
                                      loops: [],
-                                     sampler_specific_data: nil)
+                                     sampler_specific_data: "")
 
       assert_equal(valid_value, sampler_info.smpte_format)
     end
@@ -194,7 +194,7 @@ class SamplerLoopTest < Minitest::Test
                         smpte_format: invalid_value,
                         smpte_offset: SMPTETimecode.new(hours: 0, minutes: 0, seconds: 0, frames: 0),
                         loops: [],
-                        sampler_specific_data: nil)
+                        sampler_specific_data: "")
       end
     end
   end
@@ -211,7 +211,7 @@ class SamplerLoopTest < Minitest::Test
                                      smpte_format: 0,
                                      smpte_offset: smpte_timecode,
                                      loops: [],
-                                     sampler_specific_data: nil)
+                                     sampler_specific_data: "")
 
       assert_equal(valid_value, sampler_info.smpte_offset)
     end
@@ -230,7 +230,7 @@ class SamplerLoopTest < Minitest::Test
                         smpte_format: 0,
                         smpte_offset: invalid_value,
                         loops: [],
-                        sampler_specific_data: nil)
+                        sampler_specific_data: "")
       end
     end
   end
@@ -248,7 +248,7 @@ class SamplerLoopTest < Minitest::Test
                                      smpte_format: 0,
                                      smpte_offset: SMPTETimecode.new(hours: 0, minutes: 0, seconds: 0, frames: 0),
                                      loops: valid_value,
-                                     sampler_specific_data: nil)
+                                     sampler_specific_data: "")
 
       assert_equal(valid_value, sampler_info.loops)
     end
@@ -267,13 +267,13 @@ class SamplerLoopTest < Minitest::Test
                         smpte_format: 0,
                         smpte_offset: SMPTETimecode.new(hours: 0, minutes: 0, seconds: 0, frames: 0),
                         loops: invalid_value,
-                        sampler_specific_data: nil)
+                        sampler_specific_data: "")
       end
     end
   end
 
   def test_valid_sampler_specific_data
-    [nil, "", "1234"].each do |valid_value|
+    ["", "1234"].each do |valid_value|
       sampler_info = SamplerInfo.new(manufacturer_id: 0,
                                      product_id: 0,
                                      sample_nanoseconds: 22675,

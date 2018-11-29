@@ -644,7 +644,7 @@ class ReaderTest < Minitest::Test
     assert_equal(0, sampler_info.loops[0].end_sample_frame)
     assert_equal(0.5, sampler_info.loops[0].fraction)
     assert_equal(1, sampler_info.loops[0].play_count)
-    assert_nil(sampler_info.sampler_specific_data)
+    assert_equal("", sampler_info.sampler_specific_data)
   end
 
   # Several field values are out of the expected range, but the file should be successfully
@@ -670,7 +670,7 @@ class ReaderTest < Minitest::Test
     assert_equal(9999999, sampler_info.loops[0].end_sample_frame)
     assert_equal(0.5, sampler_info.loops[0].fraction)
     assert_equal(1, sampler_info.loops[0].play_count)
-    assert_nil(sampler_info.sampler_specific_data)
+    assert_equal("", sampler_info.sampler_specific_data)
   end
 
   def test_smpl_chunk_after_data_chunk
@@ -694,7 +694,7 @@ class ReaderTest < Minitest::Test
     assert_equal(0, sampler_info.loops[0].end_sample_frame)
     assert_equal(0.5, sampler_info.loops[0].fraction)
     assert_equal(1, sampler_info.loops[0].play_count)
-    assert_nil(sampler_info.sampler_specific_data)
+    assert_equal("", sampler_info.sampler_specific_data)
   end
 
   def test_smpl_chunk_after_data_chunk_and_data_chunk_has_padding_byte
@@ -728,7 +728,7 @@ class ReaderTest < Minitest::Test
     assert_equal(0, sampler_info.loops[0].end_sample_frame)
     assert_equal(0.5, sampler_info.loops[0].fraction)
     assert_equal(1, sampler_info.loops[0].play_count)
-    assert_nil(sampler_info.sampler_specific_data)
+    assert_equal("", sampler_info.sampler_specific_data)
   end
 
   def test_smpl_chunk_with_sampler_specific_data
@@ -802,7 +802,7 @@ class ReaderTest < Minitest::Test
     assert_equal(0, sampler_info.smpte_offset.seconds)
     assert_equal(0, sampler_info.smpte_offset.frames)
     assert_equal([], sampler_info.loops)
-    assert_nil(sampler_info.sampler_specific_data)
+    assert_equal("", sampler_info.sampler_specific_data)
   end
 
 private

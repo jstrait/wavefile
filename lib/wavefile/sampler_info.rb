@@ -143,9 +143,9 @@ module WaveFile
 
     # Internal
     def validate_sampler_specific_data(candidate)
-      unless candidate.nil? || candidate.is_a?(String)
+      unless candidate.is_a?(String)
         raise InvalidSamplerInfoError,
-              "Invalid `sampler_specific_data` value: `#{candidate}`. Must be nil, or a String"
+              "Invalid `sampler_specific_data` value: `#{candidate}`. Must be a String"
       end
     end
   end
