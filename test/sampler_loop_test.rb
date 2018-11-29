@@ -175,7 +175,7 @@ class SamplerLoopTest < Minitest::Test
   end
 
   def test_valid_play_count
-    [0, 10, 4_294_967_295].each do |valid_value|
+    [10, 4_294_967_295, Float::INFINITY].each do |valid_value|
       sampler_loop = SamplerLoop.new(id: 0,
                                      type: :forward,
                                      start_sample_frame: 0,
@@ -185,6 +185,15 @@ class SamplerLoopTest < Minitest::Test
 
       assert_equal(valid_value, sampler_loop.play_count)
     end
+
+    sampler_loop = SamplerLoop.new(id: 0,
+                                   type: :forward,
+                                   start_sample_frame: 0,
+                                   end_sample_frame: 0,
+                                   fraction: 0.0,
+                                   play_count: 0)
+
+    assert_equal(Float::INFINITY, sampler_loop.play_count)
   end
 
   def test_invalid_play_count

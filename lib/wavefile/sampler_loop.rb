@@ -22,18 +22,23 @@ module WaveFile
     # end_sample_frame - The last sample frame in the loop.
     # fraction - A Float between 0.0 and 1.0 which specifies a fraction of a sample at which to loop.
     #            This allows a loop to be fine tuned at a resolution finer than one sample.
-    # play_count - The number of times to loop. 0 means infinitely.
+    # play_count - The number of times to loop. Can be an Integer 0 or greater, or Float::INFINITY.
+    #              A value of 0 will be normalized to Float::INFINITY, because in the file format a
+    #              value of 0 means to repeat the loop indefinitely.
     #
     # Raises InvalidFormatError if the given arguments are invalid.
     def initialize(id:, type:, start_sample_frame:, end_sample_frame:, fraction:, play_count:)
       type = normalize_type(type)
+      if play_count == 0
+        play_count = Float::INFINITY
+      end
 
       validate_32_bit_integer_field(id, "id")
       validate_loop_type(type)
       validate_32_bit_integer_field(start_sample_frame, "start_sample_frame")
       validate_32_bit_integer_field(end_sample_frame, "end_sample_frame")
       validate_fraction(fraction)
-      validate_32_bit_integer_field(play_count, "play_count")
+      validate_play_count(play_count)
 
       @id = id
       @type = type
@@ -106,6 +111,14 @@ module WaveFile
       unless (candidate.is_a?(Integer) || candidate.is_a?(Float)) && candidate >= 0.0 && candidate < 1.0
         raise InvalidSamplerLoopError,
               "Invalid `fraction` value: `#{candidate}`. Must be >= 0.0 and < 1.0"
+      end
+    end
+
+    # Internal
+    def validate_play_count(candidate)
+      unless candidate == Float::INFINITY || (candidate.is_a?(Integer) && VALID_32_BIT_INTEGER_RANGE === candidate)
+        raise InvalidSamplerLoopError,
+              "Invalid `type` value: `#{candidate}`. Must be Float::INFINITY or an Integer between #{VALID_32_BIT_INTEGER_RANGE.min} and #{VALID_32_BIT_INTEGER_RANGE.max}"
       end
     end
   end

@@ -751,7 +751,7 @@ class ReaderTest < Minitest::Test
     assert_equal(0, sampler_info.loops[0].start_sample_frame)
     assert_equal(0, sampler_info.loops[0].end_sample_frame)
     assert_equal(0.5, sampler_info.loops[0].fraction)
-    assert_equal(1, sampler_info.loops[0].play_count)
+    assert_equal(Float::INFINITY, sampler_info.loops[0].play_count)
     assert_equal("\x04\x01\x03\x02", sampler_info.sampler_specific_data)
     assert_equal(Encoding::ASCII_8BIT, sampler_info.sampler_specific_data.encoding)
   end
