@@ -1,8 +1,11 @@
 module WaveFile
-  # Public: Error that is raised when constructing a SamplerInfo instance that is not valid.
-  # Valid means that each field is in the range that can be encoded in a *.wav file, but not
-  # not necessarily semantically correct. For example, a SamplerInfo field can be constructed
-  # with a midi_note value of 10000, even though this isn't a valid value in real life.
+  # Public: Error that is raised when constructing a SamplerInfo instance that is invalid.
+  #         "Invalid" means that one or more fields have a value that can't be encoded in the
+  #         field inside a *.wav file. For example, there's no way to encode "-23" as a value
+  #         for the midi_note field. However, this error _won't_ be raised for values that
+  #         can be encoded, but aren't semantically correct. For example, it's possible to
+  #         construct a SamplerInfo instance with a midi_note value of 10000, which can be
+  #         encoded in a *.wav file, even though this isn't a valid value in real life.
   class InvalidSamplerInfoError < FormatError; end
 
   # Public: Provides a way to indicate the data contained in a "smpl" chunk.

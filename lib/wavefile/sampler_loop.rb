@@ -1,9 +1,12 @@
 module WaveFile
-  # Public: Error that is raised when constructing a SamplerLoop instance that is not valid.
-  # Valid means that each field is in the range that can be encoded in a *.wav file, but not
-  # not necessarily semantically correct. For example, a SamplerInfo field can be constructed
-  # with starting or ending sample frames that don't correspond to the actual sample frame
-  # range of the file.
+  # Public: Error that is raised when constructing a SamplerLoop instance that is invalid.
+  #         "Invalid" means that one or more fields have a value that can't be encoded in the
+  #         field inside a *.wav file. For example, there's no way to encode "-23" as a value
+  #         for the start_sample_frame field. However, this error _won't_ be raised for values
+  #         that can be encoded, but aren't semantically correct. For example, it's possible
+  #         to set the start_sample_frame or end_sample_frame fields to values that don't
+  #         correspond to the actual sample frame range of the file. This error _won't_ be
+  #         raised for "encodeable but not semantically valid" field values.
   class InvalidSamplerLoopError < FormatError; end
 
   # Public: Provides a way to indicate the data about sampler loop points
