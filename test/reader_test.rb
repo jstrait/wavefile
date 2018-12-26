@@ -25,6 +25,9 @@ class ReaderTest < Minitest::Test
       # First 4 bytes in the file are not "RIFF"
       "invalid/bad_riff_header.wav",
 
+      # The format code in the RIFF header is missing
+      "invalid/no_riff_format.wav",
+
       # The format code in the RIFF header is not "WAVE"
       "invalid/bad_wavefile_format.wav",
 
