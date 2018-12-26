@@ -34,6 +34,9 @@ class ReaderTest < Minitest::Test
       # The file consists of just a valid RIFF header
       "invalid/no_format_chunk.wav",
 
+      # The format chunk only includes the chunk ID
+      "invalid/no_format_chunk_size.wav",
+
       # The format chunk has 0 bytes in it (despite the chunk size being 16)
       "invalid/empty_format_chunk.wav",
 
