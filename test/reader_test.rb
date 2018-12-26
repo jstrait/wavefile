@@ -55,6 +55,9 @@ class ReaderTest < Minitest::Test
       # The format chunk comes after the data chunk; it must come before
       "invalid/format_chunk_after_data_chunk.wav",
 
+      # Contains a `smpl` chunk that has a size of 0 and no data
+      "invalid/smpl_chunk_empty.wav",
+
       # Contains a `smpl` chunk that doesn't have enough bytes to match the chunk's size
       "invalid/truncated_smpl_chunk.wav",
 
