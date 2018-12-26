@@ -22,6 +22,9 @@ class ReaderTest < Minitest::Test
       # File consists of "RIFF" and nothing else
       "invalid/incomplete_riff_header.wav",
 
+      # The RIFF header chunk size field ends prematurely
+      "invalid/riff_chunk_has_incomplete_chunk_size.wav",
+
       # First 4 bytes in the file are not "RIFF"
       "invalid/bad_riff_header.wav",
 
@@ -45,6 +48,9 @@ class ReaderTest < Minitest::Test
 
       # The RIFF header and format chunk are OK, but there is no data chunk
       "invalid/no_data_chunk.wav",
+
+      # The data chunk size field ends prematurely
+      "invalid/data_chunk_has_incomplete_chunk_size.wav",
 
       # The format chunk comes after the data chunk; it must come before
       "invalid/format_chunk_after_data_chunk.wav",

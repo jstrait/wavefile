@@ -157,7 +157,7 @@ def write_data_chunk(file_writer, config, format_chunk)
   file_writer.write_or_quit("data", FOUR_CC)
   if config["chunk_size"]
     file_writer.write_or_quit(config["chunk_size"], UNSIGNED_INT_32_LITTLE_ENDIAN)
-  else
+  elsif config["cycle_repeats"]
     file_writer.write_or_quit((TOTAL_SAMPLE_FRAMES * format_chunk["block_align"]), UNSIGNED_INT_32_LITTLE_ENDIAN)
   end
 

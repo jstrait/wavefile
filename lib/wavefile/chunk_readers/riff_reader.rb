@@ -89,7 +89,11 @@ module WaveFile
 
       def read_chunk_header
         chunk_id = @io.sysread(4)
-        chunk_size = @io.sysread(4).unpack(UNSIGNED_INT_32).first || 0
+        chunk_size = @io.sysread(4).unpack(UNSIGNED_INT_32).first
+
+        if chunk_size.nil?
+          raise_error InvalidFormatError, "Unexpected end of file."
+        end
 
         return chunk_id, chunk_size
       end
