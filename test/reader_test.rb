@@ -432,6 +432,24 @@ class ReaderTest < Minitest::Test
                  buffers[2].samples)
   end
 
+  def test_read_truncated_file
+    reader = Reader.new(fixture("invalid/data_chunk_truncated.wav"), Format.new(:mono, :pcm_8, 44100))
+
+    # The chunk does not actually contain this many sample frames, it actually has 2240
+    assert_equal(100000, reader.total_sample_frames)
+
+    # First set of requested sample frames should be read correctly
+    buffer = reader.read(2000)
+    assert_equal(2000, buffer.samples.length)
+
+    # All of the remaining sample frames are returned, which is fewer than were requested.
+    buffer = reader.read(2000)
+    assert_equal(240, buffer.samples.length)
+
+    # Since there are no more sample frames, an end-of-file error should be raised
+    assert_raises(EOFError) { reader.read(2000) }
+  end
+
   def test_each_buffer_no_block_given
     reader = Reader.new(fixture("valid/valid_mono_pcm_16_44100.wav"))
     assert_raises(LocalJumpError) { reader.each_buffer(1024) }
