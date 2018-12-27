@@ -35,7 +35,8 @@ module WaveFile
           sample_frame_count = sample_frames_remaining
         end
 
-        samples = @io.sysread(sample_frame_count * @native_format.block_align).unpack(@pack_code)
+        byte_count = sample_frame_count * @native_format.block_align
+        samples = @io.sysread(byte_count).unpack(@pack_code)
         @current_sample_frame += sample_frame_count
 
         if @native_format.bits_per_sample == 24
