@@ -49,6 +49,9 @@ class ReaderTest < Minitest::Test
       # The RIFF header and format chunk are OK, but there is no data chunk
       "invalid/no_data_chunk.wav",
 
+      # The data chunk only contains the chunk ID, nothing else
+      "invalid/data_chunk_ends_after_chunk_id.wav",
+
       # The data chunk size field ends prematurely
       "invalid/data_chunk_has_incomplete_chunk_size.wav",
 
