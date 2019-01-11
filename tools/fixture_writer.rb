@@ -266,6 +266,8 @@ chunks.keys.each do |chunk_key|
     write_sample_chunk(file_writer, sample_chunk)
   when 'data_chunk'
     write_data_chunk(file_writer, data_chunk, format_chunk)
+  else
+    raise "Unknown chunk key `#{chunk_key}` in `#{yaml_file_name}`, exiting"
   end
 end
 
