@@ -9,7 +9,7 @@ module WaveFile
 
       def read
         if @chunk_size < CORE_BYTE_COUNT
-          raise_error InvalidFormatError, "The sample chunk is incomplete."
+          raise_error InvalidFormatError, "The sample chunk is incomplete; it contains fewer than the required number of fields."
         end
 
         raw_bytes = read_entire_chunk_body(CHUNK_IDS[:sample])
