@@ -440,14 +440,17 @@ class ReaderTest < Minitest::Test
 
     # The chunk does not actually contain this many sample frames, it actually has 2240
     assert_equal(100000, reader.total_sample_frames)
+    assert_equal(0, reader.current_sample_frame)
 
     # First set of requested sample frames should be read correctly
     buffer = reader.read(2000)
     assert_equal(2000, buffer.samples.length)
+    assert_equal(2000, reader.current_sample_frame)
 
     # All of the remaining sample frames are returned, which is fewer than were requested.
     buffer = reader.read(2000)
     assert_equal(240, buffer.samples.length)
+    assert_equal(2240, reader.current_sample_frame)
 
     # Since there are no more sample frames, an end-of-file error should be raised
     assert_raises(EOFError) { reader.read(2000) }
