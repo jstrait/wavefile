@@ -36,7 +36,11 @@ module WaveFile
         end
 
         byte_count = sample_frame_count * @native_format.block_align
-        samples = @io.sysread(byte_count).unpack(@pack_code)
+        samples = @io.read(byte_count)
+        if samples.nil?
+          raise EOFError
+        end
+        samples = samples.unpack(@pack_code)
 
         if @native_format.bits_per_sample == 24
           samples = convert_24_bit_samples(samples)

@@ -3,9 +3,8 @@ module WaveFile
     # Internal
     class BaseChunkReader    # :nodoc:
       def read_entire_chunk_body(chunk_id)
-        begin
-          raw_bytes = @io.sysread(@chunk_size)
-        rescue EOFError
+        raw_bytes = @io.read(@chunk_size)
+        if raw_bytes.nil?
           raw_bytes = ""
         end
 

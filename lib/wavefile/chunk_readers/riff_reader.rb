@@ -56,7 +56,7 @@ module WaveFile
               end
             else
               # Unsupported chunk types are ignored
-              @io.sysread(chunk_size)
+              @io.read(chunk_size)
             end
 
             # The RIFF specification requires that each chunk be aligned to an even number of bytes,
@@ -64,7 +64,7 @@ module WaveFile
             #
             # See http://www-mmsp.ece.mcgill.ca/Documents/AudioFormats/WAVE/Docs/riffmci.pdf, page 11.
             if chunk_size.odd?
-              @io.sysread(1)
+              @io.read(1)
             end
 
             break if @io.pos >= end_of_file_pos || data_chunk_is_final_chunk
@@ -88,8 +88,12 @@ module WaveFile
       end
 
       def read_chunk_header
-        chunk_id = @io.sysread(4)
-        chunk_size = @io.sysread(4).unpack(UNSIGNED_INT_32).first
+        chunk_id = @io.read(4)
+        chunk_size = @io.read(4)
+
+        unless chunk_size.nil?
+          chunk_size = chunk_size.unpack(UNSIGNED_INT_32).first
+        end
 
         if chunk_size.nil?
           raise_error InvalidFormatError, "Unexpected end of file."

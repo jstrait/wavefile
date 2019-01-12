@@ -8,7 +8,7 @@ module WaveFile
       end
 
       def read
-        riff_format = @io.sysread(4)
+        riff_format = @io.read(4)
 
         unless riff_format == WAVEFILE_FORMAT_CODE
           raise_error InvalidFormatError, "Expected RIFF format of '#{WAVEFILE_FORMAT_CODE}', but was '#{riff_format}'"
