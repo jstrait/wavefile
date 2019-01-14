@@ -31,6 +31,9 @@ class ReaderTest < Minitest::Test
       # The format code in the RIFF header is missing
       "invalid/no_riff_format.wav",
 
+      # The format code in the RIFF header is truncated; i.e. not a full 4 bytes
+      "invalid/incomplete_riff_format.wav",
+
       # The format code in the RIFF header is not "WAVE"
       "invalid/bad_wavefile_format.wav",
 
