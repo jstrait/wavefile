@@ -14,7 +14,7 @@ class FormatTest < Minitest::Test
   end
 
   def test_invalid_channels
-    ["dsfsfsdf", :foo, 0, -1, 65536, 2.5, 2.0].each do |invalid_channels|
+    ["dsfsfsdf", "1", :foo, 0, -1, 65536, 2.5, 2.0].each do |invalid_channels|
       assert_raises(InvalidFormatError) { Format.new(invalid_channels, :pcm_16, 44100) }
     end
   end
@@ -30,7 +30,7 @@ class FormatTest < Minitest::Test
   end
 
   def test_invalid_sample_format
-    ["dsfsfsdf", :foo, :pcm, 0, 12, :pcm_14, :pcm_abc, :float_40].each do |invalid_sample_format|
+    ["dsfsfsdf", "pcm_16", :foo, :pcm, 0, 12, :pcm_14, :pcm_abc, :float_40].each do |invalid_sample_format|
       assert_raises(InvalidFormatError) { Format.new(:mono, invalid_sample_format, 44100) }
     end
   end
@@ -52,7 +52,7 @@ class FormatTest < Minitest::Test
   end
 
   def test_invalid_sample_rate
-    ["dsfsfsdf", :foo, 0, -1, 4294967296, 44100.5, 44100.0].each do |invalid_sample_rate|
+    ["dsfsfsdf", "44100", :foo, 0, -1, 4294967296, 44100.5, 44100.0].each do |invalid_sample_rate|
       assert_raises(InvalidFormatError) { Format.new(:mono, :pcm_16, invalid_sample_rate) }
     end
   end
