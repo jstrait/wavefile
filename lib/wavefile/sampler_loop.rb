@@ -20,7 +20,8 @@ module WaveFile
     # id - A numeric ID which identifies the specific loop. Should be an Integer 0 or greater.
     # type - Indicates which direction the loop should run. Should either be one of the symbols
     #        +:forward+, +:alternating+, +:backward+, or a positive Integer. If an Integer, then 0 will
-    #        be normalized to +:forward+, 1 to +:alternating+, 2 to +:backward+.
+    #        be normalized to +:forward+, 1 to +:alternating+, 2 to +:backward+. Integer values 3 or
+    #        greater are allowed by the *.wav file spec, but don't necessarily have a defined meaning.
     # start_sample_frame - The first sample frame in the loop.
     # end_sample_frame - The last sample frame in the loop.
     # fraction - A Float between 0.0 and 1.0 which specifies a fraction of a sample at which to start
@@ -51,11 +52,12 @@ module WaveFile
       @play_count = play_count
     end
 
-    # Public: Returns the ID of the specific Loop
+    # Public: Returns a numeric ID which identifies the specific loop
     attr_reader :id
 
     # Public: Returns a symbol indicating which direction the loop should run. The possible values
-    #         are :forward, :alternating, :backward, or a positive Integer.
+    #         are :forward, :alternating, :backward, or a positive Integer. Integer values 3 or greater
+    #         are allowed by the *.wav file spec, but don't necessarily have a defined meaning.
     attr_reader :type
 
     # Public: Returns the first sample frame of the loop.
@@ -68,7 +70,7 @@ module WaveFile
     #         This allows a loop to be fine tuned at a resolution finer than one sample.
     attr_reader :fraction
 
-    # Public: Returns the number of times to loop. 0 means infinitely.
+    # Public: Returns the number of times to loop. Will be an Integer 1 or greater, or Float::INFINITY.
     attr_reader :play_count
 
     private

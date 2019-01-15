@@ -84,7 +84,7 @@ module WaveFile
     #         to an arbitrary value to allow for fine tuning.
     attr_reader :sample_nanoseconds
 
-    # Public: Returns the MIDI note number of the sample (0-127)
+    # Public: Returns the MIDI note number of the sample, which normally should be between 0 and 127.
     attr_reader :midi_note
 
     # Public: Returns the number of cents up from the specified MIDI unity note field. 100 cents is equal to
@@ -105,7 +105,7 @@ module WaveFile
 
     # Public: Returns a String of data specific to the intended target sampler, or nil if there is no sampler
     #         specific data. This is returned as a raw String because the structure of this data depends on
-    #         the specific sampler. If you want to use it, you'll need to unpack the string yourself.
+    #         the specific sampler. If you want to use it, you'll need to unpack the String yourself.
     attr_reader :sampler_specific_data
 
     private
