@@ -15,62 +15,58 @@ module WaveFile
     private
 
       def read_until_data_chunk(format)
-        begin
-          chunk_id, riff_chunk_size = read_chunk_header
-          unless chunk_id == CHUNK_IDS[:riff]
-            raise_error InvalidFormatError, "Expected chunk ID '#{CHUNK_IDS[:riff]}', but was '#{chunk_id}'"
-          end
+        chunk_id, riff_chunk_size = read_chunk_header
+        unless chunk_id == CHUNK_IDS[:riff]
+          raise_error InvalidFormatError, "Expected chunk ID '#{CHUNK_IDS[:riff]}', but was '#{chunk_id}'"
+        end
 
-          end_of_file_pos = @io.pos + riff_chunk_size
+        end_of_file_pos = @io.pos + riff_chunk_size
 
-          RiffChunkReader.new(@io, riff_chunk_size).read
+        RiffChunkReader.new(@io, riff_chunk_size).read
 
-          data_chunk_seek_pos = nil
-          data_chunk_size = nil
-          data_chunk_is_final_chunk = nil
+        data_chunk_seek_pos = nil
+        data_chunk_size = nil
+        data_chunk_is_final_chunk = nil
 
-          loop do
-            chunk_id, chunk_size = read_chunk_header
+        loop do
+          chunk_id, chunk_size = read_chunk_header
 
-            case chunk_id
-            when CHUNK_IDS[:format]
-              if data_chunk_seek_pos != nil
-                raise_error InvalidFormatError, "The format chunk is after the data chunk; it must come before."
-              end
+          case chunk_id
+          when CHUNK_IDS[:format]
+            if data_chunk_seek_pos != nil
+              raise_error InvalidFormatError, "The format chunk is after the data chunk; it must come before."
+            end
 
-              @native_format = FormatChunkReader.new(@io, chunk_size).read
-            when CHUNK_IDS[:sample]
-              @sample_chunk = SampleChunkReader.new(@io, chunk_size).read
-            when CHUNK_IDS[:data]
-              data_chunk_seek_pos = @io.pos
-              data_chunk_size = chunk_size
+            @native_format = FormatChunkReader.new(@io, chunk_size).read
+          when CHUNK_IDS[:sample]
+            @sample_chunk = SampleChunkReader.new(@io, chunk_size).read
+          when CHUNK_IDS[:data]
+            data_chunk_seek_pos = @io.pos
+            data_chunk_size = chunk_size
 
-              # Only look for chunks after the data chunk if there are enough bytes
-              # left in the file for that to be possible.
-              start_of_next_chunk_pos = (@io.pos + data_chunk_size)
-              start_of_next_chunk_pos += 1 if chunk_size.odd?
-              if start_of_next_chunk_pos < end_of_file_pos
-                @io.seek(data_chunk_seek_pos + chunk_size, IO::SEEK_SET)
-              else
-                data_chunk_is_final_chunk = true
-              end
+            # Only look for chunks after the data chunk if there are enough bytes
+            # left in the file for that to be possible.
+            start_of_next_chunk_pos = (@io.pos + data_chunk_size)
+            start_of_next_chunk_pos += 1 if chunk_size.odd?
+            if start_of_next_chunk_pos < end_of_file_pos
+              @io.seek(data_chunk_seek_pos + chunk_size, IO::SEEK_SET)
             else
-              # Unsupported chunk types are ignored
-              @io.read(chunk_size)
+              data_chunk_is_final_chunk = true
             end
-
-            # The RIFF specification requires that each chunk be aligned to an even number of bytes,
-            # even if the byte count is an odd number.
-            #
-            # See http://www-mmsp.ece.mcgill.ca/Documents/AudioFormats/WAVE/Docs/riffmci.pdf, page 11.
-            if chunk_size.odd?
-              @io.read(1)
-            end
-
-            break if @io.pos >= end_of_file_pos || data_chunk_is_final_chunk
+          else
+            # Unsupported chunk types are ignored
+            @io.read(chunk_size)
           end
-        rescue EOFError
-          raise_error InvalidFormatError, "Unexpected end of file."
+
+          # The RIFF specification requires that each chunk be aligned to an even number of bytes,
+          # even if the byte count is an odd number.
+          #
+          # See http://www-mmsp.ece.mcgill.ca/Documents/AudioFormats/WAVE/Docs/riffmci.pdf, page 11.
+          if chunk_size.odd?
+            @io.read(1)
+          end
+
+          break if @io.pos >= end_of_file_pos || data_chunk_is_final_chunk
         end
 
         if @native_format == nil
