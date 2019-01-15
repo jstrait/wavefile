@@ -11,7 +11,7 @@ module WaveFile
   # Public: Provides a way to indicate the data contained in a "smpl" chunk.
   #         That is, information about how the *.wav file could be used by a
   #         sampler, such as the file's MIDI note or loop points. If a *.wav
-  #         file contains a "smpl" chunk, then Reader.sample_info will
+  #         file contains a "smpl" chunk, then Reader.sampler_info will
   #         return an instance of this object with the relevant info.
   class SamplerInfo
     # Public: Constructs a new SamplerInfo instance.
