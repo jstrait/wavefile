@@ -32,8 +32,8 @@ module WaveFile
 
   private
 
-  VALID_8_BIT_UNSIGNED_INTEGER_RANGE = 0..255
-  VALID_8_BIT_SIGNED_INTEGER_RANGE = -128..127
+  VALID_8_BIT_UNSIGNED_INTEGER_RANGE = 0..255    # :nodoc:
+  VALID_8_BIT_SIGNED_INTEGER_RANGE = -128..127    # :nodoc:
 
   def validate_8_bit_unsigned_integer_field(candidate, field_name)
     unless candidate.is_a?(Integer) && VALID_8_BIT_UNSIGNED_INTEGER_RANGE === candidate
