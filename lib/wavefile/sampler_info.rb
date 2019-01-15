@@ -6,7 +6,7 @@ module WaveFile
   #         can be encoded, but aren't semantically correct. For example, it's possible to
   #         construct a SamplerInfo instance with a midi_note value of 10000, which can be
   #         encoded in a *.wav file, even though this isn't a valid value in real life.
-  class InvalidSamplerInfoError < FormatError; end
+  class InvalidSamplerInfoError < StandardError; end
 
   # Public: Provides a way to indicate the data contained in a "smpl" chunk.
   #         That is, information about how the *.wav file could be used by a

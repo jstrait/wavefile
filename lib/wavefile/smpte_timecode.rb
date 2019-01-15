@@ -3,7 +3,7 @@ module WaveFile
   # Valid means that each field is in the range that can be encoded in a *.wav file, but not
   # not necessarily semantically correct. For example, a SMPTETimecode field can be constructed
   # with a hours value of 100, even though this isn't a valid value in real life.
-  class InvalidSMPTETimecodeError < FormatError; end
+  class InvalidSMPTETimecodeError < StandardError; end
 
   # Public: Represents an SMPTE timecode: https://en.wikipedia.org/wiki/SMPTE_timecode
   #         If a *.wav file has a `smpl` chunk, then Reader.SamplerInfo.smpte_offset

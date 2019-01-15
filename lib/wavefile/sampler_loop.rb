@@ -7,7 +7,7 @@ module WaveFile
   #         to set the start_sample_frame or end_sample_frame fields to values that don't
   #         correspond to the actual sample frame range of the file. This error _won't_ be
   #         raised for "encodeable but not semantically valid" field values.
-  class InvalidSamplerLoopError < FormatError; end
+  class InvalidSamplerLoopError < StandardError; end
 
   # Public: Provides a way to indicate the data about sampler loop points
   #         in a file's "smpl" chunk. That is, information about how a sampler
