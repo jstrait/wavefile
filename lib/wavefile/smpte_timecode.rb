@@ -6,7 +6,7 @@ module WaveFile
   class InvalidSMPTETimecodeError < StandardError; end
 
   # Public: Represents an SMPTE timecode: https://en.wikipedia.org/wiki/SMPTE_timecode
-  #         If a *.wav file has a `smpl` chunk, then Reader.SamplerInfo.smpte_offset
+  #         If a *.wav file has a "smpl" chunk, then Reader.SamplerInfo.smpte_offset
   #         will return an instance of this class.
   class SMPTETimecode
     # Public: Constructs a new SMPTETimecode instance.
