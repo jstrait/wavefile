@@ -26,10 +26,10 @@ module WaveFile
     #                      For example, with a sample rate of 44100 this would be 22675 nanoseconds. However,
     #                      this can be set to an arbitrary value to allow for fine tuning.
     # midi_note - the MIDI note number of the sample. Should be between 0 and 127.
-    # fine_tuning_cents - the number of cents up from the specified MIDI unity note field. 100 cents is equal to
-    #                     one semitone. For example, if this value is 50, and #midi_note is 60, then the sample is
-    #                     tuned half-way between MIDI note 60 and 61. If the value is 0, then the sample has no
-    #                     fine tuning.
+    # fine_tuning_cents - the number of cents >= 0.0 and < 100.0 the note should be tuned up from the midi_note
+    #                     field. 100 cents is equal to one semitone. For example, if this value is 50.0, and
+    #                     midi_note is 60, then the sample is tuned half-way between MIDI note 60 and 61. If the
+    #                     value is 0, then the sample has no fine tuning.
     # smpte_format - the SMPTE format. Should be 0, 24, 25, 29 or 30.
     # smpte_offset - a SMPTETimecode representing the SMPTE time offset.
     # loops - an Array of 0 or more SamplerLoop objects containing loop point info. Loop point info
@@ -87,9 +87,10 @@ module WaveFile
     # Public: Returns the MIDI note number of the sample, which normally should be between 0 and 127.
     attr_reader :midi_note
 
-    # Public: Returns the number of cents up from the specified MIDI unity note field. 100 cents is equal to
-    #         one semitone. For example, if this value is 50, and #midi_note is 60, then the sample is tuned
-    #         half-way between MIDI note 60 and 61. If the value is 0, then the sample has no fine tuning.
+    # Public: Returns the number of cents >= 0.0 and < 100.0 the note should be tuned up from the midi_note
+    #         field. 100 cents is equal to one semitone. For example, if this value is 50, and midi_note is
+    #         60, then the sample is tuned half-way between MIDI note 60 and 61. If the value is 0, then the
+    #         sample has no fine tuning.
     attr_reader :fine_tuning_cents
 
     # Public: Returns the SMPTE format (0, 24, 25, 29 or 30)

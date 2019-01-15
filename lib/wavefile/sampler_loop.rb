@@ -24,7 +24,7 @@ module WaveFile
     #        greater are allowed by the *.wav file spec, but don't necessarily have a defined meaning.
     # start_sample_frame - The first sample frame in the loop.
     # end_sample_frame - The last sample frame in the loop.
-    # fraction - A Float between 0.0 and 1.0 which specifies a fraction of a sample at which to start
+    # fraction - A Float >= 0.0 and < 1.0 which specifies a fraction of a sample at which to start
     #            the loop. This allows a loop start to be fine tuned at a resolution finer than one sample.
     # play_count - The number of times to loop. Can be an Integer 0 or greater, or Float::INFINITY.
     #              A value of 0 will be normalized to Float::INFINITY, because in the file format a
@@ -66,7 +66,7 @@ module WaveFile
     # Public: Returns the last sample frame of the loop.
     attr_reader :end_sample_frame
 
-    # Public: A value between 0.0 and 1.0 which specifies a fraction of a sample at which to loop.
+    # Public: A value >= 0.0 and < 1.0 which specifies a fraction of a sample at which to loop.
     #         This allows a loop to be fine tuned at a resolution finer than one sample.
     attr_reader :fraction
 
