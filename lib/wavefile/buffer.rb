@@ -5,7 +5,7 @@ module WaveFile
   class BufferConversionError < StandardError; end
 
 
-  # Public: Represents a collection of samples in a certain format (e.g. 16-bit mono).
+  # Public: Represents a collection of samples in a certain format (e.g. 16-bit mono Integer PCM).
   # Reader returns sample data contained in Buffers, and Writer expects incoming sample
   # data to be contained in a Buffer as well.
   #
