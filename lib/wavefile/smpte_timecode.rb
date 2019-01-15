@@ -9,6 +9,9 @@ module WaveFile
   #         If a *.wav file has a `smpl` chunk, then Reader.SamplerInfo.smpte_offset
   #         will return an instance of this class.
   class SMPTETimecode
+    # Public: Constructs a new SMPTETimecode instance.
+    #
+    # Raises InvalidSMPTETimecodeError if the given arguments can't be written to a *.wav file.
     def initialize(hours:, minutes:, seconds:, frames:)
       validate_8_bit_signed_integer_field(hours, "hours")
       validate_8_bit_unsigned_integer_field(minutes, "minutes")

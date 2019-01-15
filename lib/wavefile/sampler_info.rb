@@ -38,7 +38,7 @@ module WaveFile
     # sampler_specific_data - a String of data specific to the intended target sampler, or nil if there is no sampler
     #                         specific data.
     #
-    # Raises InvalidFormatError if the given arguments are invalid.
+    # Raises InvalidSamplerInfoError if the given arguments are can't be written to a *.wav file.
     def initialize(manufacturer_id:,
                    product_id:,
                    sample_nanoseconds:,

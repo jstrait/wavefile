@@ -29,7 +29,7 @@ module WaveFile
     #              A value of 0 will be normalized to Float::INFINITY, because in the file format a
     #              value of 0 means to repeat the loop indefinitely.
     #
-    # Raises InvalidFormatError if the given arguments are invalid.
+    # Raises InvalidSamplerLoopError if the given arguments can't be written to a *.wav file.
     def initialize(id:, type:, start_sample_frame:, end_sample_frame:, fraction:, play_count:)
       type = normalize_type(type)
       if play_count == 0
