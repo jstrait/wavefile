@@ -557,6 +557,17 @@ class ReaderTest < Minitest::Test
     assert_equal(2240, reader.total_sample_frames)
   end
 
+  def test_read_non_data_chunk_is_final_chunk_without_padding_byte
+    # This fixture file contains a JUNK chunk with an odd size, but no padding byte. When a chunk
+    # is the final chunk in the file, a missing padding byte won't cause an error as long as the
+    # RIFF chunk size field matches the actual number of bytes in the file.
+    reader = Reader.new(fixture("valid/valid_mono_pcm_16_44100_junk_chunk_final_chunk_missing_padding_byte.wav"))
+    buffer = reader.read(1024)
+    assert_equal(buffer.samples, SQUARE_WAVE_CYCLE[:mono][:pcm_16] * 128)
+    assert_equal(1024, reader.current_sample_frame)
+    assert_equal(2240, reader.total_sample_frames)
+  end
+
   def test_closed?
     reader = Reader.new(fixture("valid/valid_mono_pcm_16_44100.wav"))
     assert_equal(false, reader.closed?)
