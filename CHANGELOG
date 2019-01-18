@@ -1,12 +1,29 @@
 1.1.0
 ===============================================================================
 * **Can read `smpl` chunk data from files that contain this kind of chunk.**
-  Thanks to [@henrikj242](https://github.com/henrikj242) for providing the
-  base implementation.
-* Errors raised by `Reader.new` when attempting to read an invalid file are
-  improved to provide more detail about why the file is invalid.
-* Bug Fix: Fixed off-by-one error in the maximum allowed value for
-  `Format#sample rate`.
+  If present, this will be available via `#sampler_info` on a constructed
+  `Reader` instance (otherwise it will be `nil`). Thanks to
+  [@henrikj242](https://github.com/henrikj242) for suggesting this feature and
+  providing the base implementation.
+* **More informative errors raised by `Reader.new`**. When attempting to read
+  an invalid file, the error message now provides more detail about why the
+  file is invalid.
+* **Bug Fix**: The master RIFF chunk size for files written by the gem will
+  now take into account padding bytes written for child chunks. For example,
+  when writing a file with a `data` chunk whose body has an odd number of
+  bytes, the master RIFF chunk's size will be 1 byte larger (to take the empty
+  padding byte at the end of the `data` chunk into account).
+* **Bug Fix**: If the stated `data` chunk size is larger than the actual number
+  of bytes in the file, `Reader.current_sample_frame` will be correct when
+  attempting to read past the end of the chunk. For example, if a `data` chunk
+  says it has 2000 sample frames, but there are only 1000 sample frames
+  remaining in the file, then after calling `Reader.read(1500)`,
+  `Reader.current_sample_frame` will have a value of `1000`, not `1500`. (This
+  bug did not occur for files in which the data chunk listed the correct size).
+* **Bug Fix**: Fixed off-by-one error in the maximum allowed value for
+  `Format#sample rate`. The correct maximum sample rate is now 4_294_967_295;
+  previously it allowed a maximum of 4_294_967_296.
+
 
 
 1.0.1
