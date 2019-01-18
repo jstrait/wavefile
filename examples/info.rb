@@ -60,7 +60,7 @@ begin
     if sampler_info.loops.any?
       puts "  #{sampler_info.loops.length} Loop(s):"
       sampler_info.loops.each do |loop|
-        puts "    ID #{loop.id}: #{loop.type} from sample frame #{loop.start_sample_frame} to sample frame #{loop.end_sample_frame}, looping #{loop.play_count} times."
+        puts "    ID #{loop.id}: #{loop.type} from sample frame #{loop.start_sample_frame} to #{loop.end_sample_frame} (offset fraction #{loop.fraction}), looping #{loop.play_count} times."
       end
     else
       puts "  No loops."
