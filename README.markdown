@@ -43,7 +43,7 @@ Note that if you're installing the gem into the default Ruby that comes pre-inst
 
 WaveFile has been tested with these Ruby versions, and appears to be compatible with them:
 
-* MRI 2.5.1, 2.4.4, 2.3.7, 2.2.10, 2.1.10, 2.0
+* MRI 2.6.0, 2.5.3, 2.4.5, 2.3.8, 2.2.10, 2.1.10, 2.0
 
 2.0 is the minimum supported Ruby version.
 
