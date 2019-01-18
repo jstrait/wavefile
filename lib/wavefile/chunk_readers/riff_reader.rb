@@ -14,6 +14,14 @@ module WaveFile
 
     private
 
+      def read_riff_format_code
+        riff_format = @io.read(4)
+
+        unless riff_format == WAVEFILE_FORMAT_CODE
+          raise_error InvalidFormatError, "Expected RIFF format of '#{WAVEFILE_FORMAT_CODE}', but was '#{riff_format}'"
+        end
+      end
+
       def read_until_data_chunk(format)
         chunk_id, riff_chunk_size = read_chunk_header
         unless chunk_id == CHUNK_IDS[:riff]
@@ -22,7 +30,7 @@ module WaveFile
 
         end_of_file_pos = @io.pos + riff_chunk_size
 
-        RiffChunkReader.new(@io, riff_chunk_size).read
+        read_riff_format_code()
 
         data_chunk_seek_pos = nil
         data_chunk_size = nil
