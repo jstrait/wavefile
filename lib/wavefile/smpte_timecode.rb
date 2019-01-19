@@ -12,7 +12,10 @@ module WaveFile
     # Public: Constructs a new SMPTETimecode instance.
     #
     # Raises InvalidSMPTETimecodeError if the given arguments can't be written to a *.wav file.
-    def initialize(hours:, minutes:, seconds:, frames:)
+    def initialize(hours: required("hours"),
+                   minutes: required("minutes"),
+                   seconds: required("seconds"),
+                   frames: required("frames"))
       validate_8_bit_signed_integer_field(hours, "hours")
       validate_8_bit_unsigned_integer_field(minutes, "minutes")
       validate_8_bit_unsigned_integer_field(seconds, "seconds")
@@ -34,6 +37,10 @@ module WaveFile
 
   VALID_8_BIT_UNSIGNED_INTEGER_RANGE = 0..255    # :nodoc:
   VALID_8_BIT_SIGNED_INTEGER_RANGE = -128..127    # :nodoc:
+
+  def required(keyword)
+    raise ArgumentError.new("missing keyword: #{keyword}")
+  end
 
   def validate_8_bit_unsigned_integer_field(candidate, field_name)
     unless candidate.is_a?(Integer) && VALID_8_BIT_UNSIGNED_INTEGER_RANGE === candidate

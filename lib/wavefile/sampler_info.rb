@@ -39,15 +39,15 @@ module WaveFile
     #                         specific data.
     #
     # Raises InvalidSamplerInfoError if the given arguments are can't be written to a *.wav file.
-    def initialize(manufacturer_id:,
-                   product_id:,
-                   sample_nanoseconds:,
-                   midi_note:,
-                   fine_tuning_cents:,
-                   smpte_format:,
-                   smpte_offset:,
-                   loops:,
-                   sampler_specific_data:)
+    def initialize(manufacturer_id: required("manufacturer_id"),
+                   product_id: required("product_id"),
+                   sample_nanoseconds: required("sample_nanoseconds"),
+                   midi_note: required("midi_note"),
+                   fine_tuning_cents: required("fine_tuning_cents"),
+                   smpte_format: required("smpte_format"),
+                   smpte_offset: required("smpte_offset"),
+                   loops: required("loops"),
+                   sampler_specific_data: required("sampler_specific_data"))
       validate_32_bit_integer_field(manufacturer_id, "manufacturer_id")
       validate_32_bit_integer_field(product_id, "product_id")
       validate_32_bit_integer_field(sample_nanoseconds, "sample_nanoseconds")
@@ -112,6 +112,10 @@ module WaveFile
     private
 
     VALID_32_BIT_INTEGER_RANGE = 0..4_294_967_295    # :nodoc:
+
+    def required(keyword)
+      raise ArgumentError.new("missing keyword: #{keyword}")
+    end
 
     # Internal
     def validate_32_bit_integer_field(candidate, field_name)

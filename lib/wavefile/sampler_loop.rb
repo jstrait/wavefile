@@ -31,7 +31,12 @@ module WaveFile
     #              value of 0 means to repeat the loop indefinitely.
     #
     # Raises InvalidSamplerLoopError if the given arguments can't be written to a *.wav file.
-    def initialize(id:, type:, start_sample_frame:, end_sample_frame:, fraction:, play_count:)
+    def initialize(id: required("id"),
+                  type: required("type"),
+                  start_sample_frame: required("start_sample_frame"),
+                  end_sample_frame: required("end_sample_frame"),
+                  fraction: required("fraction"),
+                  play_count: required("play_count"))
       type = normalize_type(type)
       if play_count == 0
         play_count = Float::INFINITY
@@ -77,6 +82,10 @@ module WaveFile
 
     VALID_32_BIT_INTEGER_RANGE = 0..4_294_967_295    # :nodoc:
     VALID_LOOP_TYPES = [:forward, :alternating, :backward].freeze    # :nodoc:
+
+    def required(keyword)
+      raise ArgumentError.new("missing keyword: #{keyword}")
+    end
 
     # Internal
     def normalize_type(type)
