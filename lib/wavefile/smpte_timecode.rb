@@ -9,6 +9,12 @@ module WaveFile
   #         If a *.wav file has a "smpl" chunk, then Reader.sampler_info.smpte_offset
   #         will return an instance of this class.
   class SMPTETimecode
+    VALID_8_BIT_UNSIGNED_INTEGER_RANGE = 0..255    # :nodoc:
+    private_constant :VALID_8_BIT_UNSIGNED_INTEGER_RANGE
+    VALID_8_BIT_SIGNED_INTEGER_RANGE = -128..127    # :nodoc:
+    private_constant :VALID_8_BIT_SIGNED_INTEGER_RANGE
+
+
     # Public: Constructs a new SMPTETimecode instance.
     #
     # Raises InvalidSMPTETimecodeError if the given arguments can't be written to a *.wav file.
@@ -33,9 +39,6 @@ module WaveFile
     attr_reader :frames
 
     private
-
-    VALID_8_BIT_UNSIGNED_INTEGER_RANGE = 0..255    # :nodoc:
-    VALID_8_BIT_SIGNED_INTEGER_RANGE = -128..127    # :nodoc:
 
     def required(keyword)
       raise ArgumentError.new("missing keyword: #{keyword}")

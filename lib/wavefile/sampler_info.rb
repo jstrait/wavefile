@@ -14,6 +14,10 @@ module WaveFile
   #         file contains a "smpl" chunk, then Reader.sampler_info will
   #         return an instance of this object with the relevant info.
   class SamplerInfo
+    VALID_32_BIT_INTEGER_RANGE = 0..4_294_967_295    # :nodoc:
+    private_constant :VALID_32_BIT_INTEGER_RANGE
+
+
     # Public: Constructs a new SamplerInfo instance.
     #
     # manufacturer_id - the ID of the manufacturer that this sample is intended for. If it's not
@@ -110,8 +114,6 @@ module WaveFile
     attr_reader :sampler_specific_data
 
     private
-
-    VALID_32_BIT_INTEGER_RANGE = 0..4_294_967_295    # :nodoc:
 
     def required(keyword)
       raise ArgumentError.new("missing keyword: #{keyword}")

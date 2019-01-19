@@ -15,6 +15,12 @@ module WaveFile
   #         If a *.wav file contains a "smpl" chunk, then Reader.sampler_info.loops
   #         will return an array of SamplerLoop objects with the relevant info.
   class SamplerLoop
+    VALID_32_BIT_INTEGER_RANGE = 0..4_294_967_295    # :nodoc:
+    private_constant :VALID_32_BIT_INTEGER_RANGE
+    VALID_LOOP_TYPES = [:forward, :alternating, :backward].freeze    # :nodoc:
+    private_constant :VALID_LOOP_TYPES
+
+
     # Public: Constructs a new SamplerLoop instance.
     #
     # id - A numeric ID which identifies the specific loop. Should be an Integer 0 or greater.
@@ -79,9 +85,6 @@ module WaveFile
     attr_reader :play_count
 
     private
-
-    VALID_32_BIT_INTEGER_RANGE = 0..4_294_967_295    # :nodoc:
-    VALID_LOOP_TYPES = [:forward, :alternating, :backward].freeze    # :nodoc:
 
     def required(keyword)
       raise ArgumentError.new("missing keyword: #{keyword}")
