@@ -9,6 +9,10 @@ class SMPTETimecodeTest < Minitest::Test
   VALID_8_BIT_UNSIGNED_INTEGER_TEST_VALUES = [0, 1, 128, 255]
   INVALID_8_BIT_UNSIGNED_INTEGER_TEST_VALUES = ["dsfsfsdf", :foo, -1, 256, 2.5, 2.0, [10], nil]
 
+  def test_missing_keywords
+    assert_raises(ArgumentError) { SMPTETimecode.new }
+  end
+
   def test_valid_hours
     VALID_8_BIT_SIGNED_INTEGER_TEST_VALUES.each do |valid_value|
       smpte_timecode = SMPTETimecode.new(hours: valid_value,

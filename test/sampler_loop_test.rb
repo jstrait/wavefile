@@ -4,6 +4,10 @@ require 'wavefile.rb'
 include WaveFile
 
 class SamplerLoopTest < Minitest::Test
+  def test_missing_keywords
+    assert_raises(ArgumentError) { SamplerLoop.new }
+  end
+
   def test_valid_id
     [0, 10, 4_294_967_295].each do |valid_value|
       sampler_loop = SamplerLoop.new(id: valid_value,

@@ -7,6 +7,10 @@ class SamplerInfoTest < Minitest::Test
   VALID_32_BIT_INTEGER_TEST_VALUES = [0, 10, 4_294_967_295]
   INVALID_32_BIT_INTEGER_TEST_VALUES = ["dsfsfsdf", :foo, -1, 4_294_967_296, 2.5, 2.0, [10], nil]
 
+  def test_missing_keywords
+    assert_raises(ArgumentError) { SamplerInfo.new }
+  end
+
   def test_valid_manufacturer_id
     VALID_32_BIT_INTEGER_TEST_VALUES.each do |valid_value|
       sampler_info = SamplerInfo.new(manufacturer_id: valid_value,
