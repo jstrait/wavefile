@@ -3,7 +3,7 @@ require 'wavefile.rb'
 
 include WaveFile
 
-class SamplerLoopTest < Minitest::Test
+class SamplerInfoTest < Minitest::Test
   VALID_32_BIT_INTEGER_TEST_VALUES = [0, 10, 4_294_967_295]
   INVALID_32_BIT_INTEGER_TEST_VALUES = ["dsfsfsdf", :foo, -1, 4_294_967_296, 2.5, 2.0, [10], nil]
 
