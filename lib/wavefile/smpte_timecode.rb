@@ -31,28 +31,28 @@ module WaveFile
     attr_reader :minutes
     attr_reader :seconds
     attr_reader :frames
-  end
 
-  private
+    private
 
-  VALID_8_BIT_UNSIGNED_INTEGER_RANGE = 0..255    # :nodoc:
-  VALID_8_BIT_SIGNED_INTEGER_RANGE = -128..127    # :nodoc:
+    VALID_8_BIT_UNSIGNED_INTEGER_RANGE = 0..255    # :nodoc:
+    VALID_8_BIT_SIGNED_INTEGER_RANGE = -128..127    # :nodoc:
 
-  def required(keyword)
-    raise ArgumentError.new("missing keyword: #{keyword}")
-  end
-
-  def validate_8_bit_unsigned_integer_field(candidate, field_name)
-    unless candidate.is_a?(Integer) && VALID_8_BIT_UNSIGNED_INTEGER_RANGE === candidate
-      raise InvalidSMPTETimecodeError,
-            "Invalid `#{field_name}` value: `#{candidate}`. Must be an Integer between #{VALID_8_BIT_UNSIGNED_INTEGER_RANGE.min} and #{VALID_8_BIT_UNSIGNED_INTEGER_RANGE.max}"
+    def required(keyword)
+      raise ArgumentError.new("missing keyword: #{keyword}")
     end
-  end
 
-  def validate_8_bit_signed_integer_field(candidate, field_name)
-    unless candidate.is_a?(Integer) && VALID_8_BIT_SIGNED_INTEGER_RANGE === candidate
-      raise InvalidSMPTETimecodeError,
-            "Invalid `#{field_name}` value: `#{candidate}`. Must be an Integer between #{VALID_8_BIT_SIGNED_INTEGER_RANGE.min} and #{VALID_8_BIT_SIGNED_INTEGER_RANGE.max}"
+    def validate_8_bit_unsigned_integer_field(candidate, field_name)
+      unless candidate.is_a?(Integer) && VALID_8_BIT_UNSIGNED_INTEGER_RANGE === candidate
+        raise InvalidSMPTETimecodeError,
+              "Invalid `#{field_name}` value: `#{candidate}`. Must be an Integer between #{VALID_8_BIT_UNSIGNED_INTEGER_RANGE.min} and #{VALID_8_BIT_UNSIGNED_INTEGER_RANGE.max}"
+      end
+    end
+
+    def validate_8_bit_signed_integer_field(candidate, field_name)
+      unless candidate.is_a?(Integer) && VALID_8_BIT_SIGNED_INTEGER_RANGE === candidate
+        raise InvalidSMPTETimecodeError,
+              "Invalid `#{field_name}` value: `#{candidate}`. Must be an Integer between #{VALID_8_BIT_SIGNED_INTEGER_RANGE.min} and #{VALID_8_BIT_SIGNED_INTEGER_RANGE.max}"
+      end
     end
   end
 end
