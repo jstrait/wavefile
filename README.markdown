@@ -70,7 +70,7 @@ This gem lets you read and write audio data! You can use it to create Ruby progr
 
 # Current Release: v1.1.0
 
-Released on TBD, this version has these changes:
+Released on January 20, 2019, this version has these changes:
 
 * **Can read `smpl` chunk data from files that contain this kind of chunk.** If a *.wav file contains a `smpl` chunk, then `Reader.sampler_info` will return a `SamplerInfo` instance with the relevant data (or `nil` otherwise). Thanks to [@henrikj242](https://github.com/henrikj242) for suggesting this feature and providing the base implementation.
 * **More informative errors raised by `Reader.new`**. When attempting to read an invalid file, the error message now provides more detail about why the file is invalid.
