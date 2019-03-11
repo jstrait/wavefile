@@ -36,7 +36,7 @@ end{% endhighlight %}
   <p>Notice that we gave the <code>Writer</code> a <code>Format</code> as well. This determines which format samples will be written as. Notice that the sample format (<code>:pcm_16</code>) is different from the <code>Buffer</code> we created &ndash; the gem will handle the necessary translation behind the scenes.</p>
   <p>All of the code to write the samples is done inside a block. When the block exits the file will automatically be closed. (If you want more manually control over when the file is closed you can do that as well by not passing a block and manually calling <code>close())</code>.</p>
   <p>Here&rsquo;s the full program so far:</p>
-  {% highlight ruby %}require 'wavefile'
+  {% highlight ruby %}require "wavefile"
 include WaveFile    # So we don't have to prefix all classes with 'WaveFile::'
 
 AMPLITUDE = 0.3
@@ -63,7 +63,7 @@ end{% endhighlight %}
   </audio>
   <p>You are well on your way to writing an epic <a href="http://en.wikipedia.org/wiki/Nintendo_Entertainment_System">NES</a> soundtrack!</p>
   <p>Here&rsquo;s the full program:</p>
-  {% highlight ruby %}require 'wavefile'
+  {% highlight ruby %}require "wavefile"
 include WaveFile    # So we don't have to prefix all classes with 'WaveFile::'
 
 AMPLITUDE = 0.3
@@ -79,7 +79,7 @@ end{% endhighlight %}
 <div class="section bg-white">
   <h2>Reading a Wave File</h2>
   <p>Let&rsquo;s now read the file we just wrote. We can use the <code>Reader</code> class for that.</p>
-  {% highlight ruby %}require 'wavefile'
+  {% highlight ruby %}require "wavefile"
 include WaveFile    # So we don't have to prefix all classes with 'WaveFile::'
 
 Reader.new("square.wav").each_buffer do |buffer|
@@ -98,7 +98,7 @@ First 10 samples in buffer:  [9830, 9830, 9830, 9830, 9830, 9830, 9830, 9830, 98
   <p>Notice how these samples are integers, rather than the floats that we generated in the last section. This is because when we saved that file, we indicated (via the <code>Format</code> instance we gave) that the samples should be written as 16-bit PCM samples instead of floating point.</p>
   <p>Also notice that we only read 4,096 samples at a time, instead of trying to the read the whole file. It&rsquo;s a generally a good idea to read a larger number of smaller buffers, rather than one giant buffer. For this file it probably doesn&rsquo;t matter, but longer files can have millions of samples, and Ruby can have trouble with arrays this large.</p>
   <p>OK, well that&rsquo;s cool, but let&rsquo;s say we want to read this file so we can do some transformation on it, and it will be easier to work with if the samples are in floating point format, and are stereo (since we want to combine it with some other files that are stereo). No problem, when constructing the <code>Reader</code> we just need to pass a <code>Format</code> instance that describes our desired sample format.</p>
-  <pre><code>require 'wavefile'
+  <pre><code>require "wavefile"
 include WaveFile    # So we don't have to prefix all classes with 'WaveFile::'
 
 reader = Reader.new("square.wav", <span class="highlight">Format.new(:stereo, :float, 44100)</span>)
