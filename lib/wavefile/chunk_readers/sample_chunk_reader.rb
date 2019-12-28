@@ -49,7 +49,7 @@ module WaveFile
           loop_fields[:type] = loop_fields[:type]
           loop_fields[:fraction] /= 4_294_967_296.0
 
-          fields[:loops] << SamplerLoop.new(loop_fields)
+          fields[:loops] << SamplerLoop.new(**loop_fields)
         end
 
         if sampler_data_size > 0
@@ -62,7 +62,7 @@ module WaveFile
           fields[:sampler_specific_data] = ""
         end
 
-        SamplerInfo.new(fields)
+        SamplerInfo.new(**fields)
       end
 
       private
