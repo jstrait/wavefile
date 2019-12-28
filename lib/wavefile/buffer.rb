@@ -86,7 +86,7 @@ module WaveFile
     # Public: Converts the sample data contained in the Buffer to a new format. The sample
     # data is converted in place, so the existing Buffer is modified.
     #
-    # new_format - The format that the sample data should be converted to. See Buffer#create
+    # new_format - The format that the sample data should be converted to. See Buffer#convert
     #              for how samples will be mapped if the new number of channels differs from
     #              the original number of channels.
     #
