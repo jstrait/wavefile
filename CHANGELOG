@@ -25,7 +25,6 @@
   previously it allowed a maximum of 4_294_967_296.
 
 
-
 1.0.1
 ===============================================================================
 * Bug fix: The file(s) written to an arbitrary `IO` instance are no longer
