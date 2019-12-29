@@ -68,7 +68,14 @@ This gem lets you read and write audio data! You can use it to create Ruby progr
 * Written in pure Ruby, so it's easy to include in your program. There's no need to compile a separate extension in order to use it.
 
 
-# Current Release: v1.1.0
+# Current Release: v1.1.1
+
+Released on December 29, 2019, this version contains this change:
+
+* Removes `warning: Using the last argument as keyword parameters is deprecated; maybe ** should be added to the call` output when reading a file with a `smpl` chunk using Ruby 2.7. (And presumably, higher Ruby versions as well, but Ruby 2.7 is the most recent Ruby version at the time of this release).
+
+
+# Previous Release: v1.1.0
 
 Released on January 20, 2019, this version has these changes:
 

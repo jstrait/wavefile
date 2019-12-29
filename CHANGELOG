@@ -1,3 +1,12 @@
+1.1.1
+===============================================================================
+* Removes `warning: Using the last argument as keyword parameters is
+  deprecated; maybe ** should be added to the call` output when reading a
+  file with a `smpl` chunk using Ruby 2.7. (And presumably, higher Ruby
+  versions as well, but Ruby 2.7 is the most recent Ruby version at the time
+  of this release).
+
+
 1.1.0
 ===============================================================================
 * **Can read `smpl` chunk data from files that contain this kind of chunk.**
