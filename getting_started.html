@@ -3,7 +3,7 @@ layout: default
 ---
 <div class="section">
   <h2>First Steps</h2>
-  <p>First, <a href="http://wavefilegem.com#installation">install the WaveFile gem</a>.</p>
+  <p>First, <a href="https://wavefilegem.com#installation">install the WaveFile gem</a>.</p>
   <p>Next, if you&rsquo;re new to audio programming, you might want to read up on some of the basics of digital audio first. Check out <a href="https://www.joelstrait.com/digital_audio_primer/">this blog post</a> for an introduction.</p></p>
 </div>
 <div class="section bg-white">
@@ -19,7 +19,7 @@ layout: default
 </div>
 <div class="section">
   <h2>Creating a New Wave File</h2>
-  <p>Let&rsquo;s write a simple tone to a wave file. A <a href="http://en.wikipedia.org/wiki/Square_wave">square wave</a> is about the simplest way to create a sound, so let&rsquo;s do that. A square wave consists a some repeated samples, followed by the same number of repeated samples at the opposite amplitude. For example:</p>
+  <p>Let&rsquo;s write a simple tone to a wave file. A <a href="https://en.wikipedia.org/wiki/Square_wave">square wave</a> is about the simplest way to create a sound, so let&rsquo;s do that. A square wave consists a some repeated samples, followed by the same number of repeated samples at the opposite amplitude. For example:</p>
   {% highlight ruby %}[0.3, 0.3, 0.3, 0.3, -0.3, -0.3, -0.3, -0.3,  ...and repeated...]{% endhighlight %}
   <p>We&rsquo;ll write some code to generate these samples, wrap them in a <code>Buffer</code>, and then write this <code>Buffer</code> to a file using <code>Writer</code>.</p>
   <p>The samples we&rsquo;ll generate will be in float format, which means they should be between -1.0 and 1.0. The larger each sample value, the higher the amplitude (i.e. how loud it is). The faster that we alternate between the positive and negative samples, the higher the frequency of the tone (i.e., <code>[0.2, 0.2, -0.2, -0.2]</code> will have a higher pitch than <code>[0.2, 0.2, 0.2, -0.2, -0.2, -0.2]</code>). (This is a really simplified explanation of things).</p>
@@ -61,7 +61,7 @@ end{% endhighlight %}
   <audio controls>
     <source src="media/square.wav" type="audio/wav">
   </audio>
-  <p>You are well on your way to writing an epic <a href="http://en.wikipedia.org/wiki/Nintendo_Entertainment_System">NES</a> soundtrack!</p>
+  <p>You are well on your way to writing an epic <a href="https://en.wikipedia.org/wiki/Nintendo_Entertainment_System">NES</a> soundtrack!</p>
   <p>Here&rsquo;s the full program:</p>
   {% highlight ruby %}require "wavefile"
 include WaveFile    # So we don't have to prefix all classes with 'WaveFile::'
