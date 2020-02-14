@@ -356,7 +356,7 @@ and Data Specifications 1.0, August 1991</a></li>
   <p>Samples in a multi-channel PCM wave file are interleaved. That is, in a stereo file, one sample for the left channel will be followed by one sample for the right channel, followed by another sample for the left channel, then right channel, and so forth.</p>
   <p>The samples for all channels at a moment in time are called a <em>sample frame</em> (also called a <em>block</em>). That is, a sample frame will contain one sample for each channel. In a monophonic file, a sample frame will consist on 1 sample. In a stereo file, a sample frame has 2 samples (one for the left channel, one for the right channel). In a 5-channel file, a sample frame has 5 samples. The block align field in the format chunk gives the size in bytes of each sample frame. This can be useful when seeking to a particular sample frame in the file.</p>
   <p>For example, for a 2 channel file with 16-bit PCM samples, the sample data would look like this:</p>
-  <div class="flex-column flex-row-l" style="font-size: 0.8rem; display: flex; text-align: center; align-items: center; justify-content: center;">
+  <div class="flex flex-column flex-row-l flex-align-center flex-justify-center" style="font-size: 0.8rem; text-align: center;">
     <div style="border: 2px solid #a1a1a1; border-radius: 0.5rem; padding: 0.5rem; margin-right: 0.5rem;">
       Sample Frame 1
       <div>
