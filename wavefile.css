@@ -143,7 +143,6 @@ div#header-inner {
 
 h1 {
   font-size: 2.0rem;
-  font-variant: small-caps;
   line-height: 1.0em;
   font-weight: 400;
   float: left;
@@ -172,7 +171,6 @@ ul#navigation li {
 ul#navigation li a {
   color: #000;
   font-weight: 400;
-  font-variant: small-caps;
   text-decoration: none;
   width: 100%;
   display: inline-block;
@@ -311,6 +309,7 @@ span.label {
 
 
 .flex-column { flex-direction: column; }
+.small-caps { font-variant: small-caps; }
 
 
 @media (min-width: 744px) {
