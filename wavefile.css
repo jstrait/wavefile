@@ -126,11 +126,11 @@ div#header {
 }
 
 div#header-inner {
-  padding-top: 0;
-  text-align: center;
-  overflow: auto;
   max-width: 744px;
   margin: 0 auto;
+  display: flex;
+  align-items: center;
+  padding: 1.5rem 0;
 }
 
 .container {
@@ -142,12 +142,11 @@ div#header-inner {
 }
 
 h1 {
+  margin: 0;
   font-size: 2.0rem;
-  line-height: 1.0em;
   font-weight: 400;
-  float: left;
-  margin: 1.0em 0;
-  padding: 0;
+  line-height: 2.0rem;
+  flex: 1;
 }
 
 h1 a {
@@ -156,24 +155,24 @@ h1 a {
 }
 
 ul#navigation {
-  margin: 2.0rem auto 0 auto;
+  margin: 0;
   padding: 0;
-  overflow: auto;
-  float: right;
+  display: flex;
 }
 
 ul#navigation li {
   list-style-type: none;
-  float: left;
-  margin-left: 1.5rem;
+  margin-right: 1.5rem;
+}
+
+ul#navigation li:last-child {
+  margin-right: 0;
 }
 
 ul#navigation li a {
   color: #000;
   font-weight: 400;
   text-decoration: none;
-  width: 100%;
-  display: inline-block;
   line-height: 2.0rem;
 }
 
@@ -313,6 +312,10 @@ span.label {
 
 
 @media (min-width: 744px) {
+  div#header-inner {
+    padding: 2.0rem 0;
+  }
+
   ul#feature-list > li {
     width: 45%;
     padding-right: 5%;
@@ -329,31 +332,9 @@ span.label {
 }
 
 @media (max-width: 744px) {
-  h1 {
-    margin: 1.0rem 0 0 0;
-    text-align: center;
-    width: 100%;
-    float: none;
-  }
-
   p#tagline {
     font-size: 1.5rem;
     padding: 1.0rem;
-  }
-
-  ul#navigation {
-    margin: 0 auto 1.5rem auto;
-    float: none;
-    display: inline-block;
-  }
-
-  ul#navigation li {
-    float: left;
-    margin: 0 1.5rem 0 0;
-  }
-
-  ul#navigation li.last {
-    margin: 0;
   }
 
   ul#feature-list > li:last-child {
