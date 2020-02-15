@@ -119,8 +119,6 @@ span.highlight {
   border-radius: 0.25rem;
 }
 
-.center { text-align: center; }
-
 div#header {
   background: #fff;
 }
@@ -219,8 +217,6 @@ span.label {
   font-weight: bold;
 }
 
-.scroll-x { overflow-x: scroll; }
-
 .section {
   width: 100%;
   padding: 4.5rem 0;
@@ -238,10 +234,6 @@ span.label {
 
 .section h2 {
   margin-top: 0;
-}
-
-.bg-white {
-  background: #fff;
 }
 
 .doc-list {
@@ -309,6 +301,9 @@ span.label {
 .flex-align-center { align-items: center; }
 .flex-justify-center { justify-content: center; }
 .small-caps { font-variant: small-caps; }
+.center { text-align: center; }
+.scroll-x { overflow-x: scroll; }
+.bg-white { background: #fff; }
 
 
 @media (min-width: 744px) {
