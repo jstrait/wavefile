@@ -69,26 +69,19 @@ audio {
   display: block;
 }
 
-label {
-  display: inline-block;
-  vertical-align: super;
-}
-
-audio.inline {
-  display: inline-block;
-  margin: 0;
-}
-
 ul.audio-list {
   padding: 0;
 }
 
 ul.audio-list li {
   list-style-type: none;
+  display: flex;
+  flex-direction: column;
 }
 
-ul.audio-list li label {
-  width: 180px;
+ul.audio-list li audio {
+  margin: 0;
+  width: 100%;
 }
 
 table {
@@ -309,6 +302,22 @@ span.label {
     width: 45%;
     padding-right: 5%;
     float: left;
+  }
+
+  ul.audio-list li {
+    flex-direction: row;
+    align-items: center;
+    height: 2.0rem;
+  }
+
+  ul.audio-list li label {
+    display: flex;
+    flex: 0 0 180px;
+  }
+
+  ul.audio-list li audio {
+    display: flex;
+    flex: 1;
   }
 
   pre {
