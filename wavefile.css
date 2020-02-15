@@ -204,8 +204,6 @@ ul#format-list {
 
 ul#format-list li {
   list-style-type: square;
-  float: none;
-  width: auto;
   margin: 0;
 }
 
@@ -330,10 +328,6 @@ span.label {
 
   ul#feature-list > li:last-child {
     margin-bottom: 0;
-  }
-
-  ul#format-list li {
-    padding: 0;
   }
 
   .container {
