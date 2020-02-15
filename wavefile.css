@@ -188,7 +188,7 @@ p#tagline {
 ul#feature-list {
   overflow: auto;
   margin-top: 0;
-  margin-bottom: 0;
+  margin-bottom: -1.5rem;  /* Compensate for bottom margin of final list row */
   padding: 0;
 }
 
@@ -324,10 +324,6 @@ span.label {
   p#tagline {
     font-size: 1.5rem;
     padding: 1.0rem;
-  }
-
-  ul#feature-list > li:last-child {
-    margin-bottom: 0;
   }
 
   .container {
