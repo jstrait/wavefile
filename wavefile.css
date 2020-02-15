@@ -119,10 +119,6 @@ span.highlight {
   border-radius: 0.25rem;
 }
 
-div#header {
-  background: #fff;
-}
-
 div#header-inner {
   max-width: 744px;
   margin: 0 auto;
