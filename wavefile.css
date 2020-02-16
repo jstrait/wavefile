@@ -66,7 +66,6 @@ pre code {
 }
 
 audio {
-  max-width: 744px;
   margin: 3.0rem auto;
   display: block;
 }
@@ -88,7 +87,7 @@ ul.audio-list li audio {
 
 table {
   border-collapse: collapse;
-  min-width: 744px;
+  width: 100%;
 }
 
 th {
@@ -221,13 +220,9 @@ span.label {
   margin-top: 0;
 }
 
-.section > figure {
-  margin: 0;
-}
-
 .section > pre {
   margin-left: -0.75rem;
-  width: 100%;
+  margin-right: -0.75rem;
 }
 
 .doc-list {
@@ -302,21 +297,12 @@ span.label {
 
 @media (min-width: 744px) {
   .section {
-    padding: 4.5rem 0;
-  }
-
-  .section > * {
-    max-width: 744px;
-  }
-
-  .section figure {
-    margin-left: auto;
-    margin-right: auto;
+    padding: 4.5rem calc((100% - 744px) / 2);
   }
 
   .section > pre {
-    margin-left: auto;
-    margin-right: auto;
+    margin-left: -1.5rem;
+    margin-right: -1.5rem;
   }
 
   .container {
