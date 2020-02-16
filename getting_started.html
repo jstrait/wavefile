@@ -20,16 +20,16 @@ title: Getting Started
 </div>
 <div class="section">
   <h2>Creating a New Wave File</h2>
-  <p>Let&rsquo;s write a simple tone to a wave file. A <a href="https://en.wikipedia.org/wiki/Square_wave">square wave</a> is about the simplest way to create a sound, so let&rsquo;s do that. A square wave consists a some repeated samples, followed by the same number of repeated samples at the opposite amplitude. For example:</p>
+  <p>Let&rsquo;s write a simple tone to a wave file. A <a href="https://en.wikipedia.org/wiki/Square_wave">square wave</a> is one of the simplest ways to create sound, so let&rsquo;s do that. A square wave consists a some repeated samples, followed by the same number of repeated samples at the opposite amplitude. For example:</p>
   {% highlight ruby %}[0.3, 0.3, 0.3, 0.3, -0.3, -0.3, -0.3, -0.3,  ...and repeated...]{% endhighlight %}
   <p>We&rsquo;ll write some code to generate these samples, wrap them in a <code>Buffer</code>, and then write this <code>Buffer</code> to a file using <code>Writer</code>.</p>
-  <p>The samples we&rsquo;ll generate will be in float format, which means they should be between -1.0 and 1.0. The larger each sample value, the higher the amplitude (i.e. how loud it is). The faster that we alternate between the positive and negative samples, the higher the frequency of the tone (i.e., <code>[0.2, 0.2, -0.2, -0.2]</code> will have a higher pitch than <code>[0.2, 0.2, 0.2, -0.2, -0.2, -0.2]</code>). (This is a really simplified explanation of things).</p>
-  <p>50 positive samples followed by 50 negative samples will produce the same pitch as middle A on a piano when the sample rate is 44,100Hz. Let&rsquo;s use that and generate our sample array:</p>
+  <p>The samples we&rsquo;ll generate will be in float format, which means they should be between -1.0 and 1.0. The larger each sample value, the higher the amplitude (i.e. how loud it is). The faster that we alternate between the positive and negative samples, the higher the frequency of the tone (i.e., <code>[0.2, 0.2, -0.2, -0.2]</code> will have a higher pitch than <code>[0.2, 0.2, 0.2, -0.2, -0.2, -0.2]</code>).</p>
+  <p>50 positive samples followed by 50 negative samples will produce the same pitch as middle A on a piano when the sample rate is 44,100Hz. Let&rsquo;s use that and generate our array of samples:</p>
   {% highlight ruby %}AMPLITUDE = 0.3
 one_square_cycle = ([AMPLITUDE] * 50) + ([-AMPLITUDE] * 50){% endhighlight %}
   <p>Next, let&rsquo;s wrap the samples in a <code>Buffer</code>:</p>
   {% highlight ruby %}buffer = Buffer.new(one_square_cycle, Format.new(:mono, :float, 44100)){% endhighlight %}
-  <p>Notice that we used the <code>Format</code> class to identify the sample format. The <code>Format</code> constructor takes 3 arguments: the number of channels, the format of each sample, and the sample rate. You&rsquo;re on the honor system to use the correct format here, weird stuff could happen if you use the wrong format.</p>
+  <p>Notice that we used the <code>Format</code> class to identify the sample format. The <code>Format</code> constructor takes 3 arguments: the number of channels, the format of each sample, and the sample rate. You&rsquo;re on the honor system to use the correct format here, weird stuff could happen if you use a format that doesn&rsquo;t match what&rsquo;s in the samples array.</p>
   <p>Now let&rsquo;s write the buffer to a file called <code>"square.wav"</code> in the current working directory:</p>
   {% highlight ruby %}Writer.new("square.wav", Format.new(:mono, :pcm_16, 44100)) do |writer|
   writer.write(buffer)
