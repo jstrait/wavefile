@@ -41,6 +41,8 @@ h3 {
 
 pre {
   margin-bottom: 0;
+  margin-left: -0.75rem;
+  margin-right: -0.75rem;
   overflow: auto;
   background: #efefef;
   padding: 0.75rem;
@@ -118,12 +120,11 @@ div#header-inner {
   padding: 1.5rem 0;
 }
 
+
 .container {
-  margin-top: 0;
-  margin-bottom: 6.0rem;
-  margin-left: auto;
-  margin-right: auto;
-  max-width: 744px;
+  margin: 0 auto 6.0rem auto;
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
 }
 
 h1 {
@@ -166,10 +167,10 @@ ul#navigation li a:hover {
 
 p#tagline {
   text-align: center;
-  padding: 2.0rem 0;
+  padding: 1.0rem;
   background: #2380c4;
   color: #fff;
-  font-size: 2.0rem;
+  font-size: 1.5rem;
   margin: 0;
   font-family: 'Playfair Display', serif;
   font-style: italic;
@@ -204,12 +205,10 @@ span.label {
 }
 
 .section {
-  width: 100%;
-  padding: 4.5rem 0;
+  padding: 3.0rem 0.75rem;
 }
 
 .section > * {
-  max-width: 744px;
   margin-left: auto;
   margin-right: auto;
 }
@@ -220,6 +219,15 @@ span.label {
 
 .section h2 {
   margin-top: 0;
+}
+
+.section > figure {
+  margin: 0;
+}
+
+.section > pre {
+  margin-left: -0.75rem;
+  width: 100%;
 }
 
 .doc-list {
@@ -241,7 +249,7 @@ span.label {
 }
 
 .footer p {
-  max-width: 744px;
+  padding: 0 0.75rem;
   margin: 0 auto;
 }
 
@@ -293,7 +301,35 @@ span.label {
 
 
 @media (min-width: 744px) {
+  .section {
+    padding: 4.5rem 0;
+  }
+
+  .section > * {
+    max-width: 744px;
+  }
+
+  .section figure {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .section > pre {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .container {
+    padding: 0;
+    width: 744px;
+  }
+
   div#header-inner {
+    padding: 2.0rem 0;
+  }
+
+  p#tagline {
+    font-size: 2.0rem;
     padding: 2.0rem 0;
   }
 
@@ -322,6 +358,11 @@ span.label {
     flex: 1;
   }
 
+  .footer p {
+    max-width: 744px;
+    padding: 0;
+  }
+
   pre {
     padding: 1.5rem;
     margin-left: -1.5rem;
@@ -331,42 +372,6 @@ span.label {
   .flex-row-l { flex-direction: row; }
 }
 
-@media (max-width: 744px) {
-  p#tagline {
-    font-size: 1.5rem;
-    padding: 1.0rem;
-  }
-
-  .container {
-    padding-left: 0.75rem;
-    padding-right: 0.75rem;
-    width: 100%;
-    box-sizing: border-box;
-  }
-
-  .section {
-    padding: 3.0rem 0.75rem;
-    box-sizing: border-box;
-  }
-
-  .section > * {
-    width: 100%;
-  }
-
-  .section > pre {
-    margin-left: -0.75rem;
-  }
-
-  pre {
-    margin-left: -0.75rem;
-    margin-right: -0.75rem;
-  }
-
-  .footer p {
-    padding-left: 0.75rem;
-    padding-right: 0.75rem;
-  }
-}
 
 
 /* Syntax highlighting */
