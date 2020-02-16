@@ -299,9 +299,12 @@ span.label {
   }
 
   ul#feature-list > li {
-    width: 45%;
-    padding-right: 5%;
+    width: 45.5%;
     float: left;
+  }
+
+  ul#feature-list > li:nth-child(even) {
+    margin-left: 9%;
   }
 
   ul.audio-list li {
