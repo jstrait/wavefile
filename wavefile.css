@@ -166,8 +166,7 @@ ul#navigation li a:hover {
 
 p#tagline {
   text-align: center;
-  padding-top: 2.0rem;
-  padding-bottom: 2.0rem;
+  padding: 2.0rem 0;
   background: #2380c4;
   color: #fff;
   font-size: 2.0rem;
