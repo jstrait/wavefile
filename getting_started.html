@@ -35,7 +35,7 @@ one_square_cycle = ([AMPLITUDE] * 50) + ([-AMPLITUDE] * 50){% endhighlight %}
   writer.write(buffer)
 end{% endhighlight %}
   <p>Notice that we gave the <code>Writer</code> a <code>Format</code> as well. This determines which format samples will be written as. Notice that the sample format (<code>:pcm_16</code>) is different from the <code>Buffer</code> we created &ndash; the gem will handle the necessary translation behind the scenes.</p>
-  <p>All of the code to write the samples is done inside a block. When the block exits the file will automatically be closed. (If you want more manually control over when the file is closed you can do that as well by not passing a block and manually calling <code>close())</code>.</p>
+  <p>All of the code to write the samples is done inside a block. When the block exits the file will automatically be closed. (If you want more manually control over when the file is closed you can do that as well by not passing a block and manually calling <code>close()</code>).</p>
   <p>Here&rsquo;s the full program so far:</p>
   {% highlight ruby %}require "wavefile"
 include WaveFile    # So we don't have to prefix all classes with 'WaveFile::'
