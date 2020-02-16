@@ -114,7 +114,7 @@ span.highlight {
 }
 
 div#header-inner {
-  max-width: 744px;
+  max-width: 708px;
   margin: 0 auto;
   padding: 1.5rem 0;
 }
@@ -295,9 +295,9 @@ span.label {
 .bg-white { background: #fff; }
 
 
-@media (min-width: 744px) {
+@media (min-width: 768px) {
   .section {
-    padding: 4.5rem calc((100% - 744px) / 2);
+    padding: 4.5rem calc((100% - 708px) / 2);
   }
 
   .section > pre {
@@ -307,7 +307,7 @@ span.label {
 
   .container {
     padding: 0;
-    width: 744px;
+    width: 708px;
   }
 
   div#header-inner {
@@ -345,7 +345,7 @@ span.label {
   }
 
   .footer p {
-    max-width: 744px;
+    max-width: 708px;
     padding: 0;
   }
 
