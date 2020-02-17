@@ -119,13 +119,6 @@ div#header-inner {
   padding: 1.5rem 0;
 }
 
-
-.container {
-  margin: 0 auto 6.0rem auto;
-  padding-left: 0.75rem;
-  padding-right: 0.75rem;
-}
-
 h1 {
   margin: 0;
   font-size: 2.0rem;
@@ -216,7 +209,7 @@ span.label {
   margin-bottom: 0;
 }
 
-.section h2 {
+.section > h2:first-child {
   margin-top: 0;
 }
 
@@ -303,11 +296,6 @@ span.label {
   .section > pre {
     margin-left: -1.5rem;
     margin-right: -1.5rem;
-  }
-
-  .container {
-    padding: 0;
-    width: 708px;
   }
 
   div#header-inner {
