@@ -151,11 +151,11 @@ and Data Specifications 1.0, August 1991</a></li>
   </div>
   <p>The reason for the different types of extension is that the Wave format is a container for many different kinds of sample formats, and because the Wave format has evolved over time to support new formats. Extra fields that are needed for one sample format might not be needed for another sample format. This also allows new fields to be added without having to change pre-existing Wave files.</p>
   <p>While some of these fields have a large range of possible values, in practice there are only a few that will actually be used. For some background on what some of this terminology means, check out <a href="https://www.joelstrait.com/digital_audio_primer/">this blog post</a>.</p>
-  <p><span class="label">Format Code</span> &ndash; Indicates how the sample data for the wave file is stored. The most common format is PCM, which has a code of 1. Other formats include IEEE floating point (3), ADPCM (2), &mu;-law (7), and WaveFormatExtensible (65534).</p>
-  <p><span class="label">Number of channels</span> &ndash; Typically a file will have 1 channel (mono) or 2 channels (stereo). A 5.1 surround sound file will have 6 channels.</p>
-  <p><span class="label">Sample rate</span> &ndash; The number of sample frames that occur each second. A typical value would be 44,100, which is the same as an audio CD.</p>
-  <p><span class="label">Bytes per second (a.k.a. byte rate)</span> &ndash; The spec calls this <em>byte rate</em>, which means the number of bytes required for one second of audio data. This is equal to the bytes per sample frame times the sample rate. So with a bytes per sample frame of 32, and a sample rate of 44,100, this should equal 1,411,200.</p>
-  <p><span class="label">Bytes per sample frame (a.k.a. block align)</span> &ndash; Called <em>block align</em> by the spec, this is the number of bytes required to store a single sample frame, i.e. a single sample for each channel. (Sometimes a sample frame is also referred to as a <em>block</em>). It should be equal to the number of channels times the bits per sample rounded up to a multiple of 8. For example:
+  <p><strong>Format Code</strong> &ndash; Indicates how the sample data for the wave file is stored. The most common format is PCM, which has a code of 1. Other formats include IEEE floating point (3), ADPCM (2), &mu;-law (7), and WaveFormatExtensible (65534).</p>
+  <p><strong>Number of channels</strong> &ndash; Typically a file will have 1 channel (mono) or 2 channels (stereo). A 5.1 surround sound file will have 6 channels.</p>
+  <p><strong>Sample rate</strong> &ndash; The number of sample frames that occur each second. A typical value would be 44,100, which is the same as an audio CD.</p>
+  <p><strong>Bytes per second (a.k.a. byte rate)</strong> &ndash; The spec calls this <em>byte rate</em>, which means the number of bytes required for one second of audio data. This is equal to the bytes per sample frame times the sample rate. So with a bytes per sample frame of 32, and a sample rate of 44,100, this should equal 1,411,200.</p>
+  <p><strong>Bytes per sample frame (a.k.a. block align)</strong> &ndash; Called <em>block align</em> by the spec, this is the number of bytes required to store a single sample frame, i.e. a single sample for each channel. (Sometimes a sample frame is also referred to as a <em>block</em>). It should be equal to the number of channels times the bits per sample rounded up to a multiple of 8. For example:
   <div class="scroll-x">
     <table>
       <tr>
@@ -192,9 +192,9 @@ and Data Specifications 1.0, August 1991</a></li>
   </div>
   <p>This field can be used to calculate the bytes per second field. Another possible use is for seeking around in a file. For example, if the bytes per sample frame is 32, then to seek forward 10 sample frames you need to seek forward 320 bytes.</p>
   <p>For PCM data, this field is essentially redundant since it can be calculated from the other fields. However, be sure to note the point of rounding bits per sample values to the nearest multiple of 8.</p>
-  <p><span class="label">Bits per sample</span> &ndash; For PCM data, typical values will be 8, 16, or 32. If the sample format doesn&rsquo;t require this field, it should be set to 0.</p>
-  <p><span class="label">Extension Size</span> &ndash; This field should only be present if the format code is not 1. This indicates the size of the extra fields in bytes. It does not include the bytes in this field itself. If the given sample format has no extra fields, then this field should be set to 0.</p>
-  <p><span class="label">Extra Fields</span> &ndash; It depends on the format code! The next sections describe the extra fields for a few audio formats.</p>
+  <p><strong>Bits per sample</strong> &ndash; For PCM data, typical values will be 8, 16, or 32. If the sample format doesn&rsquo;t require this field, it should be set to 0.</p>
+  <p><strong>Extension Size</strong> &ndash; This field should only be present if the format code is not 1. This indicates the size of the extra fields in bytes. It does not include the bytes in this field itself. If the given sample format has no extra fields, then this field should be set to 0.</p>
+  <p><strong>Extra Fields</strong> &ndash; It depends on the format code! The next sections describe the extra fields for a few audio formats.</p>
 
   <h2>Extra Format Fields for Floating Point</h2>
   <p>If the format code is 3, then the sample data is stored as PCM using floating point numbers. There are no extra fields for this format, so the extension size field should be set to 0.</p>
@@ -251,9 +251,9 @@ and Data Specifications 1.0, August 1991</a></li>
       </tr>
     </table>
   </div>
-  <p><span class="label">Valid Bits Per Sample</span> &ndash; Allows storing samples with bit-depths that are not a byte multiple in size. For example, to store 12-bit samples, this value can be set to 12, and the bits-per-sample field in the format chunk set to 16. Each sample will still take up 16 bytes on disk, but the reader can be informed that only the lower 12 bits should be used.</p>
-  <p><span class="label">Channel Mask</span> &ndash; Indicates which audio channels map to which speakers.</p>
-  <p><span class="label">Sub Format</span> &ndash; Identifies the format of the sample data in the data chunk. This is a replacement for the original format code field, since it will have a format code of 65534. Some GUIDs include:</p>
+  <p><strong>Valid Bits Per Sample</strong> &ndash; Allows storing samples with bit-depths that are not a byte multiple in size. For example, to store 12-bit samples, this value can be set to 12, and the bits-per-sample field in the format chunk set to 16. Each sample will still take up 16 bytes on disk, but the reader can be informed that only the lower 12 bits should be used.</p>
+  <p><strong>Channel Mask</strong> &ndash; Indicates which audio channels map to which speakers.</p>
+  <p><strong>Sub Format</strong> &ndash; Identifies the format of the sample data in the data chunk. This is a replacement for the original format code field, since it will have a format code of 65534. Some GUIDs include:</p>
   <ul>
     <li>PCM Integer: <code>0x0100000000001000800000aa00389b71</code></li>
     <li>PCM Float: <code>0x0300000000001000800000aa00389b71</code></li>

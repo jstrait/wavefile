@@ -65,6 +65,10 @@ pre code {
   padding: 0;
 }
 
+strong {
+  font-weight: bold;
+}
+
 audio {
   margin: 3.0rem auto;
   display: block;
@@ -190,10 +194,6 @@ ul#format-list {
 ul#format-list li {
   list-style-type: square;
   margin: 0;
-}
-
-span.label {
-  font-weight: bold;
 }
 
 .section {
