@@ -92,15 +92,26 @@ ul.audio-list li audio {
 table {
   border-collapse: collapse;
   width: 100%;
+  white-space: nowrap;
 }
 
 th {
   text-align: left;
   border-bottom: 2px solid #ddd;
+  padding-right: 1.5rem;
+}
+
+th:last-child {
+  padding-right: 0;
 }
 
 td {
   vertical-align: top;
+  padding-right: 1.5rem;
+}
+
+td:last-child {
+  padding-right: 0;
 }
 
 span.highlight {
