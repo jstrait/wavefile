@@ -2,7 +2,7 @@ A Ruby gem for reading and writing sound files in Wave format (*.wav).
 
 You can use this gem to create Ruby programs that work with audio, such as a [command-line drum machine](https://beatsdrummachine.com). Since it is written in pure Ruby (as opposed to wrapping an existing C library), you can use it without having to compile a separate extension.
 
-For more info, check out the website: <http://wavefilegem.com/>
+For more info, check out the website: <https://wavefilegem.com/>
 
 # Example Usage
 
@@ -23,7 +23,7 @@ Writer.new("append.wav", Format.new(:stereo, :pcm_16, 44100)) do |writer|
 end
 ```
 
-More examples can be found at <http://wavefilegem.com/examples>.
+More examples can be found at <https://wavefilegem.com/examples>.
 
 
 # Installation
@@ -36,7 +36,7 @@ First, install the WaveFile gem from rubygems.org:
 
     require 'wavefile'
 
-Note that if you're installing the gem into the default Ruby that comes pre-installed on MacOS (as opposed to a Ruby installed via [RVM](http://rvm.io/) or [rbenv](https://github.com/sstephenson/rbenv/)), you should used `sudo gem install wavefile`. Otherwise you might run into a file permission error.
+Note that if you're installing the gem into the default Ruby that comes pre-installed on MacOS (as opposed to a Ruby installed via [RVM](https://rvm.io/) or [rbenv](https://github.com/sstephenson/rbenv/)), you should used `sudo gem install wavefile`. Otherwise you might run into a file permission error.
 
 
 # Compatibility
