@@ -7,6 +7,8 @@ body {
   font-weight: 300;
   line-height: 1.5rem;
   font-family: "Lato", "Helvetica Neue", Helvetica, arial, sans-serif;
+  -webkit-text-size-adjust: none;
+  text-size-adjust: none;
   background: #fafafa;
 }
 
