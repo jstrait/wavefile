@@ -184,7 +184,7 @@ ul#feature-list {
   padding: 0;
 }
 
-ul#feature-list li {
+ul#feature-list > li {
   list-style-type: none;
   margin-bottom: 1.5rem;
 }
@@ -196,7 +196,6 @@ ul#format-list {
 
 ul#format-list li {
   list-style-type: square;
-  margin: 0;
 }
 
 .section {
