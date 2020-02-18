@@ -170,7 +170,6 @@ ul#navigation li a:hover {
 
 p#tagline {
   padding: 1.0rem;
-  background: #2380c4;
   color: #fff;
   font-size: 1.5rem;
   margin: 0;
@@ -246,7 +245,6 @@ ul#format-list li {
 }
 
 .footer {
-  background: #000;
   color: #fff;
 }
 
@@ -299,6 +297,8 @@ ul#format-list li {
 .center { text-align: center; }
 .scroll-x { overflow-x: scroll; }
 .bg-white { background: #fff; }
+.bg-black { background: #000; }
+.bg-blue { background: #2380c4; }
 
 
 @media (min-width: 768px) {
