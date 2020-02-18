@@ -2,12 +2,12 @@
 layout: default
 title: Getting Started
 ---
-<div class="section">
+<div class="section section-tall">
   <h2>First Steps</h2>
   <p>First, <a href="https://wavefilegem.com#installation">install the WaveFile gem</a>.</p>
   <p>Next, if you&rsquo;re new to audio programming, you might want to read up on some of the basics of digital audio first. Check out <a href="https://www.joelstrait.com/digital_audio_primer/">this blog post</a> for an introduction.</p></p>
 </div>
-<div class="section bg-white">
+<div class="section section-tall bg-white">
   <h2>Basic Concepts</h2>
   <p>The WaveFile gem lets you both read and write wave files. Reading is done using the <code>Reader</code> class, and writing is done using the <code>Writer</code> class.</p>
   <p>The <code>Buffer</code> class represents a collection of samples in a given sample format (e.g. stereo 16-bit PCM samples at a 44,100Hz sample rate). When samples are read using <code>Reader</code> they are returned in <code>Buffer</code> instances. Samples to be written are given to <code>Writer</code> wrapped in <code>Buffer</code> instances as well.</p>
@@ -18,7 +18,7 @@ title: Getting Started
   <p>When writing a program that creates sound, you would generate an array like this with the sample data, then wrap it in a <code>Buffer</code>, and then use <code>Writer</code> to write the samples in the <code>Buffer</code> to disk.</p>
   <p>A <code>Buffer</code> has the ability to convert its samples to any other format this gem supports. This means you can read samples from a file in whatever format you like, regardless of the actual sample format in the file (e.g. read a file with 8-bit samples and get 16-bit samples back). You can also do the same with <code>Writer</code> &ndash; for example, rather than remember the sample range of a PCM format (was it 32,767? or 32,768?) you can just generate floating point samples between -1.0 and 1.0, and transparently write them out as PCM samples.</p>
 </div>
-<div class="section">
+<div class="section section-tall">
   <h2>Creating a New Wave File</h2>
   <p>Let&rsquo;s write a simple tone to a wave file. A <a href="https://en.wikipedia.org/wiki/Square_wave">square wave</a> is one of the simplest ways to create sound, so let&rsquo;s do that. A square wave consists a some repeated samples, followed by the same number of repeated samples at the opposite amplitude. For example:</p>
   {% highlight ruby %}[0.3, 0.3, 0.3, 0.3, -0.3, -0.3, -0.3, -0.3,  ...and repeated...]{% endhighlight %}
@@ -77,7 +77,7 @@ Writer.new("square.wav", Format.new(:mono, :pcm_16, 44100)) do |writer|
   CYCLE_COUNT.times { writer.write(buffer) }
 end{% endhighlight %}
 </div>
-<div class="section bg-white">
+<div class="section section-tall bg-white">
   <h2>Reading a Wave File</h2>
   <p>Let&rsquo;s now read the file we just wrote. We can use the <code>Reader</code> class for that.</p>
   {% highlight ruby %}require "wavefile"
@@ -125,7 +125,7 @@ First 10 samples in buffer:  [[0.29998779296875, 0.29998779296875],
                               [0.29998779296875, 0.29998779296875],
                               [0.29998779296875, 0.29998779296875]]</code></pre>
 </div>
-<div class="section">
+<div class="section section-tall">
   <h2>Next Steps</h2>
   <p>Head over to the <a href="documentation.html">Documentation</a> page where you can see more <a href="examples.html">code examples</a>, read full <a href="doc-1.1.1/index.html">API documentation</a>, and get the low down on <a href="how_wave_files_work.html">how the Wave file format works</a> behind the scenes.</p>
 </div>

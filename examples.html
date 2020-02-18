@@ -2,7 +2,7 @@
 layout: default
 title: Examples
 ---
-<div class="section">
+<div class="section section-tall">
   <h2>Reading Entire Wave File With a Block</h2>
 
   <p>This is a simple way to read an entire wave file:</p>
@@ -17,7 +17,7 @@ end{% endhighlight %}
   <p>First construct a <code>Reader</code> object, then call <code>each_buffer()</code> on it. Successive sample buffers will be read from the file and passed to the given block, until all sample data in the file has been read. Finally, the <code>Reader</code> will automatically be closed. (Note that this is essentially the same as how <code>IO.open</code> works if you pass it a block).</p>
 </div>
 
-<div class="section bg-white">
+<div class="section section-tall bg-white">
   <h2>Reading Wave File Manually</h2>
 
   <p>Alternately, you can manually call <code>read()</code> to control exactly how much of the file to read. When doing this, make sure to close the <code>Reader</code> when you&rsquo;re done.</p>
@@ -40,7 +40,7 @@ ensure
 end{% endhighlight %}
 </div>
 
-<div class="section">
+<div class="section section-tall">
   <h2>Reading a Wave File Into an Arbitrary Format</h2>
 
   <p>When reading sample data you can convert it to a different format on the fly. For example, let&rsquo;s say <code>my_file.wav</code> has 2 channels and 16-bit PCM samples, but you want 1 channel normalized floating point samples. By passing a <code>Format</code> instance to the constructor, the samples will be read out in the desired format regardless of what is actually in the file:</p>
@@ -56,7 +56,7 @@ end{% endhighlight %}
   <p><strong>Note:</strong> Sample data will not be re-sampled to match the target sample rate. For example, if reading data out of a file with 44,100Hz sample rate using a target <code>Format</code> with a 22,050Hz sample rate, the samples will not be re-sampled to a 22,050Hz sample rate. This means that audio will sound pitch shifted unless the file&rsquo;s actual sample rate and the target sample rate are the same.</p>
 </div>
 
-<div class="section bg-white">
+<div class="section section-tall bg-white">
   <h2>Getting Metadata About a Wave File</h2>
 
   <p><code>Reader.format</code> contains info about the format samples will be converted to when being read out of the file, while <code>Reader.native_format</code> contains info about how the samples are actually stored in the file.</p>
@@ -92,7 +92,7 @@ rescue InvalidFormatError
 end{% endhighlight %}
 </div>
 
-<div class="section">
+<div class="section section-tall">
   <h2>Writing a Wave File With A Block</h2>
 
   <p>The <code>Writer</code> object is used to write data to a wave file. When constructing the <code>Writer</code>, you can pass a block inside which the writing will occur. When the block exits the file will automatically be closed. The example below shows how to write a basic square wave to a file.</p>
@@ -113,7 +113,7 @@ end{% endhighlight %}
   <p>For more info on how to create simple sounds with Ruby, check out <a href="https://www.joelstrait.com/nanosynth/">NanoSynth</a>.</p>
 </div>
 
-<div class="section bg-white">
+<div class="section section-tall bg-white">
   <h2>Writing a Wave File (Manual File Close Edition)</h2>
 
   <p>Alternately, you can manually control when to close the file, as shown below. Note that a file won&rsquo;t be valid for playback until it is closed. This is because some data required for playback (such as the total number of samples) isn&rsquo;t written to the file until it is closed.</p>
@@ -138,7 +138,7 @@ writer.close{% endhighlight %}
   </audio>
 </div>
 
-<div class="section">
+<div class="section section-tall">
   <h2>Copying a Wave File to Different Format</h2>
 
   <p>In this example, the sample data in the file <code>original.wav</code> will be written to <code>copy.wav</code> as stereo/16-bit with a 44,100Hz sample rate, regardless of what format the sample data in <code>original.wav</code> is stored in.</p>
@@ -155,7 +155,7 @@ Writer.new("copy.wav", Format.new(:stereo, :pcm_16, 44100)) do |writer|
 end{% endhighlight %}
 </div>
 
-<div class="section bg-white">
+<div class="section section-tall bg-white">
   <h2>Appending Wave Files</h2>
 
   <p>This example will take 3 Wave files, and write them to a single file containing each input file played one after another. Note that the individual files can be in different formats. They will all be converted to the output file&rsquo;s format.</p>
