@@ -78,8 +78,6 @@ audio.audio-block {
 
 ul.audio-list li {
   list-style-type: none;
-  display: flex;
-  flex-direction: column;
 }
 
 ul.audio-list li audio {
@@ -309,7 +307,6 @@ ul#format-list li {
   }
 
   ul.audio-list li {
-    flex-direction: row;
     align-items: center;
     height: 2.0rem;
   }
