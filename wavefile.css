@@ -76,10 +76,6 @@ audio.audio-block {
   display: block;
 }
 
-ul.audio-list {
-  padding: 0;
-}
-
 ul.audio-list li {
   list-style-type: none;
   display: flex;
@@ -141,10 +137,6 @@ h1 a {
   color: #000;
 }
 
-ul#navigation {
-  padding: 0;
-}
-
 ul#navigation li {
   list-style-type: none;
   margin-right: 1.5rem;
@@ -177,7 +169,6 @@ ul#feature-list {
   overflow: auto;
   margin-top: 0;
   margin-bottom: -1.5rem;  /* Compensate for bottom margin of final list row */
-  padding: 0;
 }
 
 ul#feature-list > li {
@@ -226,10 +217,6 @@ ul#format-list li {
   margin-right: -0.75rem;
 }
 
-.doc-list {
-  padding: 0;
-}
-
 .doc-list li {
   list-style-type: none;
   margin-bottom: 1.5rem;
@@ -272,6 +259,7 @@ ul#format-list li {
 
 
 .m0 { margin: 0; }
+.p0 { padding: 0; }
 .flex { display: flex; }
 .flex-column { flex-direction: column; }
 .flex-align-center { align-items: center; }
