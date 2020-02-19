@@ -130,7 +130,6 @@ span.highlight {
 }
 
 h1 {
-  margin: 0;
   font-size: 2.0rem;
   font-weight: 400;
   line-height: 2.0rem;
@@ -143,7 +142,6 @@ h1 a {
 }
 
 ul#navigation {
-  margin: 0;
   padding: 0;
 }
 
@@ -170,7 +168,6 @@ ul#navigation li a:hover {
 p#tagline {
   padding: 1.0rem;
   font-size: 1.5rem;
-  margin: 0;
   font-family: 'Playfair Display', serif;
   font-style: italic;
   line-height: 1.5em;
@@ -230,18 +227,12 @@ ul#format-list li {
 }
 
 .doc-list {
-  margin-top: 0;
-  margin-bottom: 0;
   padding: 0;
 }
 
 .doc-list li {
   list-style-type: none;
   margin-bottom: 1.5rem;
-}
-
-.footer p {
-  margin: 0;
 }
 
 .chunk-parent {
@@ -280,6 +271,7 @@ ul#format-list li {
 }
 
 
+.m0 { margin: 0; }
 .flex { display: flex; }
 .flex-column { flex-direction: column; }
 .flex-align-center { align-items: center; }
