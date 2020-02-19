@@ -49,7 +49,7 @@ Writer.new("square.wav", Format.new(:mono, :pcm_16, 44100)) do |writer|
   writer.write(buffer)
 end{% endhighlight %}
   <p>When you run this program it should create a file called <code>"square.wav"</code> in the current working directory. If you play this file (for example on a Mac using <code>afplay square.wav</code> from the command line) it should sound like this:</p>
-  <audio controls>
+  <audio controls class="audio-block">
     <source src="media/square_too_short.wav" type="audio/wav">
   </audio>
   <p>&hellip;which&hellip; doesn&rsquo;t sound like anything! The reason is that we didn&rsquo;t generate enough samples. At the sample rate we&rsquo;re using, 44,100Hz, you&rsquo;ll need 44,100 samples for 1 second of sound. We only generated 100 samples, or about 1/441th of a second. No problem, we can easily fix this by repeating our cycle more times:</p>
@@ -59,7 +59,7 @@ Writer.new("square.wav", Format.new(:mono, :pcm_16, 44100)) do |writer|
   CYCLE_COUNT.times { writer.write(buffer) }
 end{% endhighlight %}
   <p>Now when you re-run the program and play <code>"square.wav"</code> it should sound like this.</p>
-  <audio controls>
+  <audio controls class="audio-block">
     <source src="media/square.wav" type="audio/wav">
   </audio>
   <p>You are well on your way to writing an epic <a href="https://en.wikipedia.org/wiki/Nintendo_Entertainment_System">NES</a> soundtrack!</p>

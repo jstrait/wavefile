@@ -71,7 +71,7 @@ strong {
   font-weight: bold;
 }
 
-audio {
+audio.audio-block {
   margin: 3.0rem auto;
   display: block;
 }
@@ -87,7 +87,6 @@ ul.audio-list li {
 }
 
 ul.audio-list li audio {
-  margin: 0;
   width: 100%;
 }
 
