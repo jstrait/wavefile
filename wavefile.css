@@ -220,6 +220,10 @@ ul#format-list li {
   margin-bottom: 1.5rem;
 }
 
+.doc-list li:last-child {
+  margin-bottom: 0;
+}
+
 .chunk-parent {
   border: 2px solid #a1a1a1;
   box-sizing: border-box;
