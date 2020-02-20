@@ -207,25 +207,19 @@ ul#format-list li {
 .chunk-child {
   border: 2px solid #a1a1a1;
   margin: 0.75rem;
-  box-sizing: border-box;
-  width: calc(100% - 1.5rem);
   border-radius: 0.25rem;
 }
 
 .chunk-parent-field {
   border-bottom: 1px solid #a1a1a1;
   padding: 0.25rem 0.75rem;
-  width: 100%;
   display: block;
-  box-sizing: border-box;
 }
 
 .chunk-child-field {
   border-bottom: 1px solid #a1a1a1;
   padding: 0.25rem;
-  width: 100%;
   display: block;
-  box-sizing: border-box;
 }
 
 .chunk-child-field:last-child {
