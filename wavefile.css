@@ -76,10 +76,6 @@ audio.audio-block {
   display: block;
 }
 
-ul.audio-list li {
-  list-style-type: none;
-}
-
 ul.audio-list li audio {
   width: 100%;
 }
@@ -136,7 +132,6 @@ h1 a {
 }
 
 ul#navigation li {
-  list-style-type: none;
   margin-right: 1.5rem;
 }
 
@@ -170,7 +165,6 @@ ul#feature-list {
 }
 
 ul#feature-list > li {
-  list-style-type: none;
   margin-bottom: 1.5rem;
 }
 
@@ -216,7 +210,6 @@ ul#format-list li {
 }
 
 .doc-list li {
-  list-style-type: none;
   margin-bottom: 1.5rem;
 }
 
@@ -268,6 +261,7 @@ ul#format-list li {
 .flex-justify-center { justify-content: center; }
 .small-caps { font-variant: small-caps; }
 .center { text-align: center; }
+.list-style-none { list-style-type: none; }
 .scroll-x { overflow-x: scroll; }
 .white { color: #fff; }
 .bg-white { background: #fff; }
