@@ -131,14 +131,6 @@ h1 a {
   color: #000;
 }
 
-ul#navigation li {
-  margin-right: 1.5rem;
-}
-
-ul#navigation li:last-child {
-  margin-right: 0;
-}
-
 ul#navigation li a {
   color: #000;
   font-weight: 400;
@@ -162,10 +154,6 @@ ul#feature-list {
   overflow: auto;
   margin-top: 0;
   margin-bottom: -1.5rem;  /* Compensate for bottom margin of final list row */
-}
-
-ul#feature-list > li {
-  margin-bottom: 1.5rem;
 }
 
 ul#format-list {
@@ -209,14 +197,6 @@ ul#format-list li {
   margin-right: -0.75rem;
 }
 
-.doc-list li {
-  margin-bottom: 1.5rem;
-}
-
-.doc-list li:last-child {
-  margin-bottom: 0;
-}
-
 .chunk-parent {
   border: 2px solid #a1a1a1;
   box-sizing: border-box;
@@ -254,6 +234,8 @@ ul#format-list li {
 
 
 .m0 { margin: 0; }
+.mr1 { margin-right: 1.5rem; }
+.mb1 { margin-bottom: 1.5rem; }
 .p0 { padding: 0; }
 .flex { display: flex; }
 .flex-column { flex-direction: column; }
