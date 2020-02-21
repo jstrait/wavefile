@@ -192,7 +192,7 @@ and Data Specifications 1.0, August 1991</a></li>
   </div>
   <p>This field can be used to calculate the bytes per second field. Another possible use is for seeking around in a file. For example, if the bytes per sample frame is 32, then to seek forward 10 sample frames you need to seek forward 320 bytes.</p>
   <p>For PCM data, this field is essentially redundant since it can be calculated from the other fields. However, be sure to note the point of rounding bits per sample values to the nearest multiple of 8.</p>
-  <p><strong>Bits per sample</strong> &ndash; For PCM data, typical values will be 8, 16, or 32. If the sample format doesn&rsquo;t require this field, it should be set to 0.</p>
+  <p><strong>Bits per sample</strong> &ndash; For integer PCM data, typical values will be 8, 16, or 32. If the sample format doesn&rsquo;t require this field, it should be set to 0.</p>
   <p><strong>Extension Size</strong> &ndash; This field should only be present if the format code is not <code>1</code>. This indicates the size of the extra fields in bytes. It does not include the bytes in this field itself. If the given sample format has no extra fields, then this field should be set to 0.</p>
   <p><strong>Extra Fields</strong> &ndash; It depends on the format code! The next sections describe the extra fields for a few audio formats.</p>
 
