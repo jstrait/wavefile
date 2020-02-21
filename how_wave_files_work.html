@@ -318,11 +318,11 @@ and Data Specifications 1.0, August 1991</a></li>
       </tr>
     </table>
   </div>
-  <p>The layout for the data chunk is simpler than the format chunk: the normal 8-byte chunk header, followed by nothing but raw sample data. The sample data can be stored in a number of formats, which will be indicated by the audio format code field in the format chunk.</p>
+  <p>The layout for the data chunk is simpler than the format chunk: the normal 8-byte chunk header, followed by nothing but raw sample data. The sample data can be stored in a number of formats, which will be indicated by the format code field in the format chunk.</p>
   <p>The following sections describe several formats that sample data in the data chunk can be stored as.</p>
 
   <h2>Integer PCM Data Chunk</h2>
-  <p>Audio format code: <code>1</code></p>
+  <p>Format code: <code>1</code></p>
   <p>The simplest, and most common, format is to store raw PCM samples as integers. The bits per sample field will indicate the range of the sample data:</p>
   <div class="scroll-x">
     <table>
@@ -399,11 +399,11 @@ and Data Specifications 1.0, August 1991</a></li>
     <div style="padding: 0.5rem;">...etc</div>
   </div>
   <h2>Floating Point PCM Data Chunk</h2>
-  <p>Audio format code: <code>3</code></p>
-  <p>Alternately, PCM samples can be stored as floating point values. This is essentially the same as integer PCM format (i.e. audio format code <code>1</code>), except that samples are in the range -1.0 to 1.0. The bits per sample field should be set to 32 or 64 to indicate the precision of the values. Sample frames should be layed out in the same way as described in the &ldquo;Integer PCM Data Chunk&rdquo; section above.</p>
+  <p>Format code: <code>3</code></p>
+  <p>Alternately, PCM samples can be stored as floating point values. This is essentially the same as integer PCM format (i.e. format code <code>1</code>), except that samples are in the range -1.0 to 1.0. The bits per sample field should be set to 32 or 64 to indicate the precision of the values. Sample frames should be layed out in the same way as described in the &ldquo;Integer PCM Data Chunk&rdquo; section above.</p>
   <h2>EXTENSIBLE Data Chunk</h2>
-  <p>Audio format code: <code>65534</code></p>
-  <p>Since WAVE_FORMAT_EXTENSIBLE is a container format, the audio format code of <code>65534</code> doesn&rsquo;t imply any particular sample format. Instead, the sample format is indicated by the sub format GUID in the format chunk extension. For example, if the sub format GUID is the GUID for integer PCM, then the samples are in the same format as if the audio format code was <code>1</code>.</p>
+  <p>Format code: <code>65534</code></p>
+  <p>Since WAVE_FORMAT_EXTENSIBLE is a container format, the format code of <code>65534</code> doesn&rsquo;t imply any particular sample format. Instead, the sample format is indicated by the sub format GUID in the format chunk extension. For example, if the sub format GUID is the GUID for integer PCM, then the samples are in the same format as if the format code was <code>1</code>.</p>
 
   <h2>References</h2>
   <p>Documents from Microsoft defining the initial file format, and changes over time:</p>
