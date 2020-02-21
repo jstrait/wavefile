@@ -138,6 +138,10 @@ ul#navigation li a {
   line-height: 2.0rem;
 }
 
+ul#navigation li a.selected {
+  text-decoration: underline;
+}
+
 ul#navigation li a:hover {
   color: #ff862e;
 }
