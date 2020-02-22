@@ -5,7 +5,7 @@ id: tutorial
 ---
 <div class="section section-tall">
   <h2>First Steps</h2>
-  <p>First, <a href="https://wavefilegem.com#installation">install the WaveFile gem</a>.</p>
+  <p>First, <a href="/#installation">install the WaveFile gem</a>.</p>
   <p>Next, if you&rsquo;re new to audio programming, you might want to read up on some of the basics of digital audio first. Check out <a href="https://www.joelstrait.com/digital_audio_primer/">this blog post</a> for an introduction.</p></p>
 </div>
 <div class="section section-tall bg-white">
@@ -91,7 +91,7 @@ Reader.new("square.wav").each_buffer do |buffer|
   puts "First 10 samples in buffer:  #{buffer.samples[0...10].inspect}"
   puts "--------------------------------------------------------------"
 end{% endhighlight %}
-  <p>After constructing the <code>Reader</code> we call the <code>each_buffer</code> method. This method is useful when you want to read an entire file. It reads successive buffers of a given size, and passes each to the given block. When all buffers have been read, the file is automatically closed. (You can also manually control what to read and when to close the file, see the <a href="examples.html">examples</a> page for more info).</p>
+  <p>After constructing the <code>Reader</code> we call the <code>each_buffer</code> method. This method is useful when you want to read an entire file. It reads successive buffers of a given size, and passes each to the given block. When all buffers have been read, the file is automatically closed. (You can also manually control what to read and when to close the file, see the <a href="/examples.html">examples</a> page for more info).</p>
   <p>When you run the program, it should print out repeated output similar to the following:</p>
   <pre><code>Buffer number of channels:   1
 Buffer bits per sample:      16
@@ -128,5 +128,5 @@ First 10 samples in buffer:  [[0.29998779296875, 0.29998779296875],
 </div>
 <div class="section section-tall">
   <h2>Next Steps</h2>
-  <p>Head over to the <a href="examples.html">examples</a> page to see more code examples, read full <a href="doc-1.1.1/index.html">API documentation</a>, and if you&rsquo;re interested, get the low down on <a href="how_wave_files_work.html">how the Wave file format works</a> behind the scenes.</p>
+  <p>Head over to the <a href="/examples.html">examples</a> page to see more code examples, read full <a href="/doc-1.1.1/index.html">API documentation</a>, and if you&rsquo;re interested, get the low down on <a href="/how_wave_files_work.html">how the Wave file format works</a> behind the scenes.</p>
 </div>
