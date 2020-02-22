@@ -1,9 +1,13 @@
 html {
   font-size: 20px;
+  height: 100%;
 }
 
 body {
   margin: 0;
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
   font-weight: 300;
   line-height: 1.5rem;
   font-family: "Lato", "Helvetica Neue", Helvetica, arial, sans-serif;
@@ -239,6 +243,7 @@ ul#format-list li {
 .flex-column { flex-direction: column; }
 .flex-align-center { align-items: center; }
 .flex-justify-center { justify-content: center; }
+.flex-fill { flex: 1; }
 .small-caps { font-variant: small-caps; }
 .center { text-align: center; }
 .list-style-none { list-style-type: none; }
