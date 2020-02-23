@@ -45,6 +45,10 @@ h3 {
   color: #2380c4;
 }
 
+figure {
+  margin: 0;
+}
+
 pre {
   margin-bottom: 0;
   margin-left: -0.75rem;
@@ -186,11 +190,6 @@ ul#format-list li {
   padding-bottom: 3.0rem;
 }
 
-.section > * {
-  margin-left: auto;
-  margin-right: auto;
-}
-
 .section > *:last-child {
   margin-bottom: 0;
 }
@@ -199,12 +198,8 @@ ul#format-list li {
   margin-top: 0;
 }
 
-.section > pre {
-  margin-left: -0.75rem;
-  margin-right: -0.75rem;
-}
-
 .chunk-parent {
+  margin: 0 auto;
   border: 2px solid #a1a1a1;
   box-sizing: border-box;
   max-width: 15.0rem;
@@ -267,11 +262,6 @@ ul#format-list li {
   .section-tall {
     padding-top: 4.5rem;
     padding-bottom: 4.5rem;
-  }
-
-  .section > pre {
-    margin-left: -1.5rem;
-    margin-right: -1.5rem;
   }
 
   p#tagline {
