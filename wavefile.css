@@ -269,12 +269,12 @@ ul#format-list li {
   }
 
   ul#feature-list > li {
-    width: 45.5%;
+    width: calc(50% - 1.5rem);
     float: left;
   }
 
   ul#feature-list > li:nth-child(even) {
-    margin-left: 9%;
+    margin-left: 3.0rem;
   }
 
   ul.audio-list li {
