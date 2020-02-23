@@ -163,8 +163,6 @@ p#tagline {
 
 ul#feature-list {
   overflow: auto;
-  margin-top: 0;
-  margin-bottom: -1.5rem;  /* Compensate for bottom margin of final list row */
 }
 
 ul#format-list {
@@ -300,6 +298,7 @@ ul#format-list li {
     margin-right: -1.5rem;
   }
 
+  .mb0-l { margin-bottom: 0; }
   .flex-row-l { flex-direction: row; }
 }
 
