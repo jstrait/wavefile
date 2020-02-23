@@ -266,14 +266,45 @@ and Data Specifications 1.0, August 1991</a></li>
   <p><strong>Valid Bits Per Sample</strong> &ndash; Allows storing samples with bit-depths that are not a byte multiple in size. For example, to store 12-bit samples, this value can be set to <code>12</code>, and the bits-per-sample field in the format chunk set to <code>16</code>. Each sample will still take up 16 bytes on disk, but the reader can be informed that only the lower 12 bits should be used.</p>
   <p><strong>Channel Mask</strong> &ndash; Indicates which audio channels map to which speakers.</p>
   <p><strong>Sub Format</strong> &ndash; Identifies the format of the sample data in the data chunk. This is a replacement for the original format code field, since it will have a format code of <code>65534</code>. Some GUIDs include:</p>
-  <ul>
-    <li>PCM Integer: <code>0x0100000000001000800000aa00389b71</code></li>
-    <li>PCM Float: <code>0x0300000000001000800000aa00389b71</code></li>
-    <li>A-law: <code>0x0600000000001000800000aa00389b71</code></li>
-    <li>&mu;-law: <code>0x0700000000001000800000aa00389b71</code></li>
-    <li>ADPCM: <code>0x0200000000001000800000aa00389b71</code></li>
-    <li>MPEG: <code>0x5000000000001000800000aa00389b71</code></li>
-  </ul>
+  <div class="scroll-x">
+    <table>
+      <tr>
+        <th>Format</th>
+        <th>Original Format Code</th>
+        <th>Extensible GUID</th>
+      </tr>
+      <tr>
+        <td>PCM Integer</td>
+        <td><code>1</code></td>
+        <td><code>0x0100000000001000800000aa00389b71</code></td>
+      </tr>
+      <tr>
+        <td>ADPCM</td>
+        <td><code>2</code></td>
+        <td><code>0x0200000000001000800000aa00389b71</code></td>
+      </tr>
+      <tr>
+        <td>PCM Float</td>
+        <td><code>3</code></td>
+        <td><code>0x0300000000001000800000aa00389b71</code></td>
+      </tr>
+      <tr>
+        <td>A-law</td>
+        <td><code>6</code></td>
+        <td><code>0x0600000000001000800000aa00389b71</code></td>
+      </tr>
+      <tr>
+        <td>&mu;-law</td>
+        <td><code>7</code></td>
+        <td><code>0x0700000000001000800000aa00389b71</code></td>
+      </tr>
+      <tr>
+        <td>MPEG</td>
+        <td><code>80</code></td>
+        <td><code>0x5000000000001000800000aa00389b71</code></td>
+      </tr>
+    </table>
+  </div>
 
   <h2>The Fact Chunk</h2>
   <div class="scroll-x">
