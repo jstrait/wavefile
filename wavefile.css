@@ -160,10 +160,6 @@ p#tagline {
   line-height: 2.0rem;
 }
 
-ul#feature-list {
-  overflow: auto;
-}
-
 ul#format-list {
   padding-left: 1.0rem;
 }
@@ -264,6 +260,10 @@ ul#format-list li {
   p#tagline {
     font-size: 2.0rem;
     line-height: 3.0rem;
+  }
+
+  ul#feature-list {
+    overflow: auto;
   }
 
   ul#feature-list > li {
