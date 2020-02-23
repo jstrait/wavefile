@@ -154,11 +154,10 @@ ul#navigation li a:hover {
 }
 
 p#tagline {
-  padding: 1.0rem;
   font-size: 1.5rem;
   font-family: 'Playfair Display', serif;
   font-style: italic;
-  line-height: 2.25rem;
+  line-height: 2.0rem;
 }
 
 ul#feature-list {
@@ -265,7 +264,6 @@ ul#format-list li {
   p#tagline {
     font-size: 2.0rem;
     line-height: 3.0rem;
-    padding: 2.0rem 0;
   }
 
   ul#feature-list > li {
