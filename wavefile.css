@@ -27,7 +27,7 @@ a:hover {
 h2 {
   font-weight: 400;
   font-size: 1.5rem;
-  line-height: 1.0em;
+  line-height: 1.5rem;
   margin-top: 3.0rem;
   margin-bottom: 1.0rem;
   color: #2380c4;
@@ -40,7 +40,7 @@ h2 a {
 h3 {
   font-weight: 400;
   font-size: 1.0rem;
-  line-height: 1.5em;
+  line-height: 1.5rem;
   margin: 0;
   color: #2380c4;
 }
@@ -56,7 +56,7 @@ pre {
 
 code {
   font-size: 0.75rem;
-  line-height: 2.0em;
+  line-height: 1.5rem;
   font-family: "PT Mono", menlo, courier, monospace;
   display: inline-block;
   background: #efefef;
@@ -155,7 +155,7 @@ p#tagline {
   font-size: 1.5rem;
   font-family: 'Playfair Display', serif;
   font-style: italic;
-  line-height: 1.5em;
+  line-height: 2.25rem;
 }
 
 ul#feature-list {
@@ -277,6 +277,7 @@ ul#format-list li {
 
   p#tagline {
     font-size: 2.0rem;
+    line-height: 3.0rem;
     padding: 2.0rem 0;
   }
 
