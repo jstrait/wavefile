@@ -155,7 +155,7 @@ and Data Specifications 1.0, August 1991</a></li>
   <p><strong>Format Code</strong> &ndash; Indicates how the sample data for the wave file is stored. The most common format is integer PCM, which has a code of <code>1</code>. Other formats include floating point PCM (<code>3</code>), ADPCM (<code>2</code>), A-law (<code>6</code>), &mu;-law (<code>7</code>), and WaveFormatExtensible (<code>65534</code>).</p>
   <p><strong>Number of channels</strong> &ndash; Typically a file will have 1 channel (mono) or 2 channels (stereo). A 5.1 surround sound file will have 6 channels.</p>
   <p><strong>Sample rate</strong> &ndash; The number of sample frames that occur each second. A typical value would be 44,100, which is the same as an audio CD.</p>
-  <p><strong>Bytes per second (a.k.a. byte rate)</strong> &ndash; The spec calls this <em>byte rate</em>, which means the number of bytes required for one second of audio data. This is equal to the bytes per sample frame times the sample rate. So with a bytes per sample frame of 32, and a sample rate of 44,100, this should equal 1,411,200.</p>
+  <p><strong>Bytes per second (a.k.a. byte rate)</strong> &ndash; The spec calls this <em>byte rate</em>, which means the number of bytes required for one second of audio data. This is equal to the bytes per sample frame times the sample rate. So with a bytes per sample frame of 4, and a sample rate of 44,100, this should equal 176,400.</p>
   <p><strong>Bytes per sample frame (a.k.a. block align)</strong> &ndash; Called <em>block align</em> by the spec, this is the number of bytes required to store a single sample frame, i.e. a single sample for each channel. (Sometimes a sample frame is also referred to as a <em>block</em>). To calculate, first round bits per sample to the next multiple of 8 (if necessary), divide by 8, then multiply by the number of channels. For example:
   <div class="scroll-x">
     <table>
@@ -233,7 +233,7 @@ and Data Specifications 1.0, August 1991</a></li>
       </tr>
     </table>
   </div>
-  <p>This field can be used to calculate the bytes per second field. Another possible use is for seeking around in a file. For example, if the bytes per sample frame is 32, then to seek forward 10 sample frames you need to seek forward 320 bytes.</p>
+  <p>This field can be used to calculate the bytes per second field. Another possible use is for seeking around in a file. For example, if the bytes per sample frame is 4, then to seek forward 10 sample frames you need to seek forward 40 bytes.</p>
   <p>For PCM data, this field is essentially redundant since it can be calculated from the other fields. However, be sure to note the point of rounding bits per sample values to the nearest multiple of 8.</p>
   <p><strong>Bits per sample</strong> &ndash; For integer PCM data, typical values will be <code>8</code>, <code>16</code>, or <code>32</code>. If the sample format doesn&rsquo;t require this field, it should be set to <code>0</code>.</p>
   <p><strong>Extension Size</strong> &ndash; This field should only be present if the format code is not <code>1</code>. This indicates the size of the extra fields in bytes. It does not include the bytes in this field itself. If the given sample format has no extra fields, then this field should still be present, but set to <code>0</code>.</p>
