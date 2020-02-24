@@ -156,50 +156,80 @@ and Data Specifications 1.0, August 1991</a></li>
   <p><strong>Number of channels</strong> &ndash; Typically a file will have 1 channel (mono) or 2 channels (stereo). A 5.1 surround sound file will have 6 channels.</p>
   <p><strong>Sample rate</strong> &ndash; The number of sample frames that occur each second. A typical value would be 44,100, which is the same as an audio CD.</p>
   <p><strong>Bytes per second (a.k.a. byte rate)</strong> &ndash; The spec calls this <em>byte rate</em>, which means the number of bytes required for one second of audio data. This is equal to the bytes per sample frame times the sample rate. So with a bytes per sample frame of 32, and a sample rate of 44,100, this should equal 1,411,200.</p>
-  <p><strong>Bytes per sample frame (a.k.a. block align)</strong> &ndash; Called <em>block align</em> by the spec, this is the number of bytes required to store a single sample frame, i.e. a single sample for each channel. (Sometimes a sample frame is also referred to as a <em>block</em>). It should be equal to the number of channels times the bits per sample rounded up to a multiple of 8. For example:
+  <p><strong>Bytes per sample frame (a.k.a. block align)</strong> &ndash; Called <em>block align</em> by the spec, this is the number of bytes required to store a single sample frame, i.e. a single sample for each channel. (Sometimes a sample frame is also referred to as a <em>block</em>). To calculate, first round bits per sample to the next multiple of 8 (if necessary), divide by 8, then multiply by the number of channels. For example:
   <div class="scroll-x">
     <table>
       <tr>
-        <th>Channels</th>
-        <th></th>
         <th>Bits Per Sample</th>
+        <th></th>
+        <th>Bits in a Byte</th>
+        <th></th>
+        <th>Channels</th>
         <th></th>
         <th>Bytes Per Sample Frame</th>
       </tr>
       <tr>
+        <td>5 &rarr; 8</td>
+        <td>&div;</td>
+        <td>8</td>
+        <td>&times;</td>
         <td>1</td>
-        <td>&times;</td>
-        <td>8</td>
         <td>=</td>
-        <td>8</td>
-      </tr>
-      <tr>
-        <td>2</td>
-        <td>&times;</td>
-        <td>8</td>
-        <td>=</td>
-        <td>16</td>
-      </tr>
-      <tr>
         <td>1</td>
-        <td>&times;</td>
-        <td>16</td>
-        <td>=</td>
-        <td>16</td>
       </tr>
       <tr>
-        <td>2</td>
+        <td>8</td>
+        <td>&div;</td>
+        <td>8</td>
         <td>&times;</td>
-        <td>16</td>
+        <td>1</td>
         <td>=</td>
+        <td>1</td>
+      </tr>
+      <tr>
+        <td>8</td>
+        <td>&div;</td>
+        <td>8</td>
+        <td>&times;</td>
+        <td>2</td>
+        <td>=</td>
+        <td>2</td>
+      </tr>
+      <tr>
+        <td>12 &rarr; 16</td>
+        <td>&div;</td>
+        <td>8</td>
+        <td>&times;</td>
+        <td>1</td>
+        <td>=</td>
+        <td>2</td>
+      </tr>
+      <tr>
+        <td>16</td>
+        <td>&div;</td>
+        <td>8</td>
+        <td>&times;</td>
+        <td>1</td>
+        <td>=</td>
+        <td>2</td>
+      </tr>
+      <tr>
+        <td>16</td>
+        <td>&div;</td>
+        <td>8</td>
+        <td>&times;</td>
+        <td>2</td>
+        <td>=</td>
+        <td>4</td>
+      </tr>
+      <tr>
         <td>32</td>
-      </tr>
-      <tr>
+        <td>&div;</td>
+        <td>8</td>
+        <td>&times;</td>
         <td>6</td>
-        <td>&times;</td>
-        <td>32</td>
         <td>=</td>
-        <td>192</td>
+        <td>24</td>
       </tr>
     </table>
   </div>
