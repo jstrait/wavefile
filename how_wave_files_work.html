@@ -263,7 +263,92 @@ and Data Specifications 1.0, August 1991</a></li>
     </table>
   </div>
   <p><strong>Valid Bits Per Sample</strong> &ndash; Allows storing samples with bit-depths that are not a byte multiple in size. For example, to store 12-bit samples, this value can be set to <code>12</code>, and the bits-per-sample field in the format chunk set to <code>16</code>. Each sample will still take up 16 bytes on disk, but the reader can be informed that only the lower 12 bits should be used.</p>
-  <p><strong>Channel Mask</strong> &ndash; Indicates which audio channels map to which speakers.</p>
+  <p><strong>Channel Mask</strong> &ndash; In a vanilla non-WAVE_FORMAT_EXTENSIBLE file the 1st channel is defined to be mapped to the left speaker, the 2nd channel to the right speaker, but the remaining channel&rarr;speaker mappings are undefined. The channel mask field lets you define specific speaker mappings for each channel (e.g. for a surround sound file with 6 channels). There are 18 defined speakers that can be mapped.</p>
+  <p>The least significant 18 bits of this field are used as a bit field to indicate which channel maps to which speaker (if any). Each defined speaker corresponds to a bit:</p>
+  <div class="scroll-x">
+    <table>
+      <tr>
+        <th>Bit</th>
+        <th>Speaker</th>
+      </tr>
+      <tr>
+        <td>1</td>
+        <td>Front Left</td>
+      </tr>
+      <tr>
+        <td>2</td>
+        <td>Front Right</td>
+      </tr>
+      <tr>
+        <td>3</td>
+        <td>Front Center</td>
+      </tr>
+      <tr>
+        <td>4</td>
+        <td>Low Frequency</td>
+      </tr>
+      <tr>
+        <td>5</td>
+        <td>Back Left</td>
+      </tr>
+      <tr>
+        <td>6</td>
+        <td>Back Right</td>
+      </tr>
+      <tr>
+        <td>7</td>
+        <td>Front Left of Center</td>
+      </tr>
+      <tr>
+        <td>8</td>
+        <td>Front Right of Center</td>
+      </tr>
+      <tr>
+        <td>9</td>
+        <td>Back Center</td>
+      </tr>
+      <tr>
+        <td>10</td>
+        <td>Side Left</td>
+      </tr>
+      <tr>
+        <td>11</td>
+        <td>Side Right</td>
+      </tr>
+      <tr>
+        <td>12</td>
+        <td>Top Center</td>
+      </tr>
+      <tr>
+        <td>13</td>
+        <td>Top Front Left</td>
+      </tr>
+      <tr>
+        <td>14</td>
+        <td>Top Front Center</td>
+      </tr>
+      <tr>
+        <td>15</td>
+        <td>Top Front Right</td>
+      </tr>
+      <tr>
+        <td>16</td>
+        <td>Top Back Left</td>
+      </tr>
+      <tr>
+        <td>17</td>
+        <td>Top Back Center</td>
+      </tr>
+      <tr>
+        <td>18</td>
+        <td>Top Back Right</td>
+      </tr>
+    </table>
+  </div>
+  </p>For example, if in a 4-channel file the channels should be mapped (in order) to the front left, front right, back left, and back right speakers, the channel mask field should be set to <code>00000000 00000000 00000000 00110011</code>, which is equivalent to <code>0x00000033</code>. (However, remember this should be stored as a little-endian value, not big-endian as it may be implied).</p>
+  <p>The channels will be mapped in the order of the speakers list above. E.g. if in a 2 channel file the channel mask field has the bits for Back Left and Top Center speakers set, the first channel will be mapped to Back Left and the second channel to Top Center (because Back Left comes earlier than Top Center in the list above).</p>
+  <p>If there are more channels than bits set in this field, the remaining channels will have an undefined speaker mapping. If there are more bits set in the speaker mapping than there are channels, the extra bits should be ignored. To explicitly indicate that no channel is mapped to any specific speaker, set this field to <code>0</code>.</p>
+  <p>The spec says that if the most significant bit of this field is set to <code>1</code> (e.g. <code>0xFFFFFFFF</code>) it indicates &ldquo;an entity supports all possible channel configurations.&rdquo; To be honest, I don&rsquo;t understand what that means.</p>
   <p><strong>Sub Format</strong> &ndash; Identifies the format of the sample data in the data chunk. This is a replacement for the original format code field, since it will have a format code of <code>65534</code>. Some GUIDs include:</p>
   <div class="scroll-x">
     <table>
