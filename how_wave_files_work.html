@@ -496,15 +496,15 @@ and Data Specifications 1.0, August 1991</a></li>
         <div style="border: 2px solid #a1a1a1; padding: 0.5rem; border-radius: 0.5rem; display: inline-block;">
           Left Channel
           <div>
-            <code style="font-size: 0.6rem;">Byte 1</code>
-            <code style="font-size: 0.6rem;">Byte 2</code>
+            <code style="font-size: 0.6rem;">LSB</code>
+            <code style="font-size: 0.6rem;">MSB</code>
           </div>
         </div>
         <div style="border: 2px solid #a1a1a1; padding: 0.5rem; border-radius: 0.5rem; display: inline-block;">
           Right Channel
           <div>
-            <code style="font-size: 0.6rem;">Byte 1</code>
-            <code style="font-size: 0.6rem;">Byte 2</code>
+            <code style="font-size: 0.6rem;">LSB</code>
+            <code style="font-size: 0.6rem;">MSB</code>
           </div>
         </div>
       </div>
@@ -515,21 +515,22 @@ and Data Specifications 1.0, August 1991</a></li>
         <div style="border: 2px solid #a1a1a1; padding: 0.5rem; border-radius: 0.5rem; display: inline-block;">
           Left Channel
           <div>
-            <code style="font-size: 0.6rem;">Byte 1</code>
-            <code style="font-size: 0.6rem;">Byte 2</code>
+            <code style="font-size: 0.6rem;">LSB</code>
+            <code style="font-size: 0.6rem;">MSB</code>
           </div>
         </div>
         <div style="border: 2px solid #a1a1a1; padding: 0.5rem; border-radius: 0.5rem; display: inline-block;">
           Right Channel
           <div>
-            <code style="font-size: 0.6rem;">Byte 1</code>
-            <code style="font-size: 0.6rem;">Byte 2</code>
+            <code style="font-size: 0.6rem;">LSB</code>
+            <code style="font-size: 0.6rem;">MSB</code>
           </div>
         </div>
       </div>
     </div>
     <div style="padding: 0.5rem;">...etc</div>
   </div>
+  <p><code>LSB</code> means &ldquo;least significant byte&rdquo;, and <code>MSB</code> means &ldquo;most significant byte.&rdquo;</p>
   <h2>Floating Point PCM Data Chunk</h2>
   <p>Format code: <code>3</code></p>
   <p>Alternately, PCM samples can be stored as floating point values. This is essentially the same as integer PCM format (i.e. format code <code>1</code>), except that samples are in the range -1.0 to 1.0. The bits per sample field should be set to <code>32</code> or <code>64</code> to indicate the precision of the values. Sample frames should be layed out in the same way as described in the &ldquo;Integer PCM Data Chunk&rdquo; section above.</p>
