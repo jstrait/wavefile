@@ -241,6 +241,18 @@ ul#format-list li {
 .bg-blue { background: #2380c4; }
 
 
+@supports(padding: max(0px)) {
+  .section {
+    padding-left: max(0.75rem, env(safe-area-inset-left));
+    padding-right: max(0.75rem, env(safe-area-inset-right));
+  }
+
+  pre {
+    margin-left: min(-0.75rem, calc(env(safe-area-inset-left) * -1));
+    margin-right: min(-0.75rem, calc(env(safe-area-inset-right) * -1));
+  }
+}
+
 @media (min-width: 768px) {
   .section {
     padding-left: calc((100% - 708px) / 2);
