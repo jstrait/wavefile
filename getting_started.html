@@ -20,7 +20,7 @@ id: tutorial
   <p>A <code>Buffer</code> has the ability to convert its samples to any other format this gem supports. This means you can read samples from a file in whatever format you like, regardless of the actual sample format in the file (e.g. read a file with 8-bit samples and get 16-bit samples back). You can also do the same with <code>Writer</code> &ndash; for example, rather than remember the sample range of a PCM format (was it 32,767? or 32,768?) you can just generate floating point samples between -1.0 and 1.0, and transparently write them out as PCM samples.</p>
 </div>
 <div class="section section-tall">
-  <h2>Creating a New Wave File</h2>
+  <h2>Writing a New Wave File</h2>
   <p>Let&rsquo;s write a simple tone to a wave file. A <a href="https://en.wikipedia.org/wiki/Square_wave">square wave</a> is one of the simplest ways to create sound, so let&rsquo;s do that. Our square wave will consist of a sample repeated a certain number of times, followed by the same number of repeated samples at the opposite amplitude. For example:</p>
   {% highlight ruby %}[0.3, 0.3, 0.3, 0.3, -0.3, -0.3, -0.3, -0.3,  ...and repeated...]{% endhighlight %}
   <p>We&rsquo;ll write some code to generate these samples, wrap them in a <code>Buffer</code>, and then write this <code>Buffer</code> to a file using <code>Writer</code>.</p>
