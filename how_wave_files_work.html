@@ -256,7 +256,7 @@ and Data Specifications 1.0, August 1991</a></li>
         <td>32-bit unsigned integer</td>
       </tr>
       <tr>
-        <td>Sub Format</td>
+        <td>Sub Format GUID</td>
         <td>16</td>
         <td>16-byte GUID</td>
       </tr>
@@ -349,7 +349,7 @@ and Data Specifications 1.0, August 1991</a></li>
   <p>The channels will be mapped in the order of the speakers list above. E.g. if in a 2 channel file the channel mask field has the bits for Back Left and Top Center speakers set, the first channel will be mapped to Back Left and the second channel to Top Center (because Back Left comes earlier than Top Center in the list above).</p>
   <p>If there are more channels than bits set in this field, the remaining channels will have an undefined speaker mapping. If there are more bits set in the speaker mapping than there are channels, the extra bits should be ignored. To explicitly indicate that no channel is mapped to any specific speaker, set this field to <code>0</code>.</p>
   <p>The spec says that if the most significant bit of this field is set to <code>1</code> (e.g. <code>0xFFFFFFFF</code>) it indicates &ldquo;an entity supports all possible channel configurations.&rdquo; To be honest, I don&rsquo;t understand what that means.</p>
-  <p><strong>Sub Format</strong> &ndash; Identifies the format of the sample data in the data chunk. This is a replacement for the original format code field, since it will have a format code of <code>65534</code>. Some GUIDs include:</p>
+  <p><strong>Sub Format GUID</strong> &ndash; Identifies the format of the sample data in the data chunk. This is a replacement for the original format code field, since it will have a format code of <code>65534</code>. Some GUIDs include:</p>
   <div class="scroll-x">
     <table>
       <tr>
