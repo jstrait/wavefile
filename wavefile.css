@@ -126,6 +126,15 @@ span.highlight {
   border-radius: 0.25rem;
 }
 
+.tag-good-to-know {
+  display: inline-block;
+  background: #2380c4;
+  color: #fff;
+  padding-left: 0.25rem;
+  padding-right: 0.25rem;
+  border-radius: 0.25rem;
+}
+
 h1 {
   font-size: 2.0rem;
   font-weight: 400;
