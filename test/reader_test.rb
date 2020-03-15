@@ -531,6 +531,21 @@ class ReaderTest < Minitest::Test
     assert_equal(2241, reader.total_sample_frames)
   end
 
+  def test_each_buffer_not_at_beginning_of_file
+    reader = Reader.new(fixture("valid/valid_mono_pcm_16_44100.wav"))
+
+    buffers = []
+    reader.read(8)
+    reader.each_buffer {|buffer| buffers << buffer }
+
+    assert(reader.closed?)
+    assert_equal(1, buffers.length)
+    assert_equal([2232], buffers.map {|buffer| buffer.samples.length })
+    assert_equal(SQUARE_WAVE_CYCLE[:mono][:pcm_16] * 279, buffers[0].samples)
+    assert_equal(2240, reader.current_sample_frame)
+    assert_equal(2240, reader.total_sample_frames)
+  end
+
   def test_each_buffer_inside_reader_block
     buffers = []
 
