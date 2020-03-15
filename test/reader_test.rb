@@ -561,6 +561,22 @@ class ReaderTest < Minitest::Test
     assert_equal(SQUARE_WAVE_CYCLE[:mono][:pcm_16] * 24,  buffers[2].samples)
   end
 
+  def test_read_after_each_buffer_inside_block_raises_error
+    buffers = []
+
+    # This should not raise a ReaderClosedError
+    Reader.new(fixture("valid/valid_mono_pcm_16_44100.wav")) do |reader|
+      reader.each_buffer(1024) {|buffer| buffers << buffer }
+      assert_raises(ReaderClosedError) { reader.read(100) }
+    end
+
+    assert_equal(3, buffers.length)
+    assert_equal([1024, 1024, 192], buffers.map {|buffer| buffer.samples.length })
+    assert_equal(SQUARE_WAVE_CYCLE[:mono][:pcm_16] * 128, buffers[0].samples)
+    assert_equal(SQUARE_WAVE_CYCLE[:mono][:pcm_16] * 128, buffers[1].samples)
+    assert_equal(SQUARE_WAVE_CYCLE[:mono][:pcm_16] * 24,  buffers[2].samples)
+  end
+
   def test_read_non_data_chunk_with_padding_byte
     # This fixture file contains a JUNK chunk with an odd size, aligned to an even number of
     # bytes via an appended padding byte. If the padding byte is not taken into account, this
