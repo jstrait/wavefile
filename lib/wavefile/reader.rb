@@ -56,9 +56,9 @@ module WaveFile
     end
 
 
-    # Public: Reads sample data of the into successive Buffers of the specified size, until there is
-    # no more sample data to be read. When all sample data has been read, the Reader is automatically
-    # closed. Each Buffer is passed to the given block.
+    # Public: Starting from the current reading position, reads sample frames into successive Buffers
+    # of the specified size, until there are no more sample frames to be read. When the final sample
+    # frame has been read the Reader is automatically closed. Each Buffer is passed to the given block.
     #
     # If the Reader is constructed from an open IO, the IO is NOT closed after all sample data is
     # read. However, the Reader will be closed and any attempt to continue to read from it will
@@ -92,6 +92,15 @@ module WaveFile
     #   end
     #   # Although Reader is closed, file still needs to be manually closed
     #   file.close
+    #
+    #   reader = Reader.new("my_file.wav")
+    #   reader.read(100)
+    #   # Reading using `each_buffer` will start at the 101st sample frame:
+    #   reader.each_buffer do |buffer|
+    #     puts "#{buffer.samples.length} sample frames read"
+    #   end
+    #   # At this point, the Reader is now closed (even without
+    #   # a call to `close()`
     #
     # Returns nothing. Has side effect of closing the Reader.
     def each_buffer(sample_frame_count=4096)
