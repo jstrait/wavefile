@@ -9,7 +9,7 @@ For more info, check out the website: <https://wavefilegem.com/>
 This short example shows how to append three separate Wave files into a single file:
 
 ```ruby
-require 'wavefile'
+require "wavefile"
 include WaveFile
 
 FILES_TO_APPEND = ["file1.wav", "file2.wav", "file3.wav"]
@@ -34,7 +34,7 @@ First, install the WaveFile gem from rubygems.org:
 
 ...and include it in your Ruby program:
 
-    require 'wavefile'
+    require "wavefile"
 
 Note that if you're installing the gem into the default Ruby that comes pre-installed on MacOS (as opposed to a Ruby installed via [RVM](https://rvm.io/) or [rbenv](https://github.com/sstephenson/rbenv/)), you should used `sudo gem install wavefile`. Otherwise you might run into a file permission error.
 
