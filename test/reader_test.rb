@@ -564,7 +564,6 @@ class ReaderTest < Minitest::Test
   def test_read_after_each_buffer_inside_block_raises_error
     buffers = []
 
-    # This should not raise a ReaderClosedError
     Reader.new(fixture("valid/valid_mono_pcm_16_44100.wav")) do |reader|
       reader.each_buffer(1024) {|buffer| buffers << buffer }
       assert_raises(ReaderClosedError) { reader.read(100) }
