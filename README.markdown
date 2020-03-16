@@ -65,7 +65,7 @@ This gem lets you read and write audio data! You can use it to create Ruby progr
 * Seamlessly convert between sample formats. Read sample data from a file into any format supported by this gem, regardless of how the sample data is stored in the actual file. Or, create sample data in one format (such as floats between -1.0 and 1.0), but write it to a file in a different format (such as 16-bit PCM).
 * Automatic file management, similar to how `IO.open` works. That is, you can open a file for reading or writing, and if a block is given, the file will automatically be closed when the block exits.
 * Query metadata about Wave files (sample rate, number of channels, number of sample frames, etc.), including files that are in a format this gem can't read or write.
-* Written in pure Ruby, so it's easy to include in your program. There's no need to compile a separate extension in order to use it.
+* Easy to install, since it's written in pure Ruby. There's no need to compile a separate extension in order to use it.
 
 
 # Current Release: v1.1.1
