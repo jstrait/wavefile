@@ -125,7 +125,7 @@ module WaveFile
     #
     # Raises UnsupportedFormatError if file is in a format that can't be read by this gem.
     #
-    # Raises ReaderClosedError if the Writer has been closed.
+    # Raises ReaderClosedError if the Reader has been closed.
     #
     # Raises EOFError if no samples could be read due to reaching the end of the file.
     def read(sample_frame_count)
