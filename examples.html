@@ -101,7 +101,7 @@ end{% endhighlight %}
   {% highlight ruby %}require "wavefile"
 include WaveFile
 
-# Write a 440Hz square wave beep lasting for 1 second
+# Write a 441Hz square wave beep lasting for 1 second
 amplitude = 0.25
 square_wave_cycle = ([amplitude] * 50) + ([-amplitude] * 50)
 buffer = Buffer.new(square_wave_cycle, Format.new(:mono, :float, 44100))
@@ -125,7 +125,7 @@ include WaveFile
 
 writer = Writer.new("my_file.wav", Format.new(:mono, :pcm_16, 44100))
 
-# Write a 440Hz square wave beep lasting for 1 second
+# Write a 441Hz square wave beep lasting for 1 second
 amplitude = 0.25
 square_wave_cycle = ([amplitude] * 50) + ([-amplitude] * 50)
 buffer = Buffer.new(square_wave_cycle, Format.new(:mono, :float, 44100))
