@@ -11,12 +11,12 @@ and Data Specifications 1.0, August 1991</a></li>
     <li><a href="http://www-mmsp.ece.mcgill.ca/Documents/AudioFormats/WAVE/Docs/RIFFNEW.pdf">New Multimedia Data Types and Data Techniques, August 1994</a></li>
     <li><a href="https://msdn.microsoft.com/en-us/library/windows/hardware/dn653308(v=vs.85).aspx">Multiple Channel Audio Data and WAVE Files</a></li>
   </ul>
-  <p>These documents aren&rsquo;t solely focused on Wave files, and also describe other file formats. This article attempts to consolidate the relevant information into a single document.</p>
+  <p>Besides this information being split into multiple documents, the first two documents contain extraneous information not related to Wave files. This article attempts to consolidate the relevant information in a single place.</p>
   <h2>Getting Started</h2>
   <p>If you&rsquo;re new to audio programming, you might want to read up on some of the basics of digital audio first. Check out <a href="https://www.joelstrait.com/digital_audio_primer/">this blog post</a> for an introduction.</p>
 
   <h2>Wave Files Store Audio Data</h2>
-  <p>Wave files are a container format that allows storing audio data in many formats. The most common sample format is <em>integer PCM</em>. This is raw, uncompressed sample data where each sample is an integer. (<em>PCM</em> stands for <em>pulse code modulation</em>). Similarly, PCM data can be defined using a floating point value for each sample, although this is technically considered a different audio format.</p>
+  <p>Wave files are a container format that allows storing many types of audio data. The most common format is <em>integer PCM</em>. This is raw, uncompressed sample data where each sample is an integer. (<em>PCM</em> stands for <em>pulse code modulation</em>). Similarly, PCM data can be defined using a floating point value for each sample, although this is technically considered a different format.</p>
   <p>There are many other audio formats officially defined. However, most are rare or obsolete and unlikely to be encountered.</p>
   <p>Currently, the WaveFile gem supports these sample formats:</p>
   <ul>
@@ -26,8 +26,8 @@ and Data Specifications 1.0, August 1991</a></li>
   </ul>
 
   <h2>Wave Files are RIFF Files</h2>
-  <p>Back in the late 80s Electronic Arts came up with a general container file format that could be used to store different types of data &ndash; audio, graphics, etc. It was called <em>IFF</em>, for <em><a href="https://en.wikipedia.org/wiki/Interchange_File_Format">Interchange File Format</a></em>. Microsoft then took this format, switched the byte order from <a href="https://en.wikipedia.org/wiki/Endianness">big-endian</a> to <a href="https://en.wikipedia.org/wiki/Endianness">little-endian</a> to match Intel processors, and dubbed it <em>RIFF (<a href="https://en.wikipedia.org/wiki/Resource_Interchange_File_Format">Resource Interchange File Format</a></em>). The RIFF format was then used for the <code>*.wav</code> file format.</p>
-  <p>As mentioned above, all multi-byte numbers in a RIFF file are stored as <a href="https://en.wikipedia.org/wiki/Endianness">little-endian</a>. (Some non-numeric data is stored as a sequence of bytes, in which endianness isn&rsquo;t relevant per se).</p>
+  <p>Back in the late 80s Electronic Arts came up with a general container file format that could be used to store different types of data &ndash; audio, graphics, etc. It was called <em>IFF</em>, for <em><a href="https://en.wikipedia.org/wiki/Interchange_File_Format">Interchange File Format</a></em>. Microsoft then took this format, switched the byte order from <a href="https://en.wikipedia.org/wiki/Endianness">big-endian</a> to <a href="https://en.wikipedia.org/wiki/Endianness">little-endian</a> to better suit Intel processors, and dubbed it <em>RIFF (<a href="https://en.wikipedia.org/wiki/Resource_Interchange_File_Format">Resource Interchange File Format</a></em>). The RIFF format was then used for the <code>*.wav</code> file format.</p>
+  <p>All multi-byte numbers in a RIFF file are stored as <a href="https://en.wikipedia.org/wiki/Endianness">little-endian</a>. (Some non-numeric data is stored as a sequence of bytes, in which endianness isn&rsquo;t relevant per se).</p>
   <h2>RIFF Files Contain &ldquo;Chunks&rdquo;</h2>
   <p>Like an IFF file, a RIFF file is broken up into &ldquo;chunks&rdquo; of data. Each chunk starts with an 8-byte header containing a 4-byte identifier code, and a 4-byte size field.</p>
   <p>The identifier code, called a <a href="https://en.wikipedia.org/wiki/Fourcc">FourCC</a>, is a sequence of 4 bytes. When each byte is interpreted as an 8-bit ASCII character, they typically form a human readable string. For example, <code>0x52</code> <code>0x49</code> <code>0x46</code> <code>0x46</code> (i.e. <code>"RIFF"</code>), or <code>0x64</code> <code>0x61</code> <code>0x74</code> <code>0x61</code> (i.e. <code>"data"</code>). Since this is a raw sequence of bytes, the characters are case-sensitive.</p>
