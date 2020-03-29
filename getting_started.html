@@ -100,17 +100,20 @@ First 10 samples in buffer:  [8192, 8192, 8192, 8192, 8192, 8192, 8192, 8192, 81
   <p>Notice how the first samples are <code>8192</code>, rather than the <code>0.25</code> value that we used when generating the file. This is because when we saved that file, we indicated (via the <code>Format</code> instance we gave) that the samples should be written as 16-bit PCM samples instead of floating point.</p>
   <p>Also notice that we only read 4,096 samples at a time, instead of trying to the read the whole file. It&rsquo;s a generally a good idea to read a larger number of smaller buffers, rather than one giant buffer. For this file it probably doesn&rsquo;t matter, but longer files can have millions of samples, and Ruby can have trouble with arrays this large.</p>
   <p>OK, well that&rsquo;s cool, but let&rsquo;s say we want to read this file so we can do some transformation on it, and it will be easier to work with if the samples are in floating point format, and are stereo (since we want to combine it with some other files that are stereo). No problem, when constructing the <code>Reader</code> we can pass a <code>Format</code> instance that describes our desired sample format.</p>
-  <pre><code>require "wavefile"
+  {% highlight ruby %}require "wavefile"
 include WaveFile   # So we don't have to prefix all classes with 'WaveFile::'
 
-reader = Reader.new("square.wav", <span class="highlight">Format.new(:stereo, :float, 44100)</span>)
+# Read the file's samples as floating point in 2 channels, regardless
+# of how the samples are actually stored in the file.
+reader = Reader.new("square.wav", Format.new(:stereo, :float, 44100))
+
 reader.each_buffer do |buffer|
   puts "Buffer number of channels:   #{buffer.channels}"
   puts "Buffer bits per sample:      #{buffer.bits_per_sample}"
   puts "Number of samples in buffer: #{buffer.samples.length}"
   puts "First 10 samples in buffer:  #{buffer.samples[0...10].inspect}"
   puts "--------------------------------------------------------------"
-end</code></pre>
+end{% endhighlight %}
   <p>Now when you run this program, the output should look like below. Notice that we got our original <code>0.25</code> sample value back, and that each sample frame now consists of 2 channels:</p>
   <pre><code>Buffer number of channels:   2
 Buffer bits per sample:      32

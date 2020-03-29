@@ -113,10 +113,6 @@ td:last-child {
   padding-right: 0;
 }
 
-span.highlight {
-  background: yellow;
-}
-
 .tag-important {
   display: inline-block;
   background: #ff4d4d;
