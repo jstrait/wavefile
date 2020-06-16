@@ -12,7 +12,7 @@ id: tutorial
   <h2>Basic Concepts</h2>
   <p>The WaveFile gem lets you both read and write wave files. Reading is done using the <code>Reader</code> class, and writing is done using the <code>Writer</code> class.</p>
   <p>The <code>Buffer</code> class represents a collection of samples in a given sample format (e.g. stereo 16-bit PCM samples at a 44,100Hz sample rate). When samples are read using <code>Reader</code> they are returned in <code>Buffer</code> instances. Samples to be written are given to <code>Writer</code> wrapped in <code>Buffer</code> instances as well.</p>
-  <p>A <code>Buffer</code> consists of two parts: an array of samples, and a <code>Format</code> instance that describes the sample format (since it might not be possible to determine just by looking at the raw samples). For example, the sample array in a <code>Buffer</code> read out of a mono 8-bit PCM file (in which each sample is an integer between 0 and 255) might look like this:</p>
+  <p>A <code>Buffer</code> consists of two parts: an array of samples, and a <code>Format</code> instance that describes the sample format (since it&rsquo;s not necessarily possible to determine just by looking at the raw samples). For example, the sample array in a <code>Buffer</code> read out of a mono 8-bit PCM file (in which each sample is an integer between 0 and 255) might look like this:</p>
   {% highlight ruby %}[45, 192, 13, 231, 201, 101, 15, ...etc...]{% endhighlight %}
   <p>When there is more than one channel, each sample frame will be represented by a sub array. For example, a set of stereo floating point samples (in which each sample is between -1.0 and 1.0) might look like this:</p>
   {% highlight ruby %}[[-0.2, 0.4], [0.3, 0.9], [-0.4, -0.8], [0.9, -0.2], [-0.3, 0.4], ...etc...]{% endhighlight %}
@@ -53,7 +53,7 @@ end{% endhighlight %}
   <audio controls class="audio-block">
     <source src="media/square_too_short.wav" type="audio/wav">
   </audio>
-  <p>&hellip;which&hellip; doesn&rsquo;t sound like anything! The reason is that we didn&rsquo;t generate enough samples. At the sample rate we&rsquo;re using, 44,100Hz, you&rsquo;ll need 44,100 samples for 1 second of sound. We only generated 100 samples, or about 1/441th of a second. No problem, we can easily fix this by repeating our cycle more times:</p>
+  <p>&hellip;which&hellip; doesn&rsquo;t sound like anything! The reason is that we didn&rsquo;t generate enough samples. At the sample rate we&rsquo;re using, 44,100Hz, we&rsquo;ll need 44,100 samples for 1 second of sound. We only generated 100 samples, or about 1/441th of a second. No problem, we can fix this by repeating our cycle more times:</p>
   {% highlight ruby %}CYCLE_COUNT = 441  # 441 x 100 samples == 44,100 samples, or 1 second of sound
 
 Writer.new("square.wav", Format.new(:mono, :pcm_16, 44100)) do |writer|
@@ -131,5 +131,5 @@ First 10 samples in buffer:  [[0.25, 0.25],
 </div>
 <div class="section section-tall">
   <h2>Next Steps</h2>
-  <p>Head over to the <a href="/examples.html">examples</a> page to see more code examples, read full <a href="/doc-1.1.1/index.html">API documentation</a>, and if you&rsquo;re interested, get the low down on <a href="/how_wave_files_work.html">how the Wave file format works</a> behind the scenes.</p>
+  <p>Head over to the <a href="/examples.html">examples</a> page to see more code examples, read full <a href="/doc-1.1.1/index.html">API documentation</a>, and if you&rsquo;re interested, learn <a href="/how_wave_files_work.html">how the Wave file format works</a> behind the scenes.</p>
 </div>
