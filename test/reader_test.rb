@@ -417,6 +417,36 @@ class ReaderTest < Minitest::Test
     assert_equal(SQUARE_WAVE_CYCLE[:mono][:pcm_16] * 24,  buffers[2].samples)
   end
 
+  def test_read_float_format_chunk_missing_extension_size
+    reader = Reader.new(fixture("valid/valid_float_format_chunk_missing_extension_size.wav"))
+
+    assert_equal(3, reader.native_format.audio_format)
+    assert_equal(1, reader.native_format.channels)
+    assert_equal(32, reader.native_format.bits_per_sample)
+    assert_equal(44100, reader.native_format.sample_rate)
+    assert_nil(reader.native_format.speaker_mapping)
+    assert_nil(reader.native_format.sub_audio_format_guid)
+    assert_nil(reader.native_format.valid_bits_per_sample)
+    assert_equal(1, reader.format.channels)
+    assert_equal(32, reader.format.bits_per_sample)
+    assert_equal(44100, reader.format.sample_rate)
+    assert_equal([:front_center], reader.format.speaker_mapping)
+    assert_equal(false, reader.closed?)
+    assert_equal(0, reader.current_sample_frame)
+    assert_equal(2240, reader.total_sample_frames)
+    assert_equal(true, reader.readable_format?)
+    assert_nil(reader.sampler_info)
+    reader.close
+
+    buffers = read_file("valid/valid_float_format_chunk_missing_extension_size.wav", 1024)
+
+    assert_equal(3, buffers.length)
+    assert_equal([1024, 1024, 192], buffers.map {|buffer| buffer.samples.length })
+    assert_equal(SQUARE_WAVE_CYCLE[:mono][:float] * 128, buffers[0].samples)
+    assert_equal(SQUARE_WAVE_CYCLE[:mono][:float] * 128, buffers[1].samples)
+    assert_equal(SQUARE_WAVE_CYCLE[:mono][:float] * 24,  buffers[2].samples)
+  end
+
   def test_read_with_format_conversion
     buffers = read_file("valid/valid_mono_pcm_16_44100.wav", 1024, Format.new(:stereo, :pcm_8, 22100))
 
