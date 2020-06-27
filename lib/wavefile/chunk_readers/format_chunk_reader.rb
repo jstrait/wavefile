@@ -22,21 +22,21 @@ module WaveFile
         format_chunk[:block_align],
         format_chunk[:bits_per_sample] = raw_bytes.slice!(0...MINIMUM_CHUNK_SIZE).unpack("vvVVvv")
 
-        if @chunk_size > MINIMUM_CHUNK_SIZE
+        if format_chunk[:audio_format] != FORMAT_CODES[:pcm] && @chunk_size > MINIMUM_CHUNK_SIZE
           format_chunk[:extension_size] = raw_bytes.slice!(0...2).unpack(UNSIGNED_INT_16).first
 
           if format_chunk[:extension_size] == nil
             raise_error InvalidFormatError, "The format chunk is missing an expected extension."
           end
 
-          if format_chunk[:extension_size] != raw_bytes.length
+          if format_chunk[:extension_size] > raw_bytes.length
             raise_error InvalidFormatError, "The format chunk extension is shorter than expected."
           end
 
           if format_chunk[:audio_format] == FORMAT_CODES[:extensible]
             format_chunk[:valid_bits_per_sample] = raw_bytes.slice!(0...2).unpack(UNSIGNED_INT_16).first
             format_chunk[:speaker_mapping] = raw_bytes.slice!(0...4).unpack(UNSIGNED_INT_32).first
-            format_chunk[:sub_audio_format_guid] = raw_bytes
+            format_chunk[:sub_audio_format_guid] = raw_bytes.slice!(0...16)
           end
         end
 
