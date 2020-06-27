@@ -4,13 +4,14 @@ riff_chunk:
   wave_format: "WAVE"
 format_chunk:
   chunk_id: "fmt "
-  chunk_size: 16
+  chunk_size: 18
   audio_format: 4    # This is an unsupported format code
   channels: 2
   sample_rate: 44100
   byte_rate: 176400
   block_align: 4
   bits_per_sample: 16
+  extension_size: 0
 data_chunk:
   cycle_repeats: 0
   channel_format: stereo
