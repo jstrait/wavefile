@@ -68,22 +68,18 @@ This gem lets you read and write audio data! You can use it to create Ruby progr
 * Easy to install, since it's written in pure Ruby. There's no need to compile a separate extension in order to use it.
 
 
-# Current Release: v1.1.1
+# Current Release: v1.1.2
+
+Released on TBD, this version contains these changes:
+
+* **Bug Fix**: Files with a format chunk containing extra data at the end can now be read. Previously, attempting to open such files via `Reader.new` would result in an `InvalidFormatError` being raised with a misleading "The format chunk extension is shorter than expected." message. (The problem was actually that the extension was _longer_ than expected). Any extra data beyond what is expected based on the relevant format code will be ignored.
+
+
+# Previous Release: v1.1.1
 
 Released on December 29, 2019, this version contains this change:
 
 * Removes `warning: Using the last argument as keyword parameters is deprecated; maybe ** should be added to the call` output when reading a file with a `smpl` chunk using Ruby 2.7.0. (And presumably, higher Ruby versions as well, but Ruby 2.7.0 is the most recent Ruby version at the time of this release).
-
-
-# Previous Release: v1.1.0
-
-Released on January 20, 2019, this version has these changes:
-
-* **Can read `smpl` chunk data from files that contain this kind of chunk.** If a *.wav file contains a `smpl` chunk, then `Reader.sampler_info` will return a `SamplerInfo` instance with the relevant data (or `nil` otherwise). Thanks to [@henrikj242](https://github.com/henrikj242) for suggesting this feature and providing the base implementation.
-* **More informative errors raised by `Reader.new`**. When attempting to read an invalid file, the error message now provides more detail about why the file is invalid.
-* **Bug Fix**: The master RIFF chunk size for files written by the gem will now take into account padding bytes written for child chunks. For example, when writing a file with a `data` chunk whose body has an odd number of bytes, the master RIFF chunk's size will be 1 byte larger (to take the empty padding byte at the end of the `data` chunk into account).
-* **Bug Fix**: If the stated `data` chunk size is larger than the actual number of bytes in the file, `Reader.current_sample_frame` will be correct when attempting to read past the end of the chunk. For example, if a `data` chunk says it has 2000 sample frames, but there are only 1000 sample frames remaining in the file, then after calling `Reader.read(1500)`, `Reader.current_sample_frame` will have a value of `1000`, not `1500`. (This bug did not occur for files in which the data chunk listed the correct size).
-* **Bug Fix**: Fixed off-by-one error in the maximum allowed value for `Format#sample rate`. The correct maximum sample rate is now 4_294_967_295; previously it allowed a maximum of 4_294_967_296.
 
 For changes in previous versions, visit <https://github.com/jstrait/wavefile/releases>.
 

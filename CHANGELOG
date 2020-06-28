@@ -1,3 +1,13 @@
+1.1.2
+===============================================================================
+* **Bug Fix**: Files with a format chunk containing extra data at the end can
+  now be read. Previously, attempting to open such files via `Reader.new` would
+  result in an `InvalidFormatError` being raised with a misleading "The format
+  chunk extension is shorter than expected." message. (The problem was actually
+  that the extension was _longer_ than expected). Any extra data beyond what is
+  expected based on the relevant format code will be ignored.
+
+
 1.1.1
 ===============================================================================
 * Removes `warning: Using the last argument as keyword parameters is
