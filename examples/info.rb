@@ -68,6 +68,6 @@ begin
   end
 rescue Errno::ENOENT
   puts "File not found!"
-rescue InvalidFormatError
-  puts "Not a valid Wave file!"
+rescue InvalidFormatError => error
+  puts "Not a valid Wave file! Error message: \"#{error}\""
 end
