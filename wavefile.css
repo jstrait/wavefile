@@ -325,12 +325,14 @@ ul#format-list li {
     padding: 1.5rem;
     margin-left: -1.5rem;
     margin-right: -1.5rem;
+    border-radius: 0.25rem;
   }
 
   .important, .good-to-know {
     padding: 1.5rem;
     margin-left: -1.5rem;
     margin-right: -1.5rem;
+    border-radius: 0.25rem;
   }
 
   .mb0-l { margin-bottom: 0; }
