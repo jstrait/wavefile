@@ -117,13 +117,13 @@ td:last-child {
   margin-left: -0.75rem;
   margin-right: -0.75rem;
   padding: 0.75rem;
+}
+
+.important {
   background: #fcd2d2;
 }
 
 .good-to-know {
-  margin-left: -0.75rem;
-  margin-right: -0.75rem;
-  padding: 0.75rem;
   background: #d2eafc;
 }
 
