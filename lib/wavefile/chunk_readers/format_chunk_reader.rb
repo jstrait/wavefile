@@ -22,7 +22,7 @@ module WaveFile
         format_chunk[:block_align],
         format_chunk[:bits_per_sample] = raw_bytes.slice!(0...MINIMUM_CHUNK_SIZE).unpack("vvVVvv")
 
-        if format_chunk[:audio_format] != FORMAT_CODES[:pcm] && @chunk_size > MINIMUM_CHUNK_SIZE
+        if format_chunk[:audio_format] == FORMAT_CODES[:extensible] || (format_chunk[:audio_format] != FORMAT_CODES[:pcm] && @chunk_size > MINIMUM_CHUNK_SIZE)
           format_chunk[:extension_size] = raw_bytes.slice!(0...2).unpack(UNSIGNED_INT_16).first
 
           if format_chunk[:extension_size] == nil
