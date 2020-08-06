@@ -49,6 +49,9 @@ class ReaderTest < Minitest::Test
       # The format chunk has some data, but not all of the minimum required.
       "invalid/insufficient_format_chunk.wav",
 
+      # The format chunk is extensible, but the extension is shorter than required
+      "invalid/extensible_format_chunk_extension_incomplete.wav",
+
       # The RIFF header and format chunk are OK, but there is no data chunk
       "invalid/no_data_chunk.wav",
 

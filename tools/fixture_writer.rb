@@ -153,7 +153,9 @@ def write_data_chunk(file_writer, config, format_chunk)
   elsif format_chunk["audio_format"] == 3
     sample_format = :float
   elsif format_chunk["audio_format"] == 65534
-    if format_chunk["subformat_guid"][0] == 1
+    if format_chunk["subformat_guid"] == nil
+      sample_format = :pcm
+    elsif format_chunk["subformat_guid"][0] == 1
       sample_format = :pcm
     elsif format_chunk["subformat_guid"][0] == 3
       sample_format = :float

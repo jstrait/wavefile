@@ -1,0 +1,22 @@
+riff_chunk:
+  chunk_id: "RIFF"
+  chunk_size: auto
+  wave_format: "WAVE"
+format_chunk:
+  chunk_id: "fmt "
+  chunk_size: 20
+  audio_format: 65534
+  channels: 1
+  sample_rate: 44100
+  byte_rate: 44100
+  block_align: 1
+  bits_per_sample: 8
+  extension_size: 2
+  valid_bits_per_sample: 8   # There should normally be two more fields (a total of 20 bytes) following this
+fact_chunk:
+  chunk_id: "fact"
+  chunk_size: 4
+  sample_count: auto
+data_chunk:
+  cycle_repeats: 280
+  channel_format: mono
