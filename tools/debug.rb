@@ -300,7 +300,7 @@ begin
 
     # Read padding byte if necessary
     if chunk_size_data[:actual].odd?
-      FILE.sysread(1)
+      display_line "Padding Byte", "byte", read_bytes(UNSIGNED_INT_8)
     end
 
     puts ""
