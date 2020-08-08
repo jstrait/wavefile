@@ -201,6 +201,11 @@ def read_sample_chunk(chunk_id_data, chunk_size_data)
     puts "----------------------------------+------------+----------------------------------"
     display_line "Sampler specific data", "alpha_#{sampler_specific_data_size}", read_bytes("a#{sampler_specific_data_size}")
   end
+
+  extra_byte_count = chunk_size_data[:actual] - 36 - (loop_count * 24) - sampler_specific_data_size_bytes[:actual]
+  if (extra_byte_count > 0)
+    display_line "Extra bytes", "alpha_#{extra_byte_count}", read_bytes("a#{extra_byte_count}")
+  end
 end
 
 
