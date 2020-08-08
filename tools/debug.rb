@@ -299,8 +299,8 @@ begin
       else
         chunk_size = chunk_size_data[:actual]
 
-        FILE.sysread(chunk_size)
         puts "'#{chunk_id_data[:actual]}' chunk of size #{chunk_size}, skipping."
+        FILE.sysread(chunk_size)
     end
 
     # Read padding byte if necessary
