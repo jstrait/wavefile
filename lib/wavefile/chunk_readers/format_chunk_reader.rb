@@ -30,7 +30,7 @@ module WaveFile
           end
 
           if format_chunk[:extension_size] > raw_bytes.length
-            raise_error InvalidFormatError, "The format chunk extension is shorter than expected."
+            raise_error InvalidFormatError, "The format chunk does not have enough space for the chunk extension."
           end
 
           if format_chunk[:audio_format] == FORMAT_CODES[:extensible]
