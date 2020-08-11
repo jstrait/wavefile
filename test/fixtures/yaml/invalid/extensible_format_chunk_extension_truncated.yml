@@ -1,0 +1,24 @@
+riff_chunk:
+  chunk_id: "RIFF"
+  chunk_size: auto
+  wave_format: "WAVE"
+format_chunk:
+  chunk_id: "fmt "
+  chunk_size: 20    # This is not large enough to include the extension fields
+  audio_format: 65534
+  channels: 1
+  sample_rate: 44100
+  byte_rate: 44100
+  block_align: 1
+  bits_per_sample: 8
+  extension_size: 22
+  valid_bits_per_sample: 8
+  speaker_mapping: 0x00000001  # This and the next field overflow out of the chunk, based on the given chunk size
+  subformat_guid: [1, 0, 0, 0, 0, 0, 16, 0, 128, 0, 0, 170, 0, 56, 155, 113]
+fact_chunk:
+  chunk_id: "fact"
+  chunk_size: 4
+  sample_count: auto
+data_chunk:
+  cycle_repeats: 280
+  channel_format: mono
