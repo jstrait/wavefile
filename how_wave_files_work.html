@@ -11,13 +11,13 @@ and Data Specifications 1.0, August 1991</a></li>
     <li><a href="http://www-mmsp.ece.mcgill.ca/Documents/AudioFormats/WAVE/Docs/RIFFNEW.pdf">New Multimedia Data Types and Data Techniques, August 1994</a></li>
     <li><a href="https://msdn.microsoft.com/en-us/library/windows/hardware/dn653308(v=vs.85).aspx">Multiple Channel Audio Data and WAVE Files</a></li>
   </ul>
-  <p>Besides this information being split into multiple documents, the first two documents contain extraneous information not related to Wave files. This article attempts to consolidate the relevant information in a single place.</p>
+  <p>This article attempts to consolidate the most important information in one place. This hopefully removes the need to cross-reference multiple documents, weed out extraneous information about other file formats, etc.</p>
   <h2>Getting Started</h2>
   <p>If you&rsquo;re new to audio programming, you might want to read up on some of the basics of digital audio first. Check out <a href="https://www.joelstrait.com/digital_audio_primer/">this blog post</a> for an introduction.</p>
 
   <h2>Wave Files Store Audio Data</h2>
   <p>Wave files are a container format that allows storing many types of audio data. The most common format is <em>integer PCM</em>. This is raw, uncompressed sample data where each sample is an integer. (<em>PCM</em> stands for <em>pulse code modulation</em>). Similarly, PCM data can be defined using a floating point value for each sample, although this is technically considered a different format.</p>
-  <p>There are many other audio formats officially defined. However, most are rare or obsolete and unlikely to be encountered.</p>
+  <p>There are many other audio formats officially defined. However, most are rare or obsolete.</p>
   <p>Currently, the WaveFile gem supports these sample formats:</p>
   <ul>
     <li>Integer PCM at 8, 16, 24, or 32 bits per sample (format code <code>1</code>)</li>
@@ -35,7 +35,7 @@ and Data Specifications 1.0, August 1991</a></li>
   <p class="important"><span class="tag-important">Important!</span> If a chunk body has an odd number of bytes, it must be followed by a padding byte with value <code>0</code>. In other words, a chunk must always occupy an even number of bytes in the file. The padding byte should <em>not</em> be counted in the chunk header&rsquo;s size field. For example, if a chunk body is 17 bytes in size, the header&rsquo;s size field should be set to <code>17</code>, even though the chunk body occupies 18 bytes (17 bytes of data followed by the padding byte).</p>
   <h2>High Level Wave File Structure</h2>
   <p>At top level, a Wave file consists of a single RIFF chunk (<code>"RIFF"</code>), which contains all of the data for the wave file. The RIFF chunk body starts with the format code <code>"WAVE"</code> which indicates that the file is a Wave file (since a RIFF file can also contain other types of data). This is followed by child chunks, nested inside the parent RIFF chunk.</p>
-  <p>At minimum, the child chunks must include a format chunk (<code>"fmt&nbsp;"</code>) and a data chunk (<code>"data"</code>), and the format chunk must come before the data chunk. If the format code in the format chunk is not <code>1</code> (see below), then it must also contain a fact chunk (<code>"fact"</code>). It can also contain some other types of optional chunks.</p>
+  <p>At minimum, the child chunks must include a format chunk (<code>"fmt&nbsp;"</code>) and a data chunk (<code>"data"</code>), and the format chunk must come before the data chunk. If the format code in the format chunk is not <code>1</code> (see below), then there must also be a fact chunk (<code>"fact"</code>). Other optional chunk types are also possible.</p>
   <p>A typical file might look like this:</p>
   <div class="chunk-parent">
     <span class="chunk-parent-field">RIFF Chunk ID (<code>"RIFF"</code>)</span>
