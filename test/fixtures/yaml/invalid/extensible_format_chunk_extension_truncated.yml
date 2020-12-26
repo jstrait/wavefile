@@ -4,7 +4,7 @@ riff_chunk:
   wave_format: "WAVE"
 format_chunk:
   chunk_id: "fmt "
-  chunk_size: 20    # This is not large enough to include the extension fields
+  chunk_size: 20    # This is not large enough to include all of the extension fields
   audio_format: 65534
   channels: 1
   sample_rate: 44100
