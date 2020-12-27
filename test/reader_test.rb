@@ -52,6 +52,10 @@ class ReaderTest < Minitest::Test
       # The format chunk has an odd size, but is missing the required padding byte
       "invalid/format_chunk_extra_bytes_with_odd_size_and_missing_padding_byte.wav",
 
+      # The format chunk is floating point and has an oversized extension,
+      # and the extension is too large to fit in the stated size of the chunk
+      "invalid/float_format_chunk_oversized_extension_too_large.wav",
+
       # The format chunk is extensible, but the required extension is not present
       "invalid/extensible_format_chunk_extension_missing.wav",
 
@@ -60,6 +64,10 @@ class ReaderTest < Minitest::Test
 
       # The format chunk is extensible, but the chunk doesn't have enough room for the extension
       "invalid/extensible_format_chunk_extension_truncated.wav",
+
+      # The format chunk is extensible and has an oversized extension,
+      # and the extension is too large to fit in the stated size of the chunk
+      "invalid/extensible_format_chunk_oversized_extension_too_large.wav",
 
       # The RIFF header and format chunk are OK, but there is no data chunk
       "invalid/no_data_chunk.wav",
@@ -529,6 +537,36 @@ class ReaderTest < Minitest::Test
     assert_equal(SQUARE_WAVE_CYCLE[:mono][:pcm_8] * 24,  buffers[2].samples)
   end
 
+  def test_read_float_format_chunk_with_oversized_extension
+    reader = Reader.new(fixture("valid/valid_float_format_chunk_oversized_extension.wav"))
+
+    assert_equal(3, reader.native_format.audio_format)
+    assert_equal(1, reader.native_format.channels)
+    assert_equal(32, reader.native_format.bits_per_sample)
+    assert_equal(44100, reader.native_format.sample_rate)
+    assert_nil(reader.native_format.speaker_mapping)
+    assert_nil(reader.native_format.sub_audio_format_guid)
+    assert_nil(reader.native_format.valid_bits_per_sample)
+    assert_equal(1, reader.format.channels)
+    assert_equal(32, reader.format.bits_per_sample)
+    assert_equal(44100, reader.format.sample_rate)
+    assert_equal([:front_center], reader.format.speaker_mapping)
+    assert_equal(false, reader.closed?)
+    assert_equal(0, reader.current_sample_frame)
+    assert_equal(2240, reader.total_sample_frames)
+    assert_equal(true, reader.readable_format?)
+    assert_nil(reader.sampler_info)
+    reader.close
+
+    buffers = read_file("valid/valid_float_format_chunk_oversized_extension.wav", 1024)
+
+    assert_equal(3, buffers.length)
+    assert_equal([1024, 1024, 192], buffers.map {|buffer| buffer.samples.length })
+    assert_equal(SQUARE_WAVE_CYCLE[:mono][:float] * 128, buffers[0].samples)
+    assert_equal(SQUARE_WAVE_CYCLE[:mono][:float] * 128, buffers[1].samples)
+    assert_equal(SQUARE_WAVE_CYCLE[:mono][:float] * 24,  buffers[2].samples)
+  end
+
   def test_read_float_format_chunk_with_extra_bytes
     reader = Reader.new(fixture("valid/valid_float_format_chunk_with_extra_bytes.wav"))
 
@@ -557,6 +595,36 @@ class ReaderTest < Minitest::Test
     assert_equal(SQUARE_WAVE_CYCLE[:mono][:float] * 128, buffers[0].samples)
     assert_equal(SQUARE_WAVE_CYCLE[:mono][:float] * 128, buffers[1].samples)
     assert_equal(SQUARE_WAVE_CYCLE[:mono][:float] * 24,  buffers[2].samples)
+  end
+
+  def test_read_extensible_format_chunk_with_oversized_extension
+    reader = Reader.new(fixture("valid/valid_extensible_format_chunk_oversized_extension.wav"))
+
+    assert_equal(65534, reader.native_format.audio_format)
+    assert_equal(1, reader.native_format.channels)
+    assert_equal(8, reader.native_format.bits_per_sample)
+    assert_equal(44100, reader.native_format.sample_rate)
+    assert_equal(8, reader.native_format.valid_bits_per_sample)
+    assert_equal([:front_center], reader.native_format.speaker_mapping)
+    assert_equal(WaveFile::SUB_FORMAT_GUID_PCM, reader.native_format.sub_audio_format_guid)
+    assert_equal(1, reader.format.channels)
+    assert_equal(8, reader.format.bits_per_sample)
+    assert_equal(44100, reader.format.sample_rate)
+    assert_equal([:front_center], reader.format.speaker_mapping)
+    assert_equal(false, reader.closed?)
+    assert_equal(0, reader.current_sample_frame)
+    assert_equal(2240, reader.total_sample_frames)
+    assert_equal(true, reader.readable_format?)
+    assert_nil(reader.sampler_info)
+    reader.close
+
+    buffers = read_file("valid/valid_extensible_format_chunk_oversized_extension.wav", 1024)
+
+    assert_equal(3, buffers.length)
+    assert_equal([1024, 1024, 192], buffers.map {|buffer| buffer.samples.length })
+    assert_equal(SQUARE_WAVE_CYCLE[:mono][:pcm_8] * 128, buffers[0].samples)
+    assert_equal(SQUARE_WAVE_CYCLE[:mono][:pcm_8] * 128, buffers[1].samples)
+    assert_equal(SQUARE_WAVE_CYCLE[:mono][:pcm_8] * 24,  buffers[2].samples)
   end
 
   def test_read_extensible_format_chunk_with_extra_bytes
