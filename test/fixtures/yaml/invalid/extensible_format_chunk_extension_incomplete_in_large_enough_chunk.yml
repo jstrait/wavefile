@@ -1,0 +1,23 @@
+riff_chunk:
+  chunk_id: "RIFF"
+  chunk_size: auto
+  wave_format: "WAVE"
+format_chunk:
+  chunk_id: "fmt "
+  chunk_size: 40    # This is large enough to store a full 22 byte WAVE_FORMAT_EXTENSIBLE extension
+  audio_format: 65534
+  channels: 1
+  sample_rate: 44100
+  byte_rate: 44100
+  block_align: 1
+  bits_per_sample: 8
+  extension_size: 2    # This should normally be 22 bytes for a WAVE_FORMAT_EXTENSIBLE file, not 2, so it is too short
+  valid_bits_per_sample: 8
+  extra_bytes: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]    # This should not be interpreted as extension data
+fact_chunk:
+  chunk_id: "fact"
+  chunk_size: 4
+  sample_count: auto
+data_chunk:
+  cycle_repeats: 280
+  channel_format: mono

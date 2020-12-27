@@ -62,6 +62,14 @@ class ReaderTest < Minitest::Test
       # The format chunk is extensible, but the extension is shorter than required
       "invalid/extensible_format_chunk_extension_incomplete.wav",
 
+      # The format chunk is extensible, but the extension is shorter than required
+      # (even though the chunk is large enough to contain a full extension).
+      "invalid/extensible_format_chunk_extension_incomplete_in_large_enough_chunk.wav",
+
+      # The format chunk is extensible, but the extension is shorter than required
+      # (the chunk has a stated size that is large enough, although it is larger than the actual amount of data).
+      "invalid/extensible_format_chunk_extension_incomplete_in_incorrectly_sized_chunk.wav",
+
       # The format chunk is extensible, but the chunk doesn't have enough room for the extension
       "invalid/extensible_format_chunk_extension_truncated.wav",
 
