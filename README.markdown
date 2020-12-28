@@ -72,7 +72,7 @@ This gem lets you read and write audio data! You can use it to create Ruby progr
 
 Released on TBD, this version contains these changes:
 
-* **Bug Fix**: Files with a format chunk containing extra data at the end can now be read. Previously, attempting to open such files via `Reader.new` would result in an `InvalidFormatError` being raised with a misleading "The format chunk extension is shorter than expected." message. (The problem was actually that the extension was _longer_ than expected). Any extra data beyond what is expected based on the relevant format code will be ignored.
+* **Bug Fix**: Files with a format chunk that has extra data at the end can now be read. Previously, attempting to open such a file via `Reader.new` would result in `InvalidFormatError` being raised with a misleading "The format chunk extension is shorter than expected." message. (The problem was actually that the "extension" was _longer_ than expected). When reading a file like this, any extra data in the format chunk beyond what is expected based on the relevant format code will be ignored. Thanks to [@CromonMS](https://github.com/CromonMS) for reporting this as an issue.
 
 
 # Previous Release: v1.1.1
