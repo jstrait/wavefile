@@ -100,9 +100,14 @@ def read_format_chunk(chunk_id_data, chunk_size_data)
   display_line "Byte rate",       "int_32", read_bytes(UNSIGNED_INT_32)
   display_line "Block align",     "int_16", read_bytes(UNSIGNED_INT_16)
   display_line "Bits per sample", "int_16", read_bytes(UNSIGNED_INT_16)
+
+  bytes_read_so_far = 16
+
   if audio_format_code[:actual] != 1 && chunk_size_data[:actual] > 16
     extension_size_data = read_bytes(UNSIGNED_INT_16)
     display_line "Extension size", "int_16", extension_size_data
+    bytes_read_so_far += 2
+
     if extension_size_data[:actual] > 0
       if audio_format_code[:actual] == 65534
         display_line "Valid bits per sample", "int_16", read_bytes(UNSIGNED_INT_16)
@@ -119,15 +124,12 @@ def read_format_chunk(chunk_id_data, chunk_size_data)
       end
     end
 
-    extra_byte_count = chunk_size_data[:actual] - 18 - extension_size_data[:actual]
-    if extra_byte_count > 0
-      display_line "Extra bytes", "alpha_#{extra_byte_count}", read_bytes("a#{extra_byte_count}")
-    end
-  else
-    extra_byte_count = chunk_size_data[:actual] - 16
-    if extra_byte_count > 0
-      display_line "Extra bytes", "alpha_#{extra_byte_count}", read_bytes("a#{extra_byte_count}")
-    end
+    bytes_read_so_far += extension_size_data[:actual]
+  end
+
+  extra_byte_count = chunk_size_data[:actual] - bytes_read_so_far
+  if extra_byte_count > 0
+    display_line "Extra bytes", "alpha_#{extra_byte_count}", read_bytes("a#{extra_byte_count}")
   end
 end
 
