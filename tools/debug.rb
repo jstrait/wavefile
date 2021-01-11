@@ -87,6 +87,11 @@ def display_chunk_header(heading, expected_chunk_id, actual_chunk_id, chunk_size
   puts "=================================================================================="
   display_line "Chunk ID", expected_chunk_id, actual_chunk_id
   display_line "Chunk size", "int_32", chunk_size
+  display_chunk_section_separator
+end
+
+
+def display_chunk_section_separator
   puts "----------------------------------+------------+----------------------------------"
 end
 
@@ -194,7 +199,7 @@ def read_sample_chunk(chunk_id_data, chunk_size_data)
   display_line "Sampler Data Size",   "int_32", sampler_specific_data_size_bytes
 
   loop_count.times do |i|
-    puts "----------------------------------+------------+----------------------------------"
+    display_chunk_section_separator
     puts "Loop ##{i + 1}:"
     display_line "Identifier", "int_32", read_bytes(UNSIGNED_INT_32)
     display_line "Type",       "int_32", read_bytes(UNSIGNED_INT_32)
@@ -205,7 +210,7 @@ def read_sample_chunk(chunk_id_data, chunk_size_data)
   end
 
   if sampler_specific_data_size > 0
-    puts "----------------------------------+------------+----------------------------------"
+    display_chunk_section_separator
     display_line "Sampler specific data", "alpha_#{sampler_specific_data_size}", read_bytes("a#{sampler_specific_data_size}")
   end
 
@@ -243,7 +248,7 @@ def read_list_chunk(chunk_id_data, chunk_size_data)
   bytes_remaining = chunk_size_data[:actual] - 4
 
   while bytes_remaining > 1
-    puts "----------------------------------+------------+----------------------------------"
+    display_chunk_section_separator
     display_line "Sub Type ID", "alpha_4", read_bytes("a4")
 
     size_bytes = read_bytes(UNSIGNED_INT_32)
