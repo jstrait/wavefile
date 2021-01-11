@@ -108,6 +108,11 @@ def read_format_chunk(chunk_id_data, chunk_size_data)
         display_line "Valid bits per sample", "int_16", read_bytes(UNSIGNED_INT_16)
         display_line "Speaker mapping", "binary", read_bytes("B32")
         display_line "Sub format GUID", "hex", read_bytes("H32")
+
+        extra_byte_count = extension_size_data[:actual] - 22
+        if extra_byte_count > 0
+          display_line "Extra extension bytes", "alpha_#{extra_byte_count}", read_bytes("a#{extra_byte_count}")
+        end
       else
         extension_pack_code = "a#{extension_size_data[:actual]}"
         display_line "Raw extension", "alpha_#{extension_size_data[:actual]}", read_bytes(extension_pack_code)
