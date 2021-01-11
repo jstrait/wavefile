@@ -268,9 +268,15 @@ end
 
 
 def read_data_chunk(chunk_id_data, chunk_size_data)
+  intro_byte_count = [10, chunk_size_data[:actual]].min
+
   display_chunk_header("Data Chunk", "data", chunk_id_data, chunk_size_data)
-  display_line "Data Start", "alpha_10", read_bytes("a10")
-  FILE.sysread(chunk_size_data[:actual] - 10)
+
+  if intro_byte_count > 0
+    display_line "Data Start", "alpha_#{intro_byte_count}", read_bytes("a#{intro_byte_count}")
+  end
+
+  FILE.sysread(chunk_size_data[:actual] - intro_byte_count)
 end
 
 
