@@ -1,9 +1,9 @@
 module WaveFileIOTestHelper
-  CHANNEL_ALIAS = { :mono => 1, :stereo => 2, :tri => 3}
+  CHANNEL_ALIAS = {mono: 1, stereo: 2, tri: 3}
 
   SUPPORTED_BITS_PER_SAMPLE = {
-                                :pcm => [8, 16, 24, 32].freeze,
-                                :float => [32, 64].freeze,
+                                pcm: [8, 16, 24, 32].freeze,
+                                float: [32, 64].freeze,
                               }.freeze
 
   SQUARE_WAVE_CYCLE = {}

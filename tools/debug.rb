@@ -18,27 +18,27 @@ def read_bytes(pack_str)
     size.times { bytes << FILE.sysread(1).unpack("a") }
     full_string = bytes.join()
 
-    return {:actual => full_string, :bytes => bytes }
+    return {actual: full_string, bytes: bytes }
   elsif pack_str == UNSIGNED_INT_32
     4.times { bytes << FILE.sysread(1) }
     val = bytes.join().unpack(UNSIGNED_INT_32).first
 
-    return {:actual => val, :bytes => bytes }
+    return {actual: val, bytes: bytes }
   elsif pack_str == UNSIGNED_INT_16
     2.times { bytes << FILE.sysread(1) }
     val = bytes.join().unpack(UNSIGNED_INT_16).first
 
-    return {:actual => val, :bytes => bytes }
+    return {actual: val, bytes: bytes }
   elsif pack_str == UNSIGNED_INT_8
     bytes << FILE.sysread(1)
     val = bytes.join().unpack(UNSIGNED_INT_8).first
 
-    return {:actual => val, :bytes => bytes }
+    return {actual: val, bytes: bytes }
   elsif pack_str == SIGNED_INT_8
     bytes << FILE.sysread(1)
     val = bytes.join().unpack(SIGNED_INT_8).first
 
-    return {:actual => val, :bytes => bytes }
+    return {actual: val, bytes: bytes }
   elsif pack_str.start_with?("H")
     if pack_str.length > 2
       size = pack_str[1...(pack_str.length)].to_i / 2
@@ -49,7 +49,7 @@ def read_bytes(pack_str)
     size.times { bytes << FILE.sysread(1).unpack("H2") }
     full_string = "0x#{bytes.join()}"
 
-    return {:actual => full_string, :bytes => bytes }
+    return {actual: full_string, bytes: bytes }
   elsif pack_str.start_with?("B")
     if pack_str.length > 1
       size = pack_str[1...(pack_str.length)].to_i
@@ -61,7 +61,7 @@ def read_bytes(pack_str)
     size.times { bytes << FILE.sysread(1).unpack("B8") }
     full_string = bytes.reverse.join()
 
-    return {:actual => full_string, :bytes => bytes }
+    return {actual: full_string, bytes: bytes }
   end
 end
 

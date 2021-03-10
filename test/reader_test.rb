@@ -907,35 +907,35 @@ class ReaderTest < Minitest::Test
 
       assert_equal(0, reader.current_sample_frame)
       assert_equal(2240, reader.total_sample_frames)
-      test_duration({:hours => 0, :minutes => 0, :seconds => 0, :milliseconds => 50, :sample_count => 2240},
+      test_duration({hours: 0, minutes: 0, seconds: 0, milliseconds: 50, sample_count: 2240},
                     reader.total_duration)
 
 
       reader.read(1024)
       assert_equal(1024, reader.current_sample_frame)
       assert_equal(2240, reader.total_sample_frames)
-      test_duration({:hours => 0, :minutes => 0, :seconds => 0, :milliseconds => 50, :sample_count => 2240},
+      test_duration({hours: 0, minutes: 0, seconds: 0, milliseconds: 50, sample_count: 2240},
                     reader.total_duration)
 
 
       reader.read(1024)
       assert_equal(2048, reader.current_sample_frame)
       assert_equal(2240, reader.total_sample_frames)
-      test_duration({:hours => 0, :minutes => 0, :seconds => 0, :milliseconds => 50, :sample_count => 2240},
+      test_duration({hours: 0, minutes: 0, seconds: 0, milliseconds: 50, sample_count: 2240},
                     reader.total_duration)
 
 
       reader.read(192)
       assert_equal(2240, reader.current_sample_frame)
       assert_equal(2240, reader.total_sample_frames)
-      test_duration({:hours => 0, :minutes => 0, :seconds => 0, :milliseconds => 50, :sample_count => 2240},
+      test_duration({hours: 0, minutes: 0, seconds: 0, milliseconds: 50, sample_count: 2240},
                     reader.total_duration)
 
 
       reader.close
       assert_equal(2240, reader.current_sample_frame)
       assert_equal(2240, reader.total_sample_frames)
-      test_duration({:hours => 0, :minutes => 0, :seconds => 0, :milliseconds => 50, :sample_count => 2240},
+      test_duration({hours: 0, minutes: 0, seconds: 0, milliseconds: 50, sample_count: 2240},
                     reader.total_duration)
     end
   end
