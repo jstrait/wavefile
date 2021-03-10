@@ -22,7 +22,7 @@ module WaveFile
                fact:         "fact",
                silence:      "slnt",
                cue:          "cue ",
-               laylist:      "plst",
+               playlist:     "plst",
                list:         "list",
                label:        "labl",
                labeled_text: "ltxt",
