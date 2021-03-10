@@ -414,7 +414,7 @@ private
     dir = Dir.new(OUTPUT_FOLDER)
     file_names = dir.entries
     file_names.each do |file_name|
-      if(file_name != "." && file_name != "..")
+      if file_name != "." && file_name != ".."
         File.delete("#{OUTPUT_FOLDER}/#{file_name}")
       end
     end

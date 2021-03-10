@@ -37,17 +37,17 @@ module WaveFile
       sample_frames_per_hour = sample_frames_per_minute * 60
       @hours, @minutes, @seconds, @milliseconds = 0, 0, 0, 0
 
-      if(sample_frame_count >= sample_frames_per_hour)
+      if sample_frame_count >= sample_frames_per_hour
         @hours = sample_frame_count / sample_frames_per_hour
         sample_frame_count -= sample_frames_per_hour * @hours
       end
 
-      if(sample_frame_count >= sample_frames_per_minute)
+      if sample_frame_count >= sample_frames_per_minute
         @minutes = sample_frame_count / sample_frames_per_minute
         sample_frame_count -= sample_frames_per_minute * @minutes
       end
 
-      if(sample_frame_count >= sample_frames_per_second)
+      if sample_frame_count >= sample_frames_per_second
         @seconds = sample_frame_count / sample_frames_per_second
         sample_frame_count -= sample_frames_per_second * @seconds
       end
