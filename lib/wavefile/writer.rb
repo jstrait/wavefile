@@ -273,7 +273,7 @@ module WaveFile
     # Internal
     def pack_speaker_mapping(speaker_mapping)
       speaker_mapping.inject(0) do |result, speaker|
-        result |= SPEAKER_MAPPING_BIT_VALUES[speaker]
+        result | SPEAKER_MAPPING_BIT_VALUES[speaker]
       end
     end
 
