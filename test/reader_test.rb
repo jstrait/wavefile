@@ -54,7 +54,8 @@ class ReaderTest < Minitest::Test
       # code weren't 1.
       "invalid/format_chunk_with_extra_byte_and_missing_padding_byte.wav",
 
-      # The format chunk has an odd size, but is missing the required padding byte
+      # The format chunk has an odd size with extra bytes at the end, but is
+      # missing the required padding byte
       "invalid/format_chunk_extra_bytes_with_odd_size_and_missing_padding_byte.wav",
 
       # The format chunk is floating point but the extension size field is incomplete
