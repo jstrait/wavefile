@@ -72,6 +72,14 @@ class ReaderTest < Minitest::Test
       # The format chunk is extensible, but the required extension is not present
       "invalid/extensible_format_chunk_extension_missing.wav",
 
+      # The format chunk is extensible, but the extension size field is incomplete.
+      # The required padding byte is present.
+      "invalid/extensible_format_chunk_extension_size_incomplete_with_padding_byte.wav",
+
+      # The format chunk is extensible, but the extension size field is incomplete.
+      # The required padding byte is not present.
+      "invalid/extensible_format_chunk_extension_size_incomplete.wav",
+
       # The format chunk is extensible, but the extension is shorter than required
       "invalid/extensible_format_chunk_extension_incomplete.wav",
 
