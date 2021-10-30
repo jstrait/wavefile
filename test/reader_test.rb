@@ -49,6 +49,11 @@ class ReaderTest < Minitest::Test
       # The format chunk has some data, but not all of the minimum required.
       "invalid/insufficient_format_chunk.wav",
 
+      # The format chunk has a size of 17, but is missing the required padding byte
+      # The extra byte is part of what would be the chunk extension size if the format
+      # code weren't 1.
+      "invalid/format_chunk_with_extra_byte_and_missing_padding_byte.wav",
+
       # The format chunk has an odd size, but is missing the required padding byte
       "invalid/format_chunk_extra_bytes_with_odd_size_and_missing_padding_byte.wav",
 
@@ -514,6 +519,36 @@ class ReaderTest < Minitest::Test
     reader.close
 
     buffers = read_file("valid/valid_format_chunk_with_extra_bytes.wav", 1024)
+
+    assert_equal(3, buffers.length)
+    assert_equal([1024, 1024, 192], buffers.map {|buffer| buffer.samples.length })
+    assert_equal(SQUARE_WAVE_CYCLE[:mono][:pcm_8] * 128, buffers[0].samples)
+    assert_equal(SQUARE_WAVE_CYCLE[:mono][:pcm_8] * 128, buffers[1].samples)
+    assert_equal(SQUARE_WAVE_CYCLE[:mono][:pcm_8] * 24,  buffers[2].samples)
+  end
+
+  def test_read_format_chunk_with_extra_byte_and_padding_byte
+    reader = Reader.new(fixture("valid/valid_format_chunk_with_extra_byte_and_padding_byte.wav"))
+
+    assert_equal(1, reader.native_format.audio_format)
+    assert_equal(1, reader.native_format.channels)
+    assert_equal(8, reader.native_format.bits_per_sample)
+    assert_equal(44100, reader.native_format.sample_rate)
+    assert_nil(reader.native_format.speaker_mapping)
+    assert_nil(reader.native_format.sub_audio_format_guid)
+    assert_nil(reader.native_format.valid_bits_per_sample)
+    assert_equal(1, reader.format.channels)
+    assert_equal(8, reader.format.bits_per_sample)
+    assert_equal(44100, reader.format.sample_rate)
+    assert_equal([:front_center], reader.format.speaker_mapping)
+    assert_equal(false, reader.closed?)
+    assert_equal(0, reader.current_sample_frame)
+    assert_equal(2240, reader.total_sample_frames)
+    assert_equal(true, reader.readable_format?)
+    assert_nil(reader.sampler_info)
+    reader.close
+
+    buffers = read_file("valid/valid_format_chunk_with_extra_byte_and_padding_byte.wav", 1024)
 
     assert_equal(3, buffers.length)
     assert_equal([1024, 1024, 192], buffers.map {|buffer| buffer.samples.length })
