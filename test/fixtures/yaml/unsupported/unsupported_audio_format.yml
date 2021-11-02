@@ -12,6 +12,10 @@ format_chunk:
   block_align: 4
   bits_per_sample: 16
   extension_size: 0
+fact_chunk:
+  chunk_id: "fact"
+  chunk_size: 4
+  sample_count: auto
 data_chunk:
   cycle_repeats: 0
   channel_format: stereo

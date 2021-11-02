@@ -15,6 +15,10 @@ format_chunk:
   valid_bits_per_sample: 16
   speaker_mapping: 0x00000001
   subformat_guid: [2, 0, 0, 0, 0, 0, 16, 0, 128, 0, 0, 170, 0, 56, 155, 113]  # First byte is 2, invalid subformat GUID
+fact_chunk:
+  chunk_id: "fact"
+  chunk_size: 4
+  sample_count: auto
 data_chunk:
   cycle_repeats: 0
   channel_format: mono
