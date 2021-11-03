@@ -8,9 +8,9 @@ format_chunk:
   audio_format: 6    # This is an unsupported format code
   channels: 2
   sample_rate: 44100
-  byte_rate: 176400
-  block_align: 4
-  bits_per_sample: 16
+  byte_rate: 88200
+  block_align: 2
+  bits_per_sample: 8
   extension_size: 0
 fact_chunk:
   chunk_id: "fact"
