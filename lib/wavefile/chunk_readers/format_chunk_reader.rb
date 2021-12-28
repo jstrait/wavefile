@@ -35,7 +35,7 @@ module WaveFile
 
           if format_chunk[:audio_format] == FORMAT_CODES[:extensible]
             if format_chunk[:extension_size] < 22
-              raise_error InvalidFormatError, "The format chunk extension size of #{format_chunk[:extension_size]} bytes is shorter than expected. Since this format chunk has a format code of #{FORMAT_CODES[:extensible]}, the extension must be at least 22 bytes long."
+              raise_error InvalidFormatError, "The format chunk extension size of #{format_chunk[:extension_size]} bytes is too small. Since this format chunk has a format code of #{FORMAT_CODES[:extensible]}, the extension must be at least 22 bytes long."
             end
 
             format_chunk[:valid_bits_per_sample] = raw_bytes.slice!(0...2).unpack(UNSIGNED_INT_16).first
