@@ -11,7 +11,7 @@ format_chunk:
   byte_rate: 176400
   block_align: 4
   bits_per_sample: 32
-  extension_size: 8
+  extension_size: 8    # This is too large; it makes the chunk larger than the value in the `chunk_size` field
   extra_bytes: [100, 50, 30, 255, 12, 78, 90, 92]    # Since the extension when the format code is 3 has an expected size of 0, these bytes are ignored
 fact_chunk:
   chunk_id: "fact"
