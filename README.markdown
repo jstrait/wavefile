@@ -70,7 +70,7 @@ This gem lets you read and write audio data! You can use it to create Ruby progr
 
 # Current Release: v1.1.2
 
-Released on TBD, this version fixes several bugs related to reading a *.wav file's "fmt " chunk:
+Released on TBD, this version fixes several edge case bugs related to reading a *.wav file's "fmt " chunk. In particular, reading "fmt " chunks that have extra bytes at the end of an extension or the chunk itself, and reading files in WAVE_FORMAT_EXTENSIBLE format that have an incomplete "fmt " chunk extension. The full details:
 
 * **Bug Fix**: Files that have extra bytes at the end of the "fmt " chunk can now be read. Previously, attempting to open certain files like this via `Reader.new` would result in `InvalidFormatError` being raised with a misleading "The format chunk extension is shorter than expected." message. (The problem was actually that the extension was _larger_ than expected; if the format code was 1, the message was doubly misleading because the "fmt " chunk wouldn't even have an extension). When reading a file like this, any extra data in the "fmt " chunk beyond what is expected based on the relevant format code will now be ignored.
   * Note: There was a special case where a file like this _could_ be opened correctly. If bytes 16 and 17 (0-based), when interpreted as a 16-bit unsigned little-endian integer, happened to be the same as the number of subsequent bytes in the chunk, the file _could_ be opened without issue. For example, if the "fmt " chunk size was 22, the format code was 1, and bytes 16 and 17 contained 4 (when interpreted as a 16-bit unsigned little-endian integer), the file could be opened correctly.
