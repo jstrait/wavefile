@@ -6,7 +6,7 @@ For more info, check out the website: <https://wavefilegem.com/>
 
 # Example Usage
 
-This short example shows how to append three separate Wave files into a single file:
+This example shows how to append three separate Wave files into a single file:
 
 ```ruby
 require "wavefile"
