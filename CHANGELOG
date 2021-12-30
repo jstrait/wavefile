@@ -4,11 +4,11 @@
   now be read. Previously, attempting to open certain files like this via
   `Reader.new` would result in `InvalidFormatError` being raised with a
   misleading `"Not a supported wave file. The format chunk extension is shorter
-  than expected."` message. (The problem was actually that the extension was
-  _larger_ than expected; if the format code was 1, the message was doubly
-  misleading because the `"fmt "` chunk wouldn't even have an extension). When
-  reading a file like this, any extra data in the `"fmt "` chunk beyond what is
-  expected based on the relevant format code will now be ignored.
+  than expected."` message. (If the format code was 1, the `"fmt "` chunk
+  wouldn't actually have an extension; for other format codes the extension
+  would actually be the expected size or larger). When reading a file like
+  this, any extra data in the `"fmt "` chunk beyond what is expected based on
+  the relevant format code will now be ignored.
   * There was a special case where a file like this _could_ be opened
     correctly. If the value of bytes 16 and 17 (0-based), when interpreted as a
     16-bit unsigned little-endian integer, happened to be the same as the
