@@ -12,7 +12,7 @@
   * There was a special case where a file like this _could_ be opened
     correctly. If the value of bytes 16 and 17 (0-based), when interpreted as a
     16-bit unsigned little-endian integer, happened to be the same as the
-    number of subsequent bytes in the chunk, the file _could_ be opened without
+    number of subsequent bytes in the chunk, the file could be opened without
     issue. For example, if the `"fmt "` chunk size was 22, the format code was
     1, and the value of bytes 16 and 17 was 4 (when interpreted as a 16-bit
     unsigned little-endian integer), the file could be opened correctly.
