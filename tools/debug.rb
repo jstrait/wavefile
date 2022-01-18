@@ -6,14 +6,14 @@ UNSIGNED_INT_16 = "v"
 UNSIGNED_INT_32 = "V"
 
 def main
-  # RIFF header
-  puts ""
-  display_chunk_header("Riff Chunk Header", "RIFF", read_bytes("a4"), read_bytes(UNSIGNED_INT_32))
-  display_line "Format code", "WAVE", read_bytes("a4")
-  puts ""
-  puts ""
-
   begin
+    # RIFF header
+    puts ""
+    display_chunk_header("Riff Chunk Header", "RIFF", read_bytes("a4"), read_bytes(UNSIGNED_INT_32))
+    display_line "Format code", "WAVE", read_bytes("a4")
+    puts ""
+    puts ""
+
     while true
       chunk_id_data = read_bytes("a4")
       chunk_size_data = read_bytes(UNSIGNED_INT_32)
