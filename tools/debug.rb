@@ -10,7 +10,7 @@ def main
     # RIFF header
     puts ""
     display_chunk_header("Riff Chunk Header", "RIFF", read_bytes("a4"), read_bytes(UNSIGNED_INT_32))
-    display_line "Format code", "WAVE", read_bytes("a4")
+    display_line "Form type", "WAVE", read_bytes("a4")
     puts ""
     puts ""
 
