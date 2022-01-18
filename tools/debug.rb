@@ -5,6 +5,57 @@ SIGNED_INT_8 = "c"
 UNSIGNED_INT_16 = "v"
 UNSIGNED_INT_32 = "V"
 
+def main
+  # RIFF header
+  puts ""
+  display_chunk_header("Riff Chunk Header", "RIFF", read_bytes("a4"), read_bytes(UNSIGNED_INT_32))
+  display_line "Format code", "WAVE", read_bytes("a4")
+  puts ""
+  puts ""
+
+  begin
+    while true
+      chunk_id_data = read_bytes("a4")
+      chunk_size_data = read_bytes(UNSIGNED_INT_32)
+
+      case chunk_id_data[:actual]
+        when "fmt " then
+          read_format_chunk(chunk_id_data, chunk_size_data)
+        when "fact" then
+          read_fact_chunk(chunk_id_data, chunk_size_data)
+        when "PEAK" then
+          read_peak_chunk(chunk_id_data, chunk_size_data)
+        when "cue " then
+          read_cue_chunk(chunk_id_data, chunk_size_data)
+        when "smpl" then
+          read_sample_chunk(chunk_id_data, chunk_size_data)
+        when "inst" then
+          read_instrument_chunk(chunk_id_data, chunk_size_data)
+        when "LIST" then
+          read_list_chunk(chunk_id_data, chunk_size_data)
+        when "data" then
+          read_data_chunk(chunk_id_data, chunk_size_data)
+        else
+          chunk_size = chunk_size_data[:actual]
+
+          puts "'#{chunk_id_data[:actual]}' chunk of size #{chunk_size}, skipping."
+          FILE.sysread(chunk_size)
+      end
+
+      # Read padding byte if necessary
+      if chunk_size_data[:actual].odd?
+        display_line "Padding Byte", "byte", read_bytes(UNSIGNED_INT_8)
+      end
+
+      puts ""
+      puts ""
+    end
+  rescue EOFError
+    FILE.close()
+  end
+end
+
+
 def read_bytes(pack_str)
   bytes = []
 
@@ -285,50 +336,4 @@ def read_data_chunk(chunk_id_data, chunk_size_data)
 end
 
 
-# RIFF header
-puts ""
-display_chunk_header("Riff Chunk Header", "RIFF", read_bytes("a4"), read_bytes(UNSIGNED_INT_32))
-display_line "Format code", "WAVE", read_bytes("a4")
-puts ""
-puts ""
-
-begin
-  while true
-    chunk_id_data = read_bytes("a4")
-    chunk_size_data = read_bytes(UNSIGNED_INT_32)
-
-    case chunk_id_data[:actual]
-      when "fmt " then
-        read_format_chunk(chunk_id_data, chunk_size_data)
-      when "fact" then
-        read_fact_chunk(chunk_id_data, chunk_size_data)
-      when "PEAK" then
-        read_peak_chunk(chunk_id_data, chunk_size_data)
-      when "cue " then
-        read_cue_chunk(chunk_id_data, chunk_size_data)
-      when "smpl" then
-        read_sample_chunk(chunk_id_data, chunk_size_data)
-      when "inst" then
-        read_instrument_chunk(chunk_id_data, chunk_size_data)
-      when "LIST" then
-        read_list_chunk(chunk_id_data, chunk_size_data)
-      when "data" then
-        read_data_chunk(chunk_id_data, chunk_size_data)
-      else
-        chunk_size = chunk_size_data[:actual]
-
-        puts "'#{chunk_id_data[:actual]}' chunk of size #{chunk_size}, skipping."
-        FILE.sysread(chunk_size)
-    end
-
-    # Read padding byte if necessary
-    if chunk_size_data[:actual].odd?
-      display_line "Padding Byte", "byte", read_bytes(UNSIGNED_INT_8)
-    end
-
-    puts ""
-    puts ""
-  end
-rescue EOFError
-  FILE.close()
-end
+main
