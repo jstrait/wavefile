@@ -222,7 +222,7 @@ def read_cue_chunk(chunk_id_data, chunk_size_data)
   ((chunk_size_data[:actual] - 4) / 24).times do |i|
     display_line "ID #{i + 1}", "int_32", read_bytes(UNSIGNED_INT_32)
     display_line "Position #{i + 1}", "int_32", read_bytes(UNSIGNED_INT_32)
-    display_line "Data chunk ID #{i + 1}", "alpha_4", read_bytes("a4")
+    display_line "Chunk type #{i + 1}", "alpha_4", read_bytes("a4")
     display_line "Chunk start #{i + 1}", "int_32", read_bytes(UNSIGNED_INT_32)
     display_line "Block start #{i + 1}", "int_32", read_bytes(UNSIGNED_INT_32)
     display_line "Sample offset #{i + 1}", "int_32", read_bytes(UNSIGNED_INT_32)
