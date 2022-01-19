@@ -117,7 +117,7 @@ def read_bytes(pack_str)
 end
 
 
-def display_line(label, expected, h)
+def display_line(label, data_type, h)
   actual = h[:actual]
   bytes = h[:bytes]
 
@@ -129,7 +129,7 @@ def display_line(label, expected, h)
     formatted_bytes = bytes
   end
 
-  puts "#{(label + ":").ljust(22)} #{expected.ljust(10)} | #{actual.to_s.ljust(10).gsub("\n\n", "")} | #{formatted_bytes}"
+  puts "#{(label + ":").ljust(22)} #{data_type.ljust(10)} | #{actual.to_s.ljust(10).gsub("\n\n", "")} | #{formatted_bytes}"
 end
 
 
