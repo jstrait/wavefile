@@ -168,7 +168,7 @@ def read_format_chunk(chunk_id_data, chunk_size_data)
       if audio_format_code[:actual] == 65534
         display_line "Valid bits per sample", "int_16", read_bytes(UNSIGNED_INT_16)
         display_line "Speaker mapping", "binary", read_bytes("B32")
-        display_line "Sub format GUID", "hex", read_bytes("H32")
+        display_line "Sub format GUID", "GUID", read_bytes("H32")
 
         extra_byte_count = extension_size_data[:actual] - 22
         if extra_byte_count > 0
