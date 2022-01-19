@@ -9,8 +9,8 @@ def main
   begin
     # RIFF header
     puts ""
-    display_chunk_header("Riff Chunk Header", "RIFF", read_bytes("a4"), read_bytes(UNSIGNED_INT_32))
-    display_line "Form type", "WAVE", read_bytes("a4")
+    display_chunk_header("Riff Chunk Header", read_bytes("a4"), read_bytes(UNSIGNED_INT_32))
+    display_line "Form type", "FourCC", read_bytes("a4")
     puts ""
     puts ""
 
@@ -133,10 +133,10 @@ def display_line(label, expected, h)
 end
 
 
-def display_chunk_header(heading, expected_chunk_id, actual_chunk_id, chunk_size)
+def display_chunk_header(heading, chunk_id, chunk_size)
   puts heading
   puts "=================================================================================="
-  display_line "Chunk ID", expected_chunk_id, actual_chunk_id
+  display_line "Chunk ID", "FourCC", chunk_id
   display_line "Chunk size", "int_32", chunk_size
   display_chunk_section_separator
 end
@@ -148,7 +148,7 @@ end
 
 
 def read_format_chunk(chunk_id_data, chunk_size_data)
-  display_chunk_header("Format Chunk", "fmt ", chunk_id_data, chunk_size_data)
+  display_chunk_header("Format Chunk", chunk_id_data, chunk_size_data)
   audio_format_code = read_bytes(UNSIGNED_INT_16)
   display_line "Audio format",    "int_16", audio_format_code
   display_line "Channels",        "int_16", read_bytes(UNSIGNED_INT_16)
@@ -191,7 +191,7 @@ end
 
 
 def read_fact_chunk(chunk_id_data, chunk_size_data)
-  display_chunk_header("Fact Chunk", "fact", chunk_id_data, chunk_size_data)
+  display_chunk_header("Fact Chunk", chunk_id_data, chunk_size_data)
   display_line "Sample count", "int_32", read_bytes(UNSIGNED_INT_32)
 
   if chunk_size_data[:actual] > 4
@@ -201,7 +201,7 @@ end
 
 
 def read_peak_chunk(chunk_id_data, chunk_size_data)
-  display_chunk_header("Peak Chunk", "PEAK", chunk_id_data, chunk_size_data)
+  display_chunk_header("Peak Chunk", chunk_id_data, chunk_size_data)
 
   display_line "Version",          "int_32", read_bytes(UNSIGNED_INT_32)
   display_line "Timestamp",        "int_32", read_bytes(UNSIGNED_INT_32)
@@ -215,14 +215,14 @@ end
 
 
 def read_cue_chunk(chunk_id_data, chunk_size_data)
-  display_chunk_header("Cue Chunk", "cue ", chunk_id_data, chunk_size_data)
+  display_chunk_header("Cue Chunk", chunk_id_data, chunk_size_data)
 
   display_line "Cue point count", "int_32", read_bytes(UNSIGNED_INT_32)
 
   ((chunk_size_data[:actual] - 4) / 24).times do |i|
     display_line "ID #{i + 1}", "int_32", read_bytes(UNSIGNED_INT_32)
     display_line "Position #{i + 1}", "int_32", read_bytes(UNSIGNED_INT_32)
-    display_line "Chunk type #{i + 1}", "alpha_4", read_bytes("a4")
+    display_line "Chunk type #{i + 1}", "FourCC", read_bytes("a4")
     display_line "Chunk start #{i + 1}", "int_32", read_bytes(UNSIGNED_INT_32)
     display_line "Block start #{i + 1}", "int_32", read_bytes(UNSIGNED_INT_32)
     display_line "Sample offset #{i + 1}", "int_32", read_bytes(UNSIGNED_INT_32)
@@ -231,7 +231,7 @@ end
 
 
 def read_sample_chunk(chunk_id_data, chunk_size_data)
-  display_chunk_header("Sample Chunk", "smpl", chunk_id_data, chunk_size_data)
+  display_chunk_header("Sample Chunk", chunk_id_data, chunk_size_data)
 
   display_line "Manufacturer",        "int_32", read_bytes(UNSIGNED_INT_32)
   display_line "Product",             "int_32", read_bytes(UNSIGNED_INT_32)
@@ -273,7 +273,7 @@ end
 
 
 def read_instrument_chunk(chunk_id_data, chunk_size_data)
-  display_chunk_header("Instrument Chunk", "inst", chunk_id_data, chunk_size_data)
+  display_chunk_header("Instrument Chunk", chunk_id_data, chunk_size_data)
 
   display_line "Unshifted Note", "byte", read_bytes(UNSIGNED_INT_8)
   display_line "Fine Tune",      "byte", read_bytes(SIGNED_INT_8)
@@ -291,16 +291,16 @@ end
 
 
 def read_list_chunk(chunk_id_data, chunk_size_data)
-  display_chunk_header("List Chunk", "LIST", chunk_id_data, chunk_size_data)
+  display_chunk_header("List Chunk", chunk_id_data, chunk_size_data)
 
   list_type = read_bytes("a4")
-  display_line "List Type", "alpha_4", list_type
+  display_line "List Type", "FourCC", list_type
 
   bytes_remaining = chunk_size_data[:actual] - 4
 
   while bytes_remaining > 1
     display_chunk_section_separator
-    display_line "Sub Type ID", "alpha_4", read_bytes("a4")
+    display_line "Sub Type ID", "FourCC", read_bytes("a4")
 
     size_bytes = read_bytes(UNSIGNED_INT_32)
     size = size_bytes[:actual]
@@ -326,7 +326,7 @@ end
 def read_data_chunk(chunk_id_data, chunk_size_data)
   intro_byte_count = [10, chunk_size_data[:actual]].min
 
-  display_chunk_header("Data Chunk", "data", chunk_id_data, chunk_size_data)
+  display_chunk_header("Data Chunk", chunk_id_data, chunk_size_data)
 
   if intro_byte_count > 0
     display_line "Data Start", "alpha_#{intro_byte_count}", read_bytes("a#{intro_byte_count}")
