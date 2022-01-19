@@ -291,7 +291,7 @@ end
 
 
 def read_list_chunk(chunk_id_data, chunk_size_data)
-  display_chunk_header("List Chunk", "list", chunk_id_data, chunk_size_data)
+  display_chunk_header("List Chunk", "LIST", chunk_id_data, chunk_size_data)
 
   list_type = read_bytes("a4")
   display_line "List Type", "alpha_4", list_type
