@@ -134,7 +134,7 @@ def display_line(label, data_type, h)
   actual = h[:actual]
   bytes = h[:bytes]
 
-  formatted_bytes = bytes.map {|byte| "#{byte.unpack(UNSIGNED_INT_8)}" }.join(" ")
+  formatted_bytes = bytes.map {|byte| byte.unpack("H2").first }.join(" ")
 
   puts "#{(label + ":").ljust(22)} #{data_type.ljust(10)} | #{actual.to_s.ljust(10).gsub("\n\n", "")} | #{formatted_bytes}"
 end
