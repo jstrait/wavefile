@@ -126,6 +126,8 @@ def read_bytes(pack_str)
     full_string = bytes.reverse.map {|byte| byte.unpack("B8")}.join
 
     return {actual: full_string, bytes: bytes }
+  else
+    raise "Unhandled pack string \"#{pack_str}\""
   end
 end
 
