@@ -59,6 +59,7 @@ end
 
 def read_bytes(pack_str)
   bytes = []
+  parsed_value = nil
 
   if pack_str.start_with?("a")
     if pack_str.length > 1
@@ -68,41 +69,27 @@ def read_bytes(pack_str)
     end
 
     size.times { bytes << FILE.sysread(1) }
-    full_string = bytes.join
-
-    return {actual: full_string, bytes: bytes }
+    parsed_value = bytes.join
   elsif pack_str == UNSIGNED_INT_32
     4.times { bytes << FILE.sysread(1) }
     parsed_value = bytes.join.unpack(UNSIGNED_INT_32).first
-
-    return {actual: parsed_value, bytes: bytes }
   elsif pack_str == UNSIGNED_INT_16
     2.times { bytes << FILE.sysread(1) }
     parsed_value = bytes.join.unpack(UNSIGNED_INT_16).first
-
-    return {actual: parsed_value, bytes: bytes }
   elsif pack_str == UNSIGNED_INT_8
     bytes << FILE.sysread(1)
     parsed_value = bytes.join.unpack(UNSIGNED_INT_8).first
-
-    return {actual: parsed_value, bytes: bytes }
   elsif pack_str.start_with?(UNSIGNED_INT_8)
     size = pack_str[1...(pack_str.length)].to_i
 
     size.times { bytes << FILE.sysread(1) }
     parsed_value = "N/A"
-
-    return {actual: parsed_value, bytes: bytes }
   elsif pack_str == SIGNED_INT_8
     bytes << FILE.sysread(1)
     parsed_value = bytes.join.unpack(SIGNED_INT_8).first
-
-    return {actual: parsed_value, bytes: bytes }
   elsif pack_str == FLOAT_32
     4.times { bytes << FILE.sysread(1) }
     parsed_value = bytes.join.unpack(FLOAT_32).first
-
-    return {actual: parsed_value, bytes: bytes }
   elsif pack_str.start_with?("H")
     if pack_str.length > 2
       size = pack_str[1...(pack_str.length)].to_i / 2
@@ -111,9 +98,7 @@ def read_bytes(pack_str)
     end
 
     size.times { bytes << FILE.sysread(1) }
-    full_string = "0x#{bytes.map {|byte| byte.unpack("H2")}.join}"
-
-    return {actual: full_string, bytes: bytes }
+    parsed_value = "0x#{bytes.map {|byte| byte.unpack("H2")}.join}"
   elsif pack_str.start_with?("B")
     if pack_str.length > 1
       size = pack_str[1...(pack_str.length)].to_i
@@ -123,12 +108,12 @@ def read_bytes(pack_str)
     size /= 8
 
     size.times { bytes << FILE.sysread(1) }
-    full_string = bytes.reverse.map {|byte| byte.unpack("B8")}.join
-
-    return {actual: full_string, bytes: bytes }
+    parsed_value = bytes.reverse.map {|byte| byte.unpack("B8")}.join
   else
     raise "Unhandled pack string \"#{pack_str}\""
   end
+
+  return { actual: parsed_value, bytes: bytes }
 end
 
 
