@@ -4,6 +4,7 @@ UNSIGNED_INT_8  = "C"
 SIGNED_INT_8 = "c"
 UNSIGNED_INT_16 = "v"
 UNSIGNED_INT_32 = "V"
+FLOAT_32 = "e"
 
 def main
   begin
@@ -90,6 +91,11 @@ def read_bytes(pack_str)
     val = bytes.join().unpack(SIGNED_INT_8).first
 
     return {actual: val, bytes: bytes }
+  elsif pack_str == FLOAT_32
+    4.times { bytes << FILE.sysread(1) }
+    val = bytes.join().unpack(FLOAT_32).first
+
+    return {actual: val, bytes: bytes }
   elsif pack_str.start_with?("H")
     if pack_str.length > 2
       size = pack_str[1...(pack_str.length)].to_i / 2
@@ -121,7 +127,7 @@ def display_line(label, data_type, h)
   actual = h[:actual]
   bytes = h[:bytes]
 
-  if Integer === actual
+  if Integer === actual || Float === actual
     formatted_bytes = bytes.map {|byte| "#{byte.unpack(UNSIGNED_INT_8)}" }.join(" ")
   elsif String === actual
     formatted_bytes = bytes.inspect.gsub('[[', '[').gsub(']]', ']').gsub(',', '')
@@ -207,8 +213,7 @@ def read_peak_chunk(chunk_id_data, chunk_size_data)
   display_line "Timestamp",        "int_32", read_bytes(UNSIGNED_INT_32)
 
   ((chunk_size_data[:actual] - 8) / 8).times do |i|
-    # TODO: Fix this to be a 4 byte signed float
-    display_line "Chan. #{i + 1} Value",    "int_32", read_bytes(UNSIGNED_INT_32)
+    display_line "Chan. #{i + 1} Value",    "float_32", read_bytes(FLOAT_32)
     display_line "Chan. #{i + 1} Position", "int_32", read_bytes(UNSIGNED_INT_32)
   end
 end
