@@ -73,36 +73,36 @@ def read_bytes(pack_str)
     return {actual: full_string, bytes: bytes }
   elsif pack_str == UNSIGNED_INT_32
     4.times { bytes << FILE.sysread(1) }
-    val = bytes.join.unpack(UNSIGNED_INT_32).first
+    parsed_value = bytes.join.unpack(UNSIGNED_INT_32).first
 
-    return {actual: val, bytes: bytes }
+    return {actual: parsed_value, bytes: bytes }
   elsif pack_str == UNSIGNED_INT_16
     2.times { bytes << FILE.sysread(1) }
-    val = bytes.join.unpack(UNSIGNED_INT_16).first
+    parsed_value = bytes.join.unpack(UNSIGNED_INT_16).first
 
-    return {actual: val, bytes: bytes }
+    return {actual: parsed_value, bytes: bytes }
   elsif pack_str == UNSIGNED_INT_8
     bytes << FILE.sysread(1)
-    val = bytes.join.unpack(UNSIGNED_INT_8).first
+    parsed_value = bytes.join.unpack(UNSIGNED_INT_8).first
 
-    return {actual: val, bytes: bytes }
+    return {actual: parsed_value, bytes: bytes }
   elsif pack_str.start_with?(UNSIGNED_INT_8)
     size = pack_str[1...(pack_str.length)].to_i
 
     size.times { bytes << FILE.sysread(1) }
-    val = "N/A"
+    parsed_value = "N/A"
 
-    return {actual: val, bytes: bytes }
+    return {actual: parsed_value, bytes: bytes }
   elsif pack_str == SIGNED_INT_8
     bytes << FILE.sysread(1)
-    val = bytes.join.unpack(SIGNED_INT_8).first
+    parsed_value = bytes.join.unpack(SIGNED_INT_8).first
 
-    return {actual: val, bytes: bytes }
+    return {actual: parsed_value, bytes: bytes }
   elsif pack_str == FLOAT_32
     4.times { bytes << FILE.sysread(1) }
-    val = bytes.join.unpack(FLOAT_32).first
+    parsed_value = bytes.join.unpack(FLOAT_32).first
 
-    return {actual: val, bytes: bytes }
+    return {actual: parsed_value, bytes: bytes }
   elsif pack_str.start_with?("H")
     if pack_str.length > 2
       size = pack_str[1...(pack_str.length)].to_i / 2
