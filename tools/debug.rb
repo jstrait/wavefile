@@ -67,7 +67,7 @@ def read_bytes(pack_str)
       size = 1
     end
 
-    size.times { bytes << FILE.sysread(1).unpack("a") }
+    size.times { bytes << FILE.sysread(1) }
     full_string = bytes.join
 
     return {actual: full_string, bytes: bytes }
@@ -110,8 +110,8 @@ def read_bytes(pack_str)
       size = 1
     end
 
-    size.times { bytes << FILE.sysread(1).unpack("H2") }
-    full_string = "0x#{bytes.join}"
+    size.times { bytes << FILE.sysread(1) }
+    full_string = "0x#{bytes.map {|byte| byte.unpack("H2")}.join}"
 
     return {actual: full_string, bytes: bytes }
   elsif pack_str.start_with?("B")
@@ -122,8 +122,8 @@ def read_bytes(pack_str)
     end
     size /= 8
 
-    size.times { bytes << FILE.sysread(1).unpack("B8") }
-    full_string = bytes.reverse.join
+    size.times { bytes << FILE.sysread(1) }
+    full_string = bytes.reverse.map {|byte| byte.unpack("B8")}.join
 
     return {actual: full_string, bytes: bytes }
   end
@@ -134,13 +134,7 @@ def display_line(label, data_type, h)
   actual = h[:actual]
   bytes = h[:bytes]
 
-  if Integer === actual || Float === actual || actual == "N/A"
-    formatted_bytes = bytes.map {|byte| "#{byte.unpack(UNSIGNED_INT_8)}" }.join(" ")
-  elsif String === actual
-    formatted_bytes = bytes.inspect.gsub('[[', '[').gsub(']]', ']').gsub(',', '')
-  else
-    formatted_bytes = bytes
-  end
+  formatted_bytes = bytes.map {|byte| "#{byte.unpack(UNSIGNED_INT_8)}" }.join(" ")
 
   puts "#{(label + ":").ljust(22)} #{data_type.ljust(10)} | #{actual.to_s.ljust(10).gsub("\n\n", "")} | #{formatted_bytes}"
 end
