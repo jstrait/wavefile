@@ -86,6 +86,13 @@ def read_bytes(pack_str)
     val = bytes.join().unpack(UNSIGNED_INT_8).first
 
     return {actual: val, bytes: bytes }
+  elsif pack_str.start_with?(UNSIGNED_INT_8)
+    size = pack_str[1...(pack_str.length)].to_i
+
+    size.times { bytes << FILE.sysread(1) }
+    val = "N/A"
+
+    return {actual: val, bytes: bytes }
   elsif pack_str == SIGNED_INT_8
     bytes << FILE.sysread(1)
     val = bytes.join().unpack(SIGNED_INT_8).first
@@ -127,7 +134,7 @@ def display_line(label, data_type, h)
   actual = h[:actual]
   bytes = h[:bytes]
 
-  if Integer === actual || Float === actual
+  if Integer === actual || Float === actual || actual == "N/A"
     formatted_bytes = bytes.map {|byte| "#{byte.unpack(UNSIGNED_INT_8)}" }.join(" ")
   elsif String === actual
     formatted_bytes = bytes.inspect.gsub('[[', '[').gsub(']]', ']').gsub(',', '')
@@ -178,11 +185,11 @@ def read_format_chunk(chunk_id_data, chunk_size_data)
 
         extra_byte_count = extension_size_data[:actual] - 22
         if extra_byte_count > 0
-          display_line "Extra extension bytes", "alpha_#{extra_byte_count}", read_bytes("a#{extra_byte_count}")
+          display_line "Extra extension bytes", "bytes", read_bytes("#{UNSIGNED_INT_8}#{extra_byte_count}")
         end
       else
-        extension_pack_code = "a#{extension_size_data[:actual]}"
-        display_line "Raw extension", "alpha_#{extension_size_data[:actual]}", read_bytes(extension_pack_code)
+        extension_pack_code = "#{UNSIGNED_INT_8}#{extension_size_data[:actual]}"
+        display_line "Raw extension", "bytes", read_bytes(extension_pack_code)
       end
     end
 
@@ -191,7 +198,7 @@ def read_format_chunk(chunk_id_data, chunk_size_data)
 
   extra_byte_count = chunk_size_data[:actual] - bytes_read_so_far
   if extra_byte_count > 0
-    display_line "Extra bytes", "alpha_#{extra_byte_count}", read_bytes("a#{extra_byte_count}")
+    display_line "Extra bytes", "bytes", read_bytes("#{UNSIGNED_INT_8}#{extra_byte_count}")
   end
 end
 
@@ -267,12 +274,12 @@ def read_sample_chunk(chunk_id_data, chunk_size_data)
 
   if sampler_specific_data_size > 0
     display_chunk_section_separator
-    display_line "Sampler specific data", "alpha_#{sampler_specific_data_size}", read_bytes("a#{sampler_specific_data_size}")
+    display_line "Sampler specific data", "bytes", read_bytes("#{UNSIGNED_INT_8}#{sampler_specific_data_size}")
   end
 
   extra_byte_count = chunk_size_data[:actual] - 36 - (loop_count * 24) - sampler_specific_data_size_bytes[:actual]
   if (extra_byte_count > 0)
-    display_line "Extra bytes", "alpha_#{extra_byte_count}", read_bytes("a#{extra_byte_count}")
+    display_line "Extra bytes", "bytes", read_bytes("#{UNSIGNED_INT_8}#{extra_byte_count}")
   end
 end
 
@@ -290,7 +297,7 @@ def read_instrument_chunk(chunk_id_data, chunk_size_data)
 
   extra_data_size = chunk_size_data[:actual] - 7
   if extra_data_size > 0
-    display_line "Extra Data", "alpha_#{extra_data_size}", read_bytes("a#{extra_data_size}")
+    display_line "Extra Data", "bytes", read_bytes("#{UNSIGNED_INT_8}#{extra_data_size}")
   end
 end
 
@@ -334,7 +341,7 @@ def read_data_chunk(chunk_id_data, chunk_size_data)
   display_chunk_header("Data Chunk", chunk_id_data, chunk_size_data)
 
   if intro_byte_count > 0
-    display_line "Data Start", "alpha_#{intro_byte_count}", read_bytes("a#{intro_byte_count}")
+    display_line "Data Start", "bytes", read_bytes("#{UNSIGNED_INT_8}#{intro_byte_count}")
   end
 
   FILE.sysread(chunk_size_data[:actual] - intro_byte_count)
