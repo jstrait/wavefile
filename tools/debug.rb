@@ -52,7 +52,7 @@ def main
       puts ""
     end
   rescue EOFError
-    FILE.close()
+    FILE.close
   end
 end
 
@@ -68,22 +68,22 @@ def read_bytes(pack_str)
     end
 
     size.times { bytes << FILE.sysread(1).unpack("a") }
-    full_string = bytes.join()
+    full_string = bytes.join
 
     return {actual: full_string, bytes: bytes }
   elsif pack_str == UNSIGNED_INT_32
     4.times { bytes << FILE.sysread(1) }
-    val = bytes.join().unpack(UNSIGNED_INT_32).first
+    val = bytes.join.unpack(UNSIGNED_INT_32).first
 
     return {actual: val, bytes: bytes }
   elsif pack_str == UNSIGNED_INT_16
     2.times { bytes << FILE.sysread(1) }
-    val = bytes.join().unpack(UNSIGNED_INT_16).first
+    val = bytes.join.unpack(UNSIGNED_INT_16).first
 
     return {actual: val, bytes: bytes }
   elsif pack_str == UNSIGNED_INT_8
     bytes << FILE.sysread(1)
-    val = bytes.join().unpack(UNSIGNED_INT_8).first
+    val = bytes.join.unpack(UNSIGNED_INT_8).first
 
     return {actual: val, bytes: bytes }
   elsif pack_str.start_with?(UNSIGNED_INT_8)
@@ -95,12 +95,12 @@ def read_bytes(pack_str)
     return {actual: val, bytes: bytes }
   elsif pack_str == SIGNED_INT_8
     bytes << FILE.sysread(1)
-    val = bytes.join().unpack(SIGNED_INT_8).first
+    val = bytes.join.unpack(SIGNED_INT_8).first
 
     return {actual: val, bytes: bytes }
   elsif pack_str == FLOAT_32
     4.times { bytes << FILE.sysread(1) }
-    val = bytes.join().unpack(FLOAT_32).first
+    val = bytes.join.unpack(FLOAT_32).first
 
     return {actual: val, bytes: bytes }
   elsif pack_str.start_with?("H")
@@ -111,7 +111,7 @@ def read_bytes(pack_str)
     end
 
     size.times { bytes << FILE.sysread(1).unpack("H2") }
-    full_string = "0x#{bytes.join()}"
+    full_string = "0x#{bytes.join}"
 
     return {actual: full_string, bytes: bytes }
   elsif pack_str.start_with?("B")
@@ -123,7 +123,7 @@ def read_bytes(pack_str)
     size /= 8
 
     size.times { bytes << FILE.sysread(1).unpack("B8") }
-    full_string = bytes.reverse.join()
+    full_string = bytes.reverse.join
 
     return {actual: full_string, bytes: bytes }
   end
