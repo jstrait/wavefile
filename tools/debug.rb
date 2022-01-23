@@ -15,26 +15,26 @@ def main
       chunk_size_data = read_bytes(UNSIGNED_INT_32)
 
       case chunk_id_data[:parsed_value]
-        when "RIFF" then
-          read_riff_chunk_header(chunk_id_data, chunk_size_data)
-        when "fmt " then
-          read_format_chunk(chunk_id_data, chunk_size_data)
-        when "fact" then
-          read_fact_chunk(chunk_id_data, chunk_size_data)
-        when "PEAK" then
-          read_peak_chunk(chunk_id_data, chunk_size_data)
-        when "cue " then
-          read_cue_chunk(chunk_id_data, chunk_size_data)
-        when "smpl" then
-          read_sample_chunk(chunk_id_data, chunk_size_data)
-        when "inst" then
-          read_instrument_chunk(chunk_id_data, chunk_size_data)
-        when "LIST" then
-          read_list_chunk(chunk_id_data, chunk_size_data)
-        when "data" then
-          read_data_chunk(chunk_id_data, chunk_size_data)
-        else
-          read_unrecognized_chunk(chunk_id_data, chunk_size_data)
+      when "RIFF" then
+        read_riff_chunk_header(chunk_id_data, chunk_size_data)
+      when "fmt " then
+        read_format_chunk(chunk_id_data, chunk_size_data)
+      when "fact" then
+        read_fact_chunk(chunk_id_data, chunk_size_data)
+      when "PEAK" then
+        read_peak_chunk(chunk_id_data, chunk_size_data)
+      when "cue " then
+        read_cue_chunk(chunk_id_data, chunk_size_data)
+      when "smpl" then
+        read_sample_chunk(chunk_id_data, chunk_size_data)
+      when "inst" then
+        read_instrument_chunk(chunk_id_data, chunk_size_data)
+      when "LIST" then
+        read_list_chunk(chunk_id_data, chunk_size_data)
+      when "data" then
+        read_data_chunk(chunk_id_data, chunk_size_data)
+      else
+        read_unrecognized_chunk(chunk_id_data, chunk_size_data)
       end
 
       # Read padding byte if necessary
