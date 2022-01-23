@@ -34,10 +34,7 @@ def main
         when "data" then
           read_data_chunk(chunk_id_data, chunk_size_data)
         else
-          chunk_size = chunk_size_data[:parsed_value]
-
-          puts "'#{chunk_id_data[:parsed_value]}' chunk of size #{chunk_size}, skipping."
-          FILE.sysread(chunk_size)
+          read_unrecognized_chunk(chunk_id_data, chunk_size_data)
       end
 
       # Read padding byte if necessary
@@ -329,6 +326,17 @@ def read_data_chunk(chunk_id_data, chunk_size_data)
   end
 
   FILE.sysread(chunk_size_data[:parsed_value] - intro_byte_count)
+end
+
+
+def read_unrecognized_chunk(chunk_id_data, chunk_size_data)
+  chunk_size = chunk_size_data[:parsed_value]
+  display_chunk_header("\"#{chunk_id_data[:parsed_value]}\" Chunk (unrecognized chunk type)", chunk_id_data, chunk_size_data)
+
+  if chunk_size > 0
+    puts "(chunk body omitted)"
+  end
+  FILE.sysread(chunk_size)
 end
 
 
