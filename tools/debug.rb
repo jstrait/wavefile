@@ -8,11 +8,6 @@ FLOAT_32 = "e"
 
 def main
   begin
-    # RIFF header
-    puts ""
-    display_chunk_header("Riff Chunk Header", read_bytes("a4"), read_bytes(UNSIGNED_INT_32))
-    display_line "Form type", "FourCC", read_bytes("a4")
-    puts ""
     puts ""
 
     while true
@@ -20,6 +15,8 @@ def main
       chunk_size_data = read_bytes(UNSIGNED_INT_32)
 
       case chunk_id_data[:parsed_value]
+        when "RIFF" then
+          read_riff_chunk_header(chunk_id_data, chunk_size_data)
         when "fmt " then
           read_format_chunk(chunk_id_data, chunk_size_data)
         when "fact" then
@@ -138,6 +135,12 @@ end
 
 def display_chunk_section_separator
   puts "----------------------------------+------------+----------------------------------"
+end
+
+
+def read_riff_chunk_header(chunk_id_data, chunk_size_data)
+  display_chunk_header("Riff Chunk Header", chunk_id_data, chunk_size_data)
+  display_line "Form type", "FourCC", read_bytes("a4")
 end
 
 
