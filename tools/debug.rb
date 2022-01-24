@@ -6,6 +6,18 @@ UNSIGNED_INT_16 = "v"
 UNSIGNED_INT_32 = "V"
 FLOAT_32 = "e"
 
+RECOGNIZED_CHUNK_IDS = [
+  "RIFF",
+  "fmt ",
+  "fact",
+  "PEAK",
+  "cue ",
+  "smpl",
+  "inst",
+  "LIST",
+  "data",
+]
+
 def main
   begin
     puts ""
@@ -14,27 +26,29 @@ def main
       chunk_id_data = read_bytes("a4")
       chunk_size_data = read_bytes(UNSIGNED_INT_32)
 
+      display_chunk_header(chunk_id_data, chunk_size_data)
+
       case chunk_id_data[:parsed_value]
       when "RIFF" then
-        read_riff_chunk_header(chunk_id_data, chunk_size_data)
+        read_riff_chunk_header(chunk_size_data)
       when "fmt " then
-        read_format_chunk(chunk_id_data, chunk_size_data)
+        read_format_chunk(chunk_size_data)
       when "fact" then
-        read_fact_chunk(chunk_id_data, chunk_size_data)
+        read_fact_chunk(chunk_size_data)
       when "PEAK" then
-        read_peak_chunk(chunk_id_data, chunk_size_data)
+        read_peak_chunk(chunk_size_data)
       when "cue " then
-        read_cue_chunk(chunk_id_data, chunk_size_data)
+        read_cue_chunk(chunk_size_data)
       when "smpl" then
-        read_sample_chunk(chunk_id_data, chunk_size_data)
+        read_sample_chunk(chunk_size_data)
       when "inst" then
-        read_instrument_chunk(chunk_id_data, chunk_size_data)
+        read_instrument_chunk(chunk_size_data)
       when "LIST" then
-        read_list_chunk(chunk_id_data, chunk_size_data)
+        read_list_chunk(chunk_size_data)
       when "data" then
-        read_data_chunk(chunk_id_data, chunk_size_data)
+        read_data_chunk(chunk_size_data)
       else
-        read_unrecognized_chunk(chunk_id_data, chunk_size_data)
+        read_unrecognized_chunk(chunk_size_data)
       end
 
       # Read padding byte if necessary
@@ -121,8 +135,16 @@ def display_line(label, data_type, h)
 end
 
 
-def display_chunk_header(heading, chunk_id, chunk_size)
-  puts heading
+def display_chunk_header(chunk_id, chunk_size)
+  title = "\"#{chunk_id[:parsed_value]}\" Chunk"
+
+  if chunk_id[:parsed_value] == "RIFF"
+    title += " Header"
+  elsif RECOGNIZED_CHUNK_IDS.member?(chunk_id[:parsed_value]) == false
+    title += " (unrecognized chunk type)"
+  end
+
+  puts title
   puts "=================================================================================="
   display_line "Chunk ID", "FourCC", chunk_id
   display_line "Chunk size", "uint_32", chunk_size
@@ -135,14 +157,12 @@ def display_chunk_section_separator
 end
 
 
-def read_riff_chunk_header(chunk_id_data, chunk_size_data)
-  display_chunk_header("\"#{chunk_id_data[:parsed_value]}\" Chunk Header", chunk_id_data, chunk_size_data)
+def read_riff_chunk_header(chunk_size_data)
   display_line "Form type", "FourCC", read_bytes("a4")
 end
 
 
-def read_format_chunk(chunk_id_data, chunk_size_data)
-  display_chunk_header("\"#{chunk_id_data[:parsed_value]}\" Chunk", chunk_id_data, chunk_size_data)
+def read_format_chunk(chunk_size_data)
   audio_format_code = read_bytes(UNSIGNED_INT_16)
   display_line "Audio format",    "uint_16", audio_format_code
   display_line "Channels",        "uint_16", read_bytes(UNSIGNED_INT_16)
@@ -184,8 +204,7 @@ def read_format_chunk(chunk_id_data, chunk_size_data)
 end
 
 
-def read_fact_chunk(chunk_id_data, chunk_size_data)
-  display_chunk_header("\"#{chunk_id_data[:parsed_value]}\" Chunk", chunk_id_data, chunk_size_data)
+def read_fact_chunk(chunk_size_data)
   display_line "Sample count", "uint_32", read_bytes(UNSIGNED_INT_32)
 
   if chunk_size_data[:parsed_value] > 4
@@ -194,9 +213,7 @@ def read_fact_chunk(chunk_id_data, chunk_size_data)
 end
 
 
-def read_peak_chunk(chunk_id_data, chunk_size_data)
-  display_chunk_header("\"#{chunk_id_data[:parsed_value]}\" Chunk", chunk_id_data, chunk_size_data)
-
+def read_peak_chunk(chunk_size_data)
   display_line "Version",          "uint_32", read_bytes(UNSIGNED_INT_32)
   display_line "Timestamp",        "uint_32", read_bytes(UNSIGNED_INT_32)
 
@@ -207,9 +224,7 @@ def read_peak_chunk(chunk_id_data, chunk_size_data)
 end
 
 
-def read_cue_chunk(chunk_id_data, chunk_size_data)
-  display_chunk_header("\"#{chunk_id_data[:parsed_value]}\" Chunk", chunk_id_data, chunk_size_data)
-
+def read_cue_chunk(chunk_size_data)
   display_line "Cue point count", "uint_32", read_bytes(UNSIGNED_INT_32)
 
   ((chunk_size_data[:parsed_value] - 4) / 24).times do |i|
@@ -223,9 +238,7 @@ def read_cue_chunk(chunk_id_data, chunk_size_data)
 end
 
 
-def read_sample_chunk(chunk_id_data, chunk_size_data)
-  display_chunk_header("\"#{chunk_id_data[:parsed_value]}\" Chunk", chunk_id_data, chunk_size_data)
-
+def read_sample_chunk(chunk_size_data)
   display_line "Manufacturer",        "uint_32", read_bytes(UNSIGNED_INT_32)
   display_line "Product",             "uint_32", read_bytes(UNSIGNED_INT_32)
   display_line "Sample Period",       "uint_32", read_bytes(UNSIGNED_INT_32)
@@ -265,9 +278,7 @@ def read_sample_chunk(chunk_id_data, chunk_size_data)
 end
 
 
-def read_instrument_chunk(chunk_id_data, chunk_size_data)
-  display_chunk_header("\"#{chunk_id_data[:parsed_value]}\" Chunk", chunk_id_data, chunk_size_data)
-
+def read_instrument_chunk(chunk_size_data)
   display_line "Unshifted Note", "uint_8", read_bytes(UNSIGNED_INT_8)
   display_line "Fine Tune",      "int_8", read_bytes(SIGNED_INT_8)
   display_line "Gain",           "int_8", read_bytes(SIGNED_INT_8)
@@ -283,9 +294,7 @@ def read_instrument_chunk(chunk_id_data, chunk_size_data)
 end
 
 
-def read_list_chunk(chunk_id_data, chunk_size_data)
-  display_chunk_header("\"#{chunk_id_data[:parsed_value]}\" Chunk", chunk_id_data, chunk_size_data)
-
+def read_list_chunk(chunk_size_data)
   list_type = read_bytes("a4")
   display_line "List Type", "FourCC", list_type
 
@@ -316,10 +325,8 @@ def read_list_chunk(chunk_id_data, chunk_size_data)
 end
 
 
-def read_data_chunk(chunk_id_data, chunk_size_data)
+def read_data_chunk(chunk_size_data)
   intro_byte_count = [10, chunk_size_data[:parsed_value]].min
-
-  display_chunk_header("\"#{chunk_id_data[:parsed_value]}\" Chunk", chunk_id_data, chunk_size_data)
 
   if intro_byte_count > 0
     display_line "Data Start", "bytes", read_bytes("#{UNSIGNED_INT_8}#{intro_byte_count}")
@@ -329,9 +336,8 @@ def read_data_chunk(chunk_id_data, chunk_size_data)
 end
 
 
-def read_unrecognized_chunk(chunk_id_data, chunk_size_data)
+def read_unrecognized_chunk(chunk_size_data)
   chunk_size = chunk_size_data[:parsed_value]
-  display_chunk_header("\"#{chunk_id_data[:parsed_value]}\" Chunk (unrecognized chunk type)", chunk_id_data, chunk_size_data)
 
   if chunk_size > 0
     puts "(chunk body omitted)"
