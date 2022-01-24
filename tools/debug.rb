@@ -6,17 +6,18 @@ UNSIGNED_INT_16 = "v"
 UNSIGNED_INT_32 = "V"
 FLOAT_32 = "e"
 
-RECOGNIZED_CHUNK_IDS = [
-  "RIFF",
-  "fmt ",
-  "fact",
-  "PEAK",
-  "cue ",
-  "smpl",
-  "inst",
-  "LIST",
-  "data",
-]
+CHUNK_BODY_READERS = {
+  "RIFF" => :read_riff_chunk_header,
+  "fmt " => :read_format_chunk,
+  "fact" => :read_fact_chunk,
+  "PEAK" => :read_peak_chunk,
+  "cue " => :read_cue_chunk,
+  "smpl" => :read_sample_chunk,
+  "inst" => :read_instrument_chunk,
+  "LIST" => :read_list_chunk,
+  "data" => :read_data_chunk,
+}
+CHUNK_BODY_READERS.default = :read_unrecognized_chunk
 
 def main
   begin
@@ -28,28 +29,7 @@ def main
 
       display_chunk_header(chunk_id_data, chunk_size_data)
 
-      case chunk_id_data[:parsed_value]
-      when "RIFF" then
-        read_riff_chunk_header(chunk_size_data)
-      when "fmt " then
-        read_format_chunk(chunk_size_data)
-      when "fact" then
-        read_fact_chunk(chunk_size_data)
-      when "PEAK" then
-        read_peak_chunk(chunk_size_data)
-      when "cue " then
-        read_cue_chunk(chunk_size_data)
-      when "smpl" then
-        read_sample_chunk(chunk_size_data)
-      when "inst" then
-        read_instrument_chunk(chunk_size_data)
-      when "LIST" then
-        read_list_chunk(chunk_size_data)
-      when "data" then
-        read_data_chunk(chunk_size_data)
-      else
-        read_unrecognized_chunk(chunk_size_data)
-      end
+      send(CHUNK_BODY_READERS[chunk_id_data[:parsed_value]], chunk_size_data)
 
       # Read padding byte if necessary
       if chunk_size_data[:parsed_value].odd?
@@ -140,7 +120,7 @@ def display_chunk_header(chunk_id, chunk_size)
 
   if chunk_id[:parsed_value] == "RIFF"
     title += " Header"
-  elsif RECOGNIZED_CHUNK_IDS.member?(chunk_id[:parsed_value]) == false
+  elsif CHUNK_BODY_READERS.keys.member?(chunk_id[:parsed_value]) == false
     title += " (unrecognized chunk type)"
   end
 
