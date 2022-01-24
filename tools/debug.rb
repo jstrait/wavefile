@@ -29,7 +29,7 @@ def main
 
       display_chunk_header(chunk_id_data, chunk_size_data)
 
-      send(CHUNK_BODY_READERS[chunk_id_data[:parsed_value]], chunk_size_data)
+      send(CHUNK_BODY_READERS[chunk_id_data[:parsed_value]], chunk_size_data[:parsed_value])
 
       # Read padding byte if necessary
       if chunk_size_data[:parsed_value].odd?
@@ -137,12 +137,12 @@ def display_chunk_section_separator
 end
 
 
-def read_riff_chunk_header(chunk_size_data)
+def read_riff_chunk_header(chunk_size)
   display_line "Form type", "FourCC", read_bytes("a4")
 end
 
 
-def read_format_chunk(chunk_size_data)
+def read_format_chunk(chunk_size)
   audio_format_code = read_bytes(UNSIGNED_INT_16)
   display_line "Audio format",    "uint_16", audio_format_code
   display_line "Channels",        "uint_16", read_bytes(UNSIGNED_INT_16)
@@ -153,7 +153,7 @@ def read_format_chunk(chunk_size_data)
 
   bytes_read_so_far = 16
 
-  if audio_format_code[:parsed_value] != 1 && chunk_size_data[:parsed_value] > 16
+  if audio_format_code[:parsed_value] != 1 && chunk_size > 16
     extension_size_data = read_bytes(UNSIGNED_INT_16)
     display_line "Extension size", "uint_16", extension_size_data
     bytes_read_so_far += 2
@@ -177,37 +177,37 @@ def read_format_chunk(chunk_size_data)
     bytes_read_so_far += extension_size_data[:parsed_value]
   end
 
-  extra_byte_count = chunk_size_data[:parsed_value] - bytes_read_so_far
+  extra_byte_count = chunk_size - bytes_read_so_far
   if extra_byte_count > 0
     display_line "Extra bytes", "bytes", read_bytes("#{UNSIGNED_INT_8}#{extra_byte_count}")
   end
 end
 
 
-def read_fact_chunk(chunk_size_data)
+def read_fact_chunk(chunk_size)
   display_line "Sample count", "uint_32", read_bytes(UNSIGNED_INT_32)
 
-  if chunk_size_data[:parsed_value] > 4
-    FILE.sysread(chunk_size_data[:parsed_value] - 4)
+  if chunk_size > 4
+    FILE.sysread(chunk_size - 4)
   end
 end
 
 
-def read_peak_chunk(chunk_size_data)
+def read_peak_chunk(chunk_size)
   display_line "Version",          "uint_32", read_bytes(UNSIGNED_INT_32)
   display_line "Timestamp",        "uint_32", read_bytes(UNSIGNED_INT_32)
 
-  ((chunk_size_data[:parsed_value] - 8) / 8).times do |i|
+  ((chunk_size - 8) / 8).times do |i|
     display_line "Chan. #{i + 1} Value",    "float_32", read_bytes(FLOAT_32)
     display_line "Chan. #{i + 1} Position", "uint_32", read_bytes(UNSIGNED_INT_32)
   end
 end
 
 
-def read_cue_chunk(chunk_size_data)
+def read_cue_chunk(chunk_size)
   display_line "Cue point count", "uint_32", read_bytes(UNSIGNED_INT_32)
 
-  ((chunk_size_data[:parsed_value] - 4) / 24).times do |i|
+  ((chunk_size - 4) / 24).times do |i|
     display_line "ID #{i + 1}", "uint_32", read_bytes(UNSIGNED_INT_32)
     display_line "Position #{i + 1}", "uint_32", read_bytes(UNSIGNED_INT_32)
     display_line "Chunk type #{i + 1}", "FourCC", read_bytes("a4")
@@ -218,7 +218,7 @@ def read_cue_chunk(chunk_size_data)
 end
 
 
-def read_sample_chunk(chunk_size_data)
+def read_sample_chunk(chunk_size)
   display_line "Manufacturer",        "uint_32", read_bytes(UNSIGNED_INT_32)
   display_line "Product",             "uint_32", read_bytes(UNSIGNED_INT_32)
   display_line "Sample Period",       "uint_32", read_bytes(UNSIGNED_INT_32)
@@ -251,14 +251,14 @@ def read_sample_chunk(chunk_size_data)
     display_line "Sampler specific data", "bytes", read_bytes("#{UNSIGNED_INT_8}#{sampler_specific_data_size}")
   end
 
-  extra_byte_count = chunk_size_data[:parsed_value] - 36 - (loop_count * 24) - sampler_specific_data_size_bytes[:parsed_value]
+  extra_byte_count = chunk_size - 36 - (loop_count * 24) - sampler_specific_data_size_bytes[:parsed_value]
   if (extra_byte_count > 0)
     display_line "Extra bytes", "bytes", read_bytes("#{UNSIGNED_INT_8}#{extra_byte_count}")
   end
 end
 
 
-def read_instrument_chunk(chunk_size_data)
+def read_instrument_chunk(chunk_size)
   display_line "Unshifted Note", "uint_8", read_bytes(UNSIGNED_INT_8)
   display_line "Fine Tune",      "int_8", read_bytes(SIGNED_INT_8)
   display_line "Gain",           "int_8", read_bytes(SIGNED_INT_8)
@@ -267,18 +267,18 @@ def read_instrument_chunk(chunk_size_data)
   display_line "Low Velocity",   "uint_8", read_bytes(UNSIGNED_INT_8)
   display_line "High Velocity",  "uint_8", read_bytes(UNSIGNED_INT_8)
 
-  extra_data_size = chunk_size_data[:parsed_value] - 7
+  extra_data_size = chunk_size - 7
   if extra_data_size > 0
     display_line "Extra Data", "bytes", read_bytes("#{UNSIGNED_INT_8}#{extra_data_size}")
   end
 end
 
 
-def read_list_chunk(chunk_size_data)
+def read_list_chunk(chunk_size)
   list_type = read_bytes("a4")
   display_line "List Type", "FourCC", list_type
 
-  bytes_remaining = chunk_size_data[:parsed_value] - 4
+  bytes_remaining = chunk_size - 4
 
   while bytes_remaining > 1
     display_chunk_section_separator
@@ -305,20 +305,18 @@ def read_list_chunk(chunk_size_data)
 end
 
 
-def read_data_chunk(chunk_size_data)
-  intro_byte_count = [10, chunk_size_data[:parsed_value]].min
+def read_data_chunk(chunk_size)
+  intro_byte_count = [10, chunk_size].min
 
   if intro_byte_count > 0
     display_line "Data Start", "bytes", read_bytes("#{UNSIGNED_INT_8}#{intro_byte_count}")
   end
 
-  FILE.sysread(chunk_size_data[:parsed_value] - intro_byte_count)
+  FILE.sysread(chunk_size - intro_byte_count)
 end
 
 
-def read_unrecognized_chunk(chunk_size_data)
-  chunk_size = chunk_size_data[:parsed_value]
-
+def read_unrecognized_chunk(chunk_size)
   if chunk_size > 0
     puts "(chunk body omitted)"
   end
