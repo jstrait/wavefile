@@ -32,7 +32,7 @@ def main
       send(CHUNK_BODY_READERS[chunk_id_data[:parsed_value]], chunk_size_data[:parsed_value])
 
       # Read padding byte if necessary
-      if chunk_size_data[:parsed_value].odd?
+      if chunk_size_data[:parsed_value].odd? && chunk_id_data[:parsed_value] != "RIFF"
         display_line "Padding Byte", "byte", read_bytes(UNSIGNED_INT_8)
       end
 
