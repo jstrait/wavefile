@@ -109,14 +109,24 @@ def display_line(label, data_type, h)
   parsed_value = h[:parsed_value]
   bytes = h[:bytes]
 
+  if data_type == "FourCC" || data_type.start_with?("alpha")
+    # Wrap the value in quotes and show character codes for non-display characters
+    formatted_value = parsed_value.inspect
+  else
+    # This branch exists to avoid wrapping a value in quotes when it semantically
+    # is not a String but happens to be contained in a String object (e.g. a bit field,
+    # GUID, etc).
+    formatted_value = parsed_value.to_s
+  end
+
   formatted_bytes = bytes.map {|byte| byte.unpack("H2").first }.join(" ")
 
-  puts "#{(label + ":").ljust(22)} #{data_type.ljust(10)} | #{parsed_value.to_s.ljust(10).gsub("\n\n", "")} | #{formatted_bytes}"
+  puts "#{(label + ":").ljust(22)} #{data_type.ljust(10)} | #{formatted_value.ljust(10)} | #{formatted_bytes}"
 end
 
 
 def display_chunk_header(chunk_id, chunk_size)
-  title = "\"#{chunk_id[:parsed_value]}\" Chunk"
+  title = "#{chunk_id[:parsed_value].inspect} Chunk"
 
   if chunk_id[:parsed_value] == "RIFF"
     title += " Header"
