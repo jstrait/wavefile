@@ -154,11 +154,11 @@ end
 
 def read_format_chunk(chunk_size)
   audio_format_code = read_bytes(UNSIGNED_INT_16)
-  display_line("Audio format",    "uint_16", audio_format_code)
-  display_line("Channels",        "uint_16", read_bytes(UNSIGNED_INT_16))
-  display_line("Sample rate",     "uint_32", read_bytes(UNSIGNED_INT_32))
-  display_line("Byte rate",       "uint_32", read_bytes(UNSIGNED_INT_32))
-  display_line("Block align",     "uint_16", read_bytes(UNSIGNED_INT_16))
+  display_line("Audio format", "uint_16", audio_format_code)
+  display_line("Channels", "uint_16", read_bytes(UNSIGNED_INT_16))
+  display_line("Sample rate", "uint_32", read_bytes(UNSIGNED_INT_32))
+  display_line("Byte rate", "uint_32", read_bytes(UNSIGNED_INT_32))
+  display_line("Block align", "uint_16", read_bytes(UNSIGNED_INT_16))
   display_line("Bits per sample", "uint_16", read_bytes(UNSIGNED_INT_16))
 
   bytes_read_so_far = 16
@@ -204,11 +204,11 @@ end
 
 
 def read_peak_chunk(chunk_size)
-  display_line("Version",          "uint_32", read_bytes(UNSIGNED_INT_32))
-  display_line("Timestamp",        "uint_32", read_bytes(UNSIGNED_INT_32))
+  display_line("Version", "uint_32", read_bytes(UNSIGNED_INT_32))
+  display_line("Timestamp", "uint_32", read_bytes(UNSIGNED_INT_32))
 
   ((chunk_size - 8) / 8).times do |i|
-    display_line("Chan. #{i + 1} Value",    "float_32", read_bytes(FLOAT_32))
+    display_line("Chan. #{i + 1} Value", "float_32", read_bytes(FLOAT_32))
     display_line("Chan. #{i + 1} Position", "uint_32", read_bytes(UNSIGNED_INT_32))
   end
 end
@@ -229,30 +229,30 @@ end
 
 
 def read_sample_chunk(chunk_size)
-  display_line("Manufacturer",        "uint_32", read_bytes(UNSIGNED_INT_32))
-  display_line("Product",             "uint_32", read_bytes(UNSIGNED_INT_32))
-  display_line("Sample Period",       "uint_32", read_bytes(UNSIGNED_INT_32))
-  display_line("MIDI Unity Note",     "uint_32", read_bytes(UNSIGNED_INT_32))
+  display_line("Manufacturer", "uint_32", read_bytes(UNSIGNED_INT_32))
+  display_line("Product", "uint_32", read_bytes(UNSIGNED_INT_32))
+  display_line("Sample Period", "uint_32", read_bytes(UNSIGNED_INT_32))
+  display_line("MIDI Unity Note", "uint_32", read_bytes(UNSIGNED_INT_32))
   display_line("MIDI Pitch Fraction", "uint_32", read_bytes(UNSIGNED_INT_32))
-  display_line("SMPTEFormat",         "uint_32", read_bytes(UNSIGNED_INT_32))
-  display_line("SMPTEOffset",         "uint_32", read_bytes(UNSIGNED_INT_32))
+  display_line("SMPTEFormat", "uint_32", read_bytes(UNSIGNED_INT_32))
+  display_line("SMPTEOffset", "uint_32", read_bytes(UNSIGNED_INT_32))
 
   sample_loops_bytes = read_bytes(UNSIGNED_INT_32)
   loop_count = sample_loops_bytes[:parsed_value]
-  display_line("Sample Loops",        "uint_32", sample_loops_bytes)
+  display_line("Sample Loops", "uint_32", sample_loops_bytes)
 
   sampler_specific_data_size_bytes = read_bytes(UNSIGNED_INT_32)
   sampler_specific_data_size = sampler_specific_data_size_bytes[:parsed_value]
-  display_line("Sampler Data Size",   "uint_32", sampler_specific_data_size_bytes)
+  display_line("Sampler Data Size", "uint_32", sampler_specific_data_size_bytes)
 
   loop_count.times do |i|
     display_chunk_section_separator
     puts "Loop ##{i + 1}:"
     display_line("Identifier", "uint_32", read_bytes(UNSIGNED_INT_32))
-    display_line("Type",       "uint_32", read_bytes(UNSIGNED_INT_32))
-    display_line("Start",      "uint_32", read_bytes(UNSIGNED_INT_32))
-    display_line("End",        "uint_32", read_bytes(UNSIGNED_INT_32))
-    display_line("Fraction",   "uint_32", read_bytes(UNSIGNED_INT_32))
+    display_line("Type", "uint_32", read_bytes(UNSIGNED_INT_32))
+    display_line("Start", "uint_32", read_bytes(UNSIGNED_INT_32))
+    display_line("End", "uint_32", read_bytes(UNSIGNED_INT_32))
+    display_line("Fraction", "uint_32", read_bytes(UNSIGNED_INT_32))
     display_line("Play Count", "uint_32", read_bytes(UNSIGNED_INT_32))
   end
 
@@ -270,12 +270,12 @@ end
 
 def read_instrument_chunk(chunk_size)
   display_line("Unshifted Note", "uint_8", read_bytes(UNSIGNED_INT_8))
-  display_line("Fine Tune",      "int_8", read_bytes(SIGNED_INT_8))
-  display_line("Gain",           "int_8", read_bytes(SIGNED_INT_8))
-  display_line("Low Note",       "uint_8", read_bytes(UNSIGNED_INT_8))
-  display_line("High Note",      "uint_8", read_bytes(UNSIGNED_INT_8))
-  display_line("Low Velocity",   "uint_8", read_bytes(UNSIGNED_INT_8))
-  display_line("High Velocity",  "uint_8", read_bytes(UNSIGNED_INT_8))
+  display_line("Fine Tune", "int_8", read_bytes(SIGNED_INT_8))
+  display_line("Gain", "int_8", read_bytes(SIGNED_INT_8))
+  display_line("Low Note", "uint_8", read_bytes(UNSIGNED_INT_8))
+  display_line("High Note", "uint_8", read_bytes(UNSIGNED_INT_8))
+  display_line("Low Velocity", "uint_8", read_bytes(UNSIGNED_INT_8))
+  display_line("High Velocity", "uint_8", read_bytes(UNSIGNED_INT_8))
 
   extra_data_size = chunk_size - 7
   if extra_data_size > 0
