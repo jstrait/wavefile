@@ -41,9 +41,9 @@ def main
 end
 
 
-def display_line(label, data_type, h)
-  parsed_value = h[:parsed_value]
-  bytes = h[:bytes]
+def display_line(label, data_type, field)
+  parsed_value = field[:parsed_value]
+  bytes = field[:bytes]
 
   if data_type == "FourCC" || data_type.start_with?("alpha")
     # Wrap the value in quotes and show character codes for non-display characters
