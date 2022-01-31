@@ -1,5 +1,3 @@
-FILE = File.open(ARGV[0], "rb")
-
 CHUNK_BODY_READERS = {
   "RIFF" => :read_riff_chunk_header,
   "fmt " => :read_format_chunk,
@@ -14,7 +12,8 @@ CHUNK_BODY_READERS = {
 CHUNK_BODY_READERS.default = :read_unrecognized_chunk
 
 def main
-  field_reader = FieldReader.new(FILE)
+  file = File.open(ARGV[0], "rb")
+  field_reader = FieldReader.new(file)
 
   begin
     puts ""
@@ -36,7 +35,7 @@ def main
       puts ""
     end
   rescue EOFError
-    FILE.close
+    file.close
   end
 end
 
