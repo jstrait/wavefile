@@ -246,7 +246,9 @@ def read_list_chunk(field_reader, chunk_size)
     end
   end
 
-  field_reader.skip_bytes(bytes_remaining)
+  if bytes_remaining > 0
+    field_reader.skip_bytes(bytes_remaining)
+  end
 end
 
 
@@ -257,15 +259,17 @@ def read_data_chunk(field_reader, chunk_size)
     display_line("Data Start", field_reader.read_bytes(intro_byte_count))
   end
 
-  field_reader.skip_bytes(chunk_size - intro_byte_count)
+  if intro_byte_count < chunk_size
+    field_reader.skip_bytes(chunk_size - intro_byte_count)
+  end
 end
 
 
 def read_unrecognized_chunk(field_reader, chunk_size)
   if chunk_size > 0
     puts "(chunk body omitted)"
+    field_reader.skip_bytes(chunk_size)
   end
-  field_reader.skip_bytes(chunk_size)
 end
 
 
