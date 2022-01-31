@@ -134,7 +134,7 @@ def read_fact_chunk(field_reader, chunk_size)
   display_line("Sample count", field_reader.read_uint32)
 
   if chunk_size > 4
-    FILE.sysread(chunk_size - 4)
+    field_reader.skip_bytes(chunk_size - 4)
   end
 end
 
@@ -247,7 +247,7 @@ def read_list_chunk(field_reader, chunk_size)
     end
   end
 
-  FILE.sysread(bytes_remaining)
+  field_reader.skip_bytes(bytes_remaining)
 end
 
 
@@ -258,7 +258,7 @@ def read_data_chunk(field_reader, chunk_size)
     display_line("Data Start", field_reader.read_bytes(intro_byte_count))
   end
 
-  FILE.sysread(chunk_size - intro_byte_count)
+  field_reader.skip_bytes(chunk_size - intro_byte_count)
 end
 
 
@@ -266,7 +266,7 @@ def read_unrecognized_chunk(field_reader, chunk_size)
   if chunk_size > 0
     puts "(chunk body omitted)"
   end
-  FILE.sysread(chunk_size)
+  field_reader.skip_bytes(chunk_size)
 end
 
 
@@ -339,6 +339,10 @@ class FieldReader
     read_field(byte_count: 1,
                type_label: "byte",
                parser: lambda {|bytes| bytes.join.unpack("C").first })
+  end
+
+  def skip_bytes(byte_count)
+    @file.sysread(byte_count)
   end
 
   private
