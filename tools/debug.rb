@@ -233,7 +233,7 @@ def read_list_chunk(field_reader, chunk_size)
 
   bytes_remaining = chunk_size - 4
 
-  while bytes_remaining > 1
+  while bytes_remaining > 0
     display_chunk_section_separator
     display_line("Sub Type ID", field_reader.read_fourcc)
 
@@ -252,10 +252,6 @@ def read_list_chunk(field_reader, chunk_size)
 
       bytes_remaining -= (size + 8)
     end
-  end
-
-  if bytes_remaining > 0
-    field_reader.skip_bytes(bytes_remaining)
   end
 end
 
