@@ -150,15 +150,23 @@ end
 
 
 def read_cue_chunk(field_reader, chunk_size)
-  display_line("Cue point count", field_reader.read_uint32)
+  cue_point_count = field_reader.read_uint32
+  display_line("Cue point count", cue_point_count)
 
-  ((chunk_size - 4) / 24).times do |i|
+  bytes_remaining = chunk_size - 4
+
+  cue_point_count[:parsed_value].times do |i|
     display_line("ID #{i + 1}", field_reader.read_uint32)
     display_line("Position #{i + 1}", field_reader.read_uint32)
     display_line("Chunk type #{i + 1}", field_reader.read_fourcc)
     display_line("Chunk start #{i + 1}", field_reader.read_uint32)
     display_line("Block start #{i + 1}", field_reader.read_uint32)
     display_line("Sample offset #{i + 1}", field_reader.read_uint32)
+    bytes_remaining -= 24
+  end
+
+  if bytes_remaining > 0
+    display_line("Extra bytes", field_reader.read_bytes(bytes_remaining))
   end
 end
 
