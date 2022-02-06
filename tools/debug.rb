@@ -133,7 +133,7 @@ def read_fact_chunk(field_reader, chunk_size)
   display_line("Sample count", field_reader.read_uint32)
 
   if chunk_size > 4
-    field_reader.skip_bytes(chunk_size - 4)
+    display_line("Extra bytes", field_reader.read_bytes(chunk_size - 4))
   end
 end
 
