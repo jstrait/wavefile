@@ -222,7 +222,7 @@ def read_instrument_chunk(field_reader, chunk_size)
 
   extra_data_size = chunk_size - 7
   if extra_data_size > 0
-    display_line("Extra Data", field_reader.read_bytes(extra_data_size))
+    display_line("Extra bytes", field_reader.read_bytes(extra_data_size))
   end
 end
 
