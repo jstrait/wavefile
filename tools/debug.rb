@@ -237,20 +237,20 @@ def read_list_chunk(field_reader, chunk_size)
     display_chunk_section_separator
     display_line("Child Chunk ID", field_reader.read_fourcc)
 
-    size_bytes = field_reader.read_uint32
-    size = size_bytes[:parsed_value]
+    child_chunk_size_bytes = field_reader.read_uint32
+    child_chunk_size = child_chunk_size_bytes[:parsed_value]
 
-    display_line("Child Chunk Size", size_bytes)
+    display_line("Child Chunk Size", child_chunk_size_bytes)
 
     if list_type[:parsed_value] == "adtl"
       display_line("Cue Point ID", field_reader.read_uint32)
-      display_line("Content", field_reader.read_string(size - 4))
+      display_line("Content", field_reader.read_string(child_chunk_size - 4))
 
-      bytes_remaining -= (size + 8)
+      bytes_remaining -= (child_chunk_size + 8)
     else   # INFO, and any unknown list type
-      display_line("Content", field_reader.read_string(size))
+      display_line("Content", field_reader.read_string(child_chunk_size))
 
-      bytes_remaining -= (size + 8)
+      bytes_remaining -= (child_chunk_size + 8)
     end
   end
 end
