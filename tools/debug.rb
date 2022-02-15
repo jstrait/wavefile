@@ -252,6 +252,11 @@ def read_list_chunk(field_reader, chunk_size)
 
       bytes_remaining -= (child_chunk_size + 8)
     end
+
+    if child_chunk_size.odd?
+      display_line("Padding Byte", field_reader.read_padding_byte)
+      bytes_remaining -= 1
+    end
   end
 end
 
