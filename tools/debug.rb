@@ -45,7 +45,7 @@ def display_line(label, field)
   bytes = field[:bytes]
   data_type = field[:type_label]
 
-  if data_type == "FourCC" || data_type.start_with?("alpha")
+  if data_type == "FourCC" || data_type == "C String"
     # Wrap the value in quotes and show character codes for non-display characters
     formatted_value = parsed_value.inspect
   else
@@ -258,12 +258,12 @@ def read_list_chunk(field_reader, chunk_size)
           display_line("Text", field_reader.read_bytes(child_chunk_size - 20))
         end
       else
-        display_line("Content", field_reader.read_string(child_chunk_size - 4))
+        display_line("Content", field_reader.read_null_terminated_string(child_chunk_size - 4))
       end
 
       bytes_remaining -= (child_chunk_size + 8)
     else   # INFO, and any unknown list type
-      display_line("Content", field_reader.read_string(child_chunk_size))
+      display_line("Content", field_reader.read_null_terminated_string(child_chunk_size))
 
       bytes_remaining -= (child_chunk_size + 8)
     end
@@ -338,10 +338,10 @@ class FieldReader
                parser: lambda {|bytes| bytes.join })
   end
 
-  def read_string(byte_count)
+  def read_null_terminated_string(byte_count)
     read_field(byte_count: byte_count,
-               type_label: "alpha_#{byte_count}",
-               parser: lambda {|bytes| bytes.join })
+               type_label: "C String",
+               parser: lambda {|bytes| bytes.join.unpack("Z#{byte_count}").first })
   end
 
   def read_bitfield(byte_count)
