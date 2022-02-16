@@ -235,7 +235,8 @@ def read_list_chunk(field_reader, chunk_size)
 
   while bytes_remaining > 0
     display_chunk_section_separator
-    display_line("Child Chunk ID", field_reader.read_fourcc)
+    child_chunk_id = field_reader.read_fourcc
+    display_line("Child Chunk ID", child_chunk_id)
 
     child_chunk_size_bytes = field_reader.read_uint32
     child_chunk_size = child_chunk_size_bytes[:parsed_value]
@@ -244,7 +245,21 @@ def read_list_chunk(field_reader, chunk_size)
 
     if list_type[:parsed_value] == "adtl"
       display_line("Cue Point ID", field_reader.read_uint32)
-      display_line("Content", field_reader.read_string(child_chunk_size - 4))
+
+      if child_chunk_id[:parsed_value] == "ltxt"
+        display_line("Sample Length", field_reader.read_uint32)
+        display_line("Purpose", field_reader.read_fourcc)
+        display_line("Country", field_reader.read_uint16)
+        display_line("Language", field_reader.read_uint16)
+        display_line("Dialect", field_reader.read_uint16)
+        display_line("Code Page", field_reader.read_uint16)
+
+        if child_chunk_size > 20
+          display_line("Text", field_reader.read_bytes(child_chunk_size - 20))
+        end
+      else
+        display_line("Content", field_reader.read_string(child_chunk_size - 4))
+      end
 
       bytes_remaining -= (child_chunk_size + 8)
     else   # INFO, and any unknown list type
