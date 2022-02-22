@@ -35,6 +35,10 @@ def main
       puts ""
     end
   rescue EOFError
+    # Swallow the error and do nothing to avoid an error being shown in the output,
+    # since the normal expected case is that EOFError will be raised once the end
+    # of the file is reached.
+  ensure
     file.close
   end
 end
