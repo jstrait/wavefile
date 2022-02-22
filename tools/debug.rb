@@ -288,15 +288,16 @@ def read_data_chunk(field_reader, chunk_size)
   end
 
   if intro_byte_count < chunk_size
-    field_reader.skip_bytes(chunk_size - intro_byte_count)
+    skipped_byte_count = field_reader.skip_bytes(chunk_size - intro_byte_count)
+    puts "(#{skipped_byte_count} bytes omitted)"
   end
 end
 
 
 def read_unrecognized_chunk(field_reader, chunk_size)
   if chunk_size > 0
-    puts "(chunk body omitted)"
-    field_reader.skip_bytes(chunk_size)
+    skipped_byte_count = field_reader.skip_bytes(chunk_size)
+    puts "(#{skipped_byte_count} bytes omitted)"
   end
 end
 
@@ -373,7 +374,9 @@ class FieldReader
   end
 
   def skip_bytes(byte_count)
-    @file.sysread(byte_count)
+    string = @file.sysread(byte_count)
+
+    string.length
   end
 
   private
