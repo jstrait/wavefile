@@ -16,16 +16,26 @@ def main
   field_reader = FieldReader.new(file)
 
   begin
-    while true
-      chunk_id_field = field_reader.read_fourcc
-      chunk_size_field = field_reader.read_uint32
+    riff_chunk_id_field = field_reader.read_fourcc
+    riff_chunk_size_field = field_reader.read_uint32
 
-      display_chunk_header(chunk_id_field, chunk_size_field)
+    display_chunk_header(riff_chunk_id_field, riff_chunk_size_field)
 
-      send(CHUNK_BODY_READERS[chunk_id_field[:parsed_value]], field_reader, chunk_size_field[:parsed_value])
+    read_riff_chunk_header(field_reader, riff_chunk_size_field[:parsed_value])
+
+    puts ""
+    puts ""
+
+    while field_reader.bytes_read < riff_chunk_size_field[:parsed_value] + 8
+      child_chunk_id_field = field_reader.read_fourcc
+      child_chunk_size_field = field_reader.read_uint32
+
+      display_chunk_header(child_chunk_id_field, child_chunk_size_field)
+
+      send(CHUNK_BODY_READERS[child_chunk_id_field[:parsed_value]], field_reader, child_chunk_size_field[:parsed_value])
 
       # Read padding byte if necessary
-      if chunk_size_field[:parsed_value].odd? && chunk_id_field[:parsed_value] != "RIFF"
+      if child_chunk_size_field[:parsed_value].odd?
         display_line("Padding Byte", field_reader.read_padding_byte)
       end
 
@@ -33,9 +43,9 @@ def main
       puts ""
     end
   rescue EOFError
-    # Swallow the error and do nothing to avoid an error being shown in the output,
-    # since the normal expected case is that EOFError will be raised once the end
-    # of the file is reached.
+    # Swallow the error and do nothing to avoid an error being shown in the output.
+    # Perhaps in the future it would be better to show an indication that the end
+    # of the file was unexpectedly reached.
   ensure
     file.close
   end
@@ -303,7 +313,10 @@ end
 class FieldReader
   def initialize(file)
     @file = file
+    @bytes_read = 0
   end
+
+  attr_reader :bytes_read
 
   def read_int8
     read_field(byte_count: 1,
@@ -374,6 +387,7 @@ class FieldReader
   def skip_bytes(byte_count)
     string = @file.sysread(byte_count)
 
+    @bytes_read += string.length
     string.length
   end
 
@@ -394,6 +408,7 @@ class FieldReader
 
     byte_count.times do |i|
       bytes << @file.sysread(1)
+      @bytes_read += 1
     end
 
     bytes
