@@ -16,8 +16,6 @@ def main
   field_reader = FieldReader.new(file)
 
   begin
-    puts ""
-
     while true
       chunk_id_data = field_reader.read_fourcc
       chunk_size_data = field_reader.read_uint32
