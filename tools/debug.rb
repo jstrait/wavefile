@@ -182,9 +182,9 @@ def read_sample_chunk(field_reader, chunk_size)
   display_line("SMPTEFormat", field_reader.read_uint32)
   display_line("SMPTEOffset", field_reader.read_uint32)
 
-  sample_loops_bytes = field_reader.read_uint32
-  loop_count = sample_loops_bytes[:parsed_value]
-  display_line("Sample Loops", sample_loops_bytes)
+  loop_count_bytes = field_reader.read_uint32
+  loop_count = loop_count_bytes[:parsed_value]
+  display_line("Sample Loops", loop_count_bytes)
 
   sampler_specific_data_size_bytes = field_reader.read_uint32
   sampler_specific_data_size = sampler_specific_data_size_bytes[:parsed_value]
