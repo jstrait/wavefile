@@ -23,12 +23,12 @@ def main
 
     read_riff_chunk_header(field_reader, riff_chunk_size_field[:parsed_value])
 
-    puts ""
-    puts ""
-
     while field_reader.bytes_read < riff_chunk_size_field[:parsed_value] + 8
       child_chunk_id_field = field_reader.read_fourcc
       child_chunk_size_field = field_reader.read_uint32
+
+      puts ""
+      puts ""
 
       display_chunk_header(child_chunk_id_field, child_chunk_size_field)
 
@@ -37,9 +37,6 @@ def main
       if child_chunk_size_field[:parsed_value].odd?
         display_line("Padding Byte", field_reader.read_padding_byte)
       end
-
-      puts ""
-      puts ""
     end
   rescue EOFError
     # Swallow the error and do nothing to avoid an error being shown in the output.
