@@ -34,7 +34,6 @@ def main
 
       send(CHUNK_BODY_READERS[child_chunk_id_field[:parsed_value]], field_reader, child_chunk_size_field[:parsed_value])
 
-      # Read padding byte if necessary
       if child_chunk_size_field[:parsed_value].odd?
         display_line("Padding Byte", field_reader.read_padding_byte)
       end
