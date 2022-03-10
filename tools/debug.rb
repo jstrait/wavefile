@@ -58,8 +58,6 @@ def display_chunk_header(chunk_id_field, chunk_size_field)
 
   if chunk_id_field[:parsed_value] == "RIFF"
     title += " Header"
-  elsif CHUNK_BODY_READERS.keys.member?(chunk_id_field[:parsed_value]) == false
-    title += " (unrecognized chunk type)"
   end
 
   puts title
@@ -301,7 +299,7 @@ end
 def read_unrecognized_chunk(field_reader, chunk_size)
   if chunk_size > 0
     skipped_byte_count = field_reader.skip_bytes(chunk_size)
-    puts "(#{skipped_byte_count} byte chunk body omitted)"
+    puts "(unrecognized chunk type; #{skipped_byte_count} byte chunk body omitted)"
   end
 end
 
