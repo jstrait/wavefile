@@ -301,7 +301,7 @@ end
 def read_unrecognized_chunk(field_reader, chunk_size)
   if chunk_size > 0
     skipped_byte_count = field_reader.skip_bytes(chunk_size)
-    puts "(#{skipped_byte_count} bytes omitted)"
+    puts "(#{skipped_byte_count} byte chunk body omitted)"
   end
 end
 
