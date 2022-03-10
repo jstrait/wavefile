@@ -1,5 +1,5 @@
 CHUNK_BODY_READERS = {
-  "RIFF" => :read_riff_chunk_header,
+  "RIFF" => :read_riff_chunk,
   "fmt " => :read_format_chunk,
   "fact" => :read_fact_chunk,
   "PEAK" => :read_peak_chunk,
@@ -21,23 +21,7 @@ def main
 
     display_chunk_header(riff_chunk_id_field, riff_chunk_size_field)
 
-    read_riff_chunk_header(field_reader, riff_chunk_size_field[:parsed_value])
-
-    while field_reader.bytes_read < riff_chunk_size_field[:parsed_value] + 8
-      child_chunk_id_field = field_reader.read_fourcc
-      child_chunk_size_field = field_reader.read_uint32
-
-      puts ""
-      puts ""
-
-      display_chunk_header(child_chunk_id_field, child_chunk_size_field)
-
-      send(CHUNK_BODY_READERS[child_chunk_id_field[:parsed_value]], field_reader, child_chunk_size_field[:parsed_value])
-
-      if child_chunk_size_field[:parsed_value].odd?
-        display_line("Padding Byte", field_reader.read_padding_byte)
-      end
-    end
+    read_riff_chunk(field_reader, riff_chunk_size_field[:parsed_value])
   rescue EOFError
     # Swallow the error and do nothing to avoid an error being shown in the output.
     # Perhaps in the future it would be better to show an indication that the end
@@ -91,8 +75,24 @@ def display_chunk_section_separator
 end
 
 
-def read_riff_chunk_header(field_reader, chunk_size)
+def read_riff_chunk(field_reader, chunk_size)
   display_line("Form type", field_reader.read_fourcc)
+
+  while field_reader.bytes_read < chunk_size + 8
+    child_chunk_id_field = field_reader.read_fourcc
+    child_chunk_size_field = field_reader.read_uint32
+
+    puts ""
+    puts ""
+
+    display_chunk_header(child_chunk_id_field, child_chunk_size_field)
+
+    send(CHUNK_BODY_READERS[child_chunk_id_field[:parsed_value]], field_reader, child_chunk_size_field[:parsed_value])
+
+    if child_chunk_size_field[:parsed_value].odd?
+      display_line("Padding Byte", field_reader.read_padding_byte)
+    end
+  end
 end
 
 
