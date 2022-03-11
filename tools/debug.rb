@@ -85,7 +85,8 @@ def read_riff_chunk(field_reader, chunk_size)
 
     display_chunk_header(child_chunk_id_field, child_chunk_size_field)
 
-    send(CHUNK_BODY_READERS[child_chunk_id_field[:parsed_value]], field_reader, child_chunk_size_field[:parsed_value])
+    chunk_body_reader_method_name = CHUNK_BODY_READERS[child_chunk_id_field[:parsed_value]]
+    send(chunk_body_reader_method_name, field_reader, child_chunk_size_field[:parsed_value])
 
     if child_chunk_size_field[:parsed_value].odd?
       display_line("Padding Byte", field_reader.read_padding_byte)
