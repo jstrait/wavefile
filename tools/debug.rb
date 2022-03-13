@@ -12,10 +12,9 @@ CHUNK_BODY_READERS = {
 CHUNK_BODY_READERS.default = :read_unrecognized_chunk
 
 def main
-  file = File.open(ARGV[0], "rb")
-  field_reader = FieldReader.new(file)
+  File.open(ARGV[0], "rb") do |file|
+    field_reader = FieldReader.new(file)
 
-  begin
     riff_chunk_id_field = field_reader.read_fourcc
     riff_chunk_size_field = field_reader.read_uint32
 
@@ -26,8 +25,6 @@ def main
     # Swallow the error and do nothing to avoid an error being shown in the output.
     # Perhaps in the future it would be better to show an indication that the end
     # of the file was unexpectedly reached.
-  ensure
-    file.close
   end
 end
 
