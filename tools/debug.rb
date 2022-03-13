@@ -15,10 +15,14 @@ def main
   File.open(ARGV[0], "rb") do |file|
     field_reader = FieldReader.new(file)
 
-    riff_chunk_id_field = field_reader.read_fourcc
-    riff_chunk_size_field = field_reader.read_uint32
-
-    display_chunk_header(riff_chunk_id_field, riff_chunk_size_field)
+    begin
+      riff_chunk_id_field = field_reader.read_fourcc
+      riff_chunk_size_field = field_reader.read_uint32
+    ensure
+      if riff_chunk_id_field != nil
+        display_chunk_header(riff_chunk_id_field, riff_chunk_size_field)
+      end
+    end
 
     read_riff_chunk(field_reader, riff_chunk_size_field[:parsed_value])
   rescue EOFError
@@ -60,8 +64,11 @@ def display_chunk_header(chunk_id_field, chunk_size_field)
   puts title
   puts "=================================================================================="
   display_line("Chunk ID", chunk_id_field)
-  display_line("Chunk size", chunk_size_field)
-  display_chunk_section_separator
+
+  if chunk_size_field != nil
+    display_line("Chunk size", chunk_size_field)
+    display_chunk_section_separator
+  end
 end
 
 
@@ -74,13 +81,19 @@ def read_riff_chunk(field_reader, chunk_size)
   display_line("Form type", field_reader.read_fourcc)
 
   while field_reader.bytes_read < chunk_size + 8
-    child_chunk_id_field = field_reader.read_fourcc
-    child_chunk_size_field = field_reader.read_uint32
+    child_chunk_id_field, child_chunk_size_field = nil
 
-    puts ""
-    puts ""
+    begin
+      child_chunk_id_field = field_reader.read_fourcc
+      child_chunk_size_field = field_reader.read_uint32
+    ensure
+      if child_chunk_id_field != nil
+        puts ""
+        puts ""
 
-    display_chunk_header(child_chunk_id_field, child_chunk_size_field)
+        display_chunk_header(child_chunk_id_field, child_chunk_size_field)
+      end
+    end
 
     chunk_body_reader_method_name = CHUNK_BODY_READERS[child_chunk_id_field[:parsed_value]]
     send(chunk_body_reader_method_name, field_reader, child_chunk_size_field[:parsed_value])
