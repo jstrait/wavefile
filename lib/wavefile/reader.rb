@@ -100,7 +100,7 @@ module WaveFile
     #     puts "#{buffer.samples.length} sample frames read"
     #   end
     #   # At this point, the Reader is now closed (even without
-    #   # a call to `close()`
+    #   # a call to `close()`)
     #
     # Returns nothing. Has side effect of closing the Reader.
     def each_buffer(sample_frame_count=4096)
