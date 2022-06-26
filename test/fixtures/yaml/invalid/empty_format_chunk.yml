@@ -1,6 +1,6 @@
 riff_chunk:
   chunk_id: "RIFF"
-  chunk_size: 20
+  chunk_size: 12
   wave_format: "WAVE"
 format_chunk:     # This format chunk only has the chunk header, but no body, so it's invalid
   chunk_id: "fmt "
