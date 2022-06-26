@@ -23,11 +23,11 @@ module WaveFile
         format_chunk[:bits_per_sample] = raw_bytes.slice!(0...MINIMUM_CHUNK_SIZE).unpack("vvVVvv")
 
         if format_chunk[:audio_format] == FORMAT_CODES[:extensible] || (format_chunk[:audio_format] != FORMAT_CODES[:pcm] && @chunk_size > MINIMUM_CHUNK_SIZE)
-          format_chunk[:extension_size] = raw_bytes.slice!(0...2).unpack(UNSIGNED_INT_16).first
-
-          if format_chunk[:extension_size] == nil
+          if raw_bytes.length < 2
             raise_error InvalidFormatError, "The format chunk is missing an expected extension."
           end
+
+          format_chunk[:extension_size] = raw_bytes.slice!(0...2).unpack(UNSIGNED_INT_16).first
 
           if format_chunk[:extension_size] > raw_bytes.length
             raise_error InvalidFormatError, "The format chunk extension size of #{format_chunk[:extension_size]} bytes is too large to fit in the format chunk. The format chunk has a stated size of #{@chunk_size} bytes, with #{raw_bytes.length} bytes available for the extension."
