@@ -48,9 +48,14 @@
   and no sample data could be read from the file. Since files like this are
   missing required fields that don't have sensible default values, it seems
   like it shouldn't be possible to create a `Reader` instance from them.
-* **Bug Fix**: When a format chunk extension is too large to fit in the chunk,
-  the error message on the `InvalidFormatError` raised will now correctly state
-  that the chunk extension is too large, rather than too small.
+* **Bug Fix**: More accurate error message on the `InvalidFormatError` raised
+  when a `"fmt "` chunk extension is too large to fit in the chunk. The message
+  will now correctly state that the chunk extension is too large, rather than
+  `"Not a supported wave file. The format chunk extension is shorter than
+  expected."`. As an example of what "too large" means, if a `"fmt "` chunk has
+  a size of 40 bytes, then any chunk extension larger than 22 bytes will be too
+  large and "overflow" out of the chunk, since all `"fmt "` chunk extensions
+  start at byte 18 (0-based).
 
 
 1.1.1
