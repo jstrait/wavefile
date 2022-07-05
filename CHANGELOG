@@ -40,14 +40,6 @@
   extra bytes at the end of the format chunk extension will be ignored, and
   sample data can be read from the "data" chunk as long as "sub format GUID"
   has a supported value.
-* **Bug Fix: Files in WAVE_FORMAT_EXTENSIBLE format with a missing or
-  incomplete format chunk extension can no longer be opened using
-  `Reader.new()`.** Previously, a `Reader` instance could be constructed for a
-  file like this, but the relevant fields on the object returned by
-  `Reader.native_format` would contain `nil` or `""` values for these fields,
-  and no sample data could be read from the file. Since files like this are
-  missing required fields that don't have sensible default values, it seems
-  like it shouldn't be possible to create a `Reader` instance from them.
 * **Bug Fix: More accurate error message on the `InvalidFormatError` raised
   when a `"fmt "` chunk extension is too large to fit in the chunk.** The
   message will now correctly state that the chunk extension is too large,
@@ -56,6 +48,14 @@
   `"fmt "` chunk has a size of 40 bytes, then any chunk extension larger than
   22 bytes will be too large and "overflow" out of the chunk, since all
   `"fmt "` chunk extensions start at byte 18 (0-based).
+* **Bug Fix: Files in WAVE_FORMAT_EXTENSIBLE format with a missing or
+  incomplete format chunk extension can no longer be opened using
+  `Reader.new()`.** Previously, a `Reader` instance could be constructed for a
+  file like this, but the relevant fields on the object returned by
+  `Reader.native_format` would contain `nil` or `""` values for these fields,
+  and no sample data could be read from the file. Since files like this are
+  missing required fields that don't have sensible default values, it seems
+  like it shouldn't be possible to create a `Reader` instance from them.
 
 
 1.1.1
