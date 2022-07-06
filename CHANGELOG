@@ -26,8 +26,8 @@
     format code is `1`, the `"fmt "` chunk does not have an extension.
   * Note: If the format code is `1`, the `"fmt "` chunk has extra bytes if the
     chunk body size is greater than 16. Otherwise, "extra bytes" means that
-    there are bytes that occur after the format chunk extension (not including
-    the required padding byte for an odd-sized chunk).
+    there are bytes that occur after the `"fmt "` chunk extension (not
+    including the required padding byte for an odd-sized chunk).
   * Thanks to [@CromonMS](https://github.com/CromonMS) for reporting this as an
     issue.
 * **Bug Fix:** Files in WAVE_FORMAT_EXTENSIBLE format that have an oversized
@@ -37,7 +37,7 @@
   extension). Previously, a `Reader.new()` instance could be constructed for a
   file like this, but the "sub format GUID" field would be incorrect, and data
   could not be read from the file. Now, this field will be read correctly, the
-  extra bytes at the end of the format chunk extension will be ignored, and
+  extra bytes at the end of the `"fmt "` chunk extension will be ignored, and
   sample data can be read from the "data" chunk as long as "sub format GUID"
   has a supported value.
 * **Bug Fix:** More accurate error message on the `InvalidFormatError` raised
@@ -49,7 +49,7 @@
   large and "overflow" out of the chunk, since all `"fmt "` chunk extensions
   start at byte 18 (0-based).
 * **Bug Fix:** Files in WAVE_FORMAT_EXTENSIBLE format with a missing or
-  incomplete format chunk extension can no longer be opened using
+  incomplete `"fmt "` chunk extension can no longer be opened using
   `Reader.new()`. Previously, a `Reader` instance could be constructed for a
   file like this, but the relevant fields on the object returned by
   `Reader.native_format` would contain `nil` or `""` values for these fields,
