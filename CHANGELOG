@@ -35,11 +35,13 @@
   different from the bug above; that bug refers to extra bytes _after_ the
   chunk extension, while this bug refers to extra bytes _inside_ the chunk
   extension). Previously, a `Reader.new()` instance could be constructed for a
-  file like this, but the "sub format GUID" field would be incorrect, and data
-  could not be read from the file. Now, this field will be read correctly, the
-  extra bytes at the end of the `"fmt "` chunk extension will be ignored, and
-  sample data can be read from the "data" chunk as long as "sub format GUID"
-  has a supported value.
+  file like this, but the "sub format GUID" field would have an incorrect
+  value, and data could not be read from the file. Now, this field will be read
+  correctly, the extra bytes at the end of the `"fmt "` chunk extension will be
+  ignored, and sample data can be read from the "data" chunk as long as "sub
+  format GUID" has a supported value. Implicit in this bug fix is that the
+  `"fmt "` chunk has a stated size large enough to fit the oversized extension.
+  For cases where it doesn't, see the next bug fix below.
 * **Bug Fix:** More accurate error message on the `InvalidFormatError` raised
   when a `"fmt "` chunk extension is too large to fit in the chunk. The message
   will now correctly state that the chunk extension is too large, rather than

@@ -70,7 +70,7 @@ This gem lets you read and write audio data! You can use it to create Ruby progr
 
 # Current Release: v1.1.2
 
-Released on TBD, this version fixes several edge case bugs related to reading a *.wav file's `"fmt "` chunk. In particular, reading `"fmt "` chunks that have extra bytes at the end of an extension or the chunk itself, and reading files in WAVE_FORMAT_EXTENSIBLE format that have an incomplete `"fmt "` chunk extension. In short, some valid files that were previously rejected can now be read, and some invalid files are handled more properly and with more accurate error messages.
+Released on TBD, this version fixes several edge case bugs related to reading a *.wav file's `"fmt "` chunk. In particular, reading `"fmt "` chunks that have extra bytes at the end of an extension or the chunk itself, and reading files in WAVE_FORMAT_EXTENSIBLE format that have an incomplete `"fmt "` chunk extension. In short, some valid files that were previously rejected can now be read, and some invalid files are handled more properly.
 
 The full details:
 
@@ -85,7 +85,9 @@ The full details:
 
 * **Bug Fix:** Files in WAVE_FORMAT_EXTENSIBLE format that have an oversized extension (i.e. larger than 22 bytes) can now be read.
 
-    This is similar but different from the bug above; that bug refers to extra bytes _after_ the chunk extension, while this bug refers to extra bytes _inside_ the chunk extension. Previously, a `Reader.new()` instance could be constructed for a file like this, but the "sub format GUID" field would be incorrect, and data could not be read from the file. Now, this field will be read correctly, the extra bytes at the end of the `"fmt "` chunk extension will be ignored, and sample data can be read from the "data" chunk as long as "sub format GUID" has a supported value.
+    This is similar but different from the bug above; that bug refers to extra bytes _after_ the chunk extension, while this bug refers to extra bytes _inside_ the chunk extension. Previously, a `Reader.new()` instance could be constructed for a file like this, but the "sub format GUID" field would have an incorrect value, and data could not be read from the file. Now, this field will be read correctly, the extra bytes at the end of the `"fmt "` chunk extension will be ignored, and sample data can be read from the "data" chunk as long as "sub format GUID" has a supported value.
+
+    Implicit in this bug fix is that the `"fmt "` chunk has a stated size large enough to fit the oversized extension. For cases where it doesn't, see the next bug fix below.
 
 * **Bug Fix:** More accurate error message on the `InvalidFormatError` raised when a `"fmt "` chunk extension is too large to fit in the chunk.
 
