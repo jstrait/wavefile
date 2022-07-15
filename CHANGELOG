@@ -31,10 +31,10 @@
   * Thanks to [@CromonMS](https://github.com/CromonMS) for reporting this as an
     issue.
 * **Bug Fix:** Files in WAVE_FORMAT_EXTENSIBLE format that have an oversized
-  extension (i.e. larger than 22 bytes) can now be read. (This is similar but
+  extension (i.e. larger than 22 bytes) can now be read. This is similar but
   different from the bug above; that bug refers to extra bytes _after_ the
   chunk extension, while this bug refers to extra bytes _inside_ the chunk
-  extension). Previously, a `Reader.new()` instance could be constructed for a
+  extension. Previously, a `Reader.new()` instance could be constructed for a
   file like this, but the "sub format GUID" field would have an incorrect
   value, and data could not be read from the file. Now, this field will be read
   correctly, the extra bytes at the end of the `"fmt "` chunk extension will be
