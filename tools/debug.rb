@@ -16,19 +16,21 @@ def main
     field_reader = FieldReader.new(file)
 
     begin
-      riff_chunk_id_field = field_reader.read_fourcc
-      riff_chunk_size_field = field_reader.read_uint32
-    ensure
-      if riff_chunk_id_field != nil
-        display_chunk_header(riff_chunk_id_field, riff_chunk_size_field)
+      begin
+        riff_chunk_id_field = field_reader.read_fourcc
+        riff_chunk_size_field = field_reader.read_uint32
+      ensure
+        if riff_chunk_id_field != nil
+          display_chunk_header(riff_chunk_id_field, riff_chunk_size_field)
+        end
       end
-    end
 
-    read_riff_chunk(field_reader, riff_chunk_size_field[:parsed_value])
-  rescue EOFError
-    # Swallow the error and do nothing to avoid an error being shown in the output.
-    # Perhaps in the future it would be better to show an indication that the end
-    # of the file was unexpectedly reached.
+      read_riff_chunk(field_reader, riff_chunk_size_field[:parsed_value])
+    rescue EOFError
+      # Swallow the error and do nothing to avoid an error being shown in the output.
+      # Perhaps in the future it would be better to show an indication that the end
+      # of the file was unexpectedly reached.
+    end
   end
 end
 
