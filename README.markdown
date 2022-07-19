@@ -76,11 +76,12 @@ The full details:
 
 * **Bug Fix:** Files that have extra bytes at the end of the `"fmt "` chunk can now be read.
 
+    If the format code is `1`, the `"fmt "` chunk has extra bytes if the chunk body size is greater than 16. Otherwise, "extra bytes" means that there are bytes that occur after the `"fmt "` chunk extension (not including the required padding byte for an odd-sized chunk).
+
     Previously, attempting to open certain files like this via `Reader.new` would result in `InvalidFormatError` being raised with a misleading `"Not a supported wave file. The format chunk extension is shorter than expected."` message. (If the format code was `1`, the `"fmt "` chunk wouldn't actually have an extension; for other format codes the extension might actually be the expected size or larger). When reading a file like this, any extra data in the `"fmt "` chunk beyond what is expected based on the relevant format code will now be ignored.
 
   * There was a special case where a file like this _could_ be opened correctly. If the format code was `1`, and the value of bytes 16 and 17 (0-based), when interpreted as a 16-bit unsigned little-endian integer, happened to be the same as the number of subsequent bytes in the chunk, the file could be opened without issue. For example, if the `"fmt "` chunk size was `22`, the format code was `1`, and the value of bytes 16 and 17 was `4` (when interpreted as a 16-bit unsigned little-endian integer), the file could be opened correctly.
   * There was another special case where `InvalidFormatError` would be incorrectly raised, but the error message would be different. If the format code was `1`, and there was exactly 1 extra byte in the `"fmt "` chunk, the error message would be `"Not a supported wave file. The format chunk is missing an expected extension."` This was misleading because when the format code is `1`, the `"fmt "` chunk does not have an extension.
-  * Note: If the format code is `1`, the `"fmt "` chunk has extra bytes if the chunk body size is greater than 16. Otherwise, "extra bytes" means that there are bytes that occur after the `"fmt "` chunk extension (not including the required padding byte for an odd-sized chunk).
   * Thanks to [@CromonMS](https://github.com/CromonMS) for reporting this as an issue.
 
 * **Bug Fix:** Files in WAVE_FORMAT_EXTENSIBLE format that have an oversized `"fmt "` chunk extension (i.e. larger than 22 bytes) can now be read.
