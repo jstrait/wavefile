@@ -10,12 +10,11 @@
   this, any extra data in the `"fmt "` chunk beyond what is expected based on
   the relevant format code will now be ignored.
   * There was a special case where a file like this _could_ be opened
-    correctly. If the value of bytes 16 and 17 (0-based), when interpreted as a
-    16-bit unsigned little-endian integer, happened to be the same as the
-    number of subsequent bytes in the chunk, the file could be opened without
-    issue. (Except if the file was in WAVE_FORMAT_EXTENSIBLE format - see the
-    next bug fix for more info). For example, if the `"fmt "` chunk size was
-    `22`, the format code was `1`, and the value of bytes 16 and 17 was `4`
+    correctly. If the format code was `1`, and the value of bytes 16 and 17
+    (0-based), when interpreted as a 16-bit unsigned little-endian integer,
+    happened to be the same as the number of subsequent bytes in the chunk, the
+    file could be opened without issue. For example, if the `"fmt "` chunk size
+    was `22`, the format code was `1`, and the value of bytes 16 and 17 was `4`
     (when interpreted as a 16-bit unsigned little-endian integer), the file
     could be opened correctly.
   * There was another special case where `InvalidFormatError` would be
