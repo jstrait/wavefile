@@ -176,7 +176,7 @@ class ReaderTest < Minitest::Test
 
   def test_read_from_unsupported_format
     unsupported_fixtures = [
-      # Audio format is 2, which is not supported
+      # Format code has an unsupported value
       "unsupported/unsupported_audio_format.wav",
 
       # Bits per sample is 20, which is not supported
