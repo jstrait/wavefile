@@ -1,0 +1,31 @@
+riff_chunk:
+  chunk_id: "RIFF"
+  chunk_size: auto
+  wave_format: "WAVE"
+format_chunk:
+  chunk_id: "fmt "
+  chunk_size: 54
+  audio_format: 2    # This is an unsupported format code (i.e. Microsoft ADPCM)
+  channels: 1
+  sample_rate: 11025
+  byte_rate: 5644
+  block_align: 256
+  bits_per_sample: 4
+  extension_size: 32
+  extra_bytes: [244, 1,            # Samples per block
+                7, 0,              # Count of coefficient pairs
+                0, 1, 0, 0,        # 1st coefficient pair (256, 0)
+                0, 2, 0, 255,      # 2nd coefficient pair (512, -256)
+                0, 0, 0, 0,        # 3rd coefficient pair (0, 0)
+                192, 0, 64, 0,     # 4th coefficient pair (192, 64)
+                240, 0, 0, 0,      # 5th coefficient pair (240, 0)
+                204, 1, 48, 255,   # 6th coefficient pair (460, -208)
+                136, 1, 24, 255,   # 7th coefficient pair (392, -232)
+                1, 4, 3, 7]        # Extra bytes following the extension
+fact_chunk:
+  chunk_id: "fact"
+  chunk_size: 4
+  sample_count: auto
+data_chunk:
+  cycle_repeats: 0
+  channel_format: mono

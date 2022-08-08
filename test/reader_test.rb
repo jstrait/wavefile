@@ -98,6 +98,24 @@ class ReaderTest < Minitest::Test
       # and the extension is too large to fit in the stated size of the chunk
       "invalid/extensible_format_chunk_oversized_extension_too_large.wav",
 
+      # The format chunk has an unsupported format code (not an error),
+      # but the extension size field is incomplete.
+      "invalid/unsupported_format_extension_size_incomplete.wav",
+
+      # The format chunk has an unsupported format code (not an error),
+      # but the extension size field is incomplete.
+      # The padding byte which is present should not be interpreted as part of the size field.
+      "invalid/unsupported_format_extension_size_incomplete_with_padding_byte.wav",
+
+      # The format chunk has an unsupported format code (not an error),
+      # but the chunk doesn't have enough room for the extension.
+      "invalid/unsupported_format_extension_truncated.wav",
+
+      # The format chunk has an unsupported format code (not an error),
+      # and an oversized extension. The extension is too large to fit in
+      # the stated size of the chunk.
+      "invalid/unsupported_format_oversized_extension_too_large.wav",
+
       # The RIFF header and format chunk are OK, but there is no data chunk
       "invalid/no_data_chunk.wav",
 
@@ -178,6 +196,33 @@ class ReaderTest < Minitest::Test
     unsupported_fixtures = [
       # Format code has an unsupported value
       "unsupported/unsupported_audio_format.wav",
+
+      # Format code has an unsupported value, and the format
+      # chunk has an extension.
+      "unsupported/unsupported_format_code_with_extension.wav",
+
+      # Format code has an unsupported value, and the format chunk does not
+      # have the expected "extension size" field. This field is not required
+      # by the gem so this should not cause `InvalidFormatError` to be raised.
+      "unsupported/unsupported_format_code_missing_extension_size.wav",
+
+      # Format code has an unsupported value, the format chunk has an extension,
+      # and extra bytes follow the extension.
+      "unsupported/unsupported_format_code_with_extension_and_extra_bytes.wav",
+
+      # Format code has an unsupported value, and a chunk extension that
+      # is smaller than is should be for the given format code. However,
+      # this should not cause an error because chunk extensions for unsupported
+      # formats are not parsed.
+      "unsupported/unsupported_format_code_with_incomplete_extension.wav",
+
+      # Format code has an unsupported value, and the format chunk has an oversized
+      # extension with extra bytes at the end.
+      "unsupported/unsupported_format_code_with_oversized_extension.wav",
+
+      # Format code has an unsupported value, the format chunk has an oversized extension
+      # with extra bytes at the end, and extra bytes follow the extension.
+      "unsupported/unsupported_format_code_with_oversized_extension_and_extra_bytes.wav",
 
       # Bits per sample is 20, which is not supported
       "unsupported/unsupported_bits_per_sample.wav",

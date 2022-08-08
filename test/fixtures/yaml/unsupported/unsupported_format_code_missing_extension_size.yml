@@ -1,0 +1,20 @@
+riff_chunk:
+  chunk_id: "RIFF"
+  chunk_size: auto
+  wave_format: "WAVE"
+format_chunk:
+  chunk_id: "fmt "
+  chunk_size: 16
+  audio_format: 2    # This is an unsupported format code (i.e. Microsoft ADPCM)
+  channels: 1
+  sample_rate: 11025
+  byte_rate: 5644
+  block_align: 256
+  bits_per_sample: 4    # Normally there should be a 2 byte "extension size" field (and extension) following this
+fact_chunk:
+  chunk_id: "fact"
+  chunk_size: 4
+  sample_count: auto
+data_chunk:
+  cycle_repeats: 0
+  channel_format: mono
