@@ -57,7 +57,8 @@
   `Reader.native_format` would contain `nil` or `""` values for these fields,
   and no sample data could be read from the file. Since files like this are
   missing required fields that don't have sensible default values, it seems
-  like it shouldn't be possible to create a `Reader` instance from them.
+  like it shouldn't be possible to create a `Reader` instance from them. After
+  this fix, attempting to do so will cause `InvalidFormatError` to be raised.
 
 
 1.1.1
