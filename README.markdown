@@ -86,7 +86,7 @@ The full details:
 
 * **Bug Fix:** Files in WAVE_FORMAT_EXTENSIBLE format that have an oversized `"fmt "` chunk extension (i.e. larger than 22 bytes) can now be read.
 
-    This is similar but different from the bug above; that bug refers to extra bytes _after_ the chunk extension, while this bug refers to extra bytes _inside_ the chunk extension. Previously, a `Reader.new()` instance could be constructed for a file like this, but the "sub format GUID" field would have an incorrect value, and data could not be read from the file. After this fix, this field will be read correctly, the extra bytes at the end of the `"fmt "` chunk extension will be ignored, and sample data can be read from the `"data"` chunk as long as "sub format GUID" has a supported value.
+    This is similar but different from the bug above; that bug refers to extra bytes _after_ the chunk extension, while this bug refers to extra bytes _inside_ the chunk extension. Previously, a `Reader` instance could be constructed for a file like this, but the "sub format GUID" field would have an incorrect value, and data could not be read from the file. After this fix, this field will be read correctly, the extra bytes at the end of the `"fmt "` chunk extension will be ignored, and sample data can be read from the `"data"` chunk as long as "sub format GUID" has a supported value.
 
     Implicit in this scenario is that the `"fmt "` chunk has a stated size large enough to fit the oversized extension. For cases where it doesn't, see the next bug fix below.
 
