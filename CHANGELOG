@@ -49,8 +49,8 @@
   chunk extensions start at byte 18 (0-based).
 * **Bug Fix:** Files in WAVE_FORMAT_EXTENSIBLE format with a missing or
   incomplete `"fmt "` chunk extension can no longer be opened using
-  `Reader.new()`. Previously, a `Reader` instance could be constructed for a
-  file like this, but the relevant fields on the object returned by
+  `Reader.new`. Previously, a `Reader` instance could be constructed for a file
+  like this, but the relevant fields on the object returned by
   `Reader.native_format` would contain `nil` or `""` values for these fields,
   and no sample data could be read from the file. Since files like this are
   missing required fields that don't have sensible default values, it seems
