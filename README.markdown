@@ -96,7 +96,7 @@ The full details:
 
 * **Bug Fix:** Files in WAVE_FORMAT_EXTENSIBLE format with a missing or incomplete `"fmt "` chunk extension can no longer be opened using `Reader.new`.
 
-    Previously, a `Reader` instance could be constructed for a file like this, but the relevant fields on the object returned by `Reader.native_format` would contain `nil` or `""` values for these fields, and no sample data could be read from the file. Since files like this are missing required fields that don't have sensible default values, it seems like it shouldn't be possible to create a `Reader` instance from them. After this fix, attempting to do so will cause `InvalidFormatError` to be raised.
+    Previously, a `Reader` instance could be constructed for a file like this, but the relevant fields on the object returned by `Reader#native_format` would contain `nil` or `""` values for these fields, and no sample data could be read from the file. Since files like this are missing required fields that don't have sensible default values, it seems like it shouldn't be possible to create a `Reader` instance from them. After this fix, attempting to do so will cause `InvalidFormatError` to be raised.
 
 # Previous Release: v1.1.1
 
