@@ -38,7 +38,9 @@
   an incorrect value, and sample data could not be read from the file. After
   this fix, this field will have the correct value, and if it is one of the
   supported values then sample data can be read. Any extra data at the end of
-  the chunk extension will be ignored.
+  the chunk extension will be ignored. Implicit in this scenario is that the
+  `"fmt "` chunk has a stated size large enough to fit the oversized extension.
+  For cases where it doesn't, see the next bug fix below.
 * **Bug Fix:** More accurate message on the `InvalidFormatError` raised when
   reading a file whose `"fmt "` chunk extension is too large to fit in the
   chunk. The message will now correctly state that the chunk extension is too
