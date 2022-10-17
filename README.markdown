@@ -70,7 +70,7 @@ This gem lets you read and write audio data! You can use it to create Ruby progr
 
 # Current Release: v1.1.2
 
-Released on TBD, this version fixes several edge case bugs related to reading a *.wav file's `"fmt "` chunk. In particular, reading a `"fmt "` chunk that has extra trailing bytes, reading a `"fmt "` chunk in WAVE_FORMAT_EXTENSIBLE format whose extension is missing, incomplete, or has extra trailing bytes, and reading a `"fmt "` chunk whose extension is too large to fit in the chunk. In short, some valid files that were previously rejected can now be read, and some invalid files are handled more properly.
+Released on TBD, this version fixes several edge case bugs related to reading a *.wav file's `"fmt "` chunk. In particular, reading a `"fmt "` chunk that has extra trailing bytes; reading a `"fmt "` chunk in WAVE_FORMAT_EXTENSIBLE format whose extension is missing, incomplete, or has extra trailing bytes; and reading a `"fmt "` chunk whose extension is too large to fit in the chunk. In short, some valid files that were previously rejected can now be read, and some invalid files are handled more properly.
 
 The full details:
 
