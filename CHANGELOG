@@ -35,9 +35,10 @@
   like this, but the relevant fields on the object returned by
   `Reader#native_format` would contain `nil` or `""` values for these fields,
   and no sample data could be read from the file. Since files like this are
-  missing required fields that don't have sensible default values, it seems
-  like it shouldn't be possible to create a `Reader` instance from them. After
-  this fix, attempting to do so will cause `InvalidFormatError` to be raised.
+  missing required fields that don't necessarily have sensible default values,
+  it seems like it shouldn't be possible to create a `Reader` instance from
+  them. After this fix, attempting to do so will cause `InvalidFormatError` to
+  be raised.
 * **Bug Fix:** Files in WAVE_FORMAT_EXTENSIBLE format that have extra bytes at
   the end of the `"fmt "` chunk extension can now be read. This is similar but
   different from the first bug above; that bug refers to extra bytes _after_
