@@ -84,19 +84,19 @@ The full details:
   * There was another special case where `InvalidFormatError` would be incorrectly raised, but the error message would be different (and also misleading). If the format code was `1`, and there was exactly 1 extra byte in the `"fmt "` chunk (i.e. the chunk size was 17), the error message would be `"Not a supported wave file. The format chunk is missing an expected extension."` This was misleading because when the format code is `1`, the `"fmt "` chunk doesn't have an extension.
   * Thanks to [@CromonMS](https://github.com/CromonMS) for reporting this as an issue.
 
+* **Bug Fix:** Files in WAVE_FORMAT_EXTENSIBLE format with a missing or incomplete `"fmt "` chunk extension can no longer be opened using `Reader.new`.
+
+    Previously, a `Reader` instance could be constructed for a file like this, but the relevant fields on the object returned by `Reader#native_format` would contain `nil` or `""` values for these fields, and no sample data could be read from the file. Since files like this are missing required fields that don't have sensible default values, it seems like it shouldn't be possible to create a `Reader` instance from them. After this fix, attempting to do so will cause `InvalidFormatError` to be raised.
+
 * **Bug Fix:** Files in WAVE_FORMAT_EXTENSIBLE format that have an oversized `"fmt "` chunk extension (i.e. larger than 22 bytes) can now be read.
 
-    This is similar but different from the bug above; that bug refers to extra bytes _after_ the chunk extension, while this bug refers to extra bytes _inside_ the chunk extension. Previously, a `Reader` instance could be constructed for a file like this, but `Reader#native_format#sub_audio_format_guid` would have an incorrect value, and sample data could not be read from the file. After this fix, this field will have the correct value, and if it is one of the supported values then sample data can be read. Any extra data at the end of the chunk extension will be ignored.
+    This is similar but different from the first bug above; that bug refers to extra bytes _after_ the chunk extension, while this bug refers to extra bytes _inside_ the chunk extension. Previously, a `Reader` instance could be constructed for a file like this, but `Reader#native_format#sub_audio_format_guid` would have an incorrect value, and sample data could not be read from the file. After this fix, this field will have the correct value, and if it is one of the supported values then sample data can be read. Any extra data at the end of the chunk extension will be ignored.
 
     Implicit in this scenario is that the `"fmt "` chunk has a stated size large enough to fit the oversized extension. For cases where it doesn't, see the next bug fix below.
 
 * **Bug Fix:** More accurate message on the `InvalidFormatError` raised when reading a file whose `"fmt "` chunk extension is too large to fit in the chunk.
 
     The message will now correctly state that the chunk extension is too large, rather than `"Not a supported wave file. The format chunk extension is shorter than expected."`. As an example of what "too large" means, if a `"fmt "` chunk has a size of 40 bytes, then any chunk extension larger than 22 bytes will be too large and overflow out of the chunk, since all `"fmt "` chunk extensions start at byte 18 (0-based).
-
-* **Bug Fix:** Files in WAVE_FORMAT_EXTENSIBLE format with a missing or incomplete `"fmt "` chunk extension can no longer be opened using `Reader.new`.
-
-    Previously, a `Reader` instance could be constructed for a file like this, but the relevant fields on the object returned by `Reader#native_format` would contain `nil` or `""` values for these fields, and no sample data could be read from the file. Since files like this are missing required fields that don't have sensible default values, it seems like it shouldn't be possible to create a `Reader` instance from them. After this fix, attempting to do so will cause `InvalidFormatError` to be raised.
 
 # Previous Release: v1.1.1
 
