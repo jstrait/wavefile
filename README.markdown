@@ -76,12 +76,12 @@ The full details:
 
 * **Bug Fix:** Files that have extra bytes at the end of the `"fmt "` chunk can now be read.
 
-    If the format code is `1`, the `"fmt "` chunk has extra bytes if the chunk body size is greater than 16. Otherwise, "extra bytes" means the chunk contains bytes after the chunk extension (not including the required padding byte for an odd-sized chunk).
+    If the format code is `1`, the `"fmt "` chunk has extra bytes if the chunk body size is greater than 16 bytes. Otherwise, "extra bytes" means the chunk contains bytes after the chunk extension (not including the required padding byte for an odd-sized chunk).
 
     Previously, attempting to open certain files like this via `Reader.new` would result in `InvalidFormatError` being raised with a misleading `"Not a supported wave file. The format chunk extension is shorter than expected."` message. (If the format code was `1`, the `"fmt "` chunk wouldn't actually have an extension; for other format codes the extension might actually be the expected size or larger). When reading a file like this, any extra data in the `"fmt "` chunk beyond what is expected based on the relevant format code will now be ignored.
 
   * There was a special case where a file like this _could_ be opened correctly. If the format code was `1`, and the value of bytes 16 and 17 (0-based), when interpreted as a 16-bit unsigned little-endian integer, happened to be the same as the number of subsequent bytes in the chunk, the file could be opened without issue. For example, if the `"fmt "` chunk size was `22`, the format code was `1`, and the value of bytes 16 and 17 was `4` (when interpreted as a 16-bit unsigned little-endian integer), the file could be opened correctly.
-  * There was another special case where `InvalidFormatError` would be incorrectly raised, but the error message would be different (and also misleading). If the format code was `1`, and there was exactly 1 extra byte in the `"fmt "` chunk (i.e. the chunk size was 17), the error message would be `"Not a supported wave file. The format chunk is missing an expected extension."` This was misleading because when the format code is `1`, the `"fmt "` chunk doesn't have an extension.
+  * There was another special case where `InvalidFormatError` would be incorrectly raised, but the error message would be different (and also misleading). If the format code was `1`, and there was exactly 1 extra byte in the `"fmt "` chunk (i.e. the chunk size was 17 bytes), the error message would be `"Not a supported wave file. The format chunk is missing an expected extension."` This was misleading because when the format code is `1`, the `"fmt "` chunk doesn't have an extension.
   * Thanks to [@CromonMS](https://github.com/CromonMS) for reporting this as an issue.
 
 * **Bug Fix:** Files in WAVE_FORMAT_EXTENSIBLE format with a missing or incomplete `"fmt "` chunk extension can no longer be opened using `Reader.new`.
