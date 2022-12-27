@@ -6,7 +6,7 @@ module WaveFile
   class InvalidSMPTETimecodeError < StandardError; end
 
   # Public: Represents an SMPTE timecode: https://en.wikipedia.org/wiki/SMPTE_timecode
-  #         If a *.wav file has a "smpl" chunk, then Reader.sampler_info.smpte_offset
+  #         If a *.wav file has a "smpl" chunk, then Reader#sampler_info#smpte_offset
   #         will return an instance of this class.
   class SMPTETimecode
     VALID_8_BIT_UNSIGNED_INTEGER_RANGE = 0..255    # :nodoc:
