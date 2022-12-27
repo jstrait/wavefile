@@ -39,13 +39,13 @@ module WaveFile
     # Examples
     #
     #   samples = ([0.5] * 50) + ([-0.5] * 50)   # A floating point 440Hz mono square wave
-    #   buffer = Buffer.new(samples, Format.new(:mono, :float, 44100)
+    #   buffer = Buffer.new(samples, Format.new(:mono, :float, 44100))
     #
     #   samples = ([0.5, 0.5] * 50) + ([-0.5, -0.5] * 50)   # A 440Hz stereo square wave
-    #   buffer = Buffer.new(samples, Format.new(2, :float, 44100)
+    #   buffer = Buffer.new(samples, Format.new(2, :float, 44100))
     #
     #   samples = ([16000] * 50) + ([-16000] * 50)   # A 16-bit PCM 440Hz mono square wave
-    #   buffer = Buffer.new(samples, Format.new(1, :pcm_16, 44100)
+    #   buffer = Buffer.new(samples, Format.new(1, :pcm_16, 44100))
     #
     # Returns a constructed Buffer.
     def initialize(samples, format)
