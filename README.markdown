@@ -70,7 +70,7 @@ This gem lets you read and write audio data! You can use it to create Ruby progr
 
 # Current Release: v1.1.2
 
-Released on TBD, this version fixes several edge case bugs related to reading a *.wav file's `"fmt "` chunk. In particular, reading a `"fmt "` chunk that has extra trailing bytes; reading a `"fmt "` chunk in WAVE_FORMAT_EXTENSIBLE format whose extension is missing, incomplete, or has extra trailing bytes; and reading a `"fmt "` chunk whose extension is too large to fit in the chunk. In short, some valid files that were previously rejected can now be read, and some invalid files are handled more properly.
+Released on TBD, this version fixes several edge case bugs related to reading a *.wav file's `"fmt "` chunk. In particular, reading a `"fmt "` chunk that has extra trailing bytes; reading a `"fmt "` chunk in WAVE_FORMAT_EXTENSIBLE format whose chunk extension is missing, incomplete, or has extra trailing bytes; and reading a `"fmt "` chunk whose chunk extension is too large to fit in the chunk. In short, some valid files that were previously rejected can now be read, and some invalid files are handled more properly.
 
 The full details:
 
@@ -78,10 +78,10 @@ The full details:
 
     If the format code is `1`, the `"fmt "` chunk has extra bytes if the chunk body size is greater than 16 bytes. Otherwise, "extra bytes" means the chunk contains bytes after the chunk extension (not including the required padding byte for an odd-sized chunk).
 
-    Previously, attempting to open certain files like this via `Reader.new` would result in `InvalidFormatError` being raised with a misleading `"Not a supported wave file. The format chunk extension is shorter than expected."` message. (If the format code was `1`, the `"fmt "` chunk wouldn't actually have an extension; for other format codes the extension might actually be the expected size or larger). When reading a file like this, any extra data in the `"fmt "` chunk beyond what is expected based on the relevant format code will now be ignored.
+    Previously, attempting to open certain files like this via `Reader.new` would result in `InvalidFormatError` being raised with a misleading `"Not a supported wave file. The format chunk extension is shorter than expected."` message. This was misleading because if the format code is `1`, the `"fmt "` chunk won't actually have a chunk extension, and for other format codes the chunk extension might actually be the expected size or larger. When reading a file like this, any extra data in the `"fmt "` chunk beyond what is expected based on the relevant format code will now be ignored.
 
   * There was a special case where a file like this _could_ be opened correctly. If the format code was `1`, and the value of bytes 16 and 17 (0-based), when interpreted as a 16-bit unsigned little-endian integer, happened to be the same as the number of subsequent bytes in the chunk, the file could be opened without issue. For example, if the `"fmt "` chunk size was `22`, the format code was `1`, and the value of bytes 16 and 17 was `4` (when interpreted as a 16-bit unsigned little-endian integer), the file could be opened correctly.
-  * There was another special case where `InvalidFormatError` would be incorrectly raised, but the error message would be different (and also misleading). If the format code was `1`, and there was exactly 1 extra byte in the `"fmt "` chunk (i.e. the chunk size was 17 bytes), the error message would be `"Not a supported wave file. The format chunk is missing an expected extension."` This was misleading because when the format code is `1`, the `"fmt "` chunk doesn't have an extension.
+  * There was another special case where `InvalidFormatError` would be incorrectly raised, but the error message would be different (and also misleading). If the format code was `1`, and there was exactly 1 extra byte in the `"fmt "` chunk (i.e. the chunk size was 17 bytes), the error message would be `"Not a supported wave file. The format chunk is missing an expected extension."` This was misleading because when the format code is `1`, the `"fmt "` chunk doesn't have a chunk extension.
   * Thanks to [@CromonMS](https://github.com/CromonMS) for reporting this as an issue.
 
 * **Bug Fix:** Files in WAVE_FORMAT_EXTENSIBLE format with a missing or incomplete `"fmt "` chunk extension can no longer be opened using `Reader.new`.
@@ -94,7 +94,7 @@ The full details:
 
     Previously, a `Reader` instance could be constructed for a file like this, but `Reader#native_format#sub_audio_format_guid` would have an incorrect value, and sample data could not be read from the file. After this fix, this field will have the correct value, and if it is one of the supported values then sample data can be read. Any extra data at the end of the chunk extension will be ignored.
 
-    Implicit in this scenario is that the `"fmt "` chunk has a stated size large enough to fit the oversized extension. For cases where it doesn't, see the next bug fix below.
+    Implicit in this scenario is that the `"fmt "` chunk has a stated size large enough to fit the oversized chunk extension. For cases where it doesn't, see the next bug fix below.
 
 * **Bug Fix:** More accurate message on the `InvalidFormatError` raised when reading a file whose `"fmt "` chunk extension is too large to fit in the chunk.
 
