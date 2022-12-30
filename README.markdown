@@ -98,7 +98,7 @@ The full details:
 
 * **Bug Fix:** More accurate message on the `InvalidFormatError` raised when reading a file whose `"fmt "` chunk extension is too large to fit in the chunk.
 
-    The message will now correctly state that the chunk extension is too large, rather than `"Not a supported wave file. The format chunk extension is shorter than expected."`. As an example of what "too large" means, if a `"fmt "` chunk has a size of 40 bytes, then any chunk extension larger than 22 bytes will be too large and overflow out of the chunk, since a chunk extension's content always starts at byte 18 (0-based).
+    The message will now correctly state that the chunk extension is too large, rather than `"Not a supported wave file. The format chunk extension is shorter than expected."`. As an example of what "too large" means, if a `"fmt "` chunk has a size of 50 bytes, then any chunk extension larger than 32 bytes will be too large and overflow out of the chunk, since a chunk extension's content always starts at byte 18 (0-based).
 
 # Previous Release: v1.1.1
 
