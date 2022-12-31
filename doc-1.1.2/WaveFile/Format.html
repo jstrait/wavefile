@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta charset="UTF-8">
+
+<title>class WaveFile::Format - WaveFile Gem - Read/Write *.wav Files with Ruby</title>
+
+<script type="text/javascript">
+  var rdoc_rel_prefix = "../";
+  var index_rel_prefix = "../";
+</script>
+
+<script src="../js/navigation.js" defer></script>
+<script src="../js/search.js" defer></script>
+<script src="../js/search_index.js" defer></script>
+<script src="../js/searcher.js" defer></script>
+<script src="../js/darkfish.js" defer></script>
+
+<link href="../css/fonts.css" rel="stylesheet">
+<link href="../css/rdoc.css" rel="stylesheet">
+
+
+<body id="top" role="document" class="class">
+<nav role="navigation">
+  <div id="project-navigation">
+    <div id="home-section" role="region" title="Quick navigation" class="nav-section">
+  <h2>
+    <a href="../index.html" rel="home">Home</a>
+  </h2>
+
+  <div id="table-of-contents-navigation">
+    <a href="../table_of_contents.html#pages">Pages</a>
+    <a href="../table_of_contents.html#classes">Classes</a>
+    <a href="../table_of_contents.html#methods">Methods</a>
+  </div>
+</div>
+
+    <div id="search-section" role="search" class="project-section initially-hidden">
+  <form action="#" method="get" accept-charset="utf-8">
+    <div id="search-field-wrapper">
+      <input id="search-field" role="combobox" aria-label="Search"
+             aria-autocomplete="list" aria-controls="search-results"
+             type="text" name="search" placeholder="Search" spellcheck="false"
+             title="Type to search, Up and Down to navigate, Enter to load">
+    </div>
+
+    <ul id="search-results" aria-label="Search Results"
+        aria-busy="false" aria-expanded="false"
+        aria-atomic="false" class="initially-hidden"></ul>
+  </form>
+</div>
+
+  </div>
+
+  
+
+  <div id="class-metadata">
+    
+<div id="sections-section" class="nav-section">
+  <h3>Sections</h3>
+
+  <ul class="link-list" role="directory">
+      <li><a href="#5Buntitled-5D"></a></li>
+      <li><a href="#Public">Public</a></li>
+  </ul>
+</div>
+
+    
+<div id="parent-class-section" class="nav-section">
+  <h3>Parent</h3>
+
+  <p class="link">Object
+</div>
+
+    
+    
+    
+<!-- Method Quickref -->
+<div id="method-list-section" class="nav-section">
+  <h3>Methods</h3>
+
+  <ul class="link-list" role="directory">
+    <li ><a href="#method-c-new">::new</a>
+    <li ><a href="#method-i-mono-3F">#mono?</a>
+    <li ><a href="#method-i-stereo-3F">#stereo?</a>
+  </ul>
+</div>
+
+  </div>
+</nav>
+
+<main role="main" aria-labelledby="class-WaveFile::Format">
+  <h1 id="class-WaveFile::Format" class="class">
+    class WaveFile::Format
+  </h1>
+
+  <section class="description">
+    
+<p>Represents information about the data format for a Wave file, such as number of channels, bits per sample, sample rate, and so forth. A <a href="Format.html"><code>Format</code></a> instance is used by <a href="Reader.html"><code>Reader</code></a> to indicate what format to read samples out as, and by <a href="Writer.html"><code>Writer</code></a> to indicate what format to write samples as.</p>
+
+  </section>
+
+  <section id="5Buntitled-5D" class="documentation-section">
+
+
+
+
+
+  </section>
+  <section id="Public" class="documentation-section">
+    <header class="documentation-section-title">
+      <h2>
+        Public
+      </h2>
+      <span class="section-click-top">
+        <a href="#top">&uarr; top</a>
+      </span>
+    </header>
+
+
+
+    <section class="attribute-method-details" class="method-section">
+      <header>
+        <h3>Attributes</h3>
+      </header>
+
+      <div id="attribute-i-bits_per_sample" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">bits_per_sample</span><span
+            class="attribute-access-type">[R]</span>
+        </div>
+
+        <div class="method-description">
+        <h3 id="attribute-i-bits_per_sample-label-Returns">Returns<span><a href="#attribute-i-bits_per_sample-label-Returns">&para;</a> <a href="#top">&uarr;</a></span></h3>
+
+<p>Returns the number of bits per sample, such as 8, 16, 24, 32, or 64.</p>
+        </div>
+      </div>
+      <div id="attribute-i-block_align" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">block_align</span><span
+            class="attribute-access-type">[R]</span>
+        </div>
+
+        <div class="method-description">
+        <h3 id="attribute-i-block_align-label-Returns">Returns<span><a href="#attribute-i-block_align-label-Returns">&para;</a> <a href="#top">&uarr;</a></span></h3>
+
+<p>Returns the number of bytes in each sample frame. For example, in a 16-bit stereo file, this will be 4 (2 bytes for each 16-bit sample, times 2 channels).</p>
+        </div>
+      </div>
+      <div id="attribute-i-byte_rate" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">byte_rate</span><span
+            class="attribute-access-type">[R]</span>
+        </div>
+
+        <div class="method-description">
+        <h3 id="attribute-i-byte_rate-label-Returns">Returns<span><a href="#attribute-i-byte_rate-label-Returns">&para;</a> <a href="#top">&uarr;</a></span></h3>
+
+<p>Returns the number of bytes contained in 1 second of sample data. Is equivalent to <a href="Format.html#attribute-i-block_align"><code>block_align</code></a> * <a href="Format.html#attribute-i-sample_rate"><code>sample_rate</code></a>.</p>
+        </div>
+      </div>
+      <div id="attribute-i-channels" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">channels</span><span
+            class="attribute-access-type">[R]</span>
+        </div>
+
+        <div class="method-description">
+        <h3 id="attribute-i-channels-label-Returns">Returns<span><a href="#attribute-i-channels-label-Returns">&para;</a> <a href="#top">&uarr;</a></span></h3>
+
+<p>Returns the number of channels, such as 1 or 2. This will always return a Integer, even if the number of channels is specified with a symbol (e.g. <code>:mono</code>) in the constructor.</p>
+        </div>
+      </div>
+      <div id="attribute-i-sample_format" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">sample_format</span><span
+            class="attribute-access-type">[R]</span>
+        </div>
+
+        <div class="method-description">
+        <h3 id="attribute-i-sample_format-label-Returns">Returns<span><a href="#attribute-i-sample_format-label-Returns">&para;</a> <a href="#top">&uarr;</a></span></h3>
+
+<p>Returns a symbol indicating the sample format, such as <code>:pcm</code> or <code>:float</code></p>
+        </div>
+      </div>
+      <div id="attribute-i-sample_rate" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">sample_rate</span><span
+            class="attribute-access-type">[R]</span>
+        </div>
+
+        <div class="method-description">
+        <h3 id="attribute-i-sample_rate-label-Returns">Returns<span><a href="#attribute-i-sample_rate-label-Returns">&para;</a> <a href="#top">&uarr;</a></span></h3>
+
+<p>Returns the number of samples per second, such as 44100.</p>
+        </div>
+      </div>
+      <div id="attribute-i-speaker_mapping" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">speaker_mapping</span><span
+            class="attribute-access-type">[R]</span>
+        </div>
+
+        <div class="method-description">
+        <h3 id="attribute-i-speaker_mapping-label-Returns">Returns<span><a href="#attribute-i-speaker_mapping-label-Returns">&para;</a> <a href="#top">&uarr;</a></span></h3>
+
+<p>Returns the mapping of each channel to a speaker.</p>
+        </div>
+      </div>
+    </section>
+
+
+     <section id="public-class-Public-method-details" class="method-section">
+       <header>
+         <h3>Public Class Methods</h3>
+       </header>
+
+      <div id="method-c-new" class="method-detail ">
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">new</span><span
+              class="method-args">(channels, format_code, sample_rate, speaker_mapping: nil)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
+        </div>
+
+        <div class="method-description">
+          <p>Constructs a new immutable <a href="Format.html"><code>Format</code></a>.</p>
+<dl class="rdoc-list note-list"><dt>channels
+<dd>
+<p>The number of channels in the format. Can either be an Integer (e.g. 1, 2, 3) or the symbols <code>:mono</code> (equivalent to 1) or <code>:stereo</code> (equivalent to 2).</p>
+</dd><dt>format_code
+<dd>
+<p>A symbol indicating the format of each sample. Consists of two parts: a format code, and the bits per sample. The valid values are <code>:pcm_8</code>, <code>:pcm_16</code>, <code>:pcm_24</code>, <code>:pcm_32</code>, <code>:float_32</code>, <code>:float_64</code>, and <code>:float</code> (equivalent to <code>:float_32</code>)</p>
+</dd><dt><a href="Format.html#attribute-i-sample_rate"><code>sample_rate</code></a>
+<dd>
+<p>The number of samples per second, such as 44100</p>
+</dd><dt><a href="Format.html#attribute-i-speaker_mapping"><code>speaker_mapping</code></a>
+<dd>
+<p>An optional array which indicates which speaker each channel should be mapped to. Each value in the array should be one of these values:</p>
+
+<p><code>:front_left</code>, <code>:front_right</code>, <code>:front_center</code>, <code>:low_frequency</code>, <code>:back_left</code>, <code>:back_right</code>, <code>:front_left_of_center</code>, <code>:front_right_of_center</code>, <code>:back_center</code>, <code>:side_left</code>, <code>:side_right</code>, <code>:top_center</code>, <code>:top_front_left</code>, <code>:top_front_center</code>, <code>:top_front_right</code>, <code>:top_back_left</code>, <code>:top_back_center</code>, <code>:top_back_right</code>.</p>
+
+<p>Each value should only appear once, and the channels must follow the ordering above.</p>
+
+<p>For example, <code>[:front_center, :back_left]</code> is a valid speaker mapping, but <code>[:back_left, :front_center]</code> is not. If a given channel should not be mapped to a specific speaker, the value <code>:undefined</code> can be used. If this field is omitted, a default value for the given number of channels. For example, if there are 2 channels, this will be set to <code>[:front_left, :front_right]</code>.</p>
+</dd></dl>
+
+<h3 id="method-c-new-label-Examples">Examples<span><a href="#method-c-new-label-Examples">&para;</a> <a href="#top">&uarr;</a></span></h3>
+
+<pre class="ruby"><span class="ruby-identifier">format</span> = <span class="ruby-constant">Format</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">1</span>, <span class="ruby-value">:pcm_16</span>, <span class="ruby-value">44100</span>)
+<span class="ruby-identifier">format</span> = <span class="ruby-constant">Format</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">:mono</span>, <span class="ruby-value">:pcm_16</span>, <span class="ruby-value">44100</span>)  <span class="ruby-comment"># Equivalent to above</span>
+
+<span class="ruby-identifier">format</span> = <span class="ruby-constant">Format</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">:stereo</span>, <span class="ruby-value">:float_32</span>, <span class="ruby-value">44100</span>)
+<span class="ruby-identifier">format</span> = <span class="ruby-constant">Format</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">:stereo</span>, <span class="ruby-value">:float</span>, <span class="ruby-value">44100</span>)  <span class="ruby-comment"># Equivalent to above</span>
+
+<span class="ruby-identifier">format</span> = <span class="ruby-constant">Format</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">2</span>, <span class="ruby-value">:pcm_16</span>, <span class="ruby-value">44100</span>, <span class="ruby-value">speaker_mapping:</span> [<span class="ruby-value">:front_right</span>, <span class="ruby-value">:front_center</span>])
+
+<span class="ruby-comment"># Channels should explicitly not be mapped to particular speakers</span>
+<span class="ruby-comment"># (otherwise, if no speaker_mapping set, it will be set to a default</span>
+<span class="ruby-comment"># value for the number of channels).</span>
+<span class="ruby-identifier">format</span> = <span class="ruby-constant">Format</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">2</span>, <span class="ruby-value">:pcm_16</span>, <span class="ruby-value">44100</span>, <span class="ruby-value">speaker_mapping:</span> [<span class="ruby-value">:undefined</span>, <span class="ruby-value">:undefined</span>])
+
+<span class="ruby-comment"># Will result in InvalidFormatError, because speakers are defined in</span>
+<span class="ruby-comment"># invalid order</span>
+<span class="ruby-identifier">format</span> = <span class="ruby-constant">Format</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">2</span>, <span class="ruby-value">:pcm_16</span>, <span class="ruby-value">44100</span>, <span class="ruby-value">speaker_mapping:</span> [<span class="ruby-value">:front_right</span>, <span class="ruby-value">:front_left</span>])
+
+<span class="ruby-comment"># speaker_mapping will be set to [:front_left, :undefined, :undefined],</span>
+<span class="ruby-comment"># because channels without a speaker mapping will be mapped to :undefined</span>
+<span class="ruby-identifier">format</span> = <span class="ruby-constant">Format</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">3</span>, <span class="ruby-value">:pcm_16</span>, <span class="ruby-value">44100</span>, <span class="ruby-value">speaker_mapping:</span> [<span class="ruby-value">:front_left</span>])
+</pre>
+
+<h3 id="method-c-new-label-Returns">Returns<span><a href="#method-c-new-label-Returns">&para;</a> <a href="#top">&uarr;</a></span></h3>
+
+<p>Raises <a href="InvalidFormatError.html"><code>InvalidFormatError</code></a> if the given arguments are invalid.</p>
+
+          <div class="method-source-code" id="new-source">
+            <pre><span class="ruby-comment"># File lib/wavefile/format.rb, line 74</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">initialize</span>(<span class="ruby-identifier">channels</span>, <span class="ruby-identifier">format_code</span>, <span class="ruby-identifier">sample_rate</span>, <span class="ruby-value">speaker_mapping:</span> <span class="ruby-keyword">nil</span>)
+  <span class="ruby-identifier">channels</span> = <span class="ruby-identifier">normalize_channels</span>(<span class="ruby-identifier">channels</span>)
+
+  <span class="ruby-identifier">validate_channels</span>(<span class="ruby-identifier">channels</span>)
+  <span class="ruby-identifier">validate_format_code</span>(<span class="ruby-identifier">format_code</span>)
+  <span class="ruby-identifier">validate_sample_rate</span>(<span class="ruby-identifier">sample_rate</span>)
+
+  <span class="ruby-identifier">sample_format</span>, <span class="ruby-identifier">bits_per_sample</span> = <span class="ruby-identifier">normalize_format_code</span>(<span class="ruby-identifier">format_code</span>)
+
+  <span class="ruby-identifier">speaker_mapping</span> = <span class="ruby-identifier">normalize_speaker_mapping</span>(<span class="ruby-identifier">channels</span>, <span class="ruby-identifier">speaker_mapping</span>)
+  <span class="ruby-identifier">validate_speaker_mapping</span>(<span class="ruby-identifier">channels</span>, <span class="ruby-identifier">speaker_mapping</span>)
+
+  <span class="ruby-ivar">@channels</span> = <span class="ruby-identifier">channels</span>
+  <span class="ruby-ivar">@sample_format</span> = <span class="ruby-identifier">sample_format</span>
+  <span class="ruby-ivar">@bits_per_sample</span> = <span class="ruby-identifier">bits_per_sample</span>
+  <span class="ruby-ivar">@sample_rate</span> = <span class="ruby-identifier">sample_rate</span>
+  <span class="ruby-ivar">@block_align</span> = (<span class="ruby-ivar">@bits_per_sample</span> <span class="ruby-operator">/</span> <span class="ruby-value">8</span>) <span class="ruby-operator">*</span> <span class="ruby-ivar">@channels</span>
+  <span class="ruby-ivar">@byte_rate</span> = <span class="ruby-ivar">@block_align</span> <span class="ruby-operator">*</span> <span class="ruby-ivar">@sample_rate</span>
+  <span class="ruby-ivar">@speaker_mapping</span> = <span class="ruby-identifier">speaker_mapping</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+        </div>
+
+
+      </div>
+
+    </section>
+
+     <section id="public-instance-Public-method-details" class="method-section">
+       <header>
+         <h3>Public Instance Methods</h3>
+       </header>
+
+      <div id="method-i-mono-3F" class="method-detail ">
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">mono?</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
+        </div>
+
+        <div class="method-description">
+          <h3 id="method-i-mono-3F-label-Returns">Returns<span><a href="#method-i-mono-3F-label-Returns">&para;</a> <a href="#top">&uarr;</a></span></h3>
+
+<p>Returns true if the format has 1 channel, false otherwise.</p>
+
+          <div class="method-source-code" id="mono-3F-source">
+            <pre><span class="ruby-comment"># File lib/wavefile/format.rb, line 96</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">mono?</span>
+  <span class="ruby-ivar">@channels</span> <span class="ruby-operator">==</span> <span class="ruby-value">1</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+        </div>
+
+
+      </div>
+
+      <div id="method-i-stereo-3F" class="method-detail ">
+        <div class="method-header">
+          <div class="method-heading">
+            <span class="method-name">stereo?</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
+        </div>
+
+        <div class="method-description">
+          <h3 id="method-i-stereo-3F-label-Returns">Returns<span><a href="#method-i-stereo-3F-label-Returns">&para;</a> <a href="#top">&uarr;</a></span></h3>
+
+<p>Returns true if the format has 2 channels, false otherwise.</p>
+
+          <div class="method-source-code" id="stereo-3F-source">
+            <pre><span class="ruby-comment"># File lib/wavefile/format.rb, line 101</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">stereo?</span>
+  <span class="ruby-ivar">@channels</span> <span class="ruby-operator">==</span> <span class="ruby-value">2</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+        </div>
+
+
+      </div>
+
+    </section>
+
+  </section>
+</main>
+
+
+<footer id="validator-badges" role="contentinfo">
+  <p><a href="https://validator.w3.org/check/referer">Validate</a>
+  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.5.0.
+  <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
+</footer>
+
