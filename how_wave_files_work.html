@@ -38,16 +38,16 @@ and Data Specifications 1.0, August 1991</a></li>
   <p>At minimum, the child chunks must include a format chunk (<code>"fmt&nbsp;"</code>) and a data chunk (<code>"data"</code>), and the format chunk must come before the data chunk. If the format code in the format chunk is not <code>1</code> (see below), then there must also be a fact chunk (<code>"fact"</code>). Other optional chunk types are also possible.</p>
   <p>A typical file might look like this:</p>
   <div class="chunk-parent">
-    <span class="chunk-parent-field">RIFF Chunk ID (<code>"RIFF"</code>)</span>
+    <span class="chunk-parent-field">RIFF Chunk ID: <code>"RIFF"</code></span>
     <span class="chunk-parent-field">RIFF Chunk Body Size</span>
     <span class="chunk-parent-field">RIFF Form Type: <code>"WAVE"</code></span>
     <div class="chunk-child">
-      <span class="chunk-child-field">Format Chunk ID (<code>"fmt&nbsp;"</code>)</span>
+      <span class="chunk-child-field">Format Chunk ID: <code>"fmt&nbsp;"</code></span>
       <span class="chunk-child-field">Format Chunk Body Size</span>
       <span class="chunk-child-field">Chunk Body<br /><br /><br /></span>
     </div>
     <div class="chunk-child">
-      <span class="chunk-child-field">Data Chunk ID (<code>"data"</code>)</span>
+      <span class="chunk-child-field">Data Chunk ID: <code>"data"</code></span>
       <span class="chunk-child-field">Data Chunk Body Size</span>
       <span class="chunk-child-field">Chunk Body<br /><br /><br /></span>
     </div>
