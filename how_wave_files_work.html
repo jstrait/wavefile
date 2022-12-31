@@ -34,13 +34,13 @@ and Data Specifications 1.0, August 1991</a></li>
   <p>The size field indicates the size of the chunk&rsquo;s body in bytes, as a 32-bit unsigned integer. The size should not include the 8-byte header. I.e., if a chunk consists of the 8-byte header followed by 1,000 bytes of data, the size field should indicate <code>1000</code>, not <code>1008</code>.</p>
   <p class="important"><span class="tag-important">Important!</span> If a chunk body has an odd number of bytes, it must be followed by a padding byte with value <code>0</code>. In other words, a chunk must always occupy an even number of bytes in the file. The padding byte should <em>not</em> be counted in the chunk header&rsquo;s size field. For example, if a chunk body is 17 bytes in size, the header&rsquo;s size field should be set to <code>17</code>, even though the chunk body occupies 18 bytes (17 bytes of data followed by the padding byte).</p>
   <h2>High Level Wave File Structure</h2>
-  <p>At top level, a Wave file consists of a single RIFF chunk (<code>"RIFF"</code>), which contains all of the data for the wave file. The RIFF chunk body starts with the format code <code>"WAVE"</code> which indicates that the file is a Wave file (since a RIFF file can also contain other types of data). This is followed by child chunks, nested inside the parent RIFF chunk.</p>
+  <p>At top level, a Wave file consists of a single RIFF chunk (<code>"RIFF"</code>), which contains all of the data for the wave file. The RIFF chunk body starts with a field indicating the RIFF form type. This field indicates what type of data the RIFF file contains. In a Wave file, this field should contain the value <code>"WAVE"</code>. This is followed by child chunks, nested inside the parent RIFF chunk.</p>
   <p>At minimum, the child chunks must include a format chunk (<code>"fmt&nbsp;"</code>) and a data chunk (<code>"data"</code>), and the format chunk must come before the data chunk. If the format code in the format chunk is not <code>1</code> (see below), then there must also be a fact chunk (<code>"fact"</code>). Other optional chunk types are also possible.</p>
   <p>A typical file might look like this:</p>
   <div class="chunk-parent">
     <span class="chunk-parent-field">RIFF Chunk ID (<code>"RIFF"</code>)</span>
     <span class="chunk-parent-field">RIFF Chunk Body Size</span>
-    <span class="chunk-parent-field">Format Code: <code>"WAVE"</code></span>
+    <span class="chunk-parent-field">RIFF Form Type: <code>"WAVE"</code></span>
     <div class="chunk-child">
       <span class="chunk-child-field">Format Chunk ID (<code>"fmt&nbsp;"</code>)</span>
       <span class="chunk-child-field">Format Chunk Body Size</span>
@@ -74,7 +74,7 @@ and Data Specifications 1.0, August 1991</a></li>
         <td>32-bit unsigned integer</td>
       </tr>
       <tr>
-        <td>RIFF Format Code</td>
+        <td>RIFF Form Type</td>
         <td>4</td>
         <td><code>0x57</code> <code>0x41</code> <code>0x56</code> <code>0x45</code> (i.e. <code>"WAVE"</code>)</td>
       </tr>
