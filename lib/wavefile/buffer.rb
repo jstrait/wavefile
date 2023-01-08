@@ -37,6 +37,7 @@ module WaveFile
     #          don't match, unexpected things will happen.
     #
     # Examples
+    #
     #   # One cycle of a floating point 441Hz mono square wave
     #   samples = ([0.5] * 50) + ([-0.5] * 50)
     #   buffer = Buffer.new(samples, Format.new(:mono, :float, 44100))
