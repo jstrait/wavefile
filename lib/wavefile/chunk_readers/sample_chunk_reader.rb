@@ -46,7 +46,6 @@ module WaveFile
           loop_fields[:end_sample_frame],
           loop_fields[:fraction],
           loop_fields[:play_count] = raw_bytes.slice!(0...LOOP_BYTE_COUNT).unpack("VVVVVV")
-          loop_fields[:type] = loop_fields[:type]
           loop_fields[:fraction] /= 4_294_967_296.0
 
           fields[:loops] << SamplerLoop.new(**loop_fields)
