@@ -1,6 +1,6 @@
-require 'minitest/autorun'
-require 'wavefile.rb'
-require 'wavefile_io_test_helper.rb'
+require "minitest/autorun"
+require "wavefile.rb"
+require "wavefile_io_test_helper.rb"
 
 include WaveFile
 
@@ -399,11 +399,11 @@ private
 
   def read_file(type, file_name)
     if type == :expected
-      fixture_folder = 'wave/valid'
+      fixture_folder = "wave/valid"
     elsif type == :actual
-      fixture_folder = 'actual_output'
+      fixture_folder = "actual_output"
     else
-      raise 'Invalid fixture type'
+      raise "Invalid fixture type"
     end
 
     # For Windows compatibility with binary files, File.read is not directly used

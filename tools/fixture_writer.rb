@@ -6,7 +6,7 @@
 # happily create invalid Wave files. This allows one to create both valid
 # and invalid Wave files for testing.
 
-require 'yaml'
+require "yaml"
 
 FOUR_CC = "a4"
 UNSIGNED_INT_8  = "C"
@@ -262,17 +262,17 @@ file_writer = FileWriter.new(output_file_name)
 
 chunks.keys.each do |chunk_key|
   case chunk_key
-  when 'riff_chunk'
+  when "riff_chunk"
     write_riff_chunk(file_writer, riff_chunk)
-  when 'format_chunk'
+  when "format_chunk"
     write_format_chunk(file_writer, format_chunk)
-  when 'fact_chunk'
+  when "fact_chunk"
     write_fact_chunk(file_writer, fact_chunk)
-  when 'junk_chunk'
+  when "junk_chunk"
     write_junk_chunk(file_writer, junk_chunk)
-  when 'sample_chunk'
+  when "sample_chunk"
     write_sample_chunk(file_writer, sample_chunk)
-  when 'data_chunk'
+  when "data_chunk"
     write_data_chunk(file_writer, data_chunk, format_chunk)
   else
     raise "Unknown chunk key `#{chunk_key}` in `#{yaml_file_name}`, exiting"

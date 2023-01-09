@@ -1,6 +1,6 @@
-require 'minitest/autorun'
-require 'wavefile.rb'
-require 'wavefile_io_test_helper.rb'
+require "minitest/autorun"
+require "wavefile.rb"
+require "wavefile_io_test_helper.rb"
 
 include WaveFile
 
