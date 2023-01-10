@@ -108,8 +108,8 @@ end
 
 
 def read_format_chunk(field_reader, chunk_size)
-  audio_format_code_field = field_reader.read_uint16
-  display_line("Format Code", audio_format_code_field)
+  format_code_field = field_reader.read_uint16
+  display_line("Format Code", format_code_field)
   display_line("Channel Count", field_reader.read_uint16)
   display_line("Sample Rate", field_reader.read_uint32)
   display_line("Byte Rate", field_reader.read_uint32)
@@ -118,13 +118,13 @@ def read_format_chunk(field_reader, chunk_size)
 
   bytes_read_so_far = 16
 
-  if audio_format_code_field[:parsed_value] != 1 && chunk_size > 16
+  if format_code_field[:parsed_value] != 1 && chunk_size > 16
     extension_size_field = field_reader.read_uint16
     display_line("Extension Size", extension_size_field)
     bytes_read_so_far += 2
 
     if extension_size_field[:parsed_value] > 0
-      if audio_format_code_field[:parsed_value] == 65534
+      if format_code_field[:parsed_value] == 65534
         display_line("Valid Bits Per Sample", field_reader.read_uint16)
         display_line("Speaker Mapping", field_reader.read_bitfield(4))
         display_line("Sub Format GUID", field_reader.read_guid)
