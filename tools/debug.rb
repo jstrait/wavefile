@@ -109,8 +109,8 @@ end
 
 def read_format_chunk(field_reader, chunk_size)
   audio_format_code_field = field_reader.read_uint16
-  display_line("Audio Format", audio_format_code_field)
-  display_line("Channels", field_reader.read_uint16)
+  display_line("Format Code", audio_format_code_field)
+  display_line("Channel Count", field_reader.read_uint16)
   display_line("Sample Rate", field_reader.read_uint32)
   display_line("Byte Rate", field_reader.read_uint32)
   display_line("Block Align", field_reader.read_uint16)
@@ -196,12 +196,12 @@ def read_sample_chunk(field_reader, chunk_size)
   display_line("Sample Period", field_reader.read_uint32)
   display_line("MIDI Unity Note", field_reader.read_uint32)
   display_line("MIDI Pitch Fraction", field_reader.read_uint32)
-  display_line("SMPTEFormat", field_reader.read_uint32)
-  display_line("SMPTEOffset", field_reader.read_uint32)
+  display_line("SMPTE Format", field_reader.read_uint32)
+  display_line("SMPTE Offset", field_reader.read_uint32)
 
   loop_count_field = field_reader.read_uint32
   loop_count = loop_count_field[:parsed_value]
-  display_line("Sample Loops", loop_count_field)
+  display_line("Sample Loop Count", loop_count_field)
 
   sampler_specific_data_size_field = field_reader.read_uint32
   sampler_specific_data_size = sampler_specific_data_size_field[:parsed_value]
@@ -212,8 +212,8 @@ def read_sample_chunk(field_reader, chunk_size)
     puts "Loop ##{i + 1}:"
     display_line("Identifier", field_reader.read_uint32)
     display_line("Type", field_reader.read_uint32)
-    display_line("Start", field_reader.read_uint32)
-    display_line("End", field_reader.read_uint32)
+    display_line("Start Sample Frame", field_reader.read_uint32)
+    display_line("End Sample Frame", field_reader.read_uint32)
     display_line("Fraction", field_reader.read_uint32)
     display_line("Play Count", field_reader.read_uint32)
   end
