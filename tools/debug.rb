@@ -120,6 +120,7 @@ def read_format_chunk(field_reader, chunk_size)
 
   if format_code_field[:parsed_value] != 1 && chunk_size > 16
     extension_size_field = field_reader.read_uint16
+    display_chunk_section_separator
     display_line("Extension Size", extension_size_field)
     bytes_read_so_far += 2
 
@@ -143,6 +144,7 @@ def read_format_chunk(field_reader, chunk_size)
 
   extra_byte_count = chunk_size - bytes_read_so_far
   if extra_byte_count > 0
+    display_chunk_section_separator
     display_line("Extra Bytes", field_reader.read_bytes(extra_byte_count))
   end
 end
@@ -152,6 +154,7 @@ def read_fact_chunk(field_reader, chunk_size)
   display_line("Sample Count", field_reader.read_uint32)
 
   if chunk_size > 4
+    display_chunk_section_separator
     display_line("Extra Bytes", field_reader.read_bytes(chunk_size - 4))
   end
 end
@@ -175,6 +178,7 @@ def read_cue_chunk(field_reader, chunk_size)
   bytes_remaining = chunk_size - 4
 
   cue_point_count_field[:parsed_value].times do |i|
+    display_chunk_section_separator
     display_line("ID #{i + 1}", field_reader.read_uint32)
     display_line("Position #{i + 1}", field_reader.read_uint32)
     display_line("Chunk Type #{i + 1}", field_reader.read_fourcc)
@@ -185,6 +189,7 @@ def read_cue_chunk(field_reader, chunk_size)
   end
 
   if bytes_remaining > 0
+    display_chunk_section_separator
     display_line("Extra Bytes", field_reader.read_bytes(bytes_remaining))
   end
 end
@@ -225,6 +230,7 @@ def read_sample_chunk(field_reader, chunk_size)
 
   extra_byte_count = chunk_size - 36 - (loop_count * 24) - sampler_specific_data_size_field[:parsed_value]
   if (extra_byte_count > 0)
+    display_chunk_section_separator
     display_line("Extra Bytes", field_reader.read_bytes(extra_byte_count))
   end
 end
@@ -241,6 +247,7 @@ def read_instrument_chunk(field_reader, chunk_size)
 
   extra_data_size = chunk_size - 7
   if extra_data_size > 0
+    display_chunk_section_separator
     display_line("Extra Bytes", field_reader.read_bytes(extra_data_size))
   end
 end
