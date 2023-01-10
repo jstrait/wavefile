@@ -68,7 +68,7 @@ def display_chunk_header(chunk_id_field, chunk_size_field)
   display_line("Chunk ID", chunk_id_field)
 
   if chunk_size_field != nil
-    display_line("Chunk size", chunk_size_field)
+    display_line("Chunk Size", chunk_size_field)
     display_chunk_section_separator
   end
 end
@@ -80,7 +80,7 @@ end
 
 
 def read_riff_chunk(field_reader, chunk_size)
-  display_line("Form type", field_reader.read_fourcc)
+  display_line("Form Type", field_reader.read_fourcc)
 
   while field_reader.bytes_read < chunk_size + 8
     child_chunk_id_field, child_chunk_size_field = nil
@@ -109,32 +109,32 @@ end
 
 def read_format_chunk(field_reader, chunk_size)
   audio_format_code_field = field_reader.read_uint16
-  display_line("Audio format", audio_format_code_field)
+  display_line("Audio Format", audio_format_code_field)
   display_line("Channels", field_reader.read_uint16)
-  display_line("Sample rate", field_reader.read_uint32)
-  display_line("Byte rate", field_reader.read_uint32)
-  display_line("Block align", field_reader.read_uint16)
-  display_line("Bits per sample", field_reader.read_uint16)
+  display_line("Sample Rate", field_reader.read_uint32)
+  display_line("Byte Rate", field_reader.read_uint32)
+  display_line("Block Align", field_reader.read_uint16)
+  display_line("Bits Per Sample", field_reader.read_uint16)
 
   bytes_read_so_far = 16
 
   if audio_format_code_field[:parsed_value] != 1 && chunk_size > 16
     extension_size_field = field_reader.read_uint16
-    display_line("Extension size", extension_size_field)
+    display_line("Extension Size", extension_size_field)
     bytes_read_so_far += 2
 
     if extension_size_field[:parsed_value] > 0
       if audio_format_code_field[:parsed_value] == 65534
-        display_line("Valid bits per sample", field_reader.read_uint16)
-        display_line("Speaker mapping", field_reader.read_bitfield(4))
-        display_line("Sub format GUID", field_reader.read_guid)
+        display_line("Valid Bits Per Sample", field_reader.read_uint16)
+        display_line("Speaker Mapping", field_reader.read_bitfield(4))
+        display_line("Sub Format GUID", field_reader.read_guid)
 
         extra_byte_count = extension_size_field[:parsed_value] - 22
         if extra_byte_count > 0
-          display_line("Extra extension bytes", field_reader.read_bytes(extra_byte_count))
+          display_line("Extra Extension Bytes", field_reader.read_bytes(extra_byte_count))
         end
       else
-        display_line("Raw extension", field_reader.read_bytes(extension_size_field[:parsed_value]))
+        display_line("Raw Extension", field_reader.read_bytes(extension_size_field[:parsed_value]))
       end
     end
 
@@ -143,16 +143,16 @@ def read_format_chunk(field_reader, chunk_size)
 
   extra_byte_count = chunk_size - bytes_read_so_far
   if extra_byte_count > 0
-    display_line("Extra bytes", field_reader.read_bytes(extra_byte_count))
+    display_line("Extra Bytes", field_reader.read_bytes(extra_byte_count))
   end
 end
 
 
 def read_fact_chunk(field_reader, chunk_size)
-  display_line("Sample count", field_reader.read_uint32)
+  display_line("Sample Count", field_reader.read_uint32)
 
   if chunk_size > 4
-    display_line("Extra bytes", field_reader.read_bytes(chunk_size - 4))
+    display_line("Extra Bytes", field_reader.read_bytes(chunk_size - 4))
   end
 end
 
@@ -170,22 +170,22 @@ end
 
 def read_cue_chunk(field_reader, chunk_size)
   cue_point_count_field = field_reader.read_uint32
-  display_line("Cue point count", cue_point_count_field)
+  display_line("Cue Point Count", cue_point_count_field)
 
   bytes_remaining = chunk_size - 4
 
   cue_point_count_field[:parsed_value].times do |i|
     display_line("ID #{i + 1}", field_reader.read_uint32)
     display_line("Position #{i + 1}", field_reader.read_uint32)
-    display_line("Chunk type #{i + 1}", field_reader.read_fourcc)
-    display_line("Chunk start #{i + 1}", field_reader.read_uint32)
-    display_line("Block start #{i + 1}", field_reader.read_uint32)
-    display_line("Sample offset #{i + 1}", field_reader.read_uint32)
+    display_line("Chunk Type #{i + 1}", field_reader.read_fourcc)
+    display_line("Chunk Start #{i + 1}", field_reader.read_uint32)
+    display_line("Block Start #{i + 1}", field_reader.read_uint32)
+    display_line("Sample Offset #{i + 1}", field_reader.read_uint32)
     bytes_remaining -= 24
   end
 
   if bytes_remaining > 0
-    display_line("Extra bytes", field_reader.read_bytes(bytes_remaining))
+    display_line("Extra Bytes", field_reader.read_bytes(bytes_remaining))
   end
 end
 
@@ -220,12 +220,12 @@ def read_sample_chunk(field_reader, chunk_size)
 
   if sampler_specific_data_size > 0
     display_chunk_section_separator
-    display_line("Sampler specific data", field_reader.read_bytes(sampler_specific_data_size))
+    display_line("Sampler Specific Data", field_reader.read_bytes(sampler_specific_data_size))
   end
 
   extra_byte_count = chunk_size - 36 - (loop_count * 24) - sampler_specific_data_size_field[:parsed_value]
   if (extra_byte_count > 0)
-    display_line("Extra bytes", field_reader.read_bytes(extra_byte_count))
+    display_line("Extra Bytes", field_reader.read_bytes(extra_byte_count))
   end
 end
 
@@ -241,7 +241,7 @@ def read_instrument_chunk(field_reader, chunk_size)
 
   extra_data_size = chunk_size - 7
   if extra_data_size > 0
-    display_line("Extra bytes", field_reader.read_bytes(extra_data_size))
+    display_line("Extra Bytes", field_reader.read_bytes(extra_data_size))
   end
 end
 
