@@ -121,7 +121,7 @@ and Data Specifications 1.0, August 1991</a></li>
         <td>32-bit unsigned integer</td>
       </tr>
       <tr>
-        <td>Bytes per Second<br />(a.k.a byte rate)</td>
+        <td>Bytes per Second</td>
         <td>4</td>
         <td>32-bit unsigned integer</td>
       </tr>
@@ -155,7 +155,7 @@ and Data Specifications 1.0, August 1991</a></li>
   <p><strong>Format Tag</strong> &ndash; Indicates how the sample data for the wave file is stored. The most common format tag is <code>1</code>, for integer PCM. Other formats include floating point PCM (<code>3</code>), ADPCM (<code>2</code>), A-law (<code>6</code>), &mu;-law (<code>7</code>), and WAVE_FORMAT_EXTENSIBLE (<code>65534</code>).</p>
   <p><strong>Number of channels</strong> &ndash; Typically a file will have 1 channel (mono) or 2 channels (stereo). A 5.1 surround sound file will have 6 channels.</p>
   <p><strong>Sample rate</strong> &ndash; The number of sample frames that occur each second. A typical value would be 44,100, which is the same as an audio CD.</p>
-  <p><strong>Bytes per second (a.k.a. byte rate)</strong> &ndash; The spec calls this <em>byte rate</em>, which means the number of bytes required for one second of audio data. This is equal to the bytes per sample frame times the sample rate. So with a bytes per sample frame of 4, and a sample rate of 44,100, this should equal 176,400.</p>
+  <p><strong>Bytes per second</strong> &ndash; The number of bytes required for one second of audio data. This is equal to the bytes per sample frame times the sample rate. So with a bytes per sample frame of 4, and a sample rate of 44,100, this should equal 176,400.</p>
   <p><strong>Bytes per sample frame (a.k.a. block align)</strong> &ndash; Called <em>block align</em> by the spec, this is the number of bytes required to store a single sample frame, i.e. a single sample for each channel. (Sometimes a sample frame is also referred to as a <em>block</em>). Each sample, and the sample frame as a whole, must be a whole number of bytes (i.e. it must be a multiple of 8 bits). For example, a sample frame size of 16 bits is valid, but 12 bits is not.</p>
   <p>To calculate this value, first round bits per sample up to the next multiple of 8 (if necessary), divide by 8, then multiply by the number of channels. For example:</p>
   <div class="scroll-x">
