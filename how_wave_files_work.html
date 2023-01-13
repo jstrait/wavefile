@@ -230,8 +230,8 @@ and Data Specifications 1.0, August 1991</a></li>
   </div>
 
   <h2>Extra Format Fields for EXTENSIBLE format</h2>
-  <p>If the format tag is <code>65534</code>, then the format is called &ldquo;WAVE_FORMAT_EXTENSIBLE&rdquo;. This comes from the name of a data structure given to this format in the Windows API. The extensible format is a container format (&hellip;within *.wav, which is itself a container format). It exists to work around some ambiguities in the original Wave file format without having to break compatibility with pre-existing files.</p>
-  <p>When the format is WAVE_FORMAT_EXTENSIBLE, the extension size in the format chunk should be <code>22</code>, and the following three fields should be included:</p>
+  <p>The format tag <code>65534</code> is called WAVE_FORMAT_EXTENSIBLE. This is a special format tag that can be used in place of any of the other defined format tags to add two additional fields to the format chunk. These two fields help clarify info that can be ambiguous when using the original chunk structure. Since the original format tag is replaced by <code>65534</code>, a third additional field indicates the actual format tag instead.</p>
+  <p>When the format is WAVE_FORMAT_EXTENSIBLE, the extension size in the format chunk should be at least <code>22</code>, and the following three fields should be included:</p>
   <div class="scroll-x">
     <table>
       <tr>
@@ -245,7 +245,7 @@ and Data Specifications 1.0, August 1991</a></li>
       <tr>
         <td>Extension Size</td>
         <td>2</td>
-        <td>16-bit unsigned integer (value <code>22</code>)</td>
+        <td>16-bit unsigned integer (min value <code>22</code>)</td>
       </tr>
       <tr>
         <td>Valid Bits Per Sample</td>
@@ -539,7 +539,7 @@ and Data Specifications 1.0, August 1991</a></li>
   <p>Alternately, PCM samples can be stored as floating point values. This is essentially the same as integer PCM format (i.e. format tag <code>1</code>), except that samples are in the range -1.0 to 1.0. The bits per sample field should be set to <code>32</code> or <code>64</code> to indicate the precision of the values. Sample frames should be layed out in the same way as described in the &ldquo;Integer PCM Data Chunk&rdquo; section above.</p>
   <h2>EXTENSIBLE Data Chunk</h2>
   <p>Format tag: <code>65534</code></p>
-  <p>Since WAVE_FORMAT_EXTENSIBLE is a container format, the format tag of <code>65534</code> doesn&rsquo;t imply any particular sample format. Instead, the sample format is indicated by the sub format GUID in the format chunk extension. For example, if the sub format GUID is the GUID for integer PCM, then the samples are in the same format as if the format tag was <code>1</code>.</p>
+  <p>Since WAVE_FORMAT_EXTENSIBLE doesn&rsquo;t imply any particular sample format, the sample format is instead indicated by the sub format GUID in the format chunk extension. For example, if the sub format GUID is the GUID for integer PCM, then the samples are in the same format as if the format tag was <code>1</code>.</p>
 
   <h2>References</h2>
   <p>Documents from Microsoft defining the initial file format, and changes over time:</p>
