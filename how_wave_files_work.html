@@ -126,7 +126,7 @@ and Data Specifications 1.0, August 1991</a></li>
         <td>32-bit unsigned integer</td>
       </tr>
       <tr>
-        <td>Bytes per Sample Frame<br />(a.k.a block align)</td>
+        <td>Block align</td>
         <td>2</td>
         <td>16-bit unsigned integer</td>
       </tr>
@@ -155,15 +155,15 @@ and Data Specifications 1.0, August 1991</a></li>
   <p><strong>Format Tag</strong> &ndash; Indicates how the sample data for the wave file is stored. The most common format tag is <code>1</code>, for integer PCM. Other formats include floating point PCM (<code>3</code>), ADPCM (<code>2</code>), A-law (<code>6</code>), &mu;-law (<code>7</code>), and WAVE_FORMAT_EXTENSIBLE (<code>65534</code>).</p>
   <p><strong>Number of channels</strong> &ndash; Typically a file will have 1 channel (mono) or 2 channels (stereo). A 5.1 surround sound file will have 6 channels.</p>
   <p><strong>Sample rate</strong> &ndash; The number of sample frames that occur each second. A typical value would be 44,100, which is the same as an audio CD.</p>
-  <p><strong>Average bytes per second</strong> &ndash; The number of bytes required for one second of audio data. For integer PCM of float PCM data, this is equal to the bytes per sample frame times the sample rate. So with a bytes per sample frame of 4, and a sample rate of 44,100, this should equal 176,400. For other formats the calculation can be different.</p>
-  <p><strong>Bytes per sample frame (a.k.a. block align)</strong> &ndash; Called <em>block align</em> by the spec, this is the number of bytes required to store a single sample frame, i.e. a single sample for each channel. (Sometimes a sample frame is also referred to as a <em>block</em>). Each sample, and the sample frame as a whole, must be a whole number of bytes (i.e. it must be a multiple of 8 bits). For example, a sample frame size of 16 bits is valid, but 12 bits is not.</p>
+  <p><strong>Average bytes per second</strong> &ndash; The number of bytes required for one second of audio data. For integer PCM of float PCM data, this is equal to the block align times the sample rate. So with a block align of 4, and a sample rate of 44,100, this should equal 176,400. For other formats the calculation can be different.</p>
+  <p><strong>Block align</strong> &ndash; The number of bytes required to store a single sample frame. A sample frame contains a single sample for each channel. Each sample, and the sample frame as a whole, must be a whole number of bytes (i.e. it must be a multiple of 8 bits). For example, a sample frame size of 16 bits is valid, but 12 bits is not.</p>
   <p>To calculate this value, first round bits per sample up to the next multiple of 8 (if necessary), divide by 8, then multiply by the number of channels. For example:</p>
   <div class="scroll-x">
     <table>
       <tr>
         <th>Bits Per Sample</th>
         <th>Channels</th>
-        <th>Bytes Per Sample Frame</th>
+        <th>Block Align</th>
       </tr>
       <tr>
         <td>5 &rarr; 8</td>
@@ -202,7 +202,7 @@ and Data Specifications 1.0, August 1991</a></li>
       </tr>
     </table>
   </div>
-  <p>This field can be used to calculate the average bytes per second field. Another possible use is for seeking around in a file. For example, if the bytes per sample frame is 4, then to seek forward 10 sample frames you need to seek forward 40 bytes.</p>
+  <p>This field can be used to calculate the average bytes per second field. Another possible use is for seeking around in a file. For example, if the block align (i.e. bytes per sample frame) is 4, then to seek forward 10 sample frames you need to seek forward 40 bytes.</p>
   <p><strong>Bits per sample</strong> &ndash; For integer PCM data, typical values will be <code>8</code>, <code>16</code>, or <code>32</code>. If the sample format doesn&rsquo;t require this field, it should be set to <code>0</code>.</p>
   <p><strong>Extension Size</strong> &ndash; This field should only be present if the format tag is not <code>1</code>. This indicates the size of the extra fields in bytes. It does not include the bytes in this field itself. If the given sample format has no extra fields, then this field should still be present, but set to <code>0</code>.</p>
   <p><strong>Extra Fields</strong> &ndash; It depends on the format tag! The next sections describe the extra fields for a few audio formats.</p>
@@ -488,7 +488,7 @@ and Data Specifications 1.0, August 1991</a></li>
   </div>
   <p class="important"><span class="tag-important">Important!</span> Notice that 8-bit samples are unsigned, while larger bit depths are signed.</p>
   <p>Samples in a multi-channel PCM wave file are interleaved. That is, in a stereo file, one sample for the left channel will be followed by one sample for the right channel, followed by another sample for the left channel, then right channel, and so forth.</p>
-  <p>One set of interleaved samples is called a <em>sample frame</em> (also called a <em>block</em>). A sample frame will contain one sample for each channel. In a monophonic file, a sample frame will consist of 1 sample. In a stereo file, a sample frame has 2 samples (one for the left channel, one for the right channel). In a 5-channel file, a sample frame has 5 samples. The bytes per sample frame field in the format chunk gives the size in bytes of each sample frame. This can be useful when seeking to a particular sample frame in the file.</p>
+  <p>One set of interleaved samples is called a <em>sample frame</em> (also called a <em>block</em>). A sample frame will contain one sample for each channel. In a monophonic file, a sample frame will consist of 1 sample. In a stereo file, a sample frame has 2 samples (one for the left channel, one for the right channel). In a 5-channel file, a sample frame has 5 samples. The block align field in the format chunk gives the size in bytes of each sample frame. This can be useful when seeking to a particular sample frame in the file.</p>
   <p>For example, for a 2 channel file with 16-bit PCM samples, the sample data would look like this:</p>
   <div class="flex flex-column flex-row-l flex-align-center flex-justify-center center" style="font-size: 0.8rem;">
     <div style="border: 2px solid #a1a1a1; border-radius: 0.5rem; padding: 0.5rem; margin-right: 0.5rem;">
