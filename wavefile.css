@@ -145,6 +145,11 @@ td:last-child {
   border-radius: 0.25rem;
 }
 
+.inline-code-highlight {
+  font-weight: bold;
+  color: #f00;
+}
+
 h1 {
   font-size: 2.0rem;
   font-weight: 400;

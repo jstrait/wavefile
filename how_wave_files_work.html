@@ -353,46 +353,11 @@ and Data Specifications 1.0, August 1991</a></li>
   <p>The channels will be mapped in the order of the speakers list above. E.g. if in a 2 channel file the channel mask field has the bits for Back Left and Top Center speakers set, the first channel will be mapped to Back Left and the second channel to Top Center (because Back Left comes earlier than Top Center in the list above).</p>
   <p>If there are more channels than bits set in this field, the remaining channels will have an undefined speaker mapping. If there are more bits set in the speaker mapping than there are channels, the extra bits should be ignored. To explicitly indicate that no channel is mapped to any specific speaker, set this field to <code>0</code>.</p>
   <p>The spec says that if the most significant bit of this field is set to <code>1</code> (e.g. <code>0xFFFFFFFF</code>) it indicates &ldquo;an entity supports all possible channel configurations.&rdquo; To be honest, I don&rsquo;t understand what that means.</p>
-  <p><strong>Sub Format GUID</strong> &ndash; Identifies the format of the sample data in the data chunk. Since the format tag will already be set to <code>65534</code> to indicate WAVE_FORMAT_EXTENSIBLE, this GUID indicates the sample format instead. Some GUID mappings include:</p>
-  <div class="scroll-x">
-    <table>
-      <tr>
-        <th>Format</th>
-        <th>Original Format Tag</th>
-        <th>Extensible GUID</th>
-      </tr>
-      <tr>
-        <td>PCM Integer</td>
-        <td><code>1</code></td>
-        <td><code>0x0100000000001000800000aa00389b71</code></td>
-      </tr>
-      <tr>
-        <td>ADPCM</td>
-        <td><code>2</code></td>
-        <td><code>0x0200000000001000800000aa00389b71</code></td>
-      </tr>
-      <tr>
-        <td>PCM Float</td>
-        <td><code>3</code></td>
-        <td><code>0x0300000000001000800000aa00389b71</code></td>
-      </tr>
-      <tr>
-        <td>A-law</td>
-        <td><code>6</code></td>
-        <td><code>0x0600000000001000800000aa00389b71</code></td>
-      </tr>
-      <tr>
-        <td>&mu;-law</td>
-        <td><code>7</code></td>
-        <td><code>0x0700000000001000800000aa00389b71</code></td>
-      </tr>
-      <tr>
-        <td>MPEG</td>
-        <td><code>80</code></td>
-        <td><code>0x5000000000001000800000aa00389b71</code></td>
-      </tr>
-    </table>
-  </div>
+  <p><strong>Sub Format GUID</strong> &ndash; Identifies the format of the sample data in the data chunk. Since the format tag will already be set to <code>65534</code> to indicate WAVE_FORMAT_EXTENSIBLE, this GUID indicates the sample format instead. For example, the GUID for format tag <code>1</code> is <code>00000001-0000-0010-8000-00aa00389b71</code>.</p>
+  <p>The GUID for any of the official format tags can be determined by plugging the 4 digit hex representation of the format code into the GUID template <code>0000____-0000-0010-8000-00aa00389b71</code>. For example, the format tag for A-law format is <code>6</code> in decimal, which is <code>0x0006</code> as a 4 digit hex number. Therefore the GUID for this format is <code>0000<span class="inline-code-highlight">0006</span>-0000-0010-8000-00aa00389b71</code>.</p>
+  <p>However, the GUID&rsquo;s bytes are not stored in the same order the digits are displayed in its text representation. The bytes of the first 3 sections are stored in a little-endian order, while the bytes of the last 2 are stored in a big endian order. For example, the GUID <code>00000001-0000-0010-8000-00aa00389b71</code> is stored as the bytes <code>0x01</code> <code>0x00</code> <code>0x00</code> <code>0x00</code> <code>0x00</code> <code>0x00</code> <code>0x10</code> <code>0x00</code> <code>0x80</code> <code>0x00</code> <code>0x00</code> <code>0xaa</code> <code>0x00</code> <code>0x38</code> <code>0x9b</code> <code>0x71</code>.</p>
+
+  <p>This means that the bytes of an official format tag&rsquo;s GUID can be determined by taking the two bytes of the original format tag and appending <code>0x00</code> <code>0x00</code> <code>0x00</code> <code>0x00</code> <code>0x10</code> <code>0x00</code> <code>0x80</code> <code>0x00</code> <code>0x00</code> <code>0xaa</code> <code>0x00</code> <code>0x38</code> <code>0x9b</code> <code>0x71</code>.</p>
 
   <h2>The Fact Chunk</h2>
   <div class="scroll-x">
