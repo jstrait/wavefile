@@ -231,6 +231,7 @@ and Data Specifications 1.0, August 1991</a></li>
 
   <h2>Extra Format Fields for EXTENSIBLE format</h2>
   <p>The format tag <code>65534</code> is called WAVE_FORMAT_EXTENSIBLE. This is a special format tag that can be used in place of any of the other defined format tags to add two additional fields to the format chunk. These two fields help clarify info that can be ambiguous when using the original chunk structure. Since the original format tag is replaced by <code>65534</code>, a third additional field indicates the actual format tag instead.</p>
+  <p>Note that when using this format tag in place of format tag <code>1</code> (i.e. integer PCM data) the file should include a fact chunk, even though it&rsquo;s not normally needed for that format and is redundant for the purpose of determining the number of sample frames.</p>
   <p>When the format is WAVE_FORMAT_EXTENSIBLE, the extension size in the format chunk should be at least <code>22</code>, and the following three fields should be included:</p>
   <div class="scroll-x">
     <table>
