@@ -235,8 +235,9 @@ and Data Specifications 1.0, August 1991</a></li>
 
   <h2>Extra Format Fields for EXTENSIBLE format</h2>
   <p>The format tag <code>65534</code> is called WAVE_FORMAT_EXTENSIBLE. This is a special format tag that can be used in place of any of the other defined format tags to add two additional fields to the format chunk. These two fields help clarify info that can be ambiguous when using the original chunk structure. However, the first field has one of three different meanings depending on the format. Since the original format tag is replaced by <code>65534</code>, a third additional field indicates the actual format tag instead.</p>
+  <p>These three new fields occupy a total of 22 bytes. If the non-WAVE_FORMAT_EXTENSIBLE version of an official format contains extra fields, then these extra fields should also be included in the WAVE_FORMAT_EXTENSIBLE version, after the Sub Format GUID field. This means that while the minimum size of the extra fields is 22 bytes, it could also be larger.</p>
   <p>Note that when using this format tag in place of format tag <code>1</code> (i.e. integer PCM data) the file should include a fact chunk, even though it&rsquo;s not normally needed for that format and is redundant for the purpose of determining the number of sample frames.</p>
-  <p>When the format is WAVE_FORMAT_EXTENSIBLE, the extension size in the format chunk should be at least <code>22</code>, and the following three fields should be included:</p>
+  <p>When the format is WAVE_FORMAT_EXTENSIBLE, the format chunk should look like this:</p>
   <div class="scroll-x">
     <table>
       <tr>
@@ -244,8 +245,45 @@ and Data Specifications 1.0, August 1991</a></li>
         <th>Bytes</th>
         <th>Description</th>
       </tr>
-      <tr class="center" style="border-bottom: 2px #ddd dashed;">
-        <td colspan="3"><em>&uarr;<br />Other fields in format chunk</em></td>
+      <tr>
+        <td>Chunk ID</td>
+        <td>4</td>
+        <td><code>0x66</code> <code>0x6d</code> <code>0x74</code> <code>0x20</code> (i.e. <code>"fmt&nbsp;"</code>)</td>
+      </tr>
+      <tr>
+        <td>Chunk Body Size</td>
+        <td>4</td>
+        <td>32-bit unsigned integer</td>
+      </tr>
+      <tr>
+        <td>Format Tag</td>
+        <td>2</td>
+        <td>16-bit unsigned integer (value <code>65534</code>)</td>
+      </tr>
+      <tr>
+        <td>Number of Channels</td>
+        <td>2</td>
+        <td>16-bit unsigned integer</td>
+      </tr>
+      <tr>
+        <td>Samples per second</td>
+        <td>4</td>
+        <td>32-bit unsigned integer</td>
+      </tr>
+      <tr>
+        <td>Average Bytes per Second</td>
+        <td>4</td>
+        <td>32-bit unsigned integer</td>
+      </tr>
+      <tr>
+        <td>Block align</td>
+        <td>2</td>
+        <td>16-bit unsigned integer</td>
+      </tr>
+      <tr>
+        <td>Bits per sample</td>
+        <td>2</td>
+        <td>16-bit unsigned integer</td>
       </tr>
       <tr>
         <td>Extension Size</td>
@@ -266,6 +304,9 @@ and Data Specifications 1.0, August 1991</a></li>
         <td>Sub Format GUID</td>
         <td>16</td>
         <td>16-byte GUID</td>
+      </tr>
+      <tr class="center" style="border-top: 2px #ddd dashed;">
+        <td colspan="3"><em>Other extra fields (if any)</em><br />&darr;</td>
       </tr>
     </table>
   </div>
