@@ -51,7 +51,7 @@ include WaveFile
 # Samples will be read as monophonic floating point,
 # regardless of the actual sample format in the file
 target_format = Format.new(:mono, :float, 44100)
-reader = Reader.new("my_file.wav", target_format).each_buffer do |buffer|
+Reader.new("my_file.wav", target_format).each_buffer do |buffer|
   puts "Read #{buffer.samples.length} sample frames."
 end{% endhighlight %}
   <p><strong>Note:</strong> Sample data will not be re-sampled to match the target sample rate. For example, if reading data out of a file with 44,100Hz sample rate using a target <code>Format</code> with a 22,050Hz sample rate, the samples will not be re-sampled to a 22,050Hz sample rate. This means that audio will sound pitch shifted unless the file&rsquo;s actual sample rate and the target sample rate are the same.</p>
