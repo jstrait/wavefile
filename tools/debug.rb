@@ -377,7 +377,7 @@ class FieldReader
   def read_bitfield(byte_count)
     read_field(byte_count: byte_count,
                type_label: "Bit field",
-               parser: lambda {|bytes| bytes.reverse.map {|byte| byte.unpack("B8")}.join })
+               parser: lambda {|bytes| "0x#{bytes.reverse.map {|byte| byte.unpack("H2")}.join}"})
   end
 
   def read_guid
