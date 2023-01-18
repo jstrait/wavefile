@@ -334,31 +334,31 @@ class FieldReader
 
   def read_int8
     read_field(byte_count: 1,
-               type_label: "int_8",
+               type_label: "int8",
                parser: lambda {|bytes| bytes.join.unpack("c").first })
   end
 
   def read_uint8
     read_field(byte_count: 1,
-               type_label: "uint_8",
+               type_label: "uint8",
                parser: lambda {|bytes| bytes.join.unpack("C").first })
   end
 
   def read_uint16
     read_field(byte_count: 2,
-               type_label: "uint_16",
+               type_label: "uint16",
                parser: lambda {|bytes| bytes.join.unpack("v").first })
   end
 
   def read_uint32
     read_field(byte_count: 4,
-               type_label: "uint_32",
+               type_label: "uint32",
                parser: lambda {|bytes| bytes.join.unpack("V").first })
   end
 
   def read_float32
     read_field(byte_count: 4,
-               type_label: "float_32",
+               type_label: "float32",
                parser: lambda {|bytes| bytes.join.unpack("e").first })
   end
 
