@@ -381,9 +381,22 @@ class FieldReader
   end
 
   def read_guid
+    parser_lambda = lambda do |bytes|
+      # The first 3 byte groups of the GUID string contain little-endian numbers,
+      # while the last 2 contain raw bytes. This is why only the first 3 byte groups
+      # have their order reversed.
+      byte_groups = [bytes[0..3].reverse, bytes[4..5].reverse, bytes[6..7].reverse, bytes[8..9], bytes[10..15]]
+
+      byte_group_strings = byte_groups.map do |byte_group|
+        byte_group.map {|bytes| bytes.unpack("H2")}.join
+      end
+
+      byte_group_strings.join("-")
+    end
+
     read_field(byte_count: 16,
                type_label: "GUID",
-               parser: lambda {|bytes| "0x#{bytes.map {|byte| byte.unpack("H2")}.join}" })
+               parser: parser_lambda)
   end
 
   def read_bytes(byte_count)
