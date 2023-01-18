@@ -11,13 +11,13 @@ id: tutorial
 <div class="section section-tall bg-white">
   <h2>Basic Concepts</h2>
   <p>The WaveFile gem lets you both read and write wave files. Reading is done using the <code>Reader</code> class, and writing is done using the <code>Writer</code> class.</p>
-  <p>The <code>Buffer</code> class represents a collection of samples in a given sample format (e.g. stereo 16-bit PCM samples at a 44,100Hz sample rate). When samples are read using <code>Reader</code> they are returned in <code>Buffer</code> instances. Samples to be written are given to <code>Writer</code> wrapped in <code>Buffer</code> instances as well.</p>
+  <p>The <code>Buffer</code> class represents a collection of samples in a given sample format (e.g. stereo 16-bit PCM samples at a 44,100Hz sample rate). When samples are read using <code>Reader</code> they are returned in a <code>Buffer</code> instance. Samples to be written are given to <code>Writer</code> wrapped in a <code>Buffer</code> instance as well.</p>
   <p>A <code>Buffer</code> consists of two parts: an array of samples, and a <code>Format</code> instance that describes the sample format (since it&rsquo;s not necessarily possible to determine just by looking at the raw samples). For example, the sample array in a <code>Buffer</code> read out of a mono 8-bit PCM file (in which each sample is an integer between 0 and 255) might look like this:</p>
   {% highlight ruby %}[45, 192, 13, 231, 201, 101, 15, ...etc...]{% endhighlight %}
   <p>When there is more than one channel, each sample frame will be represented by a sub array. For example, a set of stereo floating point samples (in which each sample is between -1.0 and 1.0) might look like this:</p>
   {% highlight ruby %}[[-0.2, 0.4], [0.3, 0.9], [-0.4, -0.8], [0.9, -0.2], [-0.3, 0.4], ...etc...]{% endhighlight %}
   <p>When writing a program that creates sound, you would generate an array like this with the sample data, then wrap it in a <code>Buffer</code>, and then use <code>Writer</code> to write the samples in the <code>Buffer</code> to disk.</p>
-  <p>A <code>Buffer</code> has the ability to convert its samples to any other format this gem supports. This means you can read samples from a file in whatever format you like, regardless of the actual sample format in the file (e.g. read a file with 8-bit samples and get 16-bit samples back). You can also do the same with <code>Writer</code> &ndash; for example, rather than remember the sample range of 16-bit integer PCM format (was it 32,767? or 32,768?) you can instead generate floating point samples between -1.0 and 1.0, and transparently write them out as 16-bit integer PCM samples.</p>
+  <p>A <code>Buffer</code> has the ability to convert its samples to any other format this gem supports. This means you can read samples from a file in whatever format you like, regardless of the actual sample format in the file (e.g. read a file with 8-bit samples and get 16-bit samples back). You can also do the same with <code>Writer</code> &ndash; for example, rather than remember the sample range of 16-bit integer PCM format (is the max sample 32,767? or 32,768?) you can instead generate floating point samples between -1.0 and 1.0, and transparently write them out as 16-bit integer PCM samples.</p>
 </div>
 <div class="section section-tall">
   <h2>Writing a New Wave File</h2>
@@ -36,7 +36,7 @@ one_square_cycle = ([AMPLITUDE] * 50) + ([-AMPLITUDE] * 50){% endhighlight %}
   writer.write(buffer)
 end{% endhighlight %}
   <p>Notice that we gave the <code>Writer</code> a <code>Format</code> as well. This determines the format that will be used when writing the samples to the file. Notice that the <code>:pcm_16</code> sample format is different from the <code>:float</code> sample format in the <code>Buffer</code> we created &ndash; the gem will handle the necessary translation behind the scenes.</p>
-  <p>All of the code to write the samples is done inside a block. When the block exits the file will automatically be closed. (If you want more manual control over when the file is closed you can do that as well by not passing a block and manually calling <code>close()</code>).</p>
+  <p>All of the samples are written inside a block. When the block exits the file will automatically be closed. (You can have more manual control over when the file is closed by not passing a block, calling <code>write()</code> as needed, and manually calling <code>close()</code> when done).</p>
   <p>Here&rsquo;s the full program so far:</p>
   {% highlight ruby %}require "wavefile"
 include WaveFile   # So we don't have to prefix all classes with 'WaveFile::'
@@ -97,7 +97,7 @@ end{% endhighlight %}
 Buffer bits per sample:      16
 Number of samples in buffer: 4096
 First 10 samples in buffer:  [8192, 8192, 8192, 8192, 8192, 8192, 8192, 8192, 8192, 8192]</code></pre>
-  <p>Notice how the first samples are <code>8192</code>, rather than the <code>0.25</code> value that we used when generating the file. This is because when we saved that file, we indicated (via the <code>Format</code> instance we gave) that the samples should be written as 16-bit PCM samples instead of floating point.</p>
+  <p>Notice how the first samples in each buffer are <code>8192</code>, rather than the <code>0.25</code> value that we used when generating the file. This is because when we saved that file, we indicated (via the <code>Format</code> instance we gave) that the samples should be written as 16-bit PCM samples instead of floating point.</p>
   <p>Also notice that we only read 4,096 samples at a time, instead of trying to the read the whole file. It&rsquo;s a generally a good idea to read a larger number of smaller buffers, rather than one giant buffer. For this file it probably doesn&rsquo;t matter, but longer files can have millions of samples, and Ruby can have trouble with arrays this large.</p>
   <p>OK, well that&rsquo;s cool, but let&rsquo;s say we want to read this file so we can do some transformation on it, and it will be easier to work with if the samples are in floating point format, and are stereo (since we want to combine it with some other files that are stereo). No problem, when constructing the <code>Reader</code> we can pass a <code>Format</code> instance that describes our desired sample format.</p>
   {% highlight ruby %}require "wavefile"
