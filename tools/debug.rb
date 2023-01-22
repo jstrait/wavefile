@@ -407,7 +407,8 @@ def display_chunk_header(chunk_id_field, chunk_size_field)
   end
 
   puts title
-  puts "=================================================================================="
+  puts "================================================================================"
+
   display_line("Chunk ID", chunk_id_field)
 
   if chunk_size_field != nil
@@ -434,12 +435,12 @@ def display_line(label, field)
 
   formatted_bytes = bytes.map {|byte| byte.unpack("H2").first }.join(" ")
 
-  puts "#{(label + ":").ljust(22)} #{data_type.ljust(10)} | #{formatted_value.ljust(10)} | #{formatted_bytes}"
+  puts "#{(label + ":").ljust(22)} #{data_type.ljust(9)} | #{formatted_value.ljust(10)} | #{formatted_bytes}"
 end
 
 
 def display_chunk_section_separator
-  puts "----------------------------------+------------+----------------------------------"
+  puts "---------------------------------+------------+---------------------------------"
 end
 
 
