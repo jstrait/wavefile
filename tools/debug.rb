@@ -425,22 +425,42 @@ def display_line(label, field)
 
   if data_type == "FourCC" || data_type == "C String"
     # Wrap the value in quotes and show character codes for non-display characters
-    formatted_value = parsed_value.inspect
+    formatted_parsed_value = parsed_value.inspect
+
+    formatted_parsed_value_lines = formatted_parsed_value.chars[1..-1].each_slice(18).map {|line| line.join}
+    formatted_parsed_value_lines.first.prepend("\"")
+    formatted_parsed_value_lines[1..-1].each {|line| line.prepend(" ")}
   else
     # This branch exists to avoid wrapping a value in quotes when it semantically
     # is not a String but happens to be contained in a String object (e.g. a bit field,
     # GUID, etc).
-    formatted_value = parsed_value.to_s
+    formatted_parsed_value = parsed_value.to_s
+
+    formatted_parsed_value_lines = formatted_parsed_value.chars.each_slice(19).map {|line| line.join}
   end
 
-  formatted_bytes = bytes.map {|byte| byte.unpack("H2").first }.join(" ")
+  formatted_bytes = bytes.map {|byte| byte.unpack("H2").first }
+  formatted_bytes_lines = formatted_bytes.each_slice(8).map {|line| line.join(" ")}
 
-  puts "#{(label + ":").ljust(22)} #{data_type.ljust(9)} | #{formatted_value.ljust(10)} | #{formatted_bytes}"
+  lines = []
+  i = 0
+  while (i < formatted_parsed_value_lines.length) || (i < formatted_bytes_lines.length) do
+    lines << {
+      parsed_value: formatted_parsed_value_lines[i] || "",
+      bytes: formatted_bytes_lines[i] || "",
+    }
+    i += 1
+  end
+
+  puts "#{(label + ":").ljust(22)} #{data_type.ljust(9)} | #{lines.first[:parsed_value].ljust(19)} | #{lines.first[:bytes]}"
+  lines[1..-1].each do |line|
+    puts "#{' ' * 32} | #{line[:parsed_value].ljust(19)} | #{line[:bytes]}"
+  end
 end
 
 
 def display_chunk_section_separator
-  puts "---------------------------------+------------+---------------------------------"
+  puts "---------------------------------+---------------------+------------------------"
 end
 
 
