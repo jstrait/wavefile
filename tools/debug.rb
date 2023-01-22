@@ -35,50 +35,6 @@ def main
 end
 
 
-def display_line(label, field)
-  parsed_value = field[:parsed_value]
-  bytes = field[:bytes]
-  data_type = field[:type_label]
-
-  if data_type == "FourCC" || data_type == "C String"
-    # Wrap the value in quotes and show character codes for non-display characters
-    formatted_value = parsed_value.inspect
-  else
-    # This branch exists to avoid wrapping a value in quotes when it semantically
-    # is not a String but happens to be contained in a String object (e.g. a bit field,
-    # GUID, etc).
-    formatted_value = parsed_value.to_s
-  end
-
-  formatted_bytes = bytes.map {|byte| byte.unpack("H2").first }.join(" ")
-
-  puts "#{(label + ":").ljust(22)} #{data_type.ljust(10)} | #{formatted_value.ljust(10)} | #{formatted_bytes}"
-end
-
-
-def display_chunk_header(chunk_id_field, chunk_size_field)
-  title = "#{chunk_id_field[:parsed_value].inspect} Chunk"
-
-  if chunk_id_field[:parsed_value] == "RIFF"
-    title += " Header"
-  end
-
-  puts title
-  puts "=================================================================================="
-  display_line("Chunk ID", chunk_id_field)
-
-  if chunk_size_field != nil
-    display_line("Chunk Size", chunk_size_field)
-    display_chunk_section_separator
-  end
-end
-
-
-def display_chunk_section_separator
-  puts "----------------------------------+------------+----------------------------------"
-end
-
-
 def read_riff_chunk(field_reader, chunk_size)
   display_line("Form Type", field_reader.read_fourcc)
 
@@ -440,6 +396,50 @@ class FieldReader
 
     bytes
   end
+end
+
+
+def display_chunk_header(chunk_id_field, chunk_size_field)
+  title = "#{chunk_id_field[:parsed_value].inspect} Chunk"
+
+  if chunk_id_field[:parsed_value] == "RIFF"
+    title += " Header"
+  end
+
+  puts title
+  puts "=================================================================================="
+  display_line("Chunk ID", chunk_id_field)
+
+  if chunk_size_field != nil
+    display_line("Chunk Size", chunk_size_field)
+    display_chunk_section_separator
+  end
+end
+
+
+def display_line(label, field)
+  parsed_value = field[:parsed_value]
+  bytes = field[:bytes]
+  data_type = field[:type_label]
+
+  if data_type == "FourCC" || data_type == "C String"
+    # Wrap the value in quotes and show character codes for non-display characters
+    formatted_value = parsed_value.inspect
+  else
+    # This branch exists to avoid wrapping a value in quotes when it semantically
+    # is not a String but happens to be contained in a String object (e.g. a bit field,
+    # GUID, etc).
+    formatted_value = parsed_value.to_s
+  end
+
+  formatted_bytes = bytes.map {|byte| byte.unpack("H2").first }.join(" ")
+
+  puts "#{(label + ":").ljust(22)} #{data_type.ljust(10)} | #{formatted_value.ljust(10)} | #{formatted_bytes}"
+end
+
+
+def display_chunk_section_separator
+  puts "----------------------------------+------------+----------------------------------"
 end
 
 
