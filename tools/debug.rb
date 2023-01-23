@@ -458,7 +458,10 @@ def display_line(label, field)
   end
 
   lines.each do |line|
-     puts "#{line[:label].ljust(22)} #{line[:data_type].ljust(9)} | #{line[:parsed_value].ljust(19)} | #{line[:bytes]}"
+     puts "#{line[:label].ljust(22)} "\
+          "#{line[:data_type].ljust(9)} | "\
+          "#{line[:parsed_value].ljust(19)} | "\
+          "#{line[:bytes]}"
   end
 end
 
