@@ -262,7 +262,7 @@ def read_data_chunk(field_reader, chunk_size)
   intro_byte_count = [32, chunk_size].min
 
   if intro_byte_count > 0
-    display_field("First #{intro_byte_count} bytes", field_reader.read_bytes(intro_byte_count))
+    display_field("First #{intro_byte_count} Bytes", field_reader.read_bytes(intro_byte_count))
   end
 
   if intro_byte_count < chunk_size
