@@ -423,6 +423,9 @@ def display_line(label, field)
   bytes = field[:bytes]
   data_type = field[:type_label]
 
+  label_lines = [label + ":"]
+  data_type_lines = [data_type]
+
   if data_type == "FourCC" || data_type == "C String"
     # Wrap the value in quotes and show character codes for non-display characters
     formatted_parsed_value = parsed_value.inspect
@@ -446,15 +449,16 @@ def display_line(label, field)
   i = 0
   while (i < formatted_parsed_value_lines.length) || (i < formatted_bytes_lines.length) do
     lines << {
+      label: label_lines[i] || "",
+      data_type: data_type_lines[i] || "",
       parsed_value: formatted_parsed_value_lines[i] || "",
       bytes: formatted_bytes_lines[i] || "",
     }
     i += 1
   end
 
-  puts "#{(label + ":").ljust(22)} #{data_type.ljust(9)} | #{lines.first[:parsed_value].ljust(19)} | #{lines.first[:bytes]}"
-  lines[1..-1].each do |line|
-    puts "#{' ' * 32} | #{line[:parsed_value].ljust(19)} | #{line[:bytes]}"
+  lines.each do |line|
+     puts "#{line[:label].ljust(22)} #{line[:data_type].ljust(9)} | #{line[:parsed_value].ljust(19)} | #{line[:bytes]}"
   end
 end
 
