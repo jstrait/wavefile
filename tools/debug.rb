@@ -445,23 +445,13 @@ def display_line(label, field)
   formatted_bytes = bytes.map {|byte| byte.unpack("H2").first }
   formatted_bytes_lines = formatted_bytes.each_slice(8).map {|line| line.join(" ")}
 
-  lines = []
-  i = 0
-  while (i < formatted_parsed_value_lines.length) || (i < formatted_bytes_lines.length) do
-    lines << {
-      label: label_lines[i] || "",
-      data_type: data_type_lines[i] || "",
-      parsed_value: formatted_parsed_value_lines[i] || "",
-      bytes: formatted_bytes_lines[i] || "",
-    }
-    i += 1
-  end
+  line_count = [formatted_parsed_value_lines.length, formatted_bytes_lines.length].max
 
-  lines.each do |line|
-     puts "#{line[:label].ljust(22)} "\
-          "#{line[:data_type].ljust(9)} | "\
-          "#{line[:parsed_value].ljust(19)} | "\
-          "#{line[:bytes]}"
+  line_count.times do |i|
+     puts "#{(label_lines[i] || "").ljust(22)} "\
+          "#{(data_type_lines[i] || "").ljust(9)} | "\
+          "#{(formatted_parsed_value_lines[i] || "").ljust(19)} | "\
+          "#{(formatted_bytes_lines[i] || "")}"
   end
 end
 
