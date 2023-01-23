@@ -430,28 +430,28 @@ def display_line(label, field)
     # Wrap the value in quotes and show character codes for non-display characters
     formatted_parsed_value = parsed_value.inspect
 
-    formatted_parsed_value_lines = formatted_parsed_value.chars[1..-1].each_slice(18).map {|line| line.join}
-    formatted_parsed_value_lines.first.prepend("\"")
-    formatted_parsed_value_lines[1..-1].each {|line| line.prepend(" ")}
+    parsed_value_lines = formatted_parsed_value.chars[1..-1].each_slice(18).map {|line| line.join}
+    parsed_value_lines.first.prepend("\"")
+    parsed_value_lines[1..-1].each {|line| line.prepend(" ")}
   else
     # This branch exists to avoid wrapping a value in quotes when it semantically
     # is not a String but happens to be contained in a String object (e.g. a bit field,
     # GUID, etc).
     formatted_parsed_value = parsed_value.to_s
 
-    formatted_parsed_value_lines = formatted_parsed_value.chars.each_slice(19).map {|line| line.join}
+    parsed_value_lines = formatted_parsed_value.chars.each_slice(19).map {|line| line.join}
   end
 
   formatted_bytes = bytes.map {|byte| byte.unpack("H2").first }
-  formatted_bytes_lines = formatted_bytes.each_slice(8).map {|line| line.join(" ")}
+  bytes_lines = formatted_bytes.each_slice(8).map {|line| line.join(" ")}
 
-  line_count = [formatted_parsed_value_lines.length, formatted_bytes_lines.length].max
+  line_count = [parsed_value_lines.length, bytes_lines.length].max
 
   line_count.times do |i|
      puts "#{(label_lines[i] || "").ljust(22)} "\
           "#{(data_type_lines[i] || "").ljust(9)} | "\
-          "#{(formatted_parsed_value_lines[i] || "").ljust(19)} | "\
-          "#{(formatted_bytes_lines[i] || "")}"
+          "#{(parsed_value_lines[i] || "").ljust(19)} | "\
+          "#{(bytes_lines[i] || "")}"
   end
 end
 
