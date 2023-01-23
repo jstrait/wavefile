@@ -448,10 +448,10 @@ def display_field(label, field)
   line_count = [parsed_value_lines.length, bytes_lines.length].max
 
   line_count.times do |i|
-     puts "#{(label_lines[i] || "").ljust(22)} "\
-          "#{(data_type_lines[i] || "").ljust(9)} | "\
-          "#{(parsed_value_lines[i] || "").ljust(19)} | "\
-          "#{(bytes_lines[i] || "")}"
+    puts "#{(label_lines[i] || "").ljust(22)} "\
+         "#{(data_type_lines[i] || "").ljust(9)} | "\
+         "#{(parsed_value_lines[i] || "").ljust(19)} | "\
+         "#{(bytes_lines[i] || "")}"
   end
 end
 
