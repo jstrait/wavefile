@@ -120,7 +120,9 @@ def read_peak_chunk(field_reader, chunk_size)
   display_field("Version", field_reader.read_uint32)
   display_field("Timestamp", field_reader.read_uint32)
 
-  ((chunk_size - 8) / 8).times do |i|
+  channel_count = ((chunk_size - 8) / 8)
+
+  channel_count.times do |i|
     display_field("Chan. #{i + 1} Value", field_reader.read_float32)
     display_field("Chan. #{i + 1} Position", field_reader.read_uint32)
   end
