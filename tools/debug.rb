@@ -65,6 +65,8 @@ end
 
 def read_format_chunk(field_reader, chunk_size)
   format_tag_field = field_reader.read_uint16
+  format_tag = format_tag_field[:parsed_value]
+
   display_field("Format Tag", format_tag_field)
   display_field("Channel Count", field_reader.read_uint16)
   display_field("Sample Rate", field_reader.read_uint32)
@@ -74,28 +76,30 @@ def read_format_chunk(field_reader, chunk_size)
 
   bytes_read_so_far = 16
 
-  if format_tag_field[:parsed_value] != 1 && chunk_size > 16
+  if format_tag != 1 && chunk_size > 16
     extension_size_field = field_reader.read_uint16
+    extension_size = extension_size_field[:parsed_value]
+
     display_chunk_section_separator
     display_field("Extension Size", extension_size_field)
     bytes_read_so_far += 2
 
-    if extension_size_field[:parsed_value] > 0
-      if format_tag_field[:parsed_value] == 65534
+    if extension_size > 0
+      if format_tag == 65534
         display_field("Valid Bits Per Sample", field_reader.read_uint16)
         display_field("Speaker Mapping", field_reader.read_bitfield(4))
         display_field("Sub Format GUID", field_reader.read_guid)
 
-        extra_byte_count = extension_size_field[:parsed_value] - 22
+        extra_byte_count = extension_size - 22
         if extra_byte_count > 0
           display_field("Extra Extension Bytes", field_reader.read_bytes(extra_byte_count))
         end
       else
-        display_field("Raw Extension", field_reader.read_bytes(extension_size_field[:parsed_value]))
+        display_field("Raw Extension", field_reader.read_bytes(extension_size))
       end
     end
 
-    bytes_read_so_far += extension_size_field[:parsed_value]
+    bytes_read_so_far += extension_size
   end
 
   extra_byte_count = chunk_size - bytes_read_so_far
