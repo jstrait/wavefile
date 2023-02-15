@@ -25,7 +25,9 @@ def main
         end
       end
 
-      read_riff_chunk(field_reader, riff_chunk_size_field[:parsed_value])
+      field_reader.with_byte_limit(riff_chunk_size_field[:parsed_value]) do
+        read_riff_chunk(field_reader, riff_chunk_size_field[:parsed_value])
+      end
     rescue EOFError
       # Swallow the error and do nothing to avoid an error being shown in the output.
       # Perhaps in the future it would be better to show an indication that the end
@@ -38,7 +40,7 @@ end
 def read_riff_chunk(field_reader, chunk_size)
   display_field("Form Type", field_reader.read_fourcc)
 
-  while field_reader.bytes_read < chunk_size + 8
+  while field_reader.remaining_byte_limit > 0
     child_chunk_id_field, child_chunk_size_field = nil
 
     begin
@@ -53,8 +55,12 @@ def read_riff_chunk(field_reader, chunk_size)
       end
     end
 
+    return if child_chunk_size_field[:parsed_value].nil?
+
     chunk_body_reader_method_name = CHUNK_BODY_READERS[child_chunk_id_field[:parsed_value]]
-    send(chunk_body_reader_method_name, field_reader, child_chunk_size_field[:parsed_value])
+    field_reader.with_byte_limit(child_chunk_size_field[:parsed_value]) do
+      send(chunk_body_reader_method_name, field_reader, child_chunk_size_field[:parsed_value])
+    end
 
     if child_chunk_size_field[:parsed_value].odd?
       display_field("Padding Byte", field_reader.read_padding_byte)
@@ -74,38 +80,33 @@ def read_format_chunk(field_reader, chunk_size)
   display_field("Block Align", field_reader.read_uint16)
   display_field("Bits Per Sample", field_reader.read_uint16)
 
-  bytes_read_so_far = 16
-
-  if format_tag != 1 && chunk_size > 16
+  if format_tag != nil && format_tag != 1 && chunk_size > 16
     extension_size_field = field_reader.read_uint16
     extension_size = extension_size_field[:parsed_value]
 
     display_chunk_section_separator
     display_field("Extension Size", extension_size_field)
-    bytes_read_so_far += 2
 
-    if extension_size > 0
-      if format_tag == 65534
-        display_field("Valid Bits Per Sample", field_reader.read_uint16)
-        display_field("Speaker Mapping", field_reader.read_bitfield(4))
-        display_field("Sub Format GUID", field_reader.read_guid)
+    if extension_size != nil && extension_size > 0
+      field_reader.with_byte_limit(extension_size) do
+        if format_tag == 65534
+          display_field("Valid Bits Per Sample", field_reader.read_uint16)
+          display_field("Speaker Mapping", field_reader.read_bitfield(4))
+          display_field("Sub Format GUID", field_reader.read_guid)
 
-        extra_byte_count = extension_size - 22
-        if extra_byte_count > 0
-          display_field("Extra Extension Bytes", field_reader.read_bytes(extra_byte_count))
+          if field_reader.remaining_byte_limit > 0
+            display_field("Extra Extension Bytes", field_reader.read_bytes(field_reader.remaining_byte_limit))
+          end
+        else
+          display_field("Raw Extension", field_reader.read_bytes(extension_size))
         end
-      else
-        display_field("Raw Extension", field_reader.read_bytes(extension_size))
       end
     end
-
-    bytes_read_so_far += extension_size
   end
 
-  extra_byte_count = chunk_size - bytes_read_so_far
-  if extra_byte_count > 0
+  if field_reader.remaining_byte_limit > 0
     display_chunk_section_separator
-    display_field("Extra Bytes", field_reader.read_bytes(extra_byte_count))
+    display_field("Extra Bytes", field_reader.read_bytes(field_reader.remaining_byte_limit))
   end
 end
 
@@ -113,9 +114,9 @@ end
 def read_fact_chunk(field_reader, chunk_size)
   display_field("Sample Count", field_reader.read_uint32)
 
-  if chunk_size > 4
+  if field_reader.remaining_byte_limit > 0
     display_chunk_section_separator
-    display_field("Extra Bytes", field_reader.read_bytes(chunk_size - 4))
+    display_field("Extra Bytes", field_reader.read_bytes(field_reader.remaining_byte_limit))
   end
 end
 
@@ -124,7 +125,7 @@ def read_peak_chunk(field_reader, chunk_size)
   display_field("Version", field_reader.read_uint32)
   display_field("Timestamp", field_reader.read_uint32)
 
-  channel_count = ((chunk_size - 8) / 8)
+  channel_count = field_reader.remaining_byte_limit / 8
 
   channel_count.times do |i|
     display_field("Chan. #{i + 1} Value", field_reader.read_float32)
@@ -137,9 +138,11 @@ def read_cue_chunk(field_reader, chunk_size)
   cue_point_count_field = field_reader.read_uint32
   display_field("Cue Point Count", cue_point_count_field)
 
-  bytes_remaining = chunk_size - 4
+  return if cue_point_count_field[:parsed_value].nil?
 
   cue_point_count_field[:parsed_value].times do |i|
+    break if field_reader.remaining_byte_limit <= 0
+
     display_chunk_section_separator
     display_field("ID #{i + 1}", field_reader.read_uint32)
     display_field("Position #{i + 1}", field_reader.read_uint32)
@@ -147,12 +150,11 @@ def read_cue_chunk(field_reader, chunk_size)
     display_field("Chunk Start #{i + 1}", field_reader.read_uint32)
     display_field("Block Start #{i + 1}", field_reader.read_uint32)
     display_field("Sample Offset #{i + 1}", field_reader.read_uint32)
-    bytes_remaining -= 24
   end
 
-  if bytes_remaining > 0
+  if field_reader.remaining_byte_limit > 0
     display_chunk_section_separator
-    display_field("Extra Bytes", field_reader.read_bytes(bytes_remaining))
+    display_field("Extra Bytes", field_reader.read_bytes(field_reader.remaining_byte_limit))
   end
 end
 
@@ -169,12 +171,16 @@ def read_sample_chunk(field_reader, chunk_size)
   loop_count_field = field_reader.read_uint32
   loop_count = loop_count_field[:parsed_value]
   display_field("Sample Loop Count", loop_count_field)
+  return if loop_count.nil?
 
   sampler_specific_data_size_field = field_reader.read_uint32
   sampler_specific_data_size = sampler_specific_data_size_field[:parsed_value]
   display_field("Sampler Data Size", sampler_specific_data_size_field)
+  return if sampler_specific_data_size.nil?
 
   loop_count.times do |i|
+    break if field_reader.remaining_byte_limit <= 0
+
     display_chunk_section_separator
     puts "Loop ##{i + 1}:"
     display_field("Identifier", field_reader.read_uint32)
@@ -190,10 +196,9 @@ def read_sample_chunk(field_reader, chunk_size)
     display_field("Sampler Specific Data", field_reader.read_bytes(sampler_specific_data_size))
   end
 
-  extra_byte_count = chunk_size - 36 - (loop_count * 24) - sampler_specific_data_size_field[:parsed_value]
-  if (extra_byte_count > 0)
+  if field_reader.remaining_byte_limit > 0
     display_chunk_section_separator
-    display_field("Extra Bytes", field_reader.read_bytes(extra_byte_count))
+    display_field("Extra Bytes", field_reader.read_bytes(field_reader.remaining_byte_limit))
   end
 end
 
@@ -207,10 +212,9 @@ def read_instrument_chunk(field_reader, chunk_size)
   display_field("Low Velocity", field_reader.read_uint8)
   display_field("High Velocity", field_reader.read_uint8)
 
-  extra_data_size = chunk_size - 7
-  if extra_data_size > 0
+  if field_reader.remaining_byte_limit > 0
     display_chunk_section_separator
-    display_field("Extra Bytes", field_reader.read_bytes(extra_data_size))
+    display_field("Extra Bytes", field_reader.read_bytes(field_reader.remaining_byte_limit))
   end
 end
 
@@ -219,46 +223,41 @@ def read_list_chunk(field_reader, chunk_size)
   list_type_field = field_reader.read_fourcc
   display_field("List Type", list_type_field)
 
-  bytes_remaining = chunk_size - 4
-
-  while bytes_remaining > 0
+  while field_reader.remaining_byte_limit > 0
     display_chunk_section_separator
     child_chunk_id_field = field_reader.read_fourcc
     display_field("Child Chunk ID", child_chunk_id_field)
 
     child_chunk_size_field = field_reader.read_uint32
     child_chunk_size = child_chunk_size_field[:parsed_value]
-
     display_field("Child Chunk Size", child_chunk_size_field)
+    return if child_chunk_size.nil?
 
-    if list_type_field[:parsed_value] == "adtl"
-      display_field("Cue Point ID", field_reader.read_uint32)
+    field_reader.with_byte_limit(child_chunk_size) do
+      if list_type_field[:parsed_value] == "adtl"
+        display_field("Cue Point ID", field_reader.read_uint32)
 
-      if child_chunk_id_field[:parsed_value] == "ltxt"
-        display_field("Sample Length", field_reader.read_uint32)
-        display_field("Purpose", field_reader.read_fourcc)
-        display_field("Country", field_reader.read_uint16)
-        display_field("Language", field_reader.read_uint16)
-        display_field("Dialect", field_reader.read_uint16)
-        display_field("Code Page", field_reader.read_uint16)
+        if child_chunk_id_field[:parsed_value] == "ltxt"
+          display_field("Sample Length", field_reader.read_uint32)
+          display_field("Purpose", field_reader.read_fourcc)
+          display_field("Country", field_reader.read_uint16)
+          display_field("Language", field_reader.read_uint16)
+          display_field("Dialect", field_reader.read_uint16)
+          display_field("Code Page", field_reader.read_uint16)
 
-        if child_chunk_size > 20
-          display_field("Text", field_reader.read_bytes(child_chunk_size - 20))
+          if child_chunk_size > 20
+            display_field("Text", field_reader.read_bytes(child_chunk_size - 20))
+          end
+        else
+          display_field("Content", field_reader.read_null_terminated_string(child_chunk_size - 4))
         end
-      else
-        display_field("Content", field_reader.read_null_terminated_string(child_chunk_size - 4))
+      else   # INFO, and any unknown list type
+        display_field("Content", field_reader.read_null_terminated_string(child_chunk_size))
       end
-
-      bytes_remaining -= (child_chunk_size + 8)
-    else   # INFO, and any unknown list type
-      display_field("Content", field_reader.read_null_terminated_string(child_chunk_size))
-
-      bytes_remaining -= (child_chunk_size + 8)
     end
 
     if child_chunk_size.odd?
       display_field("Padding Byte", field_reader.read_padding_byte)
-      bytes_remaining -= 1
     end
   end
 end
@@ -287,12 +286,30 @@ end
 
 
 class FieldReader
+  class ByteLimitExhaustedError < StandardError; end
+  private_constant :ByteLimitExhaustedError
+
   def initialize(file)
     @file = file
-    @bytes_read = 0
+
+    max_file_size = (2 ** 32) + 8
+    @byte_limits = [max_file_size]
   end
 
-  attr_reader :bytes_read
+  def with_byte_limit(byte_limit)
+    begin
+      push_byte_limit(byte_limit)
+      yield
+    rescue ByteLimitExhaustedError
+      # Do nothing; error is rescued to prevent propagation
+    ensure
+      pop_byte_limit
+    end
+  end
+
+  def remaining_byte_limit
+    @byte_limits.last
+  end
 
   def read_int8
     read_field(byte_count: 1,
@@ -374,30 +391,56 @@ class FieldReader
   end
 
   def skip_bytes(byte_count)
-    string = @file.sysread(byte_count)
+    clamped_byte_count = [byte_count, @byte_limits.last].min
+    string = @file.sysread(clamped_byte_count)
 
-    @bytes_read += string.length
+    decrement_byte_limits(string.length)
+
     string.length
   end
 
   private
 
+  def push_byte_limit(byte_limit)
+    clamped_byte_limit = [byte_limit, @byte_limits.last].min
+    @byte_limits.push(clamped_byte_limit)
+  end
+
+  def pop_byte_limit
+    @byte_limits.pop
+  end
+
+  def decrement_byte_limits(byte_count)
+    @byte_limits.map! {|byte_limit| byte_limit - byte_count}
+  end
+
   def read_field(byte_count: nil, type_label: nil, parser: nil)
     bytes = read_field_bytes(byte_count)
+
+    if bytes.last.nil?
+      parsed_value = nil
+    else
+      parsed_value = parser.call(bytes)
+    end
 
     {
       bytes: bytes,
       type_label: type_label,
-      parsed_value: parser.call(bytes)
+      parsed_value: parsed_value
     }
   end
 
   def read_field_bytes(byte_count)
-    bytes = []
+    if @byte_limits.last <= 0
+      raise ByteLimitExhaustedError
+    end
 
-    byte_count.times do |i|
-      bytes << @file.sysread(1)
-      @bytes_read += 1
+    bytes = [nil] * byte_count
+    clamped_byte_count = [byte_count, @byte_limits.last].min
+
+    clamped_byte_count.times do |i|
+      bytes[i] = @file.sysread(1)
+      decrement_byte_limits(1)
     end
 
     bytes
@@ -432,7 +475,9 @@ def display_field(label, field)
   label_lines = [label + ":"]
   data_type_lines = [data_type]
 
-  if data_type == "FourCC" || data_type == "C String"
+  if parsed_value.nil?
+    parsed_value_lines = ["Incomplete"]
+  elsif data_type == "FourCC" || data_type == "C String"
     # Wrap the value in quotes and show character codes for non-display characters
     formatted_parsed_value = parsed_value.inspect
 
@@ -448,7 +493,7 @@ def display_field(label, field)
     parsed_value_lines = formatted_parsed_value.chars.each_slice(19).map {|line| line.join}
   end
 
-  formatted_bytes = bytes.map {|byte| byte.unpack("H2").first }
+  formatted_bytes = bytes.map {|byte| byte.nil? ? "__" : byte.unpack("H2").first }
   bytes_lines = formatted_bytes.each_slice(8).map {|line| line.join(" ")}
 
   line_count = [parsed_value_lines.length, bytes_lines.length].max
