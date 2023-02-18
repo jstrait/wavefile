@@ -136,11 +136,12 @@ end
 
 def read_cue_chunk(field_reader, chunk_size)
   cue_point_count_field = field_reader.read_uint32
+  cue_point_count = cue_point_count_field[:parsed_value]
   display_field("Cue Point Count", cue_point_count_field)
 
-  return if cue_point_count_field[:parsed_value].nil?
+  return if cue_point_count.nil?
 
-  cue_point_count_field[:parsed_value].times do |i|
+  cue_point_count.times do |i|
     break if field_reader.remaining_byte_limit <= 0
 
     display_chunk_section_separator
