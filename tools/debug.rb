@@ -144,13 +144,15 @@ def read_cue_chunk(field_reader, chunk_size)
   cue_point_count.times do |i|
     break if field_reader.remaining_byte_limit <= 0
 
+    cue_point_number = i + 1
+
     display_chunk_section_separator
-    display_field("ID #{i + 1}", field_reader.read_uint32)
-    display_field("Position #{i + 1}", field_reader.read_uint32)
-    display_field("Chunk Type #{i + 1}", field_reader.read_fourcc)
-    display_field("Chunk Start #{i + 1}", field_reader.read_uint32)
-    display_field("Block Start #{i + 1}", field_reader.read_uint32)
-    display_field("Sample Offset #{i + 1}", field_reader.read_uint32)
+    display_field("ID #{cue_point_number}", field_reader.read_uint32)
+    display_field("Position #{cue_point_number}", field_reader.read_uint32)
+    display_field("Chunk Type #{cue_point_number}", field_reader.read_fourcc)
+    display_field("Chunk Start #{cue_point_number}", field_reader.read_uint32)
+    display_field("Block Start #{cue_point_number}", field_reader.read_uint32)
+    display_field("Sample Offset #{cue_point_number}", field_reader.read_uint32)
   end
 
   if field_reader.remaining_byte_limit > 0
