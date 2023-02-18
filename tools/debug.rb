@@ -184,14 +184,15 @@ def read_sample_chunk(field_reader, chunk_size)
   loop_count.times do |i|
     break if field_reader.remaining_byte_limit <= 0
 
+    loop_number = i + 1
+
     display_chunk_section_separator
-    puts "Loop ##{i + 1}:"
-    display_field("Identifier", field_reader.read_uint32)
-    display_field("Type", field_reader.read_uint32)
-    display_field("Start Sample Frame", field_reader.read_uint32)
-    display_field("End Sample Frame", field_reader.read_uint32)
-    display_field("Fraction", field_reader.read_uint32)
-    display_field("Play Count", field_reader.read_uint32)
+    display_field("Loop Identifier #{loop_number}", field_reader.read_uint32)
+    display_field("Type #{loop_number}", field_reader.read_uint32)
+    display_field("Start Sample Frame #{loop_number}", field_reader.read_uint32)
+    display_field("End Sample Frame #{loop_number}", field_reader.read_uint32)
+    display_field("Fraction #{loop_number}", field_reader.read_uint32)
+    display_field("Play Count #{loop_number}", field_reader.read_uint32)
   end
 
   if sampler_specific_data_size > 0
