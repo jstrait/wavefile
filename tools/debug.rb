@@ -318,56 +318,56 @@ class FieldReader
   def read_int8(label)
     read_field(label: label,
                byte_count: 1,
-               type_label: "int8",
+               type: "int8",
                parser: lambda {|bytes| bytes.join.unpack("c").first })
   end
 
   def read_uint8(label)
     read_field(label: label,
                byte_count: 1,
-               type_label: "uint8",
+               type: "uint8",
                parser: lambda {|bytes| bytes.join.unpack("C").first })
   end
 
   def read_uint16(label)
     read_field(label: label,
                byte_count: 2,
-               type_label: "uint16",
+               type: "uint16",
                parser: lambda {|bytes| bytes.join.unpack("v").first })
   end
 
   def read_uint32(label)
     read_field(label: label,
                byte_count: 4,
-               type_label: "uint32",
+               type: "uint32",
                parser: lambda {|bytes| bytes.join.unpack("V").first })
   end
 
   def read_float32(label)
     read_field(label: label,
                byte_count: 4,
-               type_label: "float32",
+               type: "float32",
                parser: lambda {|bytes| bytes.join.unpack("e").first })
   end
 
   def read_fourcc(label)
     read_field(label: label,
                byte_count: 4,
-               type_label: "FourCC",
+               type: "FourCC",
                parser: lambda {|bytes| bytes.join })
   end
 
   def read_null_terminated_string(label, byte_count)
     read_field(label: label,
                byte_count: byte_count,
-               type_label: "C String",
+               type: "C String",
                parser: lambda {|bytes| bytes.join.unpack("Z#{byte_count}").first })
   end
 
   def read_bitfield(label, byte_count)
     read_field(label: label,
                byte_count: byte_count,
-               type_label: "Bit field",
+               type: "Bit field",
                parser: lambda {|bytes| "0x#{bytes.reverse.map {|byte| byte.unpack("H2")}.join}"})
   end
 
@@ -387,21 +387,21 @@ class FieldReader
 
     read_field(label: label,
                byte_count: 16,
-               type_label: "GUID",
+               type: "GUID",
                parser: parser_lambda)
   end
 
   def read_bytes(label, byte_count)
     read_field(label: label,
                byte_count: byte_count,
-               type_label: "bytes",
+               type: "bytes",
                parser: lambda {|bytes| "N/A" })
   end
 
   def read_padding_byte(label)
     read_field(label: label,
                byte_count: 1,
-               type_label: "byte",
+               type: "byte",
                parser: lambda {|bytes| bytes.join.unpack("C").first })
   end
 
@@ -429,7 +429,7 @@ class FieldReader
     @byte_limits.map! {|byte_limit| byte_limit - byte_count}
   end
 
-  def read_field(label: nil, byte_count: nil, type_label: nil, parser: nil)
+  def read_field(label: nil, byte_count: nil, type: nil, parser: nil)
     bytes = read_field_bytes(byte_count)
 
     if bytes.last.nil?
@@ -441,7 +441,7 @@ class FieldReader
     {
       label: label,
       bytes: bytes,
-      type_label: type_label,
+      type: type,
       value: value
     }
   end
@@ -487,7 +487,7 @@ def display_field(field)
   label = field[:label]
   value = field[:value]
   bytes = field[:bytes]
-  data_type = field[:type_label]
+  data_type = field[:type]
 
   label_lines = [label + ":"]
   data_type_lines = [data_type]
