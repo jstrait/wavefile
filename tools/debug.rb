@@ -25,8 +25,8 @@ def main
         end
       end
 
-      field_reader.with_byte_limit(riff_chunk_size_field[:parsed_value]) do
-        read_riff_chunk(field_reader, riff_chunk_size_field[:parsed_value])
+      field_reader.with_byte_limit(riff_chunk_size_field[:value]) do
+        read_riff_chunk(field_reader, riff_chunk_size_field[:value])
       end
     rescue EOFError
       # Swallow the error and do nothing to avoid an error being shown in the output.
@@ -55,14 +55,14 @@ def read_riff_chunk(field_reader, chunk_size)
       end
     end
 
-    return if child_chunk_size_field[:parsed_value].nil?
+    return if child_chunk_size_field[:value].nil?
 
-    chunk_body_reader_method_name = CHUNK_BODY_READERS[child_chunk_id_field[:parsed_value]]
-    field_reader.with_byte_limit(child_chunk_size_field[:parsed_value]) do
-      send(chunk_body_reader_method_name, field_reader, child_chunk_size_field[:parsed_value])
+    chunk_body_reader_method_name = CHUNK_BODY_READERS[child_chunk_id_field[:value]]
+    field_reader.with_byte_limit(child_chunk_size_field[:value]) do
+      send(chunk_body_reader_method_name, field_reader, child_chunk_size_field[:value])
     end
 
-    if child_chunk_size_field[:parsed_value].odd?
+    if child_chunk_size_field[:value].odd?
       display_field(field_reader.read_padding_byte("Padding Byte"))
     end
   end
@@ -71,7 +71,7 @@ end
 
 def read_format_chunk(field_reader, chunk_size)
   format_tag_field = field_reader.read_uint16("Format Tag")
-  format_tag = format_tag_field[:parsed_value]
+  format_tag = format_tag_field[:value]
 
   display_field(format_tag_field)
   display_field(field_reader.read_uint16("Channel Count"))
@@ -82,7 +82,7 @@ def read_format_chunk(field_reader, chunk_size)
 
   if format_tag != nil && format_tag != 1 && chunk_size > 16
     extension_size_field = field_reader.read_uint16("Extension Size")
-    extension_size = extension_size_field[:parsed_value]
+    extension_size = extension_size_field[:value]
 
     display_chunk_section_separator
     display_field(extension_size_field)
@@ -136,7 +136,7 @@ end
 
 def read_cue_chunk(field_reader, chunk_size)
   cue_point_count_field = field_reader.read_uint32("Cue Point Count")
-  cue_point_count = cue_point_count_field[:parsed_value]
+  cue_point_count = cue_point_count_field[:value]
   display_field(cue_point_count_field)
 
   return if cue_point_count.nil?
@@ -172,12 +172,12 @@ def read_sample_chunk(field_reader, chunk_size)
   display_field(field_reader.read_uint32("SMPTE Offset"))
 
   loop_count_field = field_reader.read_uint32("Sample Loop Count")
-  loop_count = loop_count_field[:parsed_value]
+  loop_count = loop_count_field[:value]
   display_field(loop_count_field)
   return if loop_count.nil?
 
   sampler_specific_data_size_field = field_reader.read_uint32("Sampler Data Size")
-  sampler_specific_data_size = sampler_specific_data_size_field[:parsed_value]
+  sampler_specific_data_size = sampler_specific_data_size_field[:value]
   display_field(sampler_specific_data_size_field)
   return if sampler_specific_data_size.nil?
 
@@ -233,15 +233,15 @@ def read_list_chunk(field_reader, chunk_size)
     display_field(child_chunk_id_field)
 
     child_chunk_size_field = field_reader.read_uint32("Child Chunk Size")
-    child_chunk_size = child_chunk_size_field[:parsed_value]
+    child_chunk_size = child_chunk_size_field[:value]
     display_field(child_chunk_size_field)
     return if child_chunk_size.nil?
 
     field_reader.with_byte_limit(child_chunk_size) do
-      if list_type_field[:parsed_value] == "adtl"
+      if list_type_field[:value] == "adtl"
         display_field(field_reader.read_uint32("Cue Point ID"))
 
-        if child_chunk_id_field[:parsed_value] == "ltxt"
+        if child_chunk_id_field[:value] == "ltxt"
           display_field(field_reader.read_uint32("Sample Length"))
           display_field(field_reader.read_fourcc("Purpose"))
           display_field(field_reader.read_uint16("Country"))
@@ -433,16 +433,16 @@ class FieldReader
     bytes = read_field_bytes(byte_count)
 
     if bytes.last.nil?
-      parsed_value = nil
+      value = nil
     else
-      parsed_value = parser.call(bytes)
+      value = parser.call(bytes)
     end
 
     {
       label: label,
       bytes: bytes,
       type_label: type_label,
-      parsed_value: parsed_value
+      value: value
     }
   end
 
@@ -465,9 +465,9 @@ end
 
 
 def display_chunk_header(chunk_id_field, chunk_size_field)
-  title = "#{chunk_id_field[:parsed_value].inspect} Chunk"
+  title = "#{chunk_id_field[:value].inspect} Chunk"
 
-  if chunk_id_field[:parsed_value] == "RIFF"
+  if chunk_id_field[:value] == "RIFF"
     title += " Header"
   end
 
@@ -485,7 +485,7 @@ end
 
 def display_field(field)
   label = field[:label]
-  parsed_value = field[:parsed_value]
+  value = field[:value]
   bytes = field[:bytes]
   data_type = field[:type_label]
 
@@ -493,32 +493,32 @@ def display_field(field)
   data_type_lines = [data_type]
 
   if bytes.last.nil?
-    parsed_value_lines = ["Incomplete"]
+    value_lines = ["Incomplete"]
   elsif data_type == "FourCC" || data_type == "C String"
     # Wrap the value in quotes and show character codes for non-display characters
-    formatted_parsed_value = parsed_value.inspect
+    formatted_value = value.inspect
 
-    parsed_value_lines = formatted_parsed_value.chars[1..-1].each_slice(18).map {|line| line.join}
-    parsed_value_lines.first.prepend("\"")
-    parsed_value_lines[1..-1].each {|line| line.prepend(" ")}
+    value_lines = formatted_value.chars[1..-1].each_slice(18).map {|line| line.join}
+    value_lines.first.prepend("\"")
+    value_lines[1..-1].each {|line| line.prepend(" ")}
   else
     # This branch exists to avoid wrapping a value in quotes when it semantically
     # is not a String but happens to be contained in a String object (e.g. a bit field,
     # GUID, etc).
-    formatted_parsed_value = parsed_value.to_s
+    formatted_value = value.to_s
 
-    parsed_value_lines = formatted_parsed_value.chars.each_slice(19).map {|line| line.join}
+    value_lines = formatted_value.chars.each_slice(19).map {|line| line.join}
   end
 
   formatted_bytes = bytes.map {|byte| byte.nil? ? "__" : byte.unpack("H2").first }
   bytes_lines = formatted_bytes.each_slice(8).map {|line| line.join(" ")}
 
-  line_count = [parsed_value_lines.length, bytes_lines.length].max
+  line_count = [value_lines.length, bytes_lines.length].max
 
   line_count.times do |i|
     puts "#{(label_lines[i] || "").ljust(22)} "\
          "#{(data_type_lines[i] || "").ljust(9)} | "\
-         "#{(parsed_value_lines[i] || "").ljust(19)} | "\
+         "#{(value_lines[i] || "").ljust(19)} | "\
          "#{(bytes_lines[i] || "")}"
   end
 end
