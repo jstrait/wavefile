@@ -487,14 +487,14 @@ def display_field(field)
   label = field[:label]
   value = field[:value]
   bytes = field[:bytes]
-  data_type = field[:type]
+  type = field[:type]
 
   label_lines = [label + ":"]
-  data_type_lines = [data_type]
+  type_lines = [type]
 
   if bytes.last.nil?
     value_lines = ["Incomplete"]
-  elsif data_type == "FourCC" || data_type == "C String"
+  elsif type == "FourCC" || type == "C String"
     # Wrap the value in quotes and show character codes for non-display characters
     formatted_value = value.inspect
 
@@ -517,7 +517,7 @@ def display_field(field)
 
   line_count.times do |i|
     puts "#{(label_lines[i] || "").ljust(22)} "\
-         "#{(data_type_lines[i] || "").ljust(9)} | "\
+         "#{(type_lines[i] || "").ljust(9)} | "\
          "#{(value_lines[i] || "").ljust(19)} | "\
          "#{(bytes_lines[i] || "")}"
   end
