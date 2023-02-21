@@ -25,8 +25,8 @@ def main
         end
       end
 
-      field_reader.with_byte_limit(riff_chunk_size_field[:value]) do
-        read_riff_chunk(field_reader, riff_chunk_size_field[:value])
+      field_reader.with_byte_limit(riff_chunk_size_field.value) do
+        read_riff_chunk(field_reader, riff_chunk_size_field.value)
       end
     rescue EOFError
       # Swallow the error and do nothing to avoid an error being shown in the output.
@@ -55,14 +55,14 @@ def read_riff_chunk(field_reader, chunk_size)
       end
     end
 
-    return if child_chunk_size_field[:value].nil?
+    return if child_chunk_size_field.value.nil?
 
-    chunk_body_reader_method_name = CHUNK_BODY_READERS[child_chunk_id_field[:value]]
-    field_reader.with_byte_limit(child_chunk_size_field[:value]) do
-      send(chunk_body_reader_method_name, field_reader, child_chunk_size_field[:value])
+    chunk_body_reader_method_name = CHUNK_BODY_READERS[child_chunk_id_field.value]
+    field_reader.with_byte_limit(child_chunk_size_field.value) do
+      send(chunk_body_reader_method_name, field_reader, child_chunk_size_field.value)
     end
 
-    if child_chunk_size_field[:value].odd?
+    if child_chunk_size_field.value.odd?
       display_field(field_reader.read_padding_byte("Padding Byte"))
     end
   end
@@ -71,7 +71,7 @@ end
 
 def read_format_chunk(field_reader, chunk_size)
   format_tag_field = field_reader.read_uint16("Format Tag")
-  format_tag = format_tag_field[:value]
+  format_tag = format_tag_field.value
 
   display_field(format_tag_field)
   display_field(field_reader.read_uint16("Channel Count"))
@@ -82,7 +82,7 @@ def read_format_chunk(field_reader, chunk_size)
 
   if format_tag != nil && format_tag != 1 && chunk_size > 16
     extension_size_field = field_reader.read_uint16("Extension Size")
-    extension_size = extension_size_field[:value]
+    extension_size = extension_size_field.value
 
     display_chunk_section_separator
     display_field(extension_size_field)
@@ -136,7 +136,7 @@ end
 
 def read_cue_chunk(field_reader, chunk_size)
   cue_point_count_field = field_reader.read_uint32("Cue Point Count")
-  cue_point_count = cue_point_count_field[:value]
+  cue_point_count = cue_point_count_field.value
   display_field(cue_point_count_field)
 
   return if cue_point_count.nil?
@@ -172,12 +172,12 @@ def read_sample_chunk(field_reader, chunk_size)
   display_field(field_reader.read_uint32("SMPTE Offset"))
 
   loop_count_field = field_reader.read_uint32("Sample Loop Count")
-  loop_count = loop_count_field[:value]
+  loop_count = loop_count_field.value
   display_field(loop_count_field)
   return if loop_count.nil?
 
   sampler_specific_data_size_field = field_reader.read_uint32("Sampler Data Size")
-  sampler_specific_data_size = sampler_specific_data_size_field[:value]
+  sampler_specific_data_size = sampler_specific_data_size_field.value
   display_field(sampler_specific_data_size_field)
   return if sampler_specific_data_size.nil?
 
@@ -233,15 +233,15 @@ def read_list_chunk(field_reader, chunk_size)
     display_field(child_chunk_id_field)
 
     child_chunk_size_field = field_reader.read_uint32("Child Chunk Size")
-    child_chunk_size = child_chunk_size_field[:value]
+    child_chunk_size = child_chunk_size_field.value
     display_field(child_chunk_size_field)
     return if child_chunk_size.nil?
 
     field_reader.with_byte_limit(child_chunk_size) do
-      if list_type_field[:value] == "adtl"
+      if list_type_field.value == "adtl"
         display_field(field_reader.read_uint32("Cue Point ID"))
 
-        if child_chunk_id_field[:value] == "ltxt"
+        if child_chunk_id_field.value == "ltxt"
           display_field(field_reader.read_uint32("Sample Length"))
           display_field(field_reader.read_fourcc("Purpose"))
           display_field(field_reader.read_uint16("Country"))
@@ -438,12 +438,7 @@ class FieldReader
       value = parser.call(bytes)
     end
 
-    {
-      label: label,
-      bytes: bytes,
-      type: type,
-      value: value
-    }
+    Field.new(label: label, type: type, value: value, bytes: bytes)
   end
 
   def read_field_bytes(byte_count)
@@ -464,10 +459,22 @@ class FieldReader
 end
 
 
-def display_chunk_header(chunk_id_field, chunk_size_field)
-  title = "#{chunk_id_field[:value].inspect} Chunk"
+class Field
+  def initialize(label: nil, type: nil, value: nil, bytes: nil)
+    @label = label
+    @type = type
+    @value = value
+    @bytes = bytes
+  end
 
-  if chunk_id_field[:value] == "RIFF"
+  attr_reader :label, :type, :value, :bytes
+end
+
+
+def display_chunk_header(chunk_id_field, chunk_size_field)
+  title = "#{chunk_id_field.value.inspect} Chunk"
+
+  if chunk_id_field.value == "RIFF"
     title += " Header"
   end
 
@@ -484,10 +491,10 @@ end
 
 
 def display_field(field)
-  label = field[:label]
-  value = field[:value]
-  bytes = field[:bytes]
-  type = field[:type]
+  label = field.label
+  value = field.value
+  bytes = field.bytes
+  type = field.type
 
   label_lines = [label + ":"]
   type_lines = [type]
