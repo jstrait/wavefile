@@ -495,19 +495,14 @@ end
 
 
 def display_field(field)
-  label = field.label
-  value = field.value
-  bytes = field.bytes
-  type = field.type
-
-  label_lines = [label + ":"]
-  type_lines = [type]
+  label_lines = [field.label + ":"]
+  type_lines = [field.type]
 
   if field.incomplete?
     value_lines = ["Incomplete"]
-  elsif type == "FourCC" || type == "C String"
+  elsif field.type == "FourCC" || field.type == "C String"
     # Wrap the value in quotes and show character codes for non-display characters
-    formatted_value = value.inspect
+    formatted_value = field.value.inspect
 
     value_lines = formatted_value.chars[1..-1].each_slice(18).map {|line| line.join}
     value_lines.first.prepend("\"")
@@ -516,12 +511,12 @@ def display_field(field)
     # This branch exists to avoid wrapping a value in quotes when it semantically
     # is not a String but happens to be contained in a String object (e.g. a bit field,
     # GUID, etc).
-    formatted_value = value.to_s
+    formatted_value = field.value.to_s
 
     value_lines = formatted_value.chars.each_slice(19).map {|line| line.join}
   end
 
-  formatted_bytes = bytes.map {|byte| byte.nil? ? "__" : byte.unpack("H2").first }
+  formatted_bytes = field.bytes.map {|byte| byte.nil? ? "__" : byte.unpack("H2").first }
   bytes_lines = formatted_bytes.each_slice(8).map {|line| line.join(" ")}
 
   line_count = [value_lines.length, bytes_lines.length].max
