@@ -468,6 +468,10 @@ class Field
   end
 
   attr_reader :label, :type, :value, :bytes
+
+  def incomplete?
+    @bytes.last.nil?
+  end
 end
 
 
@@ -499,7 +503,7 @@ def display_field(field)
   label_lines = [label + ":"]
   type_lines = [type]
 
-  if bytes.last.nil?
+  if field.incomplete?
     value_lines = ["Incomplete"]
   elsif type == "FourCC" || type == "C String"
     # Wrap the value in quotes and show character codes for non-display characters
