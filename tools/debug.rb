@@ -292,9 +292,6 @@ end
 
 
 class FieldReader
-  class ByteLimitExhaustedError < StandardError; end
-  private_constant :ByteLimitExhaustedError
-
   def initialize(file)
     @file = file
 
@@ -433,6 +430,9 @@ class FieldReader
     end
   end
   private_constant :ByteLimit
+
+  class ByteLimitExhaustedError < StandardError; end
+  private_constant :ByteLimitExhaustedError
 
   private
 
