@@ -142,6 +142,7 @@ def read_cue_chunk(field_reader, chunk_size)
   return if cue_point_count.nil?
 
   cue_point_count.times do |i|
+    # Prevent trailing section separator in output
     break if field_reader.remaining_byte_limit <= 0
 
     cue_point_number = i + 1
@@ -182,6 +183,7 @@ def read_sample_chunk(field_reader, chunk_size)
   return if sampler_specific_data_size.nil?
 
   loop_count.times do |i|
+    # Prevent trailing section separator in output
     break if field_reader.remaining_byte_limit <= 0
 
     loop_number = i + 1
