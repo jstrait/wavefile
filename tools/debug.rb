@@ -95,7 +95,7 @@ def read_format_chunk(field_reader, chunk_size)
           display_field(field_reader.read_guid("Sub Format GUID"))
 
           if field_reader.remaining_byte_limit > 0
-            display_field(field_reader.read_bytes("Extra Extension Bytes", field_reader.remaining_byte_limit))
+            display_field(field_reader.read_bytes("Extra Extension Bytes", extension_size - field_reader.bytes_read_toward_limit))
           end
         else
           display_field(field_reader.read_bytes("Raw Extension", extension_size))
@@ -106,7 +106,7 @@ def read_format_chunk(field_reader, chunk_size)
 
   if field_reader.remaining_byte_limit > 0
     display_chunk_section_separator
-    display_field(field_reader.read_bytes("Extra Bytes", field_reader.remaining_byte_limit))
+    display_field(field_reader.read_bytes("Extra Bytes", chunk_size - field_reader.bytes_read_toward_limit))
   end
 end
 
@@ -116,7 +116,7 @@ def read_fact_chunk(field_reader, chunk_size)
 
   if field_reader.remaining_byte_limit > 0
     display_chunk_section_separator
-    display_field(field_reader.read_bytes("Extra Bytes", field_reader.remaining_byte_limit))
+    display_field(field_reader.read_bytes("Extra Bytes", chunk_size - field_reader.bytes_read_toward_limit))
   end
 end
 
@@ -158,7 +158,7 @@ def read_cue_chunk(field_reader, chunk_size)
 
   if field_reader.remaining_byte_limit > 0
     display_chunk_section_separator
-    display_field(field_reader.read_bytes("Extra Bytes", field_reader.remaining_byte_limit))
+    display_field(field_reader.read_bytes("Extra Bytes", chunk_size - field_reader.bytes_read_toward_limit))
   end
 end
 
@@ -204,7 +204,7 @@ def read_sample_chunk(field_reader, chunk_size)
 
   if field_reader.remaining_byte_limit > 0
     display_chunk_section_separator
-    display_field(field_reader.read_bytes("Extra Bytes", field_reader.remaining_byte_limit))
+    display_field(field_reader.read_bytes("Extra Bytes", chunk_size - field_reader.bytes_read_toward_limit))
   end
 end
 
@@ -220,7 +220,7 @@ def read_instrument_chunk(field_reader, chunk_size)
 
   if field_reader.remaining_byte_limit > 0
     display_chunk_section_separator
-    display_field(field_reader.read_bytes("Extra Bytes", field_reader.remaining_byte_limit))
+    display_field(field_reader.read_bytes("Extra Bytes", chunk_size - field_reader.bytes_read_toward_limit))
   end
 end
 
@@ -299,7 +299,7 @@ class FieldReader
     @file = file
 
     max_file_size = (2 ** 32) + 8
-    @byte_limits = [max_file_size]
+    @byte_limits = [ByteLimit.new(max_file_size)]
   end
 
   def with_byte_limit(byte_limit)
@@ -314,7 +314,11 @@ class FieldReader
   end
 
   def remaining_byte_limit
-    @byte_limits.last
+    @byte_limits.last.remaining_byte_limit
+  end
+
+  def bytes_read_toward_limit
+    @byte_limits.last.bytes_read_count
   end
 
   def read_int8(label)
@@ -408,27 +412,41 @@ class FieldReader
   end
 
   def skip_bytes(byte_count)
-    clamped_byte_count = [byte_count, @byte_limits.last].min
+    clamped_byte_count = [byte_count, @byte_limits.last.remaining_byte_limit].min
     string = @file.sysread(clamped_byte_count)
 
-    decrement_byte_limits(string.length)
+    increment_bytes_read_counts(string.length)
 
     string.length
   end
 
+  class ByteLimit
+    def initialize(byte_limit)
+      @byte_limit = byte_limit
+      @bytes_read_count = 0
+    end
+
+    attr_accessor :bytes_read_count
+
+    def remaining_byte_limit
+      @byte_limit - @bytes_read_count
+    end
+  end
+  private_constant :ByteLimit
+
   private
 
   def push_byte_limit(byte_limit)
-    clamped_byte_limit = [byte_limit, @byte_limits.last].min
-    @byte_limits.push(clamped_byte_limit)
+    clamped_byte_limit = [byte_limit, @byte_limits.last.remaining_byte_limit].min
+    @byte_limits.push(ByteLimit.new(clamped_byte_limit))
   end
 
   def pop_byte_limit
     @byte_limits.pop
   end
 
-  def decrement_byte_limits(byte_count)
-    @byte_limits.map! {|byte_limit| byte_limit - byte_count}
+  def increment_bytes_read_counts(byte_count)
+    @byte_limits.each {|byte_limit| byte_limit.bytes_read_count += byte_count}
   end
 
   def read_field(label: nil, byte_count: nil, type: nil, parser: nil)
@@ -444,16 +462,16 @@ class FieldReader
   end
 
   def read_field_bytes(byte_count)
-    if @byte_limits.last <= 0
+    if @byte_limits.last.remaining_byte_limit <= 0
       raise ByteLimitExhaustedError
     end
 
     bytes = [nil] * byte_count
-    clamped_byte_count = [byte_count, @byte_limits.last].min
+    clamped_byte_count = [byte_count, @byte_limits.last.remaining_byte_limit].min
 
     clamped_byte_count.times do |i|
       bytes[i] = @file.sysread(1)
-      decrement_byte_limits(1)
+      increment_bytes_read_counts(1)
     end
 
     bytes
