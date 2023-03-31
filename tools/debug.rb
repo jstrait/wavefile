@@ -496,7 +496,11 @@ end
 
 
 def display_chunk_header(chunk_id_field, chunk_size_field)
-  title = "#{chunk_id_field.value.inspect} Chunk"
+  if chunk_id_field.value.nil?
+    title = "Invalid Chunk"
+  else
+    title = "#{chunk_id_field.value.inspect} Chunk"
+  end
 
   if chunk_id_field.value == "RIFF"
     title += " Header"
