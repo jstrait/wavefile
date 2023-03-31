@@ -16,14 +16,11 @@ def main
     field_reader = FieldReader.new(file)
 
     begin
-      begin
-        riff_chunk_id_field = field_reader.read_fourcc("Chunk ID")
-        riff_chunk_size_field = field_reader.read_uint32("Chunk Size")
-      ensure
-        if riff_chunk_id_field != nil
-          display_chunk_header(riff_chunk_id_field, riff_chunk_size_field)
-        end
-      end
+      display_chunk_header(field_reader.read_fourcc("Chunk ID"))
+
+      riff_chunk_size_field = field_reader.read_uint32("Chunk Size")
+      display_field(riff_chunk_size_field)
+      display_chunk_section_separator
 
       field_reader.with_byte_limit(riff_chunk_size_field.value) do
         read_riff_chunk(field_reader, riff_chunk_size_field.value)
@@ -41,19 +38,16 @@ def read_riff_chunk(field_reader, chunk_size)
   display_field(field_reader.read_fourcc("Form Type"))
 
   while field_reader.remaining_byte_limit > 0
-    child_chunk_id_field, child_chunk_size_field = nil
+    child_chunk_id_field = field_reader.read_fourcc("Chunk ID")
+    puts ""
+    puts ""
+    display_chunk_header(child_chunk_id_field)
 
-    begin
-      child_chunk_id_field = field_reader.read_fourcc("Chunk ID")
-      child_chunk_size_field = field_reader.read_uint32("Chunk Size")
-    ensure
-      if child_chunk_id_field != nil
-        puts ""
-        puts ""
+    return if child_chunk_id_field.value.nil?
 
-        display_chunk_header(child_chunk_id_field, child_chunk_size_field)
-      end
-    end
+    child_chunk_size_field = field_reader.read_uint32("Chunk Size")
+    display_field(child_chunk_size_field)
+    display_chunk_section_separator
 
     return if child_chunk_size_field.value.nil?
 
@@ -495,7 +489,7 @@ class Field
 end
 
 
-def display_chunk_header(chunk_id_field, chunk_size_field)
+def display_chunk_header(chunk_id_field)
   if chunk_id_field.value.nil?
     title = "Invalid Chunk"
   else
@@ -510,11 +504,6 @@ def display_chunk_header(chunk_id_field, chunk_size_field)
   puts "================================================================================"
 
   display_field(chunk_id_field)
-
-  if chunk_size_field != nil
-    display_field(chunk_size_field)
-    display_chunk_section_separator
-  end
 end
 
 
