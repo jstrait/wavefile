@@ -19,11 +19,12 @@ def main
       display_chunk_header(field_reader.read_fourcc("Chunk ID"))
 
       riff_chunk_size_field = field_reader.read_uint32("Chunk Size")
+      riff_chunk_size = riff_chunk_size_field.value
       display_field(riff_chunk_size_field)
       display_chunk_section_separator
 
-      field_reader.with_byte_limit(riff_chunk_size_field.value) do
-        read_riff_chunk(field_reader, riff_chunk_size_field.value)
+      field_reader.with_byte_limit(riff_chunk_size) do
+        read_riff_chunk(field_reader, riff_chunk_size)
       end
     rescue EOFError
       # Swallow the error and do nothing to avoid an error being shown in the output.
@@ -39,24 +40,26 @@ def read_riff_chunk(field_reader, chunk_size)
 
   while field_reader.remaining_byte_limit > 0
     child_chunk_id_field = field_reader.read_fourcc("Chunk ID")
+    child_chunk_id = child_chunk_id_field.value
     puts ""
     puts ""
     display_chunk_header(child_chunk_id_field)
 
-    return if child_chunk_id_field.value.nil?
+    return if child_chunk_id.nil?
 
     child_chunk_size_field = field_reader.read_uint32("Chunk Size")
+    child_chunk_size = child_chunk_size_field.value
     display_field(child_chunk_size_field)
     display_chunk_section_separator
 
-    return if child_chunk_size_field.value.nil?
+    return if child_chunk_size.nil?
 
-    chunk_body_reader_method_name = CHUNK_BODY_READERS[child_chunk_id_field.value]
-    field_reader.with_byte_limit(child_chunk_size_field.value) do
-      send(chunk_body_reader_method_name, field_reader, child_chunk_size_field.value)
+    chunk_body_reader_method_name = CHUNK_BODY_READERS[child_chunk_id]
+    field_reader.with_byte_limit(child_chunk_size) do
+      send(chunk_body_reader_method_name, field_reader, child_chunk_size)
     end
 
-    if child_chunk_size_field.value.odd?
+    if child_chunk_size.odd?
       display_field(field_reader.read_padding_byte("Padding Byte"))
     end
   end
