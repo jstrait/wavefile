@@ -23,6 +23,8 @@ def main
       display_field(riff_chunk_size_field)
       display_chunk_section_separator
 
+      return if riff_chunk_size.nil?
+
       field_reader.with_byte_limit(riff_chunk_size) do
         read_riff_chunk(field_reader, riff_chunk_size)
       end
@@ -463,13 +465,13 @@ class FieldReader
       raise ByteLimitExhaustedError
     end
 
-    bytes = [nil] * byte_count
     clamped_byte_count = [byte_count, @byte_limits.last.remaining_byte_limit].min
+    string = @file.sysread(clamped_byte_count)
 
-    clamped_byte_count.times do |i|
-      bytes[i] = @file.sysread(1)
-      increment_bytes_read_counts(1)
-    end
+    bytes = [nil] * byte_count
+    bytes[0, string.length] = string.chars
+
+    increment_bytes_read_counts(string.length)
 
     bytes
   end
