@@ -1,3 +1,6 @@
+# Although some of the fields in the "smpl" chunk have a value outside the
+# expected range, the gem should be able to read this file because these field
+# values aren't actually validated.
 riff_chunk:
   chunk_id: "RIFF"
   chunk_size: auto
