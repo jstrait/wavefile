@@ -1139,7 +1139,7 @@ class ReaderTest < Minitest::Test
   # Several field values are out of the expected range, but the file should be successfully
   # read anyway because the sample chunk has the correct structure
   def test_smpl_chunk_field_values_out_of_range
-    file_name = fixture("invalid/smpl_chunk_fields_out_of_range.wav")
+    file_name = fixture("valid/with_sample_chunk_with_fields_out_of_range.wav")
     sampler_info = Reader.new(file_name).sampler_info
 
     assert_equal(0, sampler_info.manufacturer_id)
