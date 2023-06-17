@@ -16,7 +16,7 @@ data_chunk:
   channel_format: stereo
 sample_chunk:
   chunk_id: "smpl"
-  chunk_size: 60
+  chunk_size: 64
   manufacturer_id: 0
   product_id: 0
   sample_nanoseconds: 0
