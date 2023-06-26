@@ -30,6 +30,10 @@ class FileWriter
   end
 
   def write_value(value, type)
+    if value.nil?
+      raise "Unexpected attempt to write a nil value"
+    end
+
     if type == "24"
       components = [value].pack("l").unpack("CCc")
       components.each do |byte|
@@ -210,16 +214,16 @@ def write_square_wave_samples(file_writer, sample_format, bits_per_sample, chann
 
   SQUARE_WAVE_CYCLE_REPEATS.times do
     channel_count.times do
-      file_writer.write_or_quit(low_val,  pack_code)
-      file_writer.write_or_quit(low_val,  pack_code)
-      file_writer.write_or_quit(low_val,  pack_code)
-      file_writer.write_or_quit(low_val,  pack_code)
+      file_writer.write_value(low_val,  pack_code)
+      file_writer.write_value(low_val,  pack_code)
+      file_writer.write_value(low_val,  pack_code)
+      file_writer.write_value(low_val,  pack_code)
     end
     channel_count.times do
-      file_writer.write_or_quit(high_val, pack_code)
-      file_writer.write_or_quit(high_val, pack_code)
-      file_writer.write_or_quit(high_val, pack_code)
-      file_writer.write_or_quit(high_val, pack_code)
+      file_writer.write_value(high_val, pack_code)
+      file_writer.write_value(high_val, pack_code)
+      file_writer.write_value(high_val, pack_code)
+      file_writer.write_value(high_val, pack_code)
     end
   end
 end
