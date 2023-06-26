@@ -102,7 +102,6 @@ end
 def write_junk_chunk(file_writer, config)
   file_writer.write_or_quit(config["chunk_id"], FOUR_CC)
   file_writer.write_or_quit(config["chunk_size"], UNSIGNED_INT_32_LITTLE_ENDIAN)
-  #file_writer.write_or_quit("123456789\000", "a10")
   if config["data"]
     config["data"].each do |byte|
       file_writer.write_or_skip(byte, UNSIGNED_INT_8)
