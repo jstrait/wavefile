@@ -51,32 +51,23 @@ class FileWriter
 
     write_value(value, type)
   end
-
-  def write_or_quit(value, type)
-    if value == nil
-      close
-      exit(0)
-    end
-
-    write_value(value, type)
-  end
 end
 
 def write_riff_chunk(file_writer, config)
-  file_writer.write_or_quit(config["chunk_id"], FOUR_CC)
-  file_writer.write_or_quit(config["chunk_size"], UNSIGNED_INT_32_LITTLE_ENDIAN)
-  file_writer.write_or_quit(config["wave_format"], FOUR_CC)
+  file_writer.write_or_skip(config["chunk_id"], FOUR_CC)
+  file_writer.write_or_skip(config["chunk_size"], UNSIGNED_INT_32_LITTLE_ENDIAN)
+  file_writer.write_or_skip(config["wave_format"], FOUR_CC)
 end
 
 def write_format_chunk(file_writer, config)
-  file_writer.write_or_quit(config["chunk_id"], FOUR_CC)
-  file_writer.write_or_quit(config["chunk_size"], UNSIGNED_INT_32_LITTLE_ENDIAN)
-  file_writer.write_or_quit(config["audio_format"], UNSIGNED_INT_16_LITTLE_ENDIAN)
-  file_writer.write_or_quit(config["channels"], UNSIGNED_INT_16_LITTLE_ENDIAN)
-  file_writer.write_or_quit(config["sample_rate"], UNSIGNED_INT_32_LITTLE_ENDIAN)
-  file_writer.write_or_quit(config["byte_rate"], UNSIGNED_INT_32_LITTLE_ENDIAN)
-  file_writer.write_or_quit(config["block_align"], UNSIGNED_INT_16_LITTLE_ENDIAN)
-  file_writer.write_or_quit(config["bits_per_sample"], UNSIGNED_INT_16_LITTLE_ENDIAN)
+  file_writer.write_or_skip(config["chunk_id"], FOUR_CC)
+  file_writer.write_or_skip(config["chunk_size"], UNSIGNED_INT_32_LITTLE_ENDIAN)
+  file_writer.write_or_skip(config["audio_format"], UNSIGNED_INT_16_LITTLE_ENDIAN)
+  file_writer.write_or_skip(config["channels"], UNSIGNED_INT_16_LITTLE_ENDIAN)
+  file_writer.write_or_skip(config["sample_rate"], UNSIGNED_INT_32_LITTLE_ENDIAN)
+  file_writer.write_or_skip(config["byte_rate"], UNSIGNED_INT_32_LITTLE_ENDIAN)
+  file_writer.write_or_skip(config["block_align"], UNSIGNED_INT_16_LITTLE_ENDIAN)
+  file_writer.write_or_skip(config["bits_per_sample"], UNSIGNED_INT_16_LITTLE_ENDIAN)
   file_writer.write_or_skip(config["extension_size"], UNSIGNED_INT_16_LITTLE_ENDIAN)
   file_writer.write_or_skip(config["valid_bits_per_sample"], UNSIGNED_INT_16_LITTLE_ENDIAN)
   file_writer.write_or_skip(config["speaker_mapping"], UNSIGNED_INT_32_LITTLE_ENDIAN)
@@ -94,18 +85,18 @@ def write_format_chunk(file_writer, config)
 end
 
 def write_fact_chunk(file_writer, config)
-  file_writer.write_or_quit(config["chunk_id"], FOUR_CC)
-  file_writer.write_or_quit(config["chunk_size"], UNSIGNED_INT_32_LITTLE_ENDIAN)
+  file_writer.write_or_skip(config["chunk_id"], FOUR_CC)
+  file_writer.write_or_skip(config["chunk_size"], UNSIGNED_INT_32_LITTLE_ENDIAN)
   if config["sample_count"] == "auto"
-    file_writer.write_or_quit(TOTAL_SAMPLE_FRAMES, UNSIGNED_INT_32_LITTLE_ENDIAN)
+    file_writer.write_or_skip(TOTAL_SAMPLE_FRAMES, UNSIGNED_INT_32_LITTLE_ENDIAN)
   else
-    file_writer.write_or_quit(config["sample_count"], UNSIGNED_INT_32_LITTLE_ENDIAN)
+    file_writer.write_or_skip(config["sample_count"], UNSIGNED_INT_32_LITTLE_ENDIAN)
   end
 end
 
 def write_junk_chunk(file_writer, config)
-  file_writer.write_or_quit(config["chunk_id"], FOUR_CC)
-  file_writer.write_or_quit(config["chunk_size"], UNSIGNED_INT_32_LITTLE_ENDIAN)
+  file_writer.write_or_skip(config["chunk_id"], FOUR_CC)
+  file_writer.write_or_skip(config["chunk_size"], UNSIGNED_INT_32_LITTLE_ENDIAN)
   if config["data"]
     config["data"].each do |byte|
       file_writer.write_or_skip(byte, UNSIGNED_INT_8)
@@ -114,26 +105,26 @@ def write_junk_chunk(file_writer, config)
 end
 
 def write_sample_chunk(file_writer, config)
-  file_writer.write_or_quit(config["chunk_id"], FOUR_CC)
-  file_writer.write_or_quit(config["chunk_size"], UNSIGNED_INT_32_LITTLE_ENDIAN)
-  file_writer.write_or_quit(config["manufacturer_id"], UNSIGNED_INT_32_LITTLE_ENDIAN)
-  file_writer.write_or_quit(config["product_id"], UNSIGNED_INT_32_LITTLE_ENDIAN)
-  file_writer.write_or_quit(config["sample_nanoseconds"], UNSIGNED_INT_32_LITTLE_ENDIAN)
-  file_writer.write_or_quit(config["unity_note"], UNSIGNED_INT_32_LITTLE_ENDIAN)
-  file_writer.write_or_quit(config["pitch_fraction"], UNSIGNED_INT_32_LITTLE_ENDIAN)
-  file_writer.write_or_quit(config["smpte_format"], UNSIGNED_INT_32_LITTLE_ENDIAN)
-  file_writer.write_or_quit(config["smpte_offset"], UNSIGNED_INT_32_LITTLE_ENDIAN)
-  file_writer.write_or_quit(config["loop_count"], UNSIGNED_INT_32_LITTLE_ENDIAN)
-  file_writer.write_or_quit(config["sampler_data_size"], UNSIGNED_INT_32_LITTLE_ENDIAN)
+  file_writer.write_or_skip(config["chunk_id"], FOUR_CC)
+  file_writer.write_or_skip(config["chunk_size"], UNSIGNED_INT_32_LITTLE_ENDIAN)
+  file_writer.write_or_skip(config["manufacturer_id"], UNSIGNED_INT_32_LITTLE_ENDIAN)
+  file_writer.write_or_skip(config["product_id"], UNSIGNED_INT_32_LITTLE_ENDIAN)
+  file_writer.write_or_skip(config["sample_nanoseconds"], UNSIGNED_INT_32_LITTLE_ENDIAN)
+  file_writer.write_or_skip(config["unity_note"], UNSIGNED_INT_32_LITTLE_ENDIAN)
+  file_writer.write_or_skip(config["pitch_fraction"], UNSIGNED_INT_32_LITTLE_ENDIAN)
+  file_writer.write_or_skip(config["smpte_format"], UNSIGNED_INT_32_LITTLE_ENDIAN)
+  file_writer.write_or_skip(config["smpte_offset"], UNSIGNED_INT_32_LITTLE_ENDIAN)
+  file_writer.write_or_skip(config["loop_count"], UNSIGNED_INT_32_LITTLE_ENDIAN)
+  file_writer.write_or_skip(config["sampler_data_size"], UNSIGNED_INT_32_LITTLE_ENDIAN)
 
   if config["loops"]
     config["loops"].each do |loop|
-      file_writer.write_or_quit(loop["id"], UNSIGNED_INT_32_LITTLE_ENDIAN)
-      file_writer.write_or_quit(loop["type"], UNSIGNED_INT_32_LITTLE_ENDIAN)
-      file_writer.write_or_quit(loop["start_sample_frame"], UNSIGNED_INT_32_LITTLE_ENDIAN)
-      file_writer.write_or_quit(loop["end_sample_frame"], UNSIGNED_INT_32_LITTLE_ENDIAN)
-      file_writer.write_or_quit(loop["fraction"], UNSIGNED_INT_32_LITTLE_ENDIAN)
-      file_writer.write_or_quit(loop["play_count"], UNSIGNED_INT_32_LITTLE_ENDIAN)
+      file_writer.write_or_skip(loop["id"], UNSIGNED_INT_32_LITTLE_ENDIAN)
+      file_writer.write_or_skip(loop["type"], UNSIGNED_INT_32_LITTLE_ENDIAN)
+      file_writer.write_or_skip(loop["start_sample_frame"], UNSIGNED_INT_32_LITTLE_ENDIAN)
+      file_writer.write_or_skip(loop["end_sample_frame"], UNSIGNED_INT_32_LITTLE_ENDIAN)
+      file_writer.write_or_skip(loop["fraction"], UNSIGNED_INT_32_LITTLE_ENDIAN)
+      file_writer.write_or_skip(loop["play_count"], UNSIGNED_INT_32_LITTLE_ENDIAN)
     end
   end
 
@@ -165,11 +156,11 @@ def write_data_chunk(file_writer, config, format_chunk)
     end
   end
 
-  file_writer.write_or_quit("data", FOUR_CC)
+  file_writer.write_or_skip("data", FOUR_CC)
   if config["chunk_size"]
-    file_writer.write_or_quit(config["chunk_size"], UNSIGNED_INT_32_LITTLE_ENDIAN)
+    file_writer.write_or_skip(config["chunk_size"], UNSIGNED_INT_32_LITTLE_ENDIAN)
   elsif config["cycle_repeats"]
-    file_writer.write_or_quit((TOTAL_SAMPLE_FRAMES * format_chunk["block_align"]), UNSIGNED_INT_32_LITTLE_ENDIAN)
+    file_writer.write_or_skip((TOTAL_SAMPLE_FRAMES * format_chunk["block_align"]), UNSIGNED_INT_32_LITTLE_ENDIAN)
   end
 
   write_square_wave_samples(file_writer, sample_format, format_chunk["bits_per_sample"], config["channel_format"])
