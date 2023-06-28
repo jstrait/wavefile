@@ -34,14 +34,7 @@ class FileWriter
       raise "Unexpected attempt to write a nil value"
     end
 
-    if type == "24"
-      components = [value].pack("l").unpack("CCc")
-      components.each do |byte|
-        @output_file.write([byte].pack("C"))
-      end
-    else
-      @output_file.write([value].pack(type))
-    end
+    @output_file.write([value].pack(type))
   end
 
   def write_or_skip(value, type)
@@ -179,7 +172,7 @@ def write_square_wave_samples(file_writer, sample_format, bits_per_sample, chann
     elsif bits_per_sample == 16
       low_val, high_val, pack_code = -10000, 10000, "s<"
     elsif bits_per_sample == 24
-      low_val, high_val, pack_code = -1_000_000, 1_000_000, "24"
+      low_val, high_val, pack_code = -1_000_000, 1_000_000, "l<X"
     elsif bits_per_sample == 32
       low_val, high_val, pack_code = -1_000_000_000, 1_000_000_000, "l<"
     end
