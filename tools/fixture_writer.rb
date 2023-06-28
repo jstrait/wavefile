@@ -12,6 +12,9 @@ FOUR_CC = "a4"
 UNSIGNED_INT_8  = "C"
 UNSIGNED_INT_16_LITTLE_ENDIAN = "v"
 UNSIGNED_INT_32_LITTLE_ENDIAN = "V"
+SIGNED_INT_16_LITTLE_ENDIAN = "s<"
+SIGNED_INT_24_LITTLE_ENDIAN = "l<X"
+SIGNED_INT_32_LITTLE_ENDIAN = "l<"
 FLOAT_32_LITTLE_ENDIAN = "e"
 FLOAT_64_LITTLE_ENDIAN = "E"
 
@@ -170,11 +173,11 @@ def write_square_wave_samples(file_writer, sample_format, bits_per_sample, chann
     if bits_per_sample == 8
       low_val, high_val, pack_code = 88, 167, UNSIGNED_INT_8
     elsif bits_per_sample == 16
-      low_val, high_val, pack_code = -10000, 10000, "s<"
+      low_val, high_val, pack_code = -10000, 10000, SIGNED_INT_16_LITTLE_ENDIAN
     elsif bits_per_sample == 24
-      low_val, high_val, pack_code = -1_000_000, 1_000_000, "l<X"
+      low_val, high_val, pack_code = -1_000_000, 1_000_000, SIGNED_INT_24_LITTLE_ENDIAN
     elsif bits_per_sample == 32
-      low_val, high_val, pack_code = -1_000_000_000, 1_000_000_000, "l<"
+      low_val, high_val, pack_code = -1_000_000_000, 1_000_000_000, SIGNED_INT_32_LITTLE_ENDIAN
     end
   elsif sample_format == :float
     if bits_per_sample == 32
