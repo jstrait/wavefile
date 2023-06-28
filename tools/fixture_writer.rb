@@ -159,7 +159,7 @@ def write_data_chunk(file_writer, config, format_chunk)
     file_writer.write_or_skip((TOTAL_SAMPLE_FRAMES * format_chunk["block_align"]), UNSIGNED_INT_32_LITTLE_ENDIAN)
   end
 
-  write_square_wave_samples(file_writer, sample_format, format_chunk["bits_per_sample"], config["channel_format"])
+  write_square_wave_samples(file_writer, sample_format, format_chunk["bits_per_sample"], format_chunk["channels"])
 
   if config["extra_data"]
     config["extra_data"].each do |byte|
@@ -168,7 +168,7 @@ def write_data_chunk(file_writer, config, format_chunk)
   end
 end
 
-def write_square_wave_samples(file_writer, sample_format, bits_per_sample, channel_format)
+def write_square_wave_samples(file_writer, sample_format, bits_per_sample, channel_count)
   if sample_format == :pcm
     if bits_per_sample == 8
       low_val, high_val, pack_code = 88, 167, UNSIGNED_INT_8
@@ -185,18 +185,6 @@ def write_square_wave_samples(file_writer, sample_format, bits_per_sample, chann
     elsif bits_per_sample == 64
       low_val, high_val, pack_code = -0.5, 0.5, FLOAT_64_LITTLE_ENDIAN
     end
-  end
-
-  if channel_format == "mono"
-    channel_count = 1
-  elsif channel_format == "stereo"
-    channel_count = 2
-  elsif channel_format == "tri"
-    channel_count = 3
-  elsif channel_format.is_a? Integer
-    channel_count = channel_format
-  else
-    channel_count = 0
   end
 
   SQUARE_WAVE_CYCLE_REPEATS.times do

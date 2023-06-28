@@ -14,7 +14,6 @@ format_chunk:
 data_chunk:
   chunk_size: 2241    # 280 cycle repeats plus 1 sample (does not include padding byte)
   cycle_repeats: 280
-  channel_format: mono
   extra_data: [88, 0]    # Extra sample to bring sample data to odd size, plus a padding byte
 sample_chunk:
   chunk_id: "smpl"

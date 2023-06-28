@@ -21,4 +21,3 @@ fact_chunk:
   sample_count: auto
 data_chunk:
   cycle_repeats: 280
-  channel_format: stereo

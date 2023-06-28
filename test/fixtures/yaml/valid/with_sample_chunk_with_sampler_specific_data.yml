@@ -33,4 +33,3 @@ sample_chunk:
   sampler_data: [4, 1, 3, 2]
 data_chunk:
   cycle_repeats: 280
-  channel_format: stereo

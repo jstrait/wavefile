@@ -4,7 +4,6 @@ riff_chunk:
   wave_format: "WAVE"
 data_chunk:
   cycle_repeats: 280
-  channel_format: stereo
 format_chunk:   # The `fmt ` chunk must come before the `data` chunk, or the file is invalid
   chunk_id: "fmt "
   chunk_size: 16

@@ -17,4 +17,3 @@ fact_chunk:
   sample_count: auto
 data_chunk:
   cycle_repeats: 0
-  channel_format: mono

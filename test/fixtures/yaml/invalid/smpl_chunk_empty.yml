@@ -16,4 +16,3 @@ sample_chunk:    # A sample chunk should contain the minimum fields, and this do
   chunk_size: 0
 data_chunk:
   cycle_repeats: 280
-  channel_format: stereo

@@ -17,4 +17,3 @@ junk_chunk:
   data: [1, 2, 3, 4, 5, 6, 7, 8, 9, 0]    # 9 arbitrary bytes, followed by padding byte
 data_chunk:
   cycle_repeats: 280
-  channel_format: mono

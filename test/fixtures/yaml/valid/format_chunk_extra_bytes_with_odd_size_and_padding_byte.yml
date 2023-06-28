@@ -14,4 +14,3 @@ format_chunk:
   extra_bytes: [0, 0, 0, 0]  # The final byte here is a padding byte to bring the chunk to an even number of bytes
 data_chunk:
   cycle_repeats: 280
-  channel_format: mono

@@ -15,4 +15,3 @@ data_chunk:
   chunk_id: "data"
   chunk_size: 100000    # This is larger than the actual number of samples
   cycle_repeats: 280
-  channel_format: mono
