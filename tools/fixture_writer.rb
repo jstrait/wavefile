@@ -32,20 +32,20 @@ class FileWriter
     @output_file.close
   end
 
-  def write_value(value, type)
+  def write_value(value, pack_template)
     if value.nil?
       raise "Unexpected attempt to write a nil value"
     end
 
-    @output_file.write([value].pack(type))
+    @output_file.write([value].pack(pack_template))
   end
 
-  def write_or_skip(value, type)
+  def write_or_skip(value, pack_template)
     if value == nil
       return
     end
 
-    write_value(value, type)
+    write_value(value, pack_template)
   end
 end
 
