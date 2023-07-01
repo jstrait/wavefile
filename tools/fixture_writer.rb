@@ -171,34 +171,34 @@ end
 def write_square_wave_samples(file_writer, sample_format, bits_per_sample, channel_count)
   if sample_format == :pcm
     if bits_per_sample == 8
-      low_val, high_val, pack_code = 88, 167, UNSIGNED_INT_8
+      low_val, high_val, pack_template = 88, 167, UNSIGNED_INT_8
     elsif bits_per_sample == 16
-      low_val, high_val, pack_code = -10000, 10000, SIGNED_INT_16_LITTLE_ENDIAN
+      low_val, high_val, pack_template = -10000, 10000, SIGNED_INT_16_LITTLE_ENDIAN
     elsif bits_per_sample == 24
-      low_val, high_val, pack_code = -1_000_000, 1_000_000, SIGNED_INT_24_LITTLE_ENDIAN
+      low_val, high_val, pack_template = -1_000_000, 1_000_000, SIGNED_INT_24_LITTLE_ENDIAN
     elsif bits_per_sample == 32
-      low_val, high_val, pack_code = -1_000_000_000, 1_000_000_000, SIGNED_INT_32_LITTLE_ENDIAN
+      low_val, high_val, pack_template = -1_000_000_000, 1_000_000_000, SIGNED_INT_32_LITTLE_ENDIAN
     end
   elsif sample_format == :float
     if bits_per_sample == 32
-      low_val, high_val, pack_code = -0.5, 0.5, FLOAT_32_LITTLE_ENDIAN
+      low_val, high_val, pack_template = -0.5, 0.5, FLOAT_32_LITTLE_ENDIAN
     elsif bits_per_sample == 64
-      low_val, high_val, pack_code = -0.5, 0.5, FLOAT_64_LITTLE_ENDIAN
+      low_val, high_val, pack_template = -0.5, 0.5, FLOAT_64_LITTLE_ENDIAN
     end
   end
 
   SQUARE_WAVE_CYCLE_REPEATS.times do
     channel_count.times do
-      file_writer.write_value(low_val,  pack_code)
-      file_writer.write_value(low_val,  pack_code)
-      file_writer.write_value(low_val,  pack_code)
-      file_writer.write_value(low_val,  pack_code)
+      file_writer.write_value(low_val,  pack_template)
+      file_writer.write_value(low_val,  pack_template)
+      file_writer.write_value(low_val,  pack_template)
+      file_writer.write_value(low_val,  pack_template)
     end
     channel_count.times do
-      file_writer.write_value(high_val, pack_code)
-      file_writer.write_value(high_val, pack_code)
-      file_writer.write_value(high_val, pack_code)
-      file_writer.write_value(high_val, pack_code)
+      file_writer.write_value(high_val, pack_template)
+      file_writer.write_value(high_val, pack_template)
+      file_writer.write_value(high_val, pack_template)
+      file_writer.write_value(high_val, pack_template)
     end
   end
 end
