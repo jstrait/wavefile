@@ -1,6 +1,6 @@
 riff_chunk:
   chunk_id: "RIFF"
-  chunk_size: auto
+  chunk_size: 2292
   wave_format: "WAVE"
 format_chunk:
   chunk_id: "fmt "
@@ -13,9 +13,9 @@ format_chunk:
   bits_per_sample: 8
   extension_size: 2
   valid_bits_per_sample: 8   # There should normally be two more fields (a total of 20 bytes) following this
-fact_chunk:
+fact_chunk:    # This chunk will be interpreted as being part of the "fmt " chunk, due to the "fmt " chunk size
   chunk_id: "fact"
   chunk_size: 4
   sample_count: auto
-data_chunk:
+data_chunk:    # The chunk ID and chunk size fields will also be interpreted as being part of the "fmt " chunk
   cycle_repeats: 280
