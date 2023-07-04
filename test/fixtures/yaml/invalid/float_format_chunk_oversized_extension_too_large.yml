@@ -1,6 +1,6 @@
 riff_chunk:
   chunk_id: "RIFF"
-  chunk_size: auto
+  chunk_size: 9018
   wave_format: "WAVE"
 format_chunk:
   chunk_id: "fmt "
