@@ -83,11 +83,7 @@ end
 def write_fact_chunk(file_writer, config)
   file_writer.write_or_skip(config["chunk_id"], FOUR_CC)
   file_writer.write_or_skip(config["chunk_size"], UNSIGNED_INT_32_LITTLE_ENDIAN)
-  if config["sample_count"] == "auto"
-    file_writer.write_or_skip(TOTAL_SAMPLE_FRAMES, UNSIGNED_INT_32_LITTLE_ENDIAN)
-  else
-    file_writer.write_or_skip(config["sample_count"], UNSIGNED_INT_32_LITTLE_ENDIAN)
-  end
+  file_writer.write_or_skip(config["sample_count"], UNSIGNED_INT_32_LITTLE_ENDIAN)
 end
 
 def write_junk_chunk(file_writer, config)
@@ -137,7 +133,7 @@ def write_sample_chunk(file_writer, config)
   end
 end
 
-def write_data_chunk(file_writer, config, format_chunk)
+def write_data_chunk(file_writer, config, format_chunk, sample_frame_count)
   if format_chunk["audio_format"] == 1
     sample_format = :pcm
   elsif format_chunk["audio_format"] == 3
@@ -156,10 +152,10 @@ def write_data_chunk(file_writer, config, format_chunk)
   if config["chunk_size"]
     file_writer.write_or_skip(config["chunk_size"], UNSIGNED_INT_32_LITTLE_ENDIAN)
   elsif config["cycle_repeats"]
-    file_writer.write_or_skip((TOTAL_SAMPLE_FRAMES * format_chunk["block_align"]), UNSIGNED_INT_32_LITTLE_ENDIAN)
+    file_writer.write_or_skip((sample_frame_count * format_chunk["block_align"]), UNSIGNED_INT_32_LITTLE_ENDIAN)
   end
 
-  write_square_wave_samples(file_writer, sample_format, format_chunk["bits_per_sample"], format_chunk["channels"])
+  write_square_wave_samples(file_writer, sample_format, format_chunk["bits_per_sample"], format_chunk["channels"], config["cycle_repeats"] || 0)
 
   if config["extra_data"]
     config["extra_data"].each do |byte|
@@ -168,7 +164,7 @@ def write_data_chunk(file_writer, config, format_chunk)
   end
 end
 
-def write_square_wave_samples(file_writer, sample_format, bits_per_sample, channel_count)
+def write_square_wave_samples(file_writer, sample_format, bits_per_sample, channel_count, cycle_count)
   if sample_format == :pcm
     if bits_per_sample == 8
       low_val, high_val, pack_template = 88, 167, UNSIGNED_INT_8
@@ -187,7 +183,7 @@ def write_square_wave_samples(file_writer, sample_format, bits_per_sample, chann
     end
   end
 
-  SQUARE_WAVE_CYCLE_REPEATS.times do
+  cycle_count.times do
     channel_count.times do
       file_writer.write_value(low_val,  pack_template)
       file_writer.write_value(low_val,  pack_template)
@@ -219,8 +215,8 @@ fact_chunk = chunks["fact_chunk"]
 junk_chunk = chunks["junk_chunk"]
 sample_chunk = chunks["sample_chunk"]
 data_chunk = chunks["data_chunk"]
-SQUARE_WAVE_CYCLE_REPEATS = (data_chunk && data_chunk["cycle_repeats"]) || 0
-TOTAL_SAMPLE_FRAMES = SQUARE_WAVE_CYCLE_SAMPLE_FRAMES * SQUARE_WAVE_CYCLE_REPEATS
+square_wave_cycle_repeats = (data_chunk && data_chunk["cycle_repeats"]) || 0
+total_sample_frames = SQUARE_WAVE_CYCLE_SAMPLE_FRAMES * square_wave_cycle_repeats
 
 if riff_chunk["chunk_size"] == "auto"
   format_chunk_size = format_chunk["chunk_size"] + CHUNK_HEADER_SIZE_IN_BYTES
@@ -231,7 +227,7 @@ if riff_chunk["chunk_size"] == "auto"
   data_chunk_size = 0
   if data_chunk
     data_chunk_size += CHUNK_HEADER_SIZE_IN_BYTES
-    data_chunk_size += data_chunk["chunk_size"] ? data_chunk["chunk_size"] : (TOTAL_SAMPLE_FRAMES * format_chunk["block_align"])
+    data_chunk_size += data_chunk["chunk_size"] ? data_chunk["chunk_size"] : (total_sample_frames * format_chunk["block_align"])
   end
 
   riff_chunk["chunk_size"] = RIFF_FORM_TYPE_SIZE_IN_BYTES +
@@ -240,6 +236,10 @@ if riff_chunk["chunk_size"] == "auto"
                              next_even(junk_chunk_size) +
                              next_even(sample_chunk_size) +
                              next_even(data_chunk_size)
+end
+
+if fact_chunk && fact_chunk["sample_count"] == "auto"
+  fact_chunk["sample_count"] = total_sample_frames
 end
 
 file_writer = FileWriter.new(output_file_name)
@@ -257,7 +257,7 @@ chunks.keys.each do |chunk_key|
   when "sample_chunk"
     write_sample_chunk(file_writer, sample_chunk)
   when "data_chunk"
-    write_data_chunk(file_writer, data_chunk, format_chunk)
+    write_data_chunk(file_writer, data_chunk, format_chunk, total_sample_frames)
   else
     raise "Unknown chunk key `#{chunk_key}` in `#{yaml_file_name}`, exiting"
   end
