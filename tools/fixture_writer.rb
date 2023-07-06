@@ -19,7 +19,7 @@ FLOAT_32_LITTLE_ENDIAN = "e"
 FLOAT_64_LITTLE_ENDIAN = "E"
 
 CHUNK_HEADER_SIZE_IN_BYTES = 8
-RIFF_CHUNK_HEADER_SIZE = 12  # 8 byte FourCC, plus the "WAVE" format code string
+RIFF_FORM_TYPE_SIZE = 4
 
 SQUARE_WAVE_CYCLE_SAMPLE_FRAMES = 8
 
@@ -227,8 +227,14 @@ if riff_chunk["chunk_size"] == "auto"
   fact_chunk_size = fact_chunk ? fact_chunk["chunk_size"] + CHUNK_HEADER_SIZE_IN_BYTES : 0
   junk_chunk_size = junk_chunk ? junk_chunk["chunk_size"] + CHUNK_HEADER_SIZE_IN_BYTES : 0
   sample_chunk_size = sample_chunk ? sample_chunk["chunk_size"] + CHUNK_HEADER_SIZE_IN_BYTES : 0
-  data_chunk_size = (data_chunk && data_chunk["chunk_size"]) ? data_chunk["chunk_size"] : (TOTAL_SAMPLE_FRAMES * format_chunk["block_align"])
-  riff_chunk["chunk_size"] = RIFF_CHUNK_HEADER_SIZE +
+
+  data_chunk_size = 0
+  if data_chunk
+    data_chunk_size += CHUNK_HEADER_SIZE_IN_BYTES
+    data_chunk_size += data_chunk["chunk_size"] ? data_chunk["chunk_size"] : (TOTAL_SAMPLE_FRAMES * format_chunk["block_align"])
+  end
+
+  riff_chunk["chunk_size"] = RIFF_FORM_TYPE_SIZE +
                              next_even(format_chunk_size) +
                              next_even(fact_chunk_size) +
                              next_even(junk_chunk_size) +
