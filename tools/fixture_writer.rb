@@ -23,6 +23,69 @@ RIFF_FORM_TYPE_SIZE_IN_BYTES = 4
 
 SQUARE_WAVE_CYCLE_SAMPLE_FRAMES = 8
 
+def main
+  yaml_file_name = ARGV[0]
+  output_file_name = ARGV[1]
+
+  chunks = YAML::load(File.read(yaml_file_name))
+
+  riff_chunk = chunks["riff_chunk"]
+  format_chunk = chunks["format_chunk"]
+  fact_chunk = chunks["fact_chunk"]
+  junk_chunk = chunks["junk_chunk"]
+  sample_chunk = chunks["sample_chunk"]
+  data_chunk = chunks["data_chunk"]
+  square_wave_cycle_repeats = (data_chunk && data_chunk["cycle_repeats"]) || 0
+  total_sample_frames = SQUARE_WAVE_CYCLE_SAMPLE_FRAMES * square_wave_cycle_repeats
+
+  if riff_chunk["chunk_size"] == "auto"
+    format_chunk_size = format_chunk["chunk_size"] + CHUNK_HEADER_SIZE_IN_BYTES
+    fact_chunk_size = fact_chunk ? fact_chunk["chunk_size"] + CHUNK_HEADER_SIZE_IN_BYTES : 0
+    junk_chunk_size = junk_chunk ? junk_chunk["chunk_size"] + CHUNK_HEADER_SIZE_IN_BYTES : 0
+    sample_chunk_size = sample_chunk ? sample_chunk["chunk_size"] + CHUNK_HEADER_SIZE_IN_BYTES : 0
+
+    data_chunk_size = 0
+    if data_chunk
+      data_chunk_size += CHUNK_HEADER_SIZE_IN_BYTES
+      data_chunk_size += data_chunk["chunk_size"] ? data_chunk["chunk_size"] : (total_sample_frames * format_chunk["block_align"])
+    end
+
+    riff_chunk["chunk_size"] = RIFF_FORM_TYPE_SIZE_IN_BYTES +
+                               next_even(format_chunk_size) +
+                               next_even(fact_chunk_size) +
+                               next_even(junk_chunk_size) +
+                               next_even(sample_chunk_size) +
+                               next_even(data_chunk_size)
+  end
+
+  if fact_chunk && fact_chunk["sample_count"] == "auto"
+    fact_chunk["sample_count"] = total_sample_frames
+  end
+
+  file_writer = FileWriter.new(output_file_name)
+
+  chunks.keys.each do |chunk_key|
+    case chunk_key
+    when "riff_chunk"
+      write_riff_chunk(file_writer, riff_chunk)
+    when "format_chunk"
+      write_format_chunk(file_writer, format_chunk)
+    when "fact_chunk"
+      write_fact_chunk(file_writer, fact_chunk)
+    when "junk_chunk"
+      write_junk_chunk(file_writer, junk_chunk)
+    when "sample_chunk"
+      write_sample_chunk(file_writer, sample_chunk)
+    when "data_chunk"
+      write_data_chunk(file_writer, data_chunk, format_chunk, total_sample_frames)
+    else
+      raise "Unknown chunk key `#{chunk_key}` in `#{yaml_file_name}`, exiting"
+    end
+  end
+
+  file_writer.close
+end
+
 class FileWriter
   def initialize(output_file_name)
     @output_file = File.open(output_file_name, "wb")
@@ -204,63 +267,4 @@ def next_even(number)
 end
 
 
-yaml_file_name = ARGV[0]
-output_file_name = ARGV[1]
-
-chunks = YAML::load(File.read(yaml_file_name))
-
-riff_chunk = chunks["riff_chunk"]
-format_chunk = chunks["format_chunk"]
-fact_chunk = chunks["fact_chunk"]
-junk_chunk = chunks["junk_chunk"]
-sample_chunk = chunks["sample_chunk"]
-data_chunk = chunks["data_chunk"]
-square_wave_cycle_repeats = (data_chunk && data_chunk["cycle_repeats"]) || 0
-total_sample_frames = SQUARE_WAVE_CYCLE_SAMPLE_FRAMES * square_wave_cycle_repeats
-
-if riff_chunk["chunk_size"] == "auto"
-  format_chunk_size = format_chunk["chunk_size"] + CHUNK_HEADER_SIZE_IN_BYTES
-  fact_chunk_size = fact_chunk ? fact_chunk["chunk_size"] + CHUNK_HEADER_SIZE_IN_BYTES : 0
-  junk_chunk_size = junk_chunk ? junk_chunk["chunk_size"] + CHUNK_HEADER_SIZE_IN_BYTES : 0
-  sample_chunk_size = sample_chunk ? sample_chunk["chunk_size"] + CHUNK_HEADER_SIZE_IN_BYTES : 0
-
-  data_chunk_size = 0
-  if data_chunk
-    data_chunk_size += CHUNK_HEADER_SIZE_IN_BYTES
-    data_chunk_size += data_chunk["chunk_size"] ? data_chunk["chunk_size"] : (total_sample_frames * format_chunk["block_align"])
-  end
-
-  riff_chunk["chunk_size"] = RIFF_FORM_TYPE_SIZE_IN_BYTES +
-                             next_even(format_chunk_size) +
-                             next_even(fact_chunk_size) +
-                             next_even(junk_chunk_size) +
-                             next_even(sample_chunk_size) +
-                             next_even(data_chunk_size)
-end
-
-if fact_chunk && fact_chunk["sample_count"] == "auto"
-  fact_chunk["sample_count"] = total_sample_frames
-end
-
-file_writer = FileWriter.new(output_file_name)
-
-chunks.keys.each do |chunk_key|
-  case chunk_key
-  when "riff_chunk"
-    write_riff_chunk(file_writer, riff_chunk)
-  when "format_chunk"
-    write_format_chunk(file_writer, format_chunk)
-  when "fact_chunk"
-    write_fact_chunk(file_writer, fact_chunk)
-  when "junk_chunk"
-    write_junk_chunk(file_writer, junk_chunk)
-  when "sample_chunk"
-    write_sample_chunk(file_writer, sample_chunk)
-  when "data_chunk"
-    write_data_chunk(file_writer, data_chunk, format_chunk, total_sample_frames)
-  else
-    raise "Unknown chunk key `#{chunk_key}` in `#{yaml_file_name}`, exiting"
-  end
-end
-
-file_writer.close
+main
