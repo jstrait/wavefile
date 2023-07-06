@@ -19,7 +19,7 @@ FLOAT_32_LITTLE_ENDIAN = "e"
 FLOAT_64_LITTLE_ENDIAN = "E"
 
 CHUNK_HEADER_SIZE_IN_BYTES = 8
-RIFF_FORM_TYPE_SIZE = 4
+RIFF_FORM_TYPE_SIZE_IN_BYTES = 4
 
 SQUARE_WAVE_CYCLE_SAMPLE_FRAMES = 8
 
@@ -234,7 +234,7 @@ if riff_chunk["chunk_size"] == "auto"
     data_chunk_size += data_chunk["chunk_size"] ? data_chunk["chunk_size"] : (TOTAL_SAMPLE_FRAMES * format_chunk["block_align"])
   end
 
-  riff_chunk["chunk_size"] = RIFF_FORM_TYPE_SIZE +
+  riff_chunk["chunk_size"] = RIFF_FORM_TYPE_SIZE_IN_BYTES +
                              next_even(format_chunk_size) +
                              next_even(fact_chunk_size) +
                              next_even(junk_chunk_size) +
