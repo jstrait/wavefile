@@ -86,32 +86,6 @@ def main
   file_writer.close
 end
 
-class FileWriter
-  def initialize(output_file_name)
-    @output_file = File.open(output_file_name, "wb")
-  end
-
-  def close
-    @output_file.close
-  end
-
-  def write_value(value, pack_template)
-    if value.nil?
-      raise "Unexpected attempt to write a nil value"
-    end
-
-    @output_file.write([value].pack(pack_template))
-  end
-
-  def write_or_skip(value, pack_template)
-    if value == nil
-      return
-    end
-
-    write_value(value, pack_template)
-  end
-end
-
 def write_riff_chunk(file_writer, config)
   file_writer.write_or_skip(config["chunk_id"], FOUR_CC)
   file_writer.write_or_skip(config["chunk_size"], UNSIGNED_INT_32_LITTLE_ENDIAN)
@@ -264,6 +238,32 @@ end
 
 def next_even(number)
   number.even? ? number : (number + 1)
+end
+
+class FileWriter
+  def initialize(output_file_name)
+    @output_file = File.open(output_file_name, "wb")
+  end
+
+  def close
+    @output_file.close
+  end
+
+  def write_value(value, pack_template)
+    if value.nil?
+      raise "Unexpected attempt to write a nil value"
+    end
+
+    @output_file.write([value].pack(pack_template))
+  end
+
+  def write_or_skip(value, pack_template)
+    if value == nil
+      return
+    end
+
+    write_value(value, pack_template)
+  end
 end
 
 
