@@ -25,7 +25,7 @@ SQUARE_WAVE_CYCLE_SAMPLE_FRAMES = 8
 
 def main
   yaml_file_name = ARGV[0]
-  output_file_name = ARGV[1]
+  wave_file_name = ARGV[1]
 
   chunks = YAML::load(File.read(yaml_file_name))
 
@@ -62,7 +62,7 @@ def main
     fact_chunk["sample_count"] = total_sample_frames
   end
 
-  file_writer = FileWriter.new(output_file_name)
+  file_writer = FileWriter.new(wave_file_name)
 
   chunks.keys.each do |chunk_key|
     case chunk_key
