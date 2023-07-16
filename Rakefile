@@ -17,13 +17,6 @@ end
 
 namespace :test do
   task :create_fixtures do
-    ["valid", "invalid", "unsupported"].each do |subfolder|
-      fixtures = Dir.glob("test/fixtures/yaml/#{subfolder}/*.yml")
-
-      fixtures.each do |fixture|
-        basename = File.basename(fixture, ".yml")
-        `ruby tools/fixture_writer.rb #{fixture} test/fixtures/wave/#{subfolder}/#{basename}.wav`
-      end
-    end
+    `ruby tools/fixture_writer.rb test/fixtures/yaml test/fixtures/wave`
   end
 end

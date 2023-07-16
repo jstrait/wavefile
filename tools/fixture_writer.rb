@@ -1,6 +1,6 @@
 # This program creates example Wave files that can be used as test fixtures.
-# The YAML file input determines what data will be written to the output
-# Wave file.
+# The input YAML directory is recursively searched for YAML files, and each YAML
+# file is used to generate a corresponding Wave file.
 #
 # This program intentionally does not try to validate the input, and will
 # happily create invalid Wave files. This allows one to create both valid
@@ -24,9 +24,20 @@ RIFF_FORM_TYPE_SIZE_IN_BYTES = 4
 SQUARE_WAVE_CYCLE_SAMPLE_FRAMES = 8
 
 def main
-  yaml_file_name = ARGV[0]
-  wave_file_name = ARGV[1]
+  yaml_root_directory = ARGV[0]
+  wave_root_directory = ARGV[1]
 
+  yaml_file_names = Dir.glob("#{yaml_root_directory}/**/*.yml")
+
+  yaml_file_names.each do |yaml_file_name|
+     wave_file_name = yaml_file_name.gsub(/^#{yaml_root_directory}/, wave_root_directory)
+     wave_file_name.gsub!(/\.yml$/, ".wav")
+
+     write_wave_file(yaml_file_name, wave_file_name)
+  end
+end
+
+def write_wave_file(yaml_file_name, wave_file_name)
   chunks = YAML::load(File.read(yaml_file_name))
 
   riff_chunk = chunks["riff_chunk"]
