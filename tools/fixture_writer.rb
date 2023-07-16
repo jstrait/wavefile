@@ -202,8 +202,6 @@ def write_data_chunk(file_writer, config, format_chunk, sample_frame_count)
 end
 
 def write_square_wave_samples(file_writer, sample_format, bits_per_sample, channel_count, cycle_count)
-  return if cycle_count <= 0
-
   if sample_format == :pcm
     if bits_per_sample == 8
       low_val, high_val, pack_template = 88, 167, UNSIGNED_INT_8
@@ -222,13 +220,20 @@ def write_square_wave_samples(file_writer, sample_format, bits_per_sample, chann
     end
   end
 
-  low_val_packed = [low_val].pack(pack_template)
-  high_val_packed = [high_val].pack(pack_template)
-  single_cycle_bytes = (low_val_packed * channel_count * 4) +
-                       (high_val_packed * channel_count * 4)
-  all_samples_bytes = single_cycle_bytes * cycle_count
-
-  file_writer.write_raw_bytes(all_samples_bytes)
+  cycle_count.times do
+    channel_count.times do
+      file_writer.write_value(low_val,  pack_template)
+      file_writer.write_value(low_val,  pack_template)
+      file_writer.write_value(low_val,  pack_template)
+      file_writer.write_value(low_val,  pack_template)
+    end
+    channel_count.times do
+      file_writer.write_value(high_val, pack_template)
+      file_writer.write_value(high_val, pack_template)
+      file_writer.write_value(high_val, pack_template)
+      file_writer.write_value(high_val, pack_template)
+    end
+  end
 end
 
 def next_even(number)
@@ -258,10 +263,6 @@ class FileWriter
     end
 
     write_value(value, pack_template)
-  end
-
-  def write_raw_bytes(byte_string)
-    @output_file.write(byte_string)
   end
 end
 
