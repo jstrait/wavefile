@@ -13,4 +13,4 @@ format_chunk:
   bits_per_sample: 8
 data_chunk:
   chunk_id: "data"
-  extra_data: [100, 101]    # Simulate the chunk size field only consisting of 2 bytes (instead of 4)
+  extra_bytes: [100, 101]    # Simulate the chunk size field only consisting of 2 bytes (instead of 4)

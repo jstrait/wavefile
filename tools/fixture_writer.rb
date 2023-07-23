@@ -205,8 +205,8 @@ def write_data_chunk(file_writer, config, format_chunk, sample_frame_count)
 
   write_square_wave_samples(file_writer, sample_format, format_chunk["bits_per_sample"], format_chunk["channels"], config["cycle_repeats"] || 0)
 
-  if config["extra_data"]
-    config["extra_data"].each do |byte|
+  if config["extra_bytes"]
+    config["extra_bytes"].each do |byte|
       file_writer.write_or_skip(byte, UNSIGNED_INT_8)
     end
   end
