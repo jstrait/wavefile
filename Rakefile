@@ -1,6 +1,5 @@
 require 'rake/testtask'
 require 'rdoc/task'
-#$:.push File.expand_path("../tools", __FILE__)
 
 Rake::TestTask.new do |t|
   t.libs << "test"
