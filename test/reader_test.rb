@@ -1317,7 +1317,7 @@ private
   end
 
   def string_io_from_file(file_name)
-    file_contents = File.read(file_name)
+    file_contents = File.binread(file_name)
 
     StringIO.new(file_contents)
   end
