@@ -1031,7 +1031,7 @@ class ReaderTest < Minitest::Test
     assert_equal(false, io.closed?)
 
     # Constructed from an StringIO instance
-    io = StringIO.new(File.read(fixture("valid/mono_pcm_16_44100.wav")))
+    io = string_io_from_file(fixture("valid/mono_pcm_16_44100.wav"))
     reader = Reader.new(io)
     assert_equal(false, reader.closed?)
     reader.close
