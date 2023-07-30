@@ -261,15 +261,16 @@ class ReaderTest < Minitest::Test
 
     exhaustively_test do |format_chunk_format, channels, sample_format|
       file_name = fixture("valid/#{format_chunk_format}#{channels}_#{sample_format}_44100.wav")
+      bits_per_sample = sample_format.to_s.split("_").last.to_i
 
       # Native format
       [file_name, string_io_from_file(file_name)].each do |io_or_file_name|
         reader = Reader.new(io_or_file_name)
         assert_equal(CHANNEL_ALIAS[channels], reader.native_format.channels)
-        assert_equal(extract_bits_per_sample(sample_format), reader.native_format.bits_per_sample)
+        assert_equal(bits_per_sample, reader.native_format.bits_per_sample)
         assert_equal(44100, reader.native_format.sample_rate)
         assert_equal(CHANNEL_ALIAS[channels], reader.format.channels)
-        assert_equal(extract_bits_per_sample(sample_format), reader.format.bits_per_sample)
+        assert_equal(bits_per_sample, reader.format.bits_per_sample)
         assert_equal(44100, reader.format.sample_rate)
         assert_equal(false, reader.closed?)
         assert_equal(0, reader.current_sample_frame)
@@ -283,7 +284,7 @@ class ReaderTest < Minitest::Test
       [file_name, string_io_from_file(file_name)].each do |io_or_file_name|
         reader = Reader.new(io_or_file_name, format)
         assert_equal(CHANNEL_ALIAS[channels], reader.native_format.channels)
-        assert_equal(extract_bits_per_sample(sample_format), reader.native_format.bits_per_sample)
+        assert_equal(bits_per_sample, reader.native_format.bits_per_sample)
         assert_equal(44100, reader.native_format.sample_rate)
         assert_equal(2, reader.format.channels)
         assert_equal(16, reader.format.bits_per_sample)
@@ -300,10 +301,10 @@ class ReaderTest < Minitest::Test
       [file_name, string_io_from_file(file_name)].each do |io_or_file_name|
         reader = Reader.new(io_or_file_name) {|r| r.read(1024) }
         assert_equal(CHANNEL_ALIAS[channels], reader.native_format.channels)
-        assert_equal(extract_bits_per_sample(sample_format), reader.native_format.bits_per_sample)
+        assert_equal(bits_per_sample, reader.native_format.bits_per_sample)
         assert_equal(44100, reader.native_format.sample_rate)
         assert_equal(CHANNEL_ALIAS[channels], reader.format.channels)
-        assert_equal(extract_bits_per_sample(sample_format), reader.format.bits_per_sample)
+        assert_equal(bits_per_sample, reader.format.bits_per_sample)
         assert_equal(44100, reader.format.sample_rate)
         assert(reader.closed?)
         assert_equal(1024, reader.current_sample_frame)
@@ -1313,10 +1314,6 @@ private
 
   def fixture(fixture_name)
     "#{FIXTURE_ROOT_PATH}/#{fixture_name}"
-  end
-
-  def extract_bits_per_sample(sample_format)
-    sample_format.to_s.split("_").last.to_i
   end
 
   def string_io_from_file(file_name)
