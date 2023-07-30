@@ -1319,11 +1319,7 @@ private
   def string_io_from_file(file_name)
     file_contents = File.read(file_name)
 
-    str_io = StringIO.new
-    str_io.syswrite(file_contents)
-    str_io.rewind
-
-    str_io
+    StringIO.new(file_contents)
   end
 
   def test_duration(expected_hash, duration)
