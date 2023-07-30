@@ -1308,11 +1308,11 @@ private
       reader.close
     end
 
-    return buffers
+    buffers
   end
 
   def fixture(fixture_name)
-    return "#{FIXTURE_ROOT_PATH}/#{fixture_name}"
+    "#{FIXTURE_ROOT_PATH}/#{fixture_name}"
   end
 
   def extract_bits_per_sample(sample_format)
