@@ -30,7 +30,7 @@ id: tutorial
 one_square_cycle = ([AMPLITUDE] * 50) + ([-AMPLITUDE] * 50){% endhighlight %}
   <p>Next, let&rsquo;s wrap the samples in a <code>Buffer</code>:</p>
   {% highlight ruby %}buffer = Buffer.new(one_square_cycle, Format.new(:mono, :float, 44100)){% endhighlight %}
-  <p>Notice that we used the <code>Format</code> class to describe our samples. The <code>Format</code> constructor takes 3 arguments: the number of channels, the format of each sample, and the sample rate. In our case, since our samples are floating point values between -1.0 and 1.0, we should use <code>:float</code> for the sample format. You&rsquo;re on the honor system to use the correct format here, weird stuff could happen if you use a format that doesn&rsquo;t match what&rsquo;s in the samples array.</p>
+  <p>Notice that we used the <code>Format</code> class to describe our samples. The <code>Format</code> constructor takes 3 arguments: the number of channels, the format of each sample, and the sample rate. In our case, since our samples are floating point values between -1.0 and 1.0, we should use <code>:float</code> for the sample format. There is no validation that the <code>Format</code> instance matches the actual samples. If it doesn&rsquo;t match you might get unexpected results.</p>
   <p>Now let&rsquo;s write the buffer to a file called <code>"square.wav"</code> in the current working directory:</p>
   {% highlight ruby %}Writer.new("square.wav", Format.new(:mono, :pcm_16, 44100)) do |writer|
   writer.write(buffer)
