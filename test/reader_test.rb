@@ -723,7 +723,7 @@ class ReaderTest < Minitest::Test
     assert_nil(reader.sampler_info)
     reader.close
 
-    buffers = read_file("valid/float_format_chunk_with_extra_bytes.wav", 1024)
+    buffers = read_file("valid/float_format_chunk_oversized_extension_and_extra_bytes.wav", 1024)
 
     assert_equal(3, buffers.length)
     assert_equal([1024, 1024, 192], buffers.map {|buffer| buffer.samples.length })
@@ -815,7 +815,7 @@ class ReaderTest < Minitest::Test
     assert_nil(reader.sampler_info)
     reader.close
 
-    buffers = read_file("valid/extensible_format_chunk_with_extra_bytes.wav", 1024)
+    buffers = read_file("valid/extensible_format_chunk_oversized_extension_and_extra_bytes.wav", 1024)
 
     assert_equal(3, buffers.length)
     assert_equal([1024, 1024, 192], buffers.map {|buffer| buffer.samples.length })
