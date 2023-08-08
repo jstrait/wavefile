@@ -11,7 +11,7 @@ class ReaderTest < Minitest::Test
 
 
   def test_nonexistent_file
-    assert_raises(Errno::ENOENT) { Reader.new(fixture("i_do_not_exist.wav")) }
+    assert_raises(Errno::ENOENT) { Reader.new(fixture_path("i_do_not_exist.wav")) }
   end
 
   def test_initialize_invalid_formats
@@ -142,7 +142,7 @@ class ReaderTest < Minitest::Test
     ]
 
     invalid_fixtures.each do |fixture_name|
-      file_name = fixture(fixture_name)
+      file_name = fixture_path(fixture_name)
 
       [file_name, string_io_from_file(file_name)].each do |io_or_file_name|
         assert_raises(InvalidFormatError) { Reader.new(io_or_file_name) }
@@ -151,7 +151,7 @@ class ReaderTest < Minitest::Test
   end
 
   def test_initialize_unsupported_format
-    file_name = fixture("unsupported/unsupported_bits_per_sample.wav")
+    file_name = fixture_path("unsupported/unsupported_bits_per_sample.wav")
 
     # Unsupported format, no read format given
     [file_name, string_io_from_file(file_name)].each do |io_or_file_name|
@@ -243,7 +243,7 @@ class ReaderTest < Minitest::Test
     ]
 
     unsupported_fixtures.each do |fixture_name|
-      file_name = fixture(fixture_name)
+      file_name = fixture_path(fixture_name)
 
       [file_name, string_io_from_file(file_name)].each do |io_or_file_name|
         reader = Reader.new(io_or_file_name)
@@ -260,7 +260,7 @@ class ReaderTest < Minitest::Test
     format = Format.new(:stereo, :pcm_16, 22050)
 
     exhaustively_test do |format_chunk_format, channels, sample_format|
-      file_name = fixture("valid/#{format_chunk_format}#{channels}_#{sample_format}_44100.wav")
+      file_name = fixture_path("valid/#{format_chunk_format}#{channels}_#{sample_format}_44100.wav")
       bits_per_sample = sample_format.to_s.split("_").last.to_i
 
       # Native format
@@ -331,7 +331,7 @@ class ReaderTest < Minitest::Test
     channels = :stereo
     sample_format = :pcm_16
 
-    reader = Reader.new(fixture("valid/extensible_stereo_pcm_16_44100.wav"))
+    reader = Reader.new(fixture_path("valid/extensible_stereo_pcm_16_44100.wav"))
     assert_equal(2, reader.native_format.channels)
     assert_equal(16, reader.native_format.bits_per_sample)
     assert_equal(44100, reader.native_format.sample_rate)
@@ -359,7 +359,7 @@ class ReaderTest < Minitest::Test
   end
 
   def test_read_extensible_no_speaker_mapping
-    reader = Reader.new(fixture("valid/extensible_stereo_pcm_24_44100_no_speaker_mapping.wav"))
+    reader = Reader.new(fixture_path("valid/extensible_stereo_pcm_24_44100_no_speaker_mapping.wav"))
 
     assert_equal(2, reader.native_format.channels)
     assert_equal(24, reader.native_format.bits_per_sample)
@@ -388,7 +388,7 @@ class ReaderTest < Minitest::Test
   end
 
   def test_read_extensible_more_speakers_than_channels
-    reader = Reader.new(fixture("valid/extensible_stereo_pcm_16_44100_more_speakers_than_channels.wav"))
+    reader = Reader.new(fixture_path("valid/extensible_stereo_pcm_16_44100_more_speakers_than_channels.wav"))
 
     assert_equal(2, reader.native_format.channels)
     assert_equal(16, reader.native_format.bits_per_sample)
@@ -417,7 +417,7 @@ class ReaderTest < Minitest::Test
   end
 
   def test_read_extensible_more_speakers_than_defined_by_spec
-    reader = Reader.new(fixture("valid/extensible_stereo_pcm_16_44100_more_speakers_than_defined_by_spec.wav"))
+    reader = Reader.new(fixture_path("valid/extensible_stereo_pcm_16_44100_more_speakers_than_defined_by_spec.wav"))
 
     assert_equal(2, reader.native_format.channels)
     assert_equal(16, reader.native_format.bits_per_sample)
@@ -464,7 +464,7 @@ class ReaderTest < Minitest::Test
   end
 
   def test_read_extensible_only_undefined_high_bit_speakers
-    reader = Reader.new(fixture("valid/extensible_stereo_pcm_16_44100_only_undefined_high_bit_speakers.wav"))
+    reader = Reader.new(fixture_path("valid/extensible_stereo_pcm_16_44100_only_undefined_high_bit_speakers.wav"))
 
     assert_equal(2, reader.native_format.channels)
     assert_equal(16, reader.native_format.bits_per_sample)
@@ -493,7 +493,7 @@ class ReaderTest < Minitest::Test
   end
 
   def test_read_non_extensible_that_has_extension
-    reader = Reader.new(fixture("valid/mono_pcm_16_44100_with_extension.wav"))
+    reader = Reader.new(fixture_path("valid/mono_pcm_16_44100_with_extension.wav"))
 
     assert_equal(1, reader.native_format.audio_format)
     assert_equal(1, reader.native_format.channels)
@@ -523,7 +523,7 @@ class ReaderTest < Minitest::Test
   end
 
   def test_read_float_format_chunk_missing_extension_size
-    reader = Reader.new(fixture("valid/float_format_chunk_missing_extension_size.wav"))
+    reader = Reader.new(fixture_path("valid/float_format_chunk_missing_extension_size.wav"))
 
     assert_equal(3, reader.native_format.audio_format)
     assert_equal(1, reader.native_format.channels)
@@ -553,7 +553,7 @@ class ReaderTest < Minitest::Test
   end
 
   def test_read_format_chunk_with_extra_bytes
-    reader = Reader.new(fixture("valid/format_chunk_with_extra_bytes.wav"))
+    reader = Reader.new(fixture_path("valid/format_chunk_with_extra_bytes.wav"))
 
     assert_equal(1, reader.native_format.audio_format)
     assert_equal(1, reader.native_format.channels)
@@ -583,7 +583,7 @@ class ReaderTest < Minitest::Test
   end
 
   def test_read_format_chunk_with_extra_byte_and_padding_byte
-    reader = Reader.new(fixture("valid/format_chunk_with_extra_byte_and_padding_byte.wav"))
+    reader = Reader.new(fixture_path("valid/format_chunk_with_extra_byte_and_padding_byte.wav"))
 
     assert_equal(1, reader.native_format.audio_format)
     assert_equal(1, reader.native_format.channels)
@@ -613,7 +613,7 @@ class ReaderTest < Minitest::Test
   end
 
   def test_read_format_chunk_with_extra_bytes_with_odd_size_and_padding_byte
-    reader = Reader.new(fixture("valid/format_chunk_extra_bytes_with_odd_size_and_padding_byte.wav"))
+    reader = Reader.new(fixture_path("valid/format_chunk_extra_bytes_with_odd_size_and_padding_byte.wav"))
 
     assert_equal(1, reader.native_format.audio_format)
     assert_equal(1, reader.native_format.channels)
@@ -643,7 +643,7 @@ class ReaderTest < Minitest::Test
   end
 
   def test_read_float_format_chunk_with_oversized_extension
-    reader = Reader.new(fixture("valid/float_format_chunk_oversized_extension.wav"))
+    reader = Reader.new(fixture_path("valid/float_format_chunk_oversized_extension.wav"))
 
     assert_equal(3, reader.native_format.audio_format)
     assert_equal(1, reader.native_format.channels)
@@ -673,7 +673,7 @@ class ReaderTest < Minitest::Test
   end
 
   def test_read_float_format_chunk_with_extra_bytes
-    reader = Reader.new(fixture("valid/float_format_chunk_with_extra_bytes.wav"))
+    reader = Reader.new(fixture_path("valid/float_format_chunk_with_extra_bytes.wav"))
 
     assert_equal(3, reader.native_format.audio_format)
     assert_equal(1, reader.native_format.channels)
@@ -703,7 +703,7 @@ class ReaderTest < Minitest::Test
   end
 
   def test_read_float_format_chunk_with_oversized_extension_and_extra_bytes
-    reader = Reader.new(fixture("valid/float_format_chunk_oversized_extension_and_extra_bytes.wav"))
+    reader = Reader.new(fixture_path("valid/float_format_chunk_oversized_extension_and_extra_bytes.wav"))
 
     assert_equal(3, reader.native_format.audio_format)
     assert_equal(1, reader.native_format.channels)
@@ -733,7 +733,7 @@ class ReaderTest < Minitest::Test
   end
 
   def test_read_extensible_format_chunk_with_oversized_extension
-    reader = Reader.new(fixture("valid/extensible_format_chunk_oversized_extension.wav"))
+    reader = Reader.new(fixture_path("valid/extensible_format_chunk_oversized_extension.wav"))
 
     assert_equal(65534, reader.native_format.audio_format)
     assert_equal(1, reader.native_format.channels)
@@ -763,7 +763,7 @@ class ReaderTest < Minitest::Test
   end
 
   def test_read_extensible_format_chunk_with_extra_bytes
-    reader = Reader.new(fixture("valid/extensible_format_chunk_with_extra_bytes.wav"))
+    reader = Reader.new(fixture_path("valid/extensible_format_chunk_with_extra_bytes.wav"))
 
     assert_equal(65534, reader.native_format.audio_format)
     assert_equal(1, reader.native_format.channels)
@@ -794,7 +794,7 @@ class ReaderTest < Minitest::Test
   end
 
   def test_read_extensible_format_chunk_with_oversized_extension_and_extra_bytes
-    reader = Reader.new(fixture("valid/extensible_format_chunk_oversized_extension_and_extra_bytes.wav"))
+    reader = Reader.new(fixture_path("valid/extensible_format_chunk_oversized_extension_and_extra_bytes.wav"))
 
     assert_equal(65534, reader.native_format.audio_format)
     assert_equal(1, reader.native_format.channels)
@@ -846,7 +846,7 @@ class ReaderTest < Minitest::Test
   end
 
   def test_read_truncated_file
-    reader = Reader.new(fixture("invalid/data_chunk_truncated.wav"), Format.new(:mono, :pcm_8, 44100))
+    reader = Reader.new(fixture_path("invalid/data_chunk_truncated.wav"), Format.new(:mono, :pcm_8, 44100))
 
     # The chunk does not actually contain this many sample frames, it actually has 2240
     assert_equal(100000, reader.total_sample_frames)
@@ -867,13 +867,13 @@ class ReaderTest < Minitest::Test
   end
 
   def test_each_buffer_no_block_given
-    reader = Reader.new(fixture("valid/mono_pcm_16_44100.wav"))
+    reader = Reader.new(fixture_path("valid/mono_pcm_16_44100.wav"))
     assert_raises(LocalJumpError) { reader.each_buffer(1024) }
   end
 
   def test_each_buffer_no_buffer_size_given
     exhaustively_test do |format_chunk_format, channels, sample_format|
-      reader = Reader.new(fixture("valid/#{format_chunk_format}#{channels}_#{sample_format}_44100.wav"))
+      reader = Reader.new(fixture_path("valid/#{format_chunk_format}#{channels}_#{sample_format}_44100.wav"))
 
       buffers = []
       reader.each_buffer {|buffer| buffers << buffer }
@@ -889,7 +889,7 @@ class ReaderTest < Minitest::Test
 
   def test_each_buffer_native_format
     exhaustively_test do |format_chunk_format, channels, sample_format|
-      reader = Reader.new(fixture("valid/#{format_chunk_format}#{channels}_#{sample_format}_44100.wav"))
+      reader = Reader.new(fixture_path("valid/#{format_chunk_format}#{channels}_#{sample_format}_44100.wav"))
 
       buffers = []
       reader.each_buffer(1024) {|buffer| buffers << buffer }
@@ -906,7 +906,7 @@ class ReaderTest < Minitest::Test
   end
 
   def test_each_buffer_with_format_conversion
-    reader = Reader.new(fixture("valid/mono_pcm_16_44100.wav"), Format.new(:stereo, :pcm_8, 22050))
+    reader = Reader.new(fixture_path("valid/mono_pcm_16_44100.wav"), Format.new(:stereo, :pcm_8, 22050))
     assert_equal(2, reader.format.channels)
     assert_equal(8, reader.format.bits_per_sample)
     assert_equal(22050, reader.format.sample_rate)
@@ -925,7 +925,7 @@ class ReaderTest < Minitest::Test
 
   def test_each_buffer_with_padding_byte
     buffers = []
-    reader = Reader.new(fixture("valid/mono_pcm_8_44100_with_padding_byte.wav"))
+    reader = Reader.new(fixture_path("valid/mono_pcm_8_44100_with_padding_byte.wav"))
     reader.each_buffer(1024) {|buffer| buffers << buffer }
 
     assert_equal(3, buffers.length)
@@ -939,7 +939,7 @@ class ReaderTest < Minitest::Test
   end
 
   def test_each_buffer_not_at_beginning_of_file
-    reader = Reader.new(fixture("valid/mono_pcm_16_44100.wav"))
+    reader = Reader.new(fixture_path("valid/mono_pcm_16_44100.wav"))
 
     buffers = []
     reader.read(8)
@@ -957,7 +957,7 @@ class ReaderTest < Minitest::Test
     buffers = []
 
     # This should not raise a ReaderClosedError
-    Reader.new(fixture("valid/mono_pcm_16_44100.wav")) do |reader|
+    Reader.new(fixture_path("valid/mono_pcm_16_44100.wav")) do |reader|
       reader.each_buffer(1024) {|buffer| buffers << buffer }
     end
 
@@ -971,7 +971,7 @@ class ReaderTest < Minitest::Test
   def test_read_after_each_buffer_inside_block_raises_error
     buffers = []
 
-    Reader.new(fixture("valid/mono_pcm_16_44100.wav")) do |reader|
+    Reader.new(fixture_path("valid/mono_pcm_16_44100.wav")) do |reader|
       reader.each_buffer(1024) {|buffer| buffers << buffer }
       assert_raises(ReaderClosedError) { reader.read(100) }
     end
@@ -987,7 +987,7 @@ class ReaderTest < Minitest::Test
     # This fixture file contains a JUNK chunk with an odd size, aligned to an even number of
     # bytes via an appended padding byte. If the padding byte is not taken into account, this
     # test will blow up due to the file not being synced up to the data chunk in the right place.
-    reader = Reader.new(fixture("valid/mono_pcm_16_44100_junk_chunk_with_padding_byte.wav"))
+    reader = Reader.new(fixture_path("valid/mono_pcm_16_44100_junk_chunk_with_padding_byte.wav"))
     buffer = reader.read(1024)
     assert_equal(buffer.samples, SQUARE_WAVE_CYCLE[:mono][:pcm_16] * 128)
     assert_equal(1024, reader.current_sample_frame)
@@ -998,7 +998,7 @@ class ReaderTest < Minitest::Test
     # This fixture file contains a JUNK chunk with an odd size, but no padding byte. When a chunk
     # is the final chunk in the file, a missing padding byte won't cause an error as long as the
     # RIFF chunk size field matches the actual number of bytes in the file.
-    reader = Reader.new(fixture("valid/mono_pcm_16_44100_junk_chunk_final_chunk_missing_padding_byte.wav"))
+    reader = Reader.new(fixture_path("valid/mono_pcm_16_44100_junk_chunk_final_chunk_missing_padding_byte.wav"))
     buffer = reader.read(1024)
     assert_equal(buffer.samples, SQUARE_WAVE_CYCLE[:mono][:pcm_16] * 128)
     assert_equal(1024, reader.current_sample_frame)
@@ -1006,7 +1006,7 @@ class ReaderTest < Minitest::Test
   end
 
   def test_closed?
-    reader = Reader.new(fixture("valid/mono_pcm_16_44100.wav"))
+    reader = Reader.new(fixture_path("valid/mono_pcm_16_44100.wav"))
     assert_equal(false, reader.closed?)
     reader.close
     assert(reader.closed?)
@@ -1015,7 +1015,7 @@ class ReaderTest < Minitest::Test
     assert(reader.closed?)
 
     # For Reader.each_buffer
-    reader = Reader.new(fixture("valid/mono_pcm_16_44100.wav"))
+    reader = Reader.new(fixture_path("valid/mono_pcm_16_44100.wav"))
     assert_equal(false, reader.closed?)
     reader.each_buffer(1024) do |buffer|
       # No-op
@@ -1023,7 +1023,7 @@ class ReaderTest < Minitest::Test
     assert_equal(true, reader.closed?)
 
     # Constructed from a File IO instance
-    io = File.open(fixture("valid/mono_pcm_16_44100.wav"), "rb")
+    io = File.open(fixture_path("valid/mono_pcm_16_44100.wav"), "rb")
     reader = Reader.new(io)
     assert_equal(false, reader.closed?)
     reader.close
@@ -1031,7 +1031,7 @@ class ReaderTest < Minitest::Test
     assert_equal(false, io.closed?)
 
     # Constructed from a StringIO instance
-    io = string_io_from_file(fixture("valid/mono_pcm_16_44100.wav"))
+    io = string_io_from_file(fixture_path("valid/mono_pcm_16_44100.wav"))
     reader = Reader.new(io)
     assert_equal(false, reader.closed?)
     reader.close
@@ -1040,12 +1040,12 @@ class ReaderTest < Minitest::Test
   end
 
   def test_read_after_close
-    reader = Reader.new(fixture("valid/mono_pcm_16_44100.wav"))
+    reader = Reader.new(fixture_path("valid/mono_pcm_16_44100.wav"))
     reader.read(1024)
     reader.close
     assert_raises(ReaderClosedError) { reader.read(1024) }
 
-    io = File.open(fixture("valid/mono_pcm_16_44100.wav"), "rb")
+    io = File.open(fixture_path("valid/mono_pcm_16_44100.wav"), "rb")
     reader = Reader.new(io)
     reader.read(1024)
     reader.close
@@ -1054,7 +1054,7 @@ class ReaderTest < Minitest::Test
 
   def test_sample_counts_manual_reads
     exhaustively_test do |format_chunk_format, channels, sample_format|
-      reader = Reader.new(fixture("valid/#{format_chunk_format}#{channels}_#{sample_format}_44100.wav"))
+      reader = Reader.new(fixture_path("valid/#{format_chunk_format}#{channels}_#{sample_format}_44100.wav"))
 
       assert_equal(0, reader.current_sample_frame)
       assert_equal(2240, reader.total_sample_frames)
@@ -1095,7 +1095,7 @@ class ReaderTest < Minitest::Test
     exhaustively_test do |format_chunk_format, channels, sample_format|
       expected_results = [ 1024, 2048, 2240 ]
 
-      file_name = fixture("valid/#{format_chunk_format}#{channels}_#{sample_format}_44100.wav")
+      file_name = fixture_path("valid/#{format_chunk_format}#{channels}_#{sample_format}_44100.wav")
       reader = Reader.new(file_name)
 
       assert_equal(0, reader.current_sample_frame)
@@ -1114,7 +1114,7 @@ class ReaderTest < Minitest::Test
   end
 
   def test_smpl_chunk
-    file_name = fixture("valid/with_sample_chunk_before_data_chunk.wav")
+    file_name = fixture_path("valid/with_sample_chunk_before_data_chunk.wav")
     sampler_info = Reader.new(file_name).sampler_info
 
     assert_equal(0, sampler_info.manufacturer_id)
@@ -1140,7 +1140,7 @@ class ReaderTest < Minitest::Test
   # Several field values are out of the expected range, but the file should be successfully
   # read anyway because the sample chunk has the correct structure
   def test_smpl_chunk_field_values_out_of_range
-    file_name = fixture("valid/with_sample_chunk_with_fields_out_of_range.wav")
+    file_name = fixture_path("valid/with_sample_chunk_with_fields_out_of_range.wav")
     sampler_info = Reader.new(file_name).sampler_info
 
     assert_equal(0, sampler_info.manufacturer_id)
@@ -1164,7 +1164,7 @@ class ReaderTest < Minitest::Test
   end
 
   def test_smpl_chunk_after_data_chunk
-    file_name = fixture("valid/with_sample_chunk_after_data_chunk.wav")
+    file_name = fixture_path("valid/with_sample_chunk_after_data_chunk.wav")
     sampler_info = Reader.new(file_name).sampler_info
 
     assert_equal(0, sampler_info.manufacturer_id)
@@ -1188,7 +1188,7 @@ class ReaderTest < Minitest::Test
   end
 
   def test_smpl_chunk_after_data_chunk_and_data_chunk_has_padding_byte
-    file_name = fixture("valid/with_sample_chunk_after_data_chunk_and_data_chunk_has_padding_byte.wav")
+    file_name = fixture_path("valid/with_sample_chunk_after_data_chunk_and_data_chunk_has_padding_byte.wav")
 
     reader = Reader.new(file_name)
     sampler_info = reader.sampler_info
@@ -1222,7 +1222,7 @@ class ReaderTest < Minitest::Test
   end
 
   def test_smpl_chunk_with_sampler_specific_data
-    file_name = fixture("valid/with_sample_chunk_with_sampler_specific_data.wav")
+    file_name = fixture_path("valid/with_sample_chunk_with_sampler_specific_data.wav")
     sampler_info = Reader.new(file_name).sampler_info
 
     assert_equal(0, sampler_info.manufacturer_id)
@@ -1247,7 +1247,7 @@ class ReaderTest < Minitest::Test
   end
 
   def test_smpl_chunk_with_extra_unused_bytes
-    file_name = fixture("valid/with_sample_chunk_with_extra_unused_bytes.wav")
+    file_name = fixture_path("valid/with_sample_chunk_with_extra_unused_bytes.wav")
     reader = Reader.new(file_name)
     sampler_info = reader.sampler_info
 
@@ -1278,7 +1278,7 @@ class ReaderTest < Minitest::Test
   end
 
   def test_smpl_chunk_no_loops
-    file_name = fixture("valid/with_sample_chunk_no_loops.wav")
+    file_name = fixture_path("valid/with_sample_chunk_no_loops.wav")
     sampler_info = Reader.new(file_name).sampler_info
 
     assert_equal(0, sampler_info.manufacturer_id)
@@ -1299,7 +1299,7 @@ private
 
   def read_file(file_name, buffer_size, format=nil)
     buffers = []
-    reader = Reader.new(fixture(file_name), format)
+    reader = Reader.new(fixture_path(file_name), format)
 
     begin
       while true do
@@ -1312,7 +1312,7 @@ private
     buffers
   end
 
-  def fixture(fixture_name)
+  def fixture_path(fixture_name)
     "#{FIXTURE_ROOT_PATH}/#{fixture_name}"
   end
 
