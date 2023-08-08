@@ -1006,7 +1006,9 @@ class ReaderTest < Minitest::Test
   end
 
   def test_closed?
-    reader = Reader.new(fixture_path("valid/mono_pcm_16_44100.wav"))
+    file_name = fixture_path("valid/mono_pcm_16_44100.wav")
+
+    reader = Reader.new(file_name)
     assert_equal(false, reader.closed?)
     reader.close
     assert(reader.closed?)
@@ -1015,7 +1017,7 @@ class ReaderTest < Minitest::Test
     assert(reader.closed?)
 
     # For Reader.each_buffer
-    reader = Reader.new(fixture_path("valid/mono_pcm_16_44100.wav"))
+    reader = Reader.new(file_name)
     assert_equal(false, reader.closed?)
     reader.each_buffer(1024) do |buffer|
       # No-op
@@ -1023,7 +1025,7 @@ class ReaderTest < Minitest::Test
     assert_equal(true, reader.closed?)
 
     # Constructed from a File IO instance
-    io = File.open(fixture_path("valid/mono_pcm_16_44100.wav"), "rb")
+    io = File.open(file_name, "rb")
     reader = Reader.new(io)
     assert_equal(false, reader.closed?)
     reader.close
@@ -1031,7 +1033,7 @@ class ReaderTest < Minitest::Test
     assert_equal(false, io.closed?)
 
     # Constructed from a StringIO instance
-    io = string_io_from_file(fixture_path("valid/mono_pcm_16_44100.wav"))
+    io = string_io_from_file(file_name)
     reader = Reader.new(io)
     assert_equal(false, reader.closed?)
     reader.close
@@ -1040,12 +1042,14 @@ class ReaderTest < Minitest::Test
   end
 
   def test_read_after_close
-    reader = Reader.new(fixture_path("valid/mono_pcm_16_44100.wav"))
+    file_name = fixture_path("valid/mono_pcm_16_44100.wav")
+
+    reader = Reader.new(file_name)
     reader.read(1024)
     reader.close
     assert_raises(ReaderClosedError) { reader.read(1024) }
 
-    io = File.open(fixture_path("valid/mono_pcm_16_44100.wav"), "rb")
+    io = File.open(file_name, "rb")
     reader = Reader.new(io)
     reader.read(1024)
     reader.close
