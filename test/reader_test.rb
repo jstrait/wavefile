@@ -1020,7 +1020,7 @@ class ReaderTest < Minitest::Test
     reader = Reader.new(file_name)
     assert_equal(false, reader.closed?)
     reader.each_buffer(1024) do |buffer|
-      # No-op
+      # Do nothing with the buffer
     end
     assert_equal(true, reader.closed?)
 
