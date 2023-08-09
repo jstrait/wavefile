@@ -1305,13 +1305,11 @@ private
     buffers = []
     reader = Reader.new(fixture_path(file_name), format)
 
-    begin
-      while true do
-        buffers << reader.read(buffer_size)
-      end
-    rescue EOFError
-      reader.close
+    while reader.current_sample_frame < reader.total_sample_frames
+      buffers << reader.read(buffer_size)
     end
+
+    reader.close
 
     buffers
   end
