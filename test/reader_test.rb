@@ -317,7 +317,7 @@ class ReaderTest < Minitest::Test
 
   def test_read_native_format
     exhaustively_test do |format_chunk_format, channels, sample_format|
-      buffers = read_file("valid/#{format_chunk_format}#{channels}_#{sample_format}_44100.wav", 1024)
+      buffers = read_all_samples_using_read("valid/#{format_chunk_format}#{channels}_#{sample_format}_44100.wav", 1024)
 
       assert_equal(3, buffers.length)
       assert_equal([1024, 1024, 192], buffers.map {|buffer| buffer.samples.length })
@@ -349,7 +349,7 @@ class ReaderTest < Minitest::Test
     assert_nil(reader.sampler_info)
     reader.close
 
-    buffers = read_file("valid/extensible_stereo_pcm_16_44100.wav", 1024)
+    buffers = read_all_samples_using_read("valid/extensible_stereo_pcm_16_44100.wav", 1024)
 
     assert_equal(3, buffers.length)
     assert_equal([1024, 1024, 192], buffers.map {|buffer| buffer.samples.length })
@@ -378,7 +378,7 @@ class ReaderTest < Minitest::Test
     assert_nil(reader.sampler_info)
     reader.close
 
-    buffers = read_file("valid/extensible_stereo_pcm_24_44100_no_speaker_mapping.wav", 1024)
+    buffers = read_all_samples_using_read("valid/extensible_stereo_pcm_24_44100_no_speaker_mapping.wav", 1024)
 
     assert_equal(3, buffers.length)
     assert_equal([1024, 1024, 192], buffers.map {|buffer| buffer.samples.length })
@@ -407,7 +407,7 @@ class ReaderTest < Minitest::Test
     assert_nil(reader.sampler_info)
     reader.close
 
-    buffers = read_file("valid/extensible_stereo_pcm_16_44100_more_speakers_than_channels.wav", 1024)
+    buffers = read_all_samples_using_read("valid/extensible_stereo_pcm_16_44100_more_speakers_than_channels.wav", 1024)
 
     assert_equal(3, buffers.length)
     assert_equal([1024, 1024, 192], buffers.map {|buffer| buffer.samples.length })
@@ -454,7 +454,7 @@ class ReaderTest < Minitest::Test
     assert_nil(reader.sampler_info)
     reader.close
 
-    buffers = read_file("valid/extensible_stereo_pcm_16_44100_more_speakers_than_defined_by_spec.wav", 1024)
+    buffers = read_all_samples_using_read("valid/extensible_stereo_pcm_16_44100_more_speakers_than_defined_by_spec.wav", 1024)
 
     assert_equal(3, buffers.length)
     assert_equal([1024, 1024, 192], buffers.map {|buffer| buffer.samples.length })
@@ -483,7 +483,7 @@ class ReaderTest < Minitest::Test
     assert_nil(reader.sampler_info)
     reader.close
 
-    buffers = read_file("valid/extensible_stereo_pcm_16_44100_only_undefined_high_bit_speakers.wav", 1024)
+    buffers = read_all_samples_using_read("valid/extensible_stereo_pcm_16_44100_only_undefined_high_bit_speakers.wav", 1024)
 
     assert_equal(3, buffers.length)
     assert_equal([1024, 1024, 192], buffers.map {|buffer| buffer.samples.length })
@@ -513,7 +513,7 @@ class ReaderTest < Minitest::Test
     assert_nil(reader.sampler_info)
     reader.close
 
-    buffers = read_file("valid/mono_pcm_16_44100_with_extension.wav", 1024)
+    buffers = read_all_samples_using_read("valid/mono_pcm_16_44100_with_extension.wav", 1024)
 
     assert_equal(3, buffers.length)
     assert_equal([1024, 1024, 192], buffers.map {|buffer| buffer.samples.length })
@@ -543,7 +543,7 @@ class ReaderTest < Minitest::Test
     assert_nil(reader.sampler_info)
     reader.close
 
-    buffers = read_file("valid/float_format_chunk_missing_extension_size.wav", 1024)
+    buffers = read_all_samples_using_read("valid/float_format_chunk_missing_extension_size.wav", 1024)
 
     assert_equal(3, buffers.length)
     assert_equal([1024, 1024, 192], buffers.map {|buffer| buffer.samples.length })
@@ -573,7 +573,7 @@ class ReaderTest < Minitest::Test
     assert_nil(reader.sampler_info)
     reader.close
 
-    buffers = read_file("valid/format_chunk_with_extra_bytes.wav", 1024)
+    buffers = read_all_samples_using_read("valid/format_chunk_with_extra_bytes.wav", 1024)
 
     assert_equal(3, buffers.length)
     assert_equal([1024, 1024, 192], buffers.map {|buffer| buffer.samples.length })
@@ -603,7 +603,7 @@ class ReaderTest < Minitest::Test
     assert_nil(reader.sampler_info)
     reader.close
 
-    buffers = read_file("valid/format_chunk_with_extra_byte_and_padding_byte.wav", 1024)
+    buffers = read_all_samples_using_read("valid/format_chunk_with_extra_byte_and_padding_byte.wav", 1024)
 
     assert_equal(3, buffers.length)
     assert_equal([1024, 1024, 192], buffers.map {|buffer| buffer.samples.length })
@@ -633,7 +633,7 @@ class ReaderTest < Minitest::Test
     assert_nil(reader.sampler_info)
     reader.close
 
-    buffers = read_file("valid/format_chunk_extra_bytes_with_odd_size_and_padding_byte.wav", 1024)
+    buffers = read_all_samples_using_read("valid/format_chunk_extra_bytes_with_odd_size_and_padding_byte.wav", 1024)
 
     assert_equal(3, buffers.length)
     assert_equal([1024, 1024, 192], buffers.map {|buffer| buffer.samples.length })
@@ -663,7 +663,7 @@ class ReaderTest < Minitest::Test
     assert_nil(reader.sampler_info)
     reader.close
 
-    buffers = read_file("valid/float_format_chunk_oversized_extension.wav", 1024)
+    buffers = read_all_samples_using_read("valid/float_format_chunk_oversized_extension.wav", 1024)
 
     assert_equal(3, buffers.length)
     assert_equal([1024, 1024, 192], buffers.map {|buffer| buffer.samples.length })
@@ -693,7 +693,7 @@ class ReaderTest < Minitest::Test
     assert_nil(reader.sampler_info)
     reader.close
 
-    buffers = read_file("valid/float_format_chunk_with_extra_bytes.wav", 1024)
+    buffers = read_all_samples_using_read("valid/float_format_chunk_with_extra_bytes.wav", 1024)
 
     assert_equal(3, buffers.length)
     assert_equal([1024, 1024, 192], buffers.map {|buffer| buffer.samples.length })
@@ -723,7 +723,7 @@ class ReaderTest < Minitest::Test
     assert_nil(reader.sampler_info)
     reader.close
 
-    buffers = read_file("valid/float_format_chunk_oversized_extension_and_extra_bytes.wav", 1024)
+    buffers = read_all_samples_using_read("valid/float_format_chunk_oversized_extension_and_extra_bytes.wav", 1024)
 
     assert_equal(3, buffers.length)
     assert_equal([1024, 1024, 192], buffers.map {|buffer| buffer.samples.length })
@@ -753,7 +753,7 @@ class ReaderTest < Minitest::Test
     assert_nil(reader.sampler_info)
     reader.close
 
-    buffers = read_file("valid/extensible_format_chunk_oversized_extension.wav", 1024)
+    buffers = read_all_samples_using_read("valid/extensible_format_chunk_oversized_extension.wav", 1024)
 
     assert_equal(3, buffers.length)
     assert_equal([1024, 1024, 192], buffers.map {|buffer| buffer.samples.length })
@@ -784,7 +784,7 @@ class ReaderTest < Minitest::Test
     assert_nil(reader.sampler_info)
     reader.close
 
-    buffers = read_file("valid/extensible_format_chunk_with_extra_bytes.wav", 1024)
+    buffers = read_all_samples_using_read("valid/extensible_format_chunk_with_extra_bytes.wav", 1024)
 
     assert_equal(3, buffers.length)
     assert_equal([1024, 1024, 192], buffers.map {|buffer| buffer.samples.length })
@@ -815,7 +815,7 @@ class ReaderTest < Minitest::Test
     assert_nil(reader.sampler_info)
     reader.close
 
-    buffers = read_file("valid/extensible_format_chunk_oversized_extension_and_extra_bytes.wav", 1024)
+    buffers = read_all_samples_using_read("valid/extensible_format_chunk_oversized_extension_and_extra_bytes.wav", 1024)
 
     assert_equal(3, buffers.length)
     assert_equal([1024, 1024, 192], buffers.map {|buffer| buffer.samples.length })
@@ -825,7 +825,7 @@ class ReaderTest < Minitest::Test
   end
 
   def test_read_with_format_conversion
-    buffers = read_file("valid/mono_pcm_16_44100.wav", 1024, Format.new(:stereo, :pcm_8, 22100))
+    buffers = read_all_samples_using_read("valid/mono_pcm_16_44100.wav", 1024, Format.new(:stereo, :pcm_8, 22100))
 
     assert_equal(3, buffers.length)
     assert_equal([1024, 1024, 192], buffers.map {|buffer| buffer.samples.length })
@@ -835,7 +835,7 @@ class ReaderTest < Minitest::Test
   end
 
   def test_read_with_padding_byte
-    buffers = read_file("valid/mono_pcm_8_44100_with_padding_byte.wav", 1024)
+    buffers = read_all_samples_using_read("valid/mono_pcm_8_44100_with_padding_byte.wav", 1024)
 
     assert_equal(3, buffers.length)
     assert_equal([1024, 1024, 193], buffers.map {|buffer| buffer.samples.length })
@@ -1301,7 +1301,7 @@ class ReaderTest < Minitest::Test
 
 private
 
-  def read_file(file_name, buffer_size, format=nil)
+  def read_all_samples_using_read(file_name, buffer_size, format=nil)
     buffers = []
     reader = Reader.new(fixture_path(file_name), format)
 
