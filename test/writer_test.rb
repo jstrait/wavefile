@@ -322,54 +322,56 @@ class WriterTest < Minitest::Test
   end
 
   def test_total_duration
-    exhaustively_test do |format_chunk_format, channels, sample_format|
-      format = Format.new(CHANNEL_ALIAS[channels], sample_format, 44100)
+    [:mono, :stereo, :tri].each do |channels|
+      [:pcm_8, :pcm_16, :pcm_24, :pcm_32, :float_32, :float_64].each do |sample_format|
+        format = Format.new(CHANNEL_ALIAS[channels], sample_format, 44100)
 
-      ["#{OUTPUT_FOLDER}/total_duration_#{channels}_#{sample_format}_44100.wav", StringIO.new].each do |io_or_file_name|
-        writer = Writer.new(io_or_file_name, format)
+        ["#{OUTPUT_FOLDER}/total_duration_#{channels}_#{sample_format}_44100.wav", StringIO.new].each do |io_or_file_name|
+          writer = Writer.new(io_or_file_name, format)
 
-        assert_equal(0, writer.total_sample_frames)
-        duration = writer.total_duration
-        assert_equal(0, duration.sample_frame_count)
-        assert_equal(44100, duration.sample_rate)
-        assert_equal(0, duration.hours)
-        assert_equal(0, duration.minutes)
-        assert_equal(0, duration.seconds)
-        assert_equal(0, duration.milliseconds)
+          assert_equal(0, writer.total_sample_frames)
+          duration = writer.total_duration
+          assert_equal(0, duration.sample_frame_count)
+          assert_equal(44100, duration.sample_rate)
+          assert_equal(0, duration.hours)
+          assert_equal(0, duration.minutes)
+          assert_equal(0, duration.seconds)
+          assert_equal(0, duration.milliseconds)
 
-        writer.write(Buffer.new(SQUARE_WAVE_CYCLE[channels][sample_format] * 2756, format))
+          writer.write(Buffer.new(SQUARE_WAVE_CYCLE[channels][sample_format] * 2756, format))
 
-        assert_equal(8 * 2756, writer.total_sample_frames)
-        duration = writer.total_duration
-        assert_equal(8 * 2756, duration.sample_frame_count)
-        assert_equal(44100, duration.sample_rate)
-        assert_equal(0, duration.hours)
-        assert_equal(0, duration.minutes)
-        assert_equal(0, duration.seconds)
-        assert_equal(499, duration.milliseconds)
+          assert_equal(8 * 2756, writer.total_sample_frames)
+          duration = writer.total_duration
+          assert_equal(8 * 2756, duration.sample_frame_count)
+          assert_equal(44100, duration.sample_rate)
+          assert_equal(0, duration.hours)
+          assert_equal(0, duration.minutes)
+          assert_equal(0, duration.seconds)
+          assert_equal(499, duration.milliseconds)
 
-        writer.write(Buffer.new(SQUARE_WAVE_CYCLE[channels][sample_format] * 2756, format))
-        writer.write(Buffer.new(SQUARE_WAVE_CYCLE[channels][sample_format] * 2756, format))
+          writer.write(Buffer.new(SQUARE_WAVE_CYCLE[channels][sample_format] * 2756, format))
+          writer.write(Buffer.new(SQUARE_WAVE_CYCLE[channels][sample_format] * 2756, format))
 
-        assert_equal(8 * 2756 * 3, writer.total_sample_frames)
-        duration = writer.total_duration
-        assert_equal(8 * 2756 * 3, duration.sample_frame_count)
-        assert_equal(44100, duration.sample_rate)
-        assert_equal(0, duration.hours)
-        assert_equal(0, duration.minutes)
-        assert_equal(1, duration.seconds)
-        assert_equal(499, duration.milliseconds)
+          assert_equal(8 * 2756 * 3, writer.total_sample_frames)
+          duration = writer.total_duration
+          assert_equal(8 * 2756 * 3, duration.sample_frame_count)
+          assert_equal(44100, duration.sample_rate)
+          assert_equal(0, duration.hours)
+          assert_equal(0, duration.minutes)
+          assert_equal(1, duration.seconds)
+          assert_equal(499, duration.milliseconds)
 
-        writer.close
+          writer.close
 
-        assert_equal(8 * 2756 * 3, writer.total_sample_frames)
-        duration = writer.total_duration
-        assert_equal(8 * 2756 * 3, duration.sample_frame_count)
-        assert_equal(44100, duration.sample_rate)
-        assert_equal(0, duration.hours)
-        assert_equal(0, duration.minutes)
-        assert_equal(1, duration.seconds)
-        assert_equal(499, duration.milliseconds)
+          assert_equal(8 * 2756 * 3, writer.total_sample_frames)
+          duration = writer.total_duration
+          assert_equal(8 * 2756 * 3, duration.sample_frame_count)
+          assert_equal(44100, duration.sample_rate)
+          assert_equal(0, duration.hours)
+          assert_equal(0, duration.minutes)
+          assert_equal(1, duration.seconds)
+          assert_equal(499, duration.milliseconds)
+        end
       end
     end
   end
