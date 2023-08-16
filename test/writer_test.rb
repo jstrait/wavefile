@@ -323,7 +323,7 @@ class WriterTest < Minitest::Test
 
   def test_total_duration
     [:mono, :stereo, :tri].each do |channels|
-      [:pcm_8, :pcm_16, :pcm_24, :pcm_32, :float_32, :float_64].each do |sample_format|
+      [:pcm_8, :pcm_16, :pcm_24, :pcm_32, :float, :float_32, :float_64].each do |sample_format|
         format = Format.new(CHANNEL_ALIAS[channels], sample_format, 44100)
 
         ["#{OUTPUT_FOLDER}/total_duration_#{channels}_#{sample_format}_44100.wav", StringIO.new].each do |io_or_file_name|
