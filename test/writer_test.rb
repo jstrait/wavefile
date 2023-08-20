@@ -394,6 +394,7 @@ class WriterTest < Minitest::Test
 
       reader = Reader.new("#{OUTPUT_FOLDER}/exception_with_block.wav")
       assert_equal(samples.size, reader.total_sample_frames)
+      reader.close
     end
   end
 

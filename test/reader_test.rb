@@ -888,11 +888,14 @@ class ReaderTest < Minitest::Test
 
     # Since there are no more sample frames, an end-of-file error should be raised
     assert_raises(EOFError) { reader.read(2000) }
+
+    reader.close
   end
 
   def test_each_buffer_no_block_given
     reader = Reader.new(fixture_path("valid/mono_pcm_16_44100.wav"))
     assert_raises(LocalJumpError) { reader.each_buffer(1024) }
+    reader.close
   end
 
   def test_each_buffer_no_buffer_size_given
@@ -1018,6 +1021,8 @@ class ReaderTest < Minitest::Test
     assert_equal(buffer.samples, SQUARE_WAVE_CYCLE[:mono][:pcm_16] * 128)
     assert_equal(1024, reader.current_sample_frame)
     assert_equal(2240, reader.total_sample_frames)
+
+    reader.close
   end
 
   def test_read_non_data_chunk_is_final_chunk_without_padding_byte
@@ -1029,6 +1034,8 @@ class ReaderTest < Minitest::Test
     assert_equal(buffer.samples, SQUARE_WAVE_CYCLE[:mono][:pcm_16] * 128)
     assert_equal(1024, reader.current_sample_frame)
     assert_equal(2240, reader.total_sample_frames)
+
+    reader.close
   end
 
   def test_closed?
@@ -1144,7 +1151,8 @@ class ReaderTest < Minitest::Test
 
   def test_smpl_chunk
     file_name = fixture_path("valid/with_sample_chunk_before_data_chunk.wav")
-    sampler_info = Reader.new(file_name).sampler_info
+    reader = Reader.new(file_name)
+    sampler_info = reader.sampler_info
 
     assert_equal(0, sampler_info.manufacturer_id)
     assert_equal(0, sampler_info.product_id)
@@ -1164,13 +1172,16 @@ class ReaderTest < Minitest::Test
     assert_equal(0.5, sampler_info.loops[0].fraction)
     assert_equal(1, sampler_info.loops[0].play_count)
     assert_equal("", sampler_info.sampler_specific_data)
+
+    reader.close
   end
 
   # Several field values are out of the expected range, but the file should be successfully
   # read anyway because the sample chunk has the correct structure
   def test_smpl_chunk_field_values_out_of_range
     file_name = fixture_path("valid/with_sample_chunk_with_fields_out_of_range.wav")
-    sampler_info = Reader.new(file_name).sampler_info
+    reader = Reader.new(file_name)
+    sampler_info = reader.sampler_info
 
     assert_equal(0, sampler_info.manufacturer_id)
     assert_equal(0, sampler_info.product_id)
@@ -1190,11 +1201,14 @@ class ReaderTest < Minitest::Test
     assert_equal(0.5, sampler_info.loops[0].fraction)
     assert_equal(1, sampler_info.loops[0].play_count)
     assert_equal("", sampler_info.sampler_specific_data)
+
+    reader.close
   end
 
   def test_smpl_chunk_after_data_chunk
     file_name = fixture_path("valid/with_sample_chunk_after_data_chunk.wav")
-    sampler_info = Reader.new(file_name).sampler_info
+    reader = Reader.new(file_name)
+    sampler_info = reader.sampler_info
 
     assert_equal(0, sampler_info.manufacturer_id)
     assert_equal(0, sampler_info.product_id)
@@ -1214,6 +1228,8 @@ class ReaderTest < Minitest::Test
     assert_equal(0.5, sampler_info.loops[0].fraction)
     assert_equal(1, sampler_info.loops[0].play_count)
     assert_equal("", sampler_info.sampler_specific_data)
+
+    reader.close
   end
 
   def test_smpl_chunk_after_data_chunk_and_data_chunk_has_padding_byte
@@ -1248,11 +1264,14 @@ class ReaderTest < Minitest::Test
     assert_equal(0.5, sampler_info.loops[0].fraction)
     assert_equal(1, sampler_info.loops[0].play_count)
     assert_equal("", sampler_info.sampler_specific_data)
+
+    reader.close
   end
 
   def test_smpl_chunk_with_sampler_specific_data
     file_name = fixture_path("valid/with_sample_chunk_with_sampler_specific_data.wav")
-    sampler_info = Reader.new(file_name).sampler_info
+    reader = Reader.new(file_name)
+    sampler_info = reader.sampler_info
 
     assert_equal(0, sampler_info.manufacturer_id)
     assert_equal(0, sampler_info.product_id)
@@ -1273,6 +1292,8 @@ class ReaderTest < Minitest::Test
     assert_equal(Float::INFINITY, sampler_info.loops[0].play_count)
     assert_equal("\x04\x01\x03\x02", sampler_info.sampler_specific_data)
     assert_equal(Encoding::ASCII_8BIT, sampler_info.sampler_specific_data.encoding)
+
+    reader.close
   end
 
   def test_smpl_chunk_with_extra_unused_bytes
@@ -1304,11 +1325,14 @@ class ReaderTest < Minitest::Test
     # at end of `smpl` chunk.
     buffer = reader.read(1)
     assert_equal([[-10000, -10000]], buffer.samples)
+
+    reader.close
   end
 
   def test_smpl_chunk_no_loops
     file_name = fixture_path("valid/with_sample_chunk_no_loops.wav")
-    sampler_info = Reader.new(file_name).sampler_info
+    reader = Reader.new(file_name)
+    sampler_info = reader.sampler_info
 
     assert_equal(0, sampler_info.manufacturer_id)
     assert_equal(0, sampler_info.product_id)
@@ -1322,6 +1346,8 @@ class ReaderTest < Minitest::Test
     assert_equal(0, sampler_info.smpte_offset.frames)
     assert_equal([], sampler_info.loops)
     assert_equal("", sampler_info.sampler_specific_data)
+
+    reader.close
   end
 
 private
