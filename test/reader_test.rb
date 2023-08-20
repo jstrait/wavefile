@@ -1326,11 +1326,12 @@ private
 
   # Executes the given block against different combinations of number of channels and sample_format
   def exhaustively_test
-    ["", "extensible_"].each do |format_chunk_format|
+    [:non_extensible, :extensible].each do |format_chunk_format|
       [:mono, :stereo, :tri].each do |channels|
         [:pcm, :float].each do |sample_format|
           SUPPORTED_BITS_PER_SAMPLE[sample_format].each do |bits_per_sample|
-            file_name = fixture_path("valid/#{format_chunk_format}#{channels}_#{sample_format}_#{bits_per_sample}_44100.wav")
+            prefix = (format_chunk_format == :extensible) ? "extensible_" : ""
+            file_name = fixture_path("valid/#{prefix}#{channels}_#{sample_format}_#{bits_per_sample}_44100.wav")
 
             yield(file_name, channels, "#{sample_format}_#{bits_per_sample}".to_sym)
           end
