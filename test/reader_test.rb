@@ -938,6 +938,7 @@ class ReaderTest < Minitest::Test
     buffers = []
     reader.each_buffer(1024) {|buffer| buffers << buffer }
 
+    assert(reader.closed?)
     assert_equal(3, buffers.length)
     assert_equal([1024, 1024, 192], buffers.map {|buffer| buffer.samples.length })
     assert_equal(SQUARE_WAVE_CYCLE[:stereo][:pcm_8] * 128, buffers[0].samples)
@@ -952,6 +953,7 @@ class ReaderTest < Minitest::Test
     reader = Reader.new(fixture_path("valid/mono_pcm_8_44100_with_padding_byte.wav"))
     reader.each_buffer(1024) {|buffer| buffers << buffer }
 
+    assert(reader.closed?)
     assert_equal(3, buffers.length)
     assert_equal([1024, 1024, 193], buffers.map {|buffer| buffer.samples.length })
     assert_equal(SQUARE_WAVE_CYCLE[:mono][:pcm_8] * 128, buffers[0].samples)
