@@ -1242,7 +1242,7 @@ class ReaderTest < Minitest::Test
     # by a padding byte.
     assert_equal(2241, reader.total_sample_frames)
     # Test that data chunk read is correctly queued up to start of data chunk
-    assert_equal([88, 88, 88, 88, 167, 167, 167, 167], reader.read(8).samples)
+    assert_equal(SQUARE_WAVE_CYCLE[:mono][:pcm_8], reader.read(8).samples)
 
     # Sample chunk should be correctly located despite the padding byte following
     # the data chunk.
