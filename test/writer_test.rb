@@ -476,8 +476,8 @@ private
     end
     expected_file = read_file(:expected, file_name)
 
-    assert_equal(actual_file,
-                 expected_file,
+    assert_equal(expected_file,
+                 actual_file,
                  "Written file doesn't match expected output: #{file_name}")
     assert(writer.closed?)
   end
