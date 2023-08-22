@@ -15,8 +15,8 @@ module WaveFileIOTestHelper
   SQUARE_WAVE_CYCLE[:mono][:pcm_32] =   [-1000000000, -1000000000, -1000000000, -1000000000,
                                           1000000000, 1000000000, 1000000000, 1000000000]
   SQUARE_WAVE_CYCLE[:mono][:float] = [-0.5, -0.5, -0.5, -0.5, 0.5, 0.5, 0.5, 0.5]
-  SQUARE_WAVE_CYCLE[:mono][:float_32] = [-0.5, -0.5, -0.5, -0.5, 0.5, 0.5, 0.5, 0.5]
-  SQUARE_WAVE_CYCLE[:mono][:float_64] = SQUARE_WAVE_CYCLE[:mono][:float_32]
+  SQUARE_WAVE_CYCLE[:mono][:float_32] = SQUARE_WAVE_CYCLE[:mono][:float]
+  SQUARE_WAVE_CYCLE[:mono][:float_64] = SQUARE_WAVE_CYCLE[:mono][:float]
 
   SQUARE_WAVE_CYCLE[:stereo] = {}
   SQUARE_WAVE_CYCLE[:stereo][:pcm_8] =  [[88, 88], [88, 88], [88, 88], [88, 88],
@@ -31,9 +31,8 @@ module WaveFileIOTestHelper
                                          [ 1000000000,  1000000000], [ 1000000000,  1000000000]]
   SQUARE_WAVE_CYCLE[:stereo][:float] = [[-0.5, -0.5], [-0.5, -0.5], [-0.5, -0.5], [-0.5, -0.5],
                                         [0.5, 0.5], [0.5, 0.5], [0.5, 0.5], [0.5, 0.5]]
-  SQUARE_WAVE_CYCLE[:stereo][:float_32] = [[-0.5, -0.5], [-0.5, -0.5], [-0.5, -0.5], [-0.5, -0.5],
-                                         [0.5, 0.5], [0.5, 0.5], [0.5, 0.5], [0.5, 0.5]]
-  SQUARE_WAVE_CYCLE[:stereo][:float_64] = SQUARE_WAVE_CYCLE[:stereo][:float_32]
+  SQUARE_WAVE_CYCLE[:stereo][:float_32] = SQUARE_WAVE_CYCLE[:stereo][:float]
+  SQUARE_WAVE_CYCLE[:stereo][:float_64] = SQUARE_WAVE_CYCLE[:stereo][:float]
 
   SQUARE_WAVE_CYCLE[:tri] = {}
   SQUARE_WAVE_CYCLE[:tri][:pcm_8] =    [[88, 88, 88], [88, 88, 88], [88, 88, 88], [88, 88, 88],
@@ -56,7 +55,6 @@ module WaveFileIOTestHelper
                                         [ 1000000000,  1000000000,  1000000000]]
   SQUARE_WAVE_CYCLE[:tri][:float] = [[-0.5, -0.5, -0.5], [-0.5, -0.5, -0.5], [-0.5, -0.5, -0.5], [-0.5, -0.5, -0.5],
                                      [0.5, 0.5, 0.5], [0.5, 0.5, 0.5], [0.5, 0.5, 0.5], [0.5, 0.5, 0.5]]
-  SQUARE_WAVE_CYCLE[:tri][:float_32] = [[-0.5, -0.5, -0.5], [-0.5, -0.5, -0.5], [-0.5, -0.5, -0.5], [-0.5, -0.5, -0.5],
-                                        [0.5, 0.5, 0.5], [0.5, 0.5, 0.5], [0.5, 0.5, 0.5], [0.5, 0.5, 0.5]]
-  SQUARE_WAVE_CYCLE[:tri][:float_64] = SQUARE_WAVE_CYCLE[:tri][:float_32]
+  SQUARE_WAVE_CYCLE[:tri][:float_32] = SQUARE_WAVE_CYCLE[:tri][:float]
+  SQUARE_WAVE_CYCLE[:tri][:float_64] = SQUARE_WAVE_CYCLE[:tri][:float]
 end
