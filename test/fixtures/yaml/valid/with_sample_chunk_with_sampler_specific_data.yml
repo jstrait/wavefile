@@ -16,7 +16,7 @@ sample_chunk:
   chunk_size: 64
   manufacturer_id: 0
   product_id: 0
-  sample_nanoseconds: 0
+  sample_nanoseconds: 22675
   unity_note: 60
   pitch_fraction: 2_147_483_648
   smpte_format: 0
