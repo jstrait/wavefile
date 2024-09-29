@@ -1150,7 +1150,7 @@ class ReaderTest < Minitest::Test
   end
 
   def test_smpl_chunk
-    file_name = fixture_path("valid/with_sample_chunk_before_data_chunk.wav")
+    file_name = fixture_path("valid/with_smpl_chunk_before_data_chunk.wav")
     reader = Reader.new(file_name)
     sampler_info = reader.sampler_info
 
@@ -1179,7 +1179,7 @@ class ReaderTest < Minitest::Test
   # Several field values are out of the expected range, but the file should be successfully
   # read anyway because the sample chunk has the correct structure
   def test_smpl_chunk_field_values_out_of_range
-    file_name = fixture_path("valid/with_sample_chunk_with_fields_out_of_range.wav")
+    file_name = fixture_path("valid/with_smpl_chunk_with_fields_out_of_range.wav")
     reader = Reader.new(file_name)
     sampler_info = reader.sampler_info
 
@@ -1206,7 +1206,7 @@ class ReaderTest < Minitest::Test
   end
 
   def test_smpl_chunk_after_data_chunk
-    file_name = fixture_path("valid/with_sample_chunk_after_data_chunk.wav")
+    file_name = fixture_path("valid/with_smpl_chunk_after_data_chunk.wav")
     reader = Reader.new(file_name)
     sampler_info = reader.sampler_info
 
@@ -1233,7 +1233,7 @@ class ReaderTest < Minitest::Test
   end
 
   def test_smpl_chunk_after_data_chunk_and_data_chunk_has_padding_byte
-    file_name = fixture_path("valid/with_sample_chunk_after_data_chunk_and_data_chunk_has_padding_byte.wav")
+    file_name = fixture_path("valid/with_smpl_chunk_after_data_chunk_and_data_chunk_has_padding_byte.wav")
 
     reader = Reader.new(file_name)
     sampler_info = reader.sampler_info
@@ -1269,7 +1269,7 @@ class ReaderTest < Minitest::Test
   end
 
   def test_smpl_chunk_with_sampler_specific_data
-    file_name = fixture_path("valid/with_sample_chunk_with_sampler_specific_data.wav")
+    file_name = fixture_path("valid/with_smpl_chunk_with_sampler_specific_data.wav")
     reader = Reader.new(file_name)
     sampler_info = reader.sampler_info
 
@@ -1297,7 +1297,7 @@ class ReaderTest < Minitest::Test
   end
 
   def test_smpl_chunk_with_extra_unused_bytes
-    file_name = fixture_path("valid/with_sample_chunk_with_extra_unused_bytes.wav")
+    file_name = fixture_path("valid/with_smpl_chunk_with_extra_unused_bytes.wav")
     reader = Reader.new(file_name)
     sampler_info = reader.sampler_info
 
@@ -1330,7 +1330,7 @@ class ReaderTest < Minitest::Test
   end
 
   def test_smpl_chunk_no_loops
-    file_name = fixture_path("valid/with_sample_chunk_no_loops.wav")
+    file_name = fixture_path("valid/with_smpl_chunk_no_loops.wav")
     reader = Reader.new(file_name)
     sampler_info = reader.sampler_info
 
