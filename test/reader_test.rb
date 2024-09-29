@@ -1350,6 +1350,47 @@ class ReaderTest < Minitest::Test
     reader.close
   end
 
+  def test_multiple_smpl_chunks
+    [
+      "valid/with_multiple_smpl_chunks_before_data_chunk.wav",
+      "valid/with_multiple_smpl_chunks_before_and_after_data_chunk.wav",
+      "valid/with_multiple_smpl_chunks_after_data_chunk.wav",
+    ].each do |file_name|
+      reader = Reader.new(fixture_path(file_name))
+      sampler_info = reader.sampler_info
+
+      # `Reader#sampler_info` should contain data from the final "smpl" chunk
+      # in the file, and earlier "smpl" chunks should be ignored.
+      assert_equal(16_777_235, sampler_info.manufacturer_id)
+      assert_equal(1, sampler_info.product_id)
+      assert_equal(22675, sampler_info.sample_nanoseconds)
+      assert_equal(40, sampler_info.midi_note)
+      assert_equal(0.0, sampler_info.fine_tuning_cents)
+      assert_equal(24, sampler_info.smpte_format)
+      assert_equal(1, sampler_info.smpte_offset.hours)
+      assert_equal(2, sampler_info.smpte_offset.minutes)
+      assert_equal(3, sampler_info.smpte_offset.seconds)
+      assert_equal(4, sampler_info.smpte_offset.frames)
+      assert_equal(2, sampler_info.loops.length)
+      assert_equal(1, sampler_info.loops[0].id)
+      assert_equal(:alternating, sampler_info.loops[0].type)
+      assert_equal(40, sampler_info.loops[0].start_sample_frame)
+      assert_equal(50, sampler_info.loops[0].end_sample_frame)
+      assert_equal(0.5, sampler_info.loops[0].fraction)
+      assert_equal(Float::INFINITY, sampler_info.loops[0].play_count)
+      assert_equal(2, sampler_info.loops[1].id)
+      assert_equal(:forward, sampler_info.loops[1].type)
+      assert_equal(70, sampler_info.loops[1].start_sample_frame)
+      assert_equal(90, sampler_info.loops[1].end_sample_frame)
+      assert_equal(0.0, sampler_info.loops[1].fraction)
+      assert_equal(2, sampler_info.loops[1].play_count)
+      assert_equal("ABCD", sampler_info.sampler_specific_data)
+      assert_equal(Encoding::ASCII_8BIT, sampler_info.sampler_specific_data.encoding)
+
+      reader.close
+    end
+  end
+
 private
 
   # Executes the given block against different combinations of number of channels and sample_format
